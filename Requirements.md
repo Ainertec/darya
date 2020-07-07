@@ -4,11 +4,16 @@
 
 * Crud de cliente
 * Crud de motoboy
+* Motoboys tem dias de trabalho
 * Informar motoboys disponíveis
-* Crud de produtos
+* Taxa do motoboy por bairro
+* motoboy deve ter identificação dos pedidos para conferir no fim do dia
+* Selecionar motoboys por dia
+* Crud de produtos,  preço de custo
 * Efetuar venda - contém o cliente e os produtos
 * Emitir relatório diário - lucro total, detalhes das vendas
 * Emitir comanda 
+* Segunda via de comanda
 
 ### Requisitos não-funcionais
 
@@ -20,11 +25,17 @@
 
 ### Regras de negócio
 
-* Ao realizar uma venda deve-se trocar o status do motoboy para "ocupado" e informar o endereço de entrega.
+* Motoboy faz entregas por bairro, mais de uma entrega por vez
+
+* Ao criar uma venda deve-se trocar o status do motoboy para "ocupado" e informar o endereço de entrega(bairro).
+
+* Liberar motoboy para entrega e coloca-lo como bloqueado
 
 * O estado do motoboy é "livre" quando não está em nenhuma entrega e está no seu horário de trabalho
 
 * Ao concluir a venda o motoboy vai para o estado "Livre"
+
+* O pedido deve ter origem “pedido do iFood” “ pedido WhatsApp “, “ pronta entrega “, “ pedido do Instagram “.
 
 ### Venda Ifood
 
