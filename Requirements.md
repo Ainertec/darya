@@ -1,5 +1,12 @@
 ## Requisitos Sistema integrado com Ifood
 
+### dúvidas
+
+* Quem coloca a taxa para o motoboy?
+* Um cliente tem varios endereços?
+*  
+
+
 ### Requisitos funcionais
 
 * Crud de cliente
@@ -8,6 +15,7 @@
 * Informar motoboys disponíveis
 * Taxa do motoboy por bairro
 * motoboy deve ter identificação dos pedidos para conferir no fim do dia
+* Calcular total a pagar no motoboy ao fim do dia baseado na sua taxa
 * Selecionar motoboys por dia
 * Crud de produtos,  preço de custo
 * Efetuar venda - contém o cliente e os produtos
@@ -36,6 +44,8 @@
 * Ao concluir a venda o motoboy vai para o estado "Livre"
 
 * O pedido deve ter origem “pedido do iFood” “ pedido WhatsApp “, “ pronta entrega “, “ pedido do Instagram “.
+
+* Apagar o pedido ao emitir o relátorio, relatorio baseado em data.
 
 ### Venda Ifood
 

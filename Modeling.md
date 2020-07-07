@@ -33,7 +33,7 @@
 
 }
 obter o valor a ser pago ao motoboy taxa de bairro,
-buascar geovane dentro de pedido, para cada pedido para o bairro do cliente encontrar o bairro no motoboy e somar a taxa
+buascar geovane dentro de pedido, para cada pedido para o bairro do cliente encontrar o bairro no motoboy e somar a taxa.
 
 # Pedido/Venda
 {
