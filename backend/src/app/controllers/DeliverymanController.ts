@@ -17,25 +17,27 @@ class DeliverymanController {
   }
 
   async store(request: Request, response: Response) {
-    const { name, working_day, avaliable } = request.body;
+    const { name, working_day, avaliable, phone } = request.body;
 
     const deliveryman = await Deliveryman.create({
       name,
       working_day,
       avaliable,
+      phone,
     });
 
     return response.json(deliveryman);
   }
 
   async update(request: Request, response: Response) {
-    const { name, working_day, avaliable } = request.body;
+    const { name, working_day, avaliable, phone } = request.body;
     const { id } = request.params;
 
     const deliveryman = await Deliveryman.findOneAndUpdate(
       { _id: id },
       {
         name,
+        phone,
       },
       {
         new: true,

@@ -21,6 +21,7 @@ describe('should test', () => {
     const response = await request(app).post('/deliverymans').send({
       name: 'Jão',
       working_day: false,
+      phone: '99726852',
     });
     expect(response.status).toBe(200);
   });
@@ -33,6 +34,7 @@ describe('should test', () => {
 
     const response = await request(app).put(`/deliverymans/${deliveryman._id}`).send({
       name: 'Paulo',
+      phone: deliveryman.phone,
       working_day: true,
       avaliable: false,
     });
@@ -53,6 +55,7 @@ describe('should test', () => {
 
     const response = await request(app).put(`/deliverymans/${deliveryman._id}`).send({
       avaliable: true,
+      phone: deliveryman.phone,
       name: 'Paulo',
     });
 
@@ -74,6 +77,7 @@ describe('should test', () => {
 
     const response = await request(app).put(`/deliverymans/${deliveryman._id}`).send({
       working_day: true,
+      phone: deliveryman.phone,
       name: 'Paulo',
     });
 

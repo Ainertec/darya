@@ -17,6 +17,10 @@ const DeliverimanSchema = new Schema(
       // required: true,
       default: false,
     },
+    phone: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,
