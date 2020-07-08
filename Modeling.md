@@ -34,7 +34,7 @@ motoboy tem uma taxa por bairro, essa taxa precisa ser calculada no final do dia
 {
   _id,
   nome,
-  jornada:[ dd/mm, terça  ],
+  working,
   disponibilidade,
   <!-- pedido_id:[ objectId, ] -->
 
