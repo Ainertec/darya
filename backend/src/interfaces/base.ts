@@ -6,3 +6,9 @@ export interface ProductInterface extends Document {
   description?: string;
   cust: number;
 }
+
+export interface DeliverymanInterface extends Document {
+  name: string;
+  working_day: boolean;
+  avaliable?: boolean;
+}

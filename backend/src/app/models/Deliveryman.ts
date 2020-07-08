@@ -1,0 +1,26 @@
+import { Schema, model, Document } from 'mongoose';
+import { DeliverymanInterface } from '../../interfaces/base';
+
+const DeliverimanSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    working_day: {
+      type: Boolean,
+      // required: true,
+      default: false,
+    },
+    avaliable: {
+      type: Boolean,
+      // required: true,
+      default: false,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+export default model<DeliverymanInterface>('Deliveriman', DeliverimanSchema);
