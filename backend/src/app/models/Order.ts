@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose';
 import { OrderInterface } from '../../interfaces/base';
 
 const ItemsSchema = new Schema({
-  products: {
+  product: {
     type: Schema.Types.ObjectId,
     ref: 'Product',
     required: true,
@@ -55,6 +55,10 @@ const OrderSchema = new Schema(
       type: String,
       required: true,
       enum: Object.values(Source),
+    },
+    note: {
+      type: String,
+      default: null,
     },
   },
   {

@@ -43,4 +43,5 @@ export interface OrderInterface extends Document {
   total?: number;
   finished?: boolean;
   source: string;
+  note?: string;
 }

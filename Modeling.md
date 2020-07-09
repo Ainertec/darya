@@ -86,6 +86,7 @@ sold.find({createAt}).populate(motoboy). populate({
   pagamento?,
   origem: enum [ifood, whatsapp, instagram, pronta entrega]
   motoboy_id,
+  note
 
 }
 

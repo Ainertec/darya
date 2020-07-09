@@ -24,7 +24,7 @@ describe('should a Client', () => {
     await Client.deleteMany({});
   });
 
-  it('should create a order', async () => {
+  it('should create an order', async () => {
     const client = await factory.create<ClientInterface>('Client');
     const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman');
     const district = await factory.create<DistrictInterface>('District');
@@ -39,12 +39,56 @@ describe('should a Client', () => {
         client_address_id: client.address[0]._id,
         items: [
           {
-            products: products._id,
+            product: products._id,
             quantity: 5,
           },
         ],
         source: 'Ifood',
       });
+
+    expect(response.status).toBe(200);
+  });
+
+  it('should update an order', async () => {
+    const order = await factory.create<OrderInterface>('Order');
+    const client = await factory.create<ClientInterface>('Client');
+    const product = await factory.create<ProductInterface>('Product', {
+      name: 'Chocolate',
+    });
+
+    const response = await request(app)
+      .put(`/orders/${order._id}`)
+      .send({
+        client: client._id,
+        deliveryman: order.deliveryman,
+        client_address_id: client.address[0]._id,
+        district: order.district,
+        note: order.note,
+        total: 100,
+        source: 'Instagram',
+        finished: true,
+        items: [
+          {
+            product: product._id,
+            quantity: 12,
+          },
+        ],
+      });
+    console.log(response.body);
+    expect(response.status).toBe(200);
+    // expect(response.body).toEqual(
+    //   expect.objectContaining({
+    //     client: {
+    //       _id: client._id,
+    //     },
+    //   })
+    // );
+  });
+
+  it('should delete an order', async () => {
+    const order = await factory.create<OrderInterface>('Order');
+
+    const response = await request(app).delete(`/orders/${order._id}`);
 
     expect(response.status).toBe(200);
   });

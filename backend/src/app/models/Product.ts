@@ -25,4 +25,4 @@ const ProductSchema = new Schema(
   }
 );
 
-export default model<ProductInterface>('Item', ProductSchema);
+export default model<ProductInterface>('Product', ProductSchema);
