@@ -4,6 +4,7 @@ import ProductController from './app/controllers/ProductController';
 import DeliverymanController from './app/controllers/DeliverymanController';
 import DistrictController from './app/controllers/DistrictController';
 import ClientController from './app/controllers/ClientController';
+import OrderController from './app/controllers/OrderController';
 
 const routes = express.Router();
 // Products
@@ -35,5 +36,8 @@ routes.get('/clients/:name', ClientController.show);
 routes.post('/clients', ClientController.store);
 routes.put('/clients/:id', ClientController.update);
 routes.delete('/clients/:id', ClientController.delete);
+
+// Order
+routes.post('/orders', OrderController.store);
 
 export default routes;

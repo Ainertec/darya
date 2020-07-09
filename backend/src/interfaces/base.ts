@@ -29,3 +29,18 @@ export interface ClientInterface extends Document {
   address: AddressInterface[];
   phone: string[];
 }
+export interface ItemsInterface extends Document {
+  product: ProductInterface;
+  quantity: Number;
+}
+
+export interface OrderInterface extends Document {
+  client: ClientInterface;
+  client_address_id: AddressInterface;
+  district: DistrictInterface;
+  deliveryman: DeliverymanInterface;
+  items: ItemsInterface[];
+  total?: number;
+  finished?: boolean;
+  source: string;
+}

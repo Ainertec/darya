@@ -27,4 +27,4 @@ const DeliverimanSchema = new Schema(
   }
 );
 
-export default model<DeliverymanInterface>('Deliveriman', DeliverimanSchema);
+export default model<DeliverymanInterface>('Deliveryman', DeliverimanSchema);
