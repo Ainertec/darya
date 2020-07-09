@@ -99,6 +99,25 @@ describe('should test', () => {
     expect(response.status).toBe(400);
   });
 
+  it('should reset an avalibale field and working day of all deliverymans', async () => {
+    const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman', {
+      name: 'Jão',
+      working_day: true,
+      avaliable: true,
+    });
+    const response = await request(app).put(`/deliverymans`);
+    const delivery = await Deliveryman.findOne({});
+
+    expect(response.status).toBe(200);
+    expect(delivery).toEqual(
+      expect.objectContaining({
+        name: 'Jão',
+        working_day: false,
+        avaliable: false,
+      })
+    );
+  });
+
   it('should delete a deliveryman', async () => {
     const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman', {
       working_day: true,
@@ -113,10 +132,10 @@ describe('should test', () => {
     expect(countDocuments).toBe(0);
   });
 
-  it('should list a deliveryman by id', async () => {
+  it('should list a deliveryman by working day', async () => {
     const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman', {
       working_day: true,
-      avaliable: true,
+      avaliable: false,
     });
     const deliveryman2 = await factory.create<DeliverymanInterface>('Deliveryman', {
       name: 'carlos',
@@ -124,14 +143,40 @@ describe('should test', () => {
       avaliable: true,
     });
 
-    const response = await request(app).get(`/deliverymans/${deliveryman2._id}`);
+    const response = await request(app).get(`/deliverymans/working_days`);
 
     expect(response.status).toBe(200);
 
     expect(response.body).toEqual(
-      expect.objectContaining({
-        name: 'carlos',
-      })
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: 'carlos',
+        }),
+      ])
+    );
+  });
+
+  it('should list a deliveryman by avaliable', async () => {
+    const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman', {
+      working_day: true,
+      avaliable: false,
+    });
+    const deliveryman2 = await factory.create<DeliverymanInterface>('Deliveryman', {
+      name: 'carlos',
+      working_day: true,
+      avaliable: true,
+    });
+
+    const response = await request(app).get(`/deliverymans/avaliables`);
+
+    expect(response.status).toBe(200);
+
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: 'carlos',
+        }),
+      ])
     );
   });
 

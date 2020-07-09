@@ -9,11 +9,15 @@ class DeliverymanController {
   }
 
   async show(request: Request, response: Response) {
-    const { id } = request.params;
+    const deliverymans = await Deliveryman.find({ avaliable: true });
 
-    const deliveryman = await Deliveryman.findOne({ _id: id });
+    return response.json(deliverymans);
+  }
 
-    return response.json(deliveryman);
+  async showByWorking(request: Request, response: Response) {
+    const deliverymans = await Deliveryman.find({ working_day: true });
+
+    return response.json(deliverymans);
   }
 
   async store(request: Request, response: Response) {
@@ -49,6 +53,12 @@ class DeliverymanController {
     if (avaliable) deliveryman.avaliable = avaliable;
 
     return response.json(deliveryman);
+  }
+
+  async reset(request: Request, response: Response) {
+    await Deliveryman.updateMany({}, { $set: { working_day: false, avaliable: false } });
+
+    return response.status(200).send();
   }
 
   async delete(request: Request, response: Response) {

@@ -18,3 +18,14 @@ export interface DistrictInterface extends Document {
   city: string;
   rate: number;
 }
+export interface AddressInterface extends Document {
+  district: DistrictInterface;
+  street: string;
+  reference: string;
+  number: number;
+}
+export interface ClientInterface extends Document {
+  name: string;
+  address: AddressInterface[];
+  phone: string[];
+}

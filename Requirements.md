@@ -9,15 +9,16 @@
 
 ### Requisitos funcionais
 
-* Crud de cliente
-* Crud de motoboy
-* Motoboys tem dias de trabalho
-* Informar motoboys disponíveis
-* Taxa do motoboy por bairro
-* motoboy deve ter identificação dos pedidos para conferir no fim do dia
+D* Crud de cliente ok
+D* Crud de motoboy ok
+D* Crude de bairro
+<!-- * Motoboys tem dias de trabalho -->
+D* Informar motoboys disponíveis ok
+* Taxa do motoboy por bairro 
+* motoboy deve ter identificação dos pedidos para conferir no fim do dia 
 * Calcular total a pagar no motoboy ao fim do dia baseado na sua taxa
-* Selecionar motoboys por dia
-* Crud de produtos,  preço de custo
+<!-- * Selecionar motoboys por dia -->
+D* Crud de produtos,  preço de custo ok
 * Efetuar venda - contém o cliente e os produtos
 * Emitir relatório diário - lucro total, detalhes das vendas
 * Emitir comanda 
