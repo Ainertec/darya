@@ -52,6 +52,8 @@ class DeliverymanController {
     if (working_day) deliveryman.working_day = working_day;
     if (avaliable) deliveryman.avaliable = avaliable;
 
+    await deliveryman.save();
+
     return response.json(deliveryman);
   }
 
