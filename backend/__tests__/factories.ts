@@ -1,5 +1,6 @@
 import factory from 'factory-girl';
 import faker from 'faker';
+import crypto from 'crypto';
 
 import Product from '../src/app/models/Product';
 import Deliveryman from '../src/app/models/Deliveryman';
@@ -46,10 +47,21 @@ factory.define('Client', Client, {
 });
 
 factory.define('Order', Order, {
-  client: factory.assoc('Client', '_id'),
-  client_address_id: factory.assoc('Client', 'address._id'),
+  client: {
+    client_id: factory.assoc('Client', '_id'),
+    name: faker.name.findName(),
+    phone: faker.phone.phoneNumber(),
+  },
   deliveryman: factory.assoc('Deliveryman', '_id'),
-  district: factory.assoc('District', '_id'),
+  address: {
+    client_address_id: factory.assoc('Client', 'address._id'),
+    district_id: factory.assoc('District', '_id'),
+    district_name: faker.address.streetName(),
+    district_rate: faker.random.number(100),
+    street: faker.address.streetName(),
+    reference: faker.address.streetAddress(),
+    number: faker.random.number(1000),
+  },
   items: [
     {
       product: factory.assoc('Product', '_id'),
@@ -59,6 +71,7 @@ factory.define('Order', Order, {
   source: 'Instagram',
   note: faker.random.words(3),
   finished: faker.random.boolean(),
+  identification: crypto.randomBytes(4).toString('hex'),
 });
 
 export default factory;

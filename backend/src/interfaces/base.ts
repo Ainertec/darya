@@ -5,6 +5,7 @@ export interface ProductInterface extends Document {
   price: number;
   description?: string;
   cust: number;
+  stock?: number;
 }
 
 export interface DeliverymanInterface extends Document {
@@ -35,6 +36,7 @@ export interface ItemsInterface extends Document {
 }
 
 export interface OrderInterface extends Document {
+  identification: string;
   client: ClientOrderInterface;
   address: AddressOrderInterface;
   deliveryman: DeliverymanInterface;

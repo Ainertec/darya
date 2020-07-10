@@ -38,9 +38,9 @@ routes.put('/clients/:id', ClientController.update);
 routes.delete('/clients/:id', ClientController.delete);
 
 // Order
-// routes.get('/orders', OrderController.index);
+routes.get('/orders', OrderController.index);
 routes.post('/orders', OrderController.store);
-// routes.put('/orders/:id', OrderController.update);
-// routes.delete('/orders/:id', OrderController.delete);
+routes.put('/orders/:id', OrderController.update);
+routes.delete('/orders/:id', OrderController.delete);
 
 export default routes;

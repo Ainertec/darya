@@ -1,44 +1,16 @@
 import { Request, Response } from 'express';
+import crypto from 'crypto';
 import Order from '../models/Order';
 import { Source } from '../models/Order';
 import Client from '../models/Client';
 import District from '../models/District';
 
 class OrderController {
-  // async index(request: Request, response: Response) {
-  //   // const orders = await Order.aggregate().lookup({
-  //   //   from: 'client',
-  //   //   localField: 'client',
-  //   //   foreignField: '_id',
-  //   //   as: 'clientn',
-  //   // }).unwind('clientn')
-  //   // .project({
-  //   //   '$clientn.address':
-  //   // })
-  //   const orders = await Order.find()
-  //     .populate('deliveryman')
-  //     .populate('district')
-  //     .populate('items.product')
-  //     .populate('client');
+  async index(request: Request, response: Response) {
+    const orders = await Order.find({}).populate('deliveryman').populate('items.product');
 
-  //   const ordersSerializaded = orders.map((order) => {
-  //     if (order.client) {
-  //       const newAddress = order.client.address.find(
-  //         (addre) => addre._id == order.client_address_id
-  //       );
-  //       console.log('client address', order.client.address);
-  //       console.log('pa gringo é mais caro', newAddress);
-  //       const newClient = { ...order.client.toObject(), address: newAddress };
-
-  //       return {
-  //         ...order.toObject(),
-  //         client: newClient,
-  //       };
-  //     }
-  //   });
-
-  //   return response.json(ordersSerializaded);
-  // }
+    return response.json(orders);
+  }
 
   async store(request: Request, response: Response) {
     const {
@@ -64,7 +36,11 @@ class OrderController {
     const district = await District.findOne({ _id: address?.district });
     if (!district) return response.status(400).json('That district does not exist');
 
+    const identification =
+      crypto.randomBytes(4).toString('hex') + client.phone[0].slice(client.phone[0].length - 2);
+
     const order = await Order.create({
+      identification,
       client: {
         client_id: client_id,
         name: client.name,
@@ -91,60 +67,75 @@ class OrderController {
     return response.json(order);
   }
 
-  // async update(request: Request, response: Response) {
-  //   const {
-  //     client,
-  //     deliveryman,
-  //     district,
-  //     client_address_id,
-  //     items,
-  //     source,
-  //     note,
-  //     finished,
-  //     payment,
-  //   } = request.body;
-  //   const { id } = request.params;
+  async update(request: Request, response: Response) {
+    const {
+      client_id,
+      deliveryman,
+      identification,
+      client_address_id,
+      items,
+      source,
+      note,
+      finished,
+      payment,
+    } = request.body;
+    const { id } = request.params;
 
-  //   const order = await Order.findOneAndUpdate(
-  //     { _id: id },
-  //     {
-  //       client,
-  //       deliveryman,
-  //       district,
-  //       client_address_id,
-  //       items,
-  //       source,
-  //     },
-  //     { new: true }
-  //   );
+    const order = await Order.findOne({ _id: id });
 
-  //   if (!order) return response.status(400).json('Order does not exist');
-  //   if (finished) order.finished = finished;
-  //   if (note) order.note = note;
-  //   if (payment) order.payment = payment;
+    if (!order) return response.status(400).json('Order does not exist');
 
-  //   await order.save();
-  //   await order
-  //     .populate('deliveryman')
-  //     .populate('district')
-  //     .populate('items.product')
-  //     .populate('client')
-  //     .populate({
-  //       path: 'client',
-  //       match: { 'address._id': client_address_id },
-  //       // select: 'address phone name ',
-  //     })
-  //     .execPopulate();
+    order.identification = identification;
+    if (finished) order.finished = finished;
+    if (note) order.note = note;
+    if (payment) order.payment = payment;
+    order.items = items;
+    order.source = source;
+    order.deliveryman = deliveryman;
 
-  //   return response.json(order);
-  // }
+    if (
+      String(order.client.client_id) !== String(client_id) ||
+      String(order.address.client_address_id) !== String(client_address_id)
+    ) {
+      const client = await Client.findOne({ _id: client_id });
 
-  // async delete(request: Request, response: Response) {
-  //   const { id } = request.params;
+      if (!client) return response.status(400).json('That client does not exist');
 
-  //   const order = await Order.deleteOne({ _id: id });
-  //   return response.status(200).send();
-  // }
+      const address = client.address.find((add) => add._id == client_address_id);
+
+      if (!address) return response.status(400).json('That address does not exist');
+
+      const district = await District.findOne({ _id: address.district });
+
+      if (!district) return response.status(400).json('That district does not exist');
+      (order.address = {
+        client_address_id: address._id,
+        district_id: district._id,
+        district_name: district.name,
+        district_rate: district.rate,
+        street: address.street,
+        number: address.number,
+        reference: address.reference,
+      }),
+        (order.client = {
+          client_id: client_id,
+          name: client.name,
+          phone: client.phone,
+        });
+    }
+
+    await order.save();
+    await order.populate('deliveryman').populate('items.product').execPopulate();
+
+    return response.json(order);
+  }
+
+  async delete(request: Request, response: Response) {
+    const { id } = request.params;
+
+    const order = await Order.deleteOne({ _id: id });
+    return response.status(200).send();
+  }
 }
 
 export default new OrderController();

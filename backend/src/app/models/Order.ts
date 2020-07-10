@@ -60,7 +60,7 @@ const AddressSchema = new Schema({
 
 const Source = Object.freeze({
   ifood: 'Ifood',
-  whatsapp: 'Whatsapp?',
+  whatsapp: 'Whatsapp',
   instagram: 'Instagram',
   delivery: 'Pronta Entrega',
   getSource() {
@@ -99,6 +99,10 @@ const OrderSchema = new Schema(
     payment: {
       type: String,
       default: null,
+    },
+    identification: {
+      type: String,
+      required: true,
     },
   },
   {
