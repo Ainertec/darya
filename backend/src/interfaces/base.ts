@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export interface ProductInterface extends Document {
   name: string;
@@ -35,13 +35,27 @@ export interface ItemsInterface extends Document {
 }
 
 export interface OrderInterface extends Document {
-  client: ClientInterface;
-  client_address_id: AddressInterface;
-  district: DistrictInterface;
+  client: ClientOrderInterface;
+  address: AddressOrderInterface;
   deliveryman: DeliverymanInterface;
   items: ItemsInterface[];
   total?: number;
   finished?: boolean;
   source: string;
   note?: string;
+  payment?: string;
+}
+export interface ClientOrderInterface {
+  client_id: Types.ObjectId;
+  name: string;
+  phone: string[];
+}
+export interface AddressOrderInterface {
+  street: string;
+  reference: string;
+  number: number;
+  district_rate: number;
+  district_name: string;
+  district_id: Types.ObjectId;
+  client_address_id: Types.ObjectId;
 }

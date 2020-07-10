@@ -72,9 +72,16 @@ sold.find({createAt}).populate(motoboy). populate({
 # Pedido/Venda
 {
   _id,
-  client_id,
-  client_address_id,
-  bairro_id/taxa,
+  client:{
+    name,
+    phone
+  }
+  address:{
+    street,
+    number,
+    reference,
+    bairro:
+  } 
   produtos:[
     {
       product_id,
