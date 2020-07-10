@@ -22,6 +22,7 @@ describe('should a Client', () => {
   });
   beforeEach(async () => {
     await Client.deleteMany({});
+    await Order.deleteMany({});
   });
 
   it('should create an order', async () => {
@@ -188,11 +189,25 @@ describe('should a Client', () => {
   });
 
   it('should list all orders', async () => {
-    // const client = await factory.create<ClientInterface>('Client');
     const order = await factory.createMany<OrderInterface>('Order', 3);
 
     const response = await request(app).get(`/orders`);
-    // console.log(response.body);
+
     expect(response.status).toBe(200);
+    expect(response.body.length).toBe(3);
+  });
+
+  it('should list a order by identification', async () => {
+    await factory.createMany<OrderInterface>('Order', 3);
+    const order = await factory.create<OrderInterface>('Order', { identification: '1234543' });
+
+    const response = await request(app).get(`/orders/${order.identification}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        identification: '1234543',
+      })
+    );
   });
 });

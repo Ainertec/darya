@@ -12,6 +12,15 @@ class OrderController {
     return response.json(orders);
   }
 
+  async show(request: Request, response: Response) {
+    const { identification } = request.params;
+    const order = await Order.findOne({ identification: identification })
+      .populate('deliveryman')
+      .populate('items.product');
+
+    return response.json(order);
+  }
+
   async store(request: Request, response: Response) {
     const {
       client_id,
