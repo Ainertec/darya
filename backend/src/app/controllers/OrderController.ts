@@ -1,12 +1,56 @@
-import { Request, Response } from 'express';
+import { Request, Response, response } from 'express';
+import { Types } from 'mongoose';
 import crypto from 'crypto';
-import Order from '../models/Order';
-import { Source } from '../models/Order';
+import Order, { Source } from '../models/Order';
 import Client from '../models/Client';
 import District from '../models/District';
 import Deliveryman from '../models/Deliveryman';
+import { OrderInterface } from '../../interfaces/base';
 
 class OrderController {
+  public constructor() {
+    this.store = this.store.bind(this);
+    this.update = this.update.bind(this);
+  }
+
+  private async addOrUpdateAddress(
+    order: OrderInterface,
+    client_id: Types.ObjectId,
+    client_address_id: Types.ObjectId
+  ) {
+    const client = await Client.findOne({ _id: client_id });
+
+    if (!client) return 'That client does not exist';
+
+    const address = client.address.find((add) => add._id == client_address_id);
+
+    if (!address) return 'That address does not exist';
+
+    const district = await District.findOne({ _id: address.district });
+
+    if (!district) return 'That district does not exist';
+    order.address = {
+      client_address_id: address._id,
+      district_id: district._id,
+      district_name: district.name,
+      district_rate: district.rate,
+      street: address.street,
+      number: address.number,
+      reference: address.reference,
+    };
+  }
+
+  private async addOrUpdateClient(order: OrderInterface, client_id: Types.ObjectId) {
+    const client = await Client.findOne({ _id: client_id });
+
+    if (!client) return 'That client does not exist';
+    order.client = {
+      client_id: client_id,
+      name: client.name,
+      phone: client.phone,
+    };
+  }
+
   async index(request: Request, response: Response) {
     const orders = await Order.find({ finished: false })
       .populate('deliveryman')
@@ -14,11 +58,22 @@ class OrderController {
 
     return response.json(orders);
   }
-  // deliveryman
 
   async show(request: Request, response: Response) {
     const { identification } = request.params;
     const order = await Order.findOne({ identification: identification })
+      .populate('deliveryman')
+      .populate('items.product');
+
+    return response.json(order);
+  }
+
+  async showByDeliveryman(request: Request, response: Response) {
+    const { deliveryman } = request.params;
+    const ObjectId = Types.ObjectId;
+    const order = await Order.findOne({
+      deliveryman: ObjectId(deliveryman),
+    })
       .populate('deliveryman')
       .populate('items.product');
 
@@ -78,6 +133,14 @@ class OrderController {
 
     await order.populate('deliveryman').populate('items.product').execPopulate();
 
+    const deliverymanPersisted = await Deliveryman.findOne({ _id: deliveryman });
+
+    if (!deliverymanPersisted) {
+      return response.status(400).json('Invalid deliveryman');
+    }
+    deliverymanPersisted.hasDelivery = true;
+    await deliverymanPersisted.save();
+
     return response.json(order);
   }
 
@@ -91,6 +154,7 @@ class OrderController {
       source,
       note,
       payment,
+      finished,
     } = request.body;
     const { id } = request.params;
 
@@ -98,54 +162,38 @@ class OrderController {
 
     if (!order) return response.status(400).json('Order does not exist');
 
-    order.identification = identification;
+    if (identification) order.identification = identification;
+    if (items) order.items = items;
+    if (source) order.source = source;
+    if (deliveryman) order.deliveryman = deliveryman;
 
     if (note) order.note = note;
+    if (payment) order.payment = payment;
 
-    if (payment) {
-      const deliverimanPerdisted = await Deliveryman.findOne({ _id: deliveryman });
+    if (finished) {
+      const deliverymanPersisted = await Deliveryman.findOne({ _id: order.deliveryman });
 
-      if (!deliverimanPerdisted) return response.status(400).json('Invalid deliveryman');
-      deliverimanPerdisted.avaliable = false;
+      if (!deliverymanPersisted) return response.status(400).json('Invalid deliveryman');
+      deliverymanPersisted.available = false;
+      deliverymanPersisted.hasDelivery = false;
 
-      await deliverimanPerdisted.save();
-      order.payment = payment;
+      await deliverymanPersisted.save();
       order.finished = true;
     }
-
-    order.items = items;
-    order.source = source;
-    order.deliveryman = deliveryman;
-
+    if (client_id && String(order.client.client_id) !== String(client_id)) {
+      const error = await this.addOrUpdateClient(order, client_id);
+      if (error) {
+        return response.status(400).json(error);
+      }
+    }
     if (
-      String(order.client.client_id) !== String(client_id) ||
+      client_address_id &&
       String(order.address.client_address_id) !== String(client_address_id)
     ) {
-      const client = await Client.findOne({ _id: client_id });
-
-      if (!client) return response.status(400).json('That client does not exist');
-
-      const address = client.address.find((add) => add._id == client_address_id);
-
-      if (!address) return response.status(400).json('That address does not exist');
-
-      const district = await District.findOne({ _id: address.district });
-
-      if (!district) return response.status(400).json('That district does not exist');
-      (order.address = {
-        client_address_id: address._id,
-        district_id: district._id,
-        district_name: district.name,
-        district_rate: district.rate,
-        street: address.street,
-        number: address.number,
-        reference: address.reference,
-      }),
-        (order.client = {
-          client_id: client_id,
-          name: client.name,
-          phone: client.phone,
-        });
+      const error = await this.addOrUpdateAddress(order, client_id, client_address_id);
+      if (error) {
+        return response.status(400).json(error);
+      }
     }
 
     await order.save();

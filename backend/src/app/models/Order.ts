@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Model } from 'mongoose';
 import { OrderInterface } from '../../interfaces/base';
 
 const ItemsSchema = new Schema({

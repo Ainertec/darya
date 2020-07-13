@@ -11,7 +11,8 @@ export interface ProductInterface extends Document {
 export interface DeliverymanInterface extends Document {
   name: string;
   working_day: boolean;
-  avaliable?: boolean;
+  available?: boolean;
+  hasDelivery?: boolean;
   phone: string;
 }
 export interface DistrictInterface extends Document {
@@ -39,7 +40,7 @@ export interface OrderInterface extends Document {
   identification: string;
   client: ClientOrderInterface;
   address: AddressOrderInterface;
-  deliveryman: DeliverymanInterface;
+  deliveryman: Types.ObjectId;
   items: ItemsInterface[];
   total: number;
   finished?: boolean;
@@ -48,6 +49,7 @@ export interface OrderInterface extends Document {
   payment?: string;
   createdAt?: Date;
 }
+
 export interface ClientOrderInterface {
   client_id: Types.ObjectId;
   name: string;
