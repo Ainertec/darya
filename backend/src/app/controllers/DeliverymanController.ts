@@ -9,7 +9,7 @@ class DeliverymanController {
   }
 
   async show(request: Request, response: Response) {
-    const deliverymans = await Deliveryman.find({ avaliable: true });
+    const deliverymans = await Deliveryman.find({ working_day: true, avaliable: true });
 
     return response.json(deliverymans);
   }
