@@ -17,7 +17,8 @@ routes.delete('/products/:id', ProductController.delete);
 
 // Deliverymans
 routes.get('/deliverymans', DeliverymanController.index);
-routes.get('/deliverymans/avaliables', DeliverymanController.show);
+routes.get('/deliverymans/hasDelivery', DeliverymanController.showByDelivery);
+routes.get('/deliverymans/availables', DeliverymanController.show);
 routes.get('/deliverymans/working_days', DeliverymanController.showByWorking);
 routes.post('/deliverymans', DeliverymanController.store);
 routes.put('/deliverymans/:id', DeliverymanController.update);
@@ -40,6 +41,7 @@ routes.delete('/clients/:id', ClientController.delete);
 
 // Order
 routes.get('/orders', OrderController.index);
+routes.get('/orders/deliveryman/:deliveryman', OrderController.showByDeliveryman);
 routes.get('/orders/:identification', OrderController.show);
 routes.post('/orders', OrderController.store);
 routes.put('/orders/:id', OrderController.update);

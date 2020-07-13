@@ -38,7 +38,7 @@ D* Calcular valor total do pedido com taxa
 
 D* Motoboy faz entregas por bairro, mais de uma entrega por vez ok
 
-###### * motoboy tem campo "tenho entrega" boolean que é true quando ele tem algum pedido 
+D* motoboy tem campo "tenho entrega" boolean que é true quando ele tem algum pedido 
 
 D* O estado do motoboy é "livre" quando não está em nenhuma entrega e está no seu horário de trabalho ok
 

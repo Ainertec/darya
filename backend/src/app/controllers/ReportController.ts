@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { Types } from 'mongoose';
 import { startOfHour, endOfHour } from 'date-fns';
 import Order from '../models/Order';
-import Deliveryman from '../models/Deliveryman';
 
 class ReportController {
   async deliverymanPayment(request: Request, response: Response) {
