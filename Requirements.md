@@ -11,16 +11,18 @@
 
 D* Crud de cliente ok
 D* Crud de motoboy ok
-D* Crude de bairro
+D* Crude de bairro ok
 <!-- * Motoboys tem dias de trabalho -->
 D* Informar motoboys disponíveis ok
-* Taxa do motoboy por bairro 
-* motoboy deve ter identificação dos pedidos para conferir no fim do dia 
-* Calcular total a pagar no motoboy ao fim do dia baseado na sua taxa
+D* Taxa do motoboy por bairro ok
+D* motoboy deve ter identificação dos pedidos para conferir no fim do dia ok
+D* Calcular total a pagar no motoboy ao fim do dia baseado na sua taxa ok lista de vendas
+D* listar motoboys disponíveis dia de trabalho e fora de entrega ok
 <!-- * Selecionar motoboys por dia -->
 D* Crud de produtos,  preço de custo ok
-* Efetuar venda - contém o cliente e os produtos
-* Emitir relatório diário - lucro total, detalhes das vendas
+D* Efetuar venda - contém o cliente e os produtos ok
+D* Calcular valor total do pedido com taxa
+* Emitir relatório diário - lucro total, detalhes das vendas ok total liquido
 * Emitir comanda 
 * Segunda via de comanda
 
@@ -34,19 +36,17 @@ D* Crud de produtos,  preço de custo ok
 
 ### Regras de negócio
 
-* Motoboy faz entregas por bairro, mais de uma entrega por vez
+D* Motoboy faz entregas por bairro, mais de uma entrega por vez ok
 
-* Ao criar uma venda deve-se trocar o status do motoboy para "ocupado" e informar o endereço de entrega(bairro).
+###### * motoboy tem campo "tenho entrega" boolean que é true quando ele tem algum pedido 
 
-* Liberar motoboy para entrega e coloca-lo como bloqueado
+D* O estado do motoboy é "livre" quando não está em nenhuma entrega e está no seu horário de trabalho ok
 
-* O estado do motoboy é "livre" quando não está em nenhuma entrega e está no seu horário de trabalho
+D* Ao concluir a venda o motoboy vai para o estado "Livre" ok
 
-* Ao concluir a venda o motoboy vai para o estado "Livre"
+D* O pedido deve ter origem “pedido do iFood” “ pedido WhatsApp “, “ pronta entrega “, “ pedido do Instagram “. ok
 
-* O pedido deve ter origem “pedido do iFood” “ pedido WhatsApp “, “ pronta entrega “, “ pedido do Instagram “.
-
-* Apagar o pedido ao emitir o relátorio, relatorio baseado em data.
+###### * Apagar o pedido ao emitir o relátorio, relatorio baseado em data. delete de 2 anos
 
 ### Venda Ifood
 

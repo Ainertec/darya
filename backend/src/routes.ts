@@ -5,6 +5,7 @@ import DeliverymanController from './app/controllers/DeliverymanController';
 import DistrictController from './app/controllers/DistrictController';
 import ClientController from './app/controllers/ClientController';
 import OrderController from './app/controllers/OrderController';
+import ReportController from './app/controllers/ReportController';
 
 const routes = express.Router();
 // Products
@@ -43,5 +44,10 @@ routes.get('/orders/:identification', OrderController.show);
 routes.post('/orders', OrderController.store);
 routes.put('/orders/:id', OrderController.update);
 routes.delete('/orders/:id', OrderController.delete);
+
+// Reports
+
+routes.get('/reports/deliveryman/rate', ReportController.deliverymanPayment);
+routes.get('/reports/orders/profit', ReportController.ordersProfit);
 
 export default routes;
