@@ -1,7 +1,7 @@
 import { Schema, model, Document } from 'mongoose';
 import { DeliverymanInterface } from '../../interfaces/base';
 
-const DeliverimanSchema = new Schema(
+const DeliverymanSchema = new Schema(
   {
     name: {
       type: String,
@@ -12,7 +12,12 @@ const DeliverimanSchema = new Schema(
       // required: true,
       default: false,
     },
-    avaliable: {
+    available: {
+      type: Boolean,
+      // required: true,
+      default: false,
+    },
+    hasDelivery: {
       type: Boolean,
       // required: true,
       default: false,
@@ -27,4 +32,4 @@ const DeliverimanSchema = new Schema(
   }
 );
 
-export default model<DeliverymanInterface>('Deliveryman', DeliverimanSchema);
+export default model<DeliverymanInterface>('Deliveryman', DeliverymanSchema);

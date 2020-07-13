@@ -29,14 +29,14 @@ describe('should test', () => {
   it('should update a deliveryman', async () => {
     const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman', {
       working_day: true,
-      avaliable: true,
+      available: true,
     });
 
     const response = await request(app).put(`/deliverymans/${deliveryman._id}`).send({
       name: 'Paulo',
       phone: deliveryman.phone,
       working_day: true,
-      avaliable: false,
+      available: false,
     });
 
     expect(response.status).toBe(200);
@@ -47,14 +47,14 @@ describe('should test', () => {
     );
   });
 
-  it('should update an avaliable field of a deliveryman', async () => {
+  it('should update an available field of a deliveryman', async () => {
     const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman', {
       working_day: false,
-      avaliable: false,
+      available: false,
     });
 
     const response = await request(app).put(`/deliverymans/${deliveryman._id}`).send({
-      avaliable: true,
+      available: true,
       phone: deliveryman.phone,
       name: 'Paulo',
     });
@@ -63,7 +63,7 @@ describe('should test', () => {
     expect(response.body).toEqual(
       expect.objectContaining({
         name: 'Paulo',
-        avaliable: true,
+        available: true,
         working_day: false,
       })
     );
@@ -72,7 +72,7 @@ describe('should test', () => {
   it('should update a working_day field of a deliveryman', async () => {
     const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman', {
       working_day: false,
-      avaliable: false,
+      available: false,
     });
 
     const response = await request(app).put(`/deliverymans/${deliveryman._id}`).send({
@@ -85,13 +85,13 @@ describe('should test', () => {
     expect(response.body).toEqual(
       expect.objectContaining({
         name: 'Paulo',
-        avaliable: false,
+        available: false,
         working_day: true,
       })
     );
   });
 
-  it('should not update a field of an unexisten deliveryman', async () => {
+  it('should not update a field of an inexistent deliveryman', async () => {
     const response = await request(app).put(`/deliverymans/5f05febbd43fb02cb0b83d64`).send({
       working_day: true,
       name: 'Paulo',
@@ -99,11 +99,11 @@ describe('should test', () => {
     expect(response.status).toBe(400);
   });
 
-  it('should reset an avalibale field and working day of all deliverymans', async () => {
+  it('should reset an available field and working day of all deliverymans', async () => {
     const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman', {
       name: 'Jão',
       working_day: true,
-      avaliable: true,
+      available: true,
     });
     const response = await request(app).put(`/deliverymans`);
     const delivery = await Deliveryman.findOne({});
@@ -113,7 +113,7 @@ describe('should test', () => {
       expect.objectContaining({
         name: 'Jão',
         working_day: false,
-        avaliable: false,
+        available: false,
       })
     );
   });
@@ -121,7 +121,7 @@ describe('should test', () => {
   it('should delete a deliveryman', async () => {
     const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman', {
       working_day: true,
-      avaliable: true,
+      available: true,
     });
 
     const response = await request(app).delete(`/deliverymans/${deliveryman._id}`);
@@ -135,12 +135,12 @@ describe('should test', () => {
   it('should list a deliveryman by working day', async () => {
     const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman', {
       working_day: true,
-      avaliable: false,
+      available: false,
     });
     const deliveryman2 = await factory.create<DeliverymanInterface>('Deliveryman', {
       name: 'carlos',
       working_day: true,
-      avaliable: true,
+      available: true,
     });
 
     const response = await request(app).get(`/deliverymans/working_days`);
@@ -156,18 +156,42 @@ describe('should test', () => {
     );
   });
 
-  it('should list a deliveryman by avaliable', async () => {
+  it('should list a deliveryman by hasDelivery', async () => {
     const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman', {
       working_day: true,
-      avaliable: false,
+      available: false,
     });
     const deliveryman2 = await factory.create<DeliverymanInterface>('Deliveryman', {
       name: 'carlos',
       working_day: true,
-      avaliable: true,
+      available: true,
+      hasDelivery: true,
     });
 
-    const response = await request(app).get(`/deliverymans/avaliables`);
+    const response = await request(app).get(`/deliverymans/hasDelivery`);
+
+    expect(response.status).toBe(200);
+
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: 'carlos',
+        }),
+      ])
+    );
+  });
+  it('should list a deliveryman by available', async () => {
+    const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman', {
+      working_day: true,
+      available: false,
+    });
+    const deliveryman2 = await factory.create<DeliverymanInterface>('Deliveryman', {
+      name: 'carlos',
+      working_day: true,
+      available: true,
+    });
+
+    const response = await request(app).get(`/deliverymans/availables`);
 
     expect(response.status).toBe(200);
 
@@ -184,12 +208,12 @@ describe('should test', () => {
     const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman', {
       name: 'jãozin',
       working_day: true,
-      avaliable: true,
+      available: true,
     });
     const deliveryman2 = await factory.create<DeliverymanInterface>('Deliveryman', {
       name: 'carlos',
       working_day: true,
-      avaliable: true,
+      available: true,
     });
 
     const response = await request(app).get(`/deliverymans`);
