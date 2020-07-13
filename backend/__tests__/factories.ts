@@ -69,6 +69,7 @@ factory.define('Order', Order, {
     },
   ],
   source: 'Instagram',
+  total: faker.random.number(500),
   note: faker.random.words(3),
   finished: faker.random.boolean(),
   identification: crypto.randomBytes(4).toString('hex'),

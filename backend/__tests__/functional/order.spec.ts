@@ -12,6 +12,7 @@ import {
   DeliverymanInterface,
   ProductInterface,
 } from '../../src/interfaces/base';
+import Deliveryman from '../../src/app/models/Deliveryman';
 
 describe('should a Client', () => {
   beforeAll(() => {
@@ -49,6 +50,30 @@ describe('should a Client', () => {
     expect(response.status).toBe(200);
   });
 
+  // it('should update a deliveryman avaliable when create a order', async () => {
+  //   const client = await factory.create<ClientInterface>('Client');
+  //   const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman');
+  //   const district = await factory.create<DistrictInterface>('District');
+  //   const products = await factory.create<ProductInterface>('Product');
+
+  //   const response = await request(app)
+  //     .post('/orders')
+  //     .send({
+  //       client_id: client._id,
+  //       deliveryman: deliveryman._id,
+  //       client_address_id: client.address[0]._id,
+  //       items: [
+  //         {
+  //           product: products._id,
+  //           quantity: 5,
+  //         },
+  //       ],
+  //       source: 'nada',
+  //     });
+
+  //   expect(response.status).toBe(400);
+  // });
+
   it('should not create an order with invalid source', async () => {
     const client = await factory.create<ClientInterface>('Client');
     const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman');
@@ -73,7 +98,7 @@ describe('should a Client', () => {
     expect(response.status).toBe(400);
   });
 
-  it('should update an order', async () => {
+  it('should update a order', async () => {
     const order = await factory.create<OrderInterface>('Order');
     // const client = await factory.create<ClientInterface>('Client');
     const product = await factory.create<ProductInterface>('Product', {
@@ -90,7 +115,6 @@ describe('should a Client', () => {
         note: 'Brabo',
         total: 100,
         source: 'Whatsapp',
-        finished: true,
         items: [
           {
             product: product._id,
@@ -104,10 +128,45 @@ describe('should a Client', () => {
       expect.objectContaining({
         source: 'Whatsapp',
         identification: '1234567',
-        finished: true,
         note: 'Brabo',
       })
     );
+  });
+
+  it('should update a order and update a deliveryman avaliable', async () => {
+    const delivaryman = await factory.create<DeliverymanInterface>('Deliveryman', {
+      avaliable: false,
+    });
+    const order = await factory.create<OrderInterface>('Order', {
+      deliveryman: delivaryman._id,
+    });
+
+    const product = await factory.create<ProductInterface>('Product', {
+      name: 'Chocolate',
+    });
+
+    const response = await request(app)
+      .put(`/orders/${order._id}`)
+      .send({
+        identification: '1234567',
+        client_id: order.client.client_id,
+        deliveryman: order.deliveryman,
+        client_address_id: order.address.client_address_id,
+        note: 'Brabo',
+        total: 100,
+        payment: 'Dinheiro',
+        source: 'Whatsapp',
+        items: [
+          {
+            product: product._id,
+            quantity: 12,
+          },
+        ],
+      });
+    const deliverymanUpdated = await Deliveryman.findOne({ _id: delivaryman._id });
+
+    expect(response.status).toBe(200);
+    expect(deliverymanUpdated?.avaliable).toBe(false);
   });
 
   it('should update a order client and address', async () => {
@@ -128,7 +187,6 @@ describe('should a Client', () => {
         note: 'Brabo',
         total: 100,
         source: 'Whatsapp',
-        finished: true,
         items: [
           {
             product: product._id,
@@ -142,7 +200,6 @@ describe('should a Client', () => {
       expect.objectContaining({
         source: 'Whatsapp',
         identification: '1234567',
-        finished: true,
         note: 'Brabo',
         client: expect.objectContaining({
           name: 'Cleiton',

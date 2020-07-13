@@ -4,13 +4,17 @@ import Order from '../models/Order';
 import { Source } from '../models/Order';
 import Client from '../models/Client';
 import District from '../models/District';
+import Deliveryman from '../models/Deliveryman';
 
 class OrderController {
   async index(request: Request, response: Response) {
-    const orders = await Order.find({}).populate('deliveryman').populate('items.product');
+    const orders = await Order.find({ finished: false })
+      .populate('deliveryman')
+      .populate('items.product');
 
     return response.json(orders);
   }
+  // deliveryman
 
   async show(request: Request, response: Response) {
     const { identification } = request.params;
@@ -69,6 +73,7 @@ class OrderController {
       source,
       note,
       payment,
+      total: 20,
     });
 
     await order.populate('deliveryman').populate('items.product').execPopulate();
@@ -85,7 +90,6 @@ class OrderController {
       items,
       source,
       note,
-      finished,
       payment,
     } = request.body;
     const { id } = request.params;
@@ -95,9 +99,20 @@ class OrderController {
     if (!order) return response.status(400).json('Order does not exist');
 
     order.identification = identification;
-    if (finished) order.finished = finished;
+
     if (note) order.note = note;
-    if (payment) order.payment = payment;
+
+    if (payment) {
+      const deliverimanPerdisted = await Deliveryman.findOne({ _id: deliveryman });
+
+      if (!deliverimanPerdisted) return response.status(400).json('Invalid deliveryman');
+      deliverimanPerdisted.avaliable = false;
+
+      await deliverimanPerdisted.save();
+      order.payment = payment;
+      order.finished = true;
+    }
+
     order.items = items;
     order.source = source;
     order.deliveryman = deliveryman;
@@ -142,7 +157,7 @@ class OrderController {
   async delete(request: Request, response: Response) {
     const { id } = request.params;
 
-    const order = await Order.deleteOne({ _id: id });
+    await Order.deleteOne({ _id: id });
     return response.status(200).send();
   }
 }

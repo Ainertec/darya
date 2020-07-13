@@ -41,11 +41,12 @@ export interface OrderInterface extends Document {
   address: AddressOrderInterface;
   deliveryman: DeliverymanInterface;
   items: ItemsInterface[];
-  total?: number;
+  total: number;
   finished?: boolean;
   source: string;
   note?: string;
   payment?: string;
+  createdAt?: Date;
 }
 export interface ClientOrderInterface {
   client_id: Types.ObjectId;
