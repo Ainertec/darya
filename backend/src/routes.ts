@@ -6,6 +6,7 @@ import DistrictController from './app/controllers/DistrictController';
 import ClientController from './app/controllers/ClientController';
 import OrderController from './app/controllers/OrderController';
 import ReportController from './app/controllers/ReportController';
+import PrinterController from './app/controllers/PrinterController';
 
 const routes = express.Router();
 // Products
@@ -52,4 +53,6 @@ routes.delete('/orders/:id', OrderController.delete);
 routes.get('/reports/deliveryman/rate', ReportController.deliverymanPayment);
 routes.get('/reports/orders/profit', ReportController.ordersProfit);
 
+// Printer
+routes.post('/printers', PrinterController.store);
 export default routes;
