@@ -19,6 +19,7 @@ class DeliverymanController {
 
     return response.json(deliveryman);
   }
+
   async showByDelivery(request: Request, response: Response) {
     const deliveryman = await Deliveryman.find({
       working_day: true,

@@ -50,6 +50,20 @@ export interface OrderInterface extends Document {
   createdAt?: Date;
 }
 
+export interface OrderInterfaceDeliveryman extends Document {
+  deliveryman: DeliverymanInterface;
+  identification: string;
+  client: ClientOrderInterface;
+  address: AddressOrderInterface;
+  items: ItemsInterface[];
+  total: number;
+  finished?: boolean;
+  source: string;
+  note?: string;
+  payment?: string;
+  createdAt?: Date;
+}
+
 export interface ClientOrderInterface {
   client_id: Types.ObjectId;
   name: string;

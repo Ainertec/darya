@@ -302,9 +302,11 @@ describe('should a Client', () => {
     expect(response.status).toBe(200);
 
     expect(response.body).toEqual(
-      expect.objectContaining({
-        identification: '123123',
-      })
+      expect.arrayContaining([
+        expect.objectContaining({
+          identification: '123123',
+        }),
+      ])
     );
   });
 });
