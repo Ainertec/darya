@@ -7,6 +7,7 @@ import ClientController from './app/controllers/ClientController';
 import OrderController from './app/controllers/OrderController';
 import ReportController from './app/controllers/ReportController';
 import PrinterController from './app/controllers/PrinterController';
+import SerialController from './app/controllers/SerialController';
 
 const routes = express.Router();
 // Products
@@ -52,7 +53,13 @@ routes.delete('/orders/:id', OrderController.delete);
 
 routes.get('/reports/deliveryman/rate', ReportController.deliverymanPayment);
 routes.get('/reports/orders/profit', ReportController.ordersProfit);
+routes.get('/reports/products/dispense_gain', ReportController.productsDispenseAndGain);
+routes.get('/reports/products/amount', ReportController.productsAmount);
+routes.delete('/reports', ReportController.delete);
 
 // Printer
 routes.post('/printers', PrinterController.store);
+
+// Serial
+routes.get('/serial_false', SerialController.exit);
 export default routes;

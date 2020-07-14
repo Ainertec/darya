@@ -1,18 +1,11 @@
 import request from 'supertest';
+import { sub } from 'date-fns';
 import { closeConnection, openConnection } from '../utils/connection';
-// import Client from '../../src/app/models/Client';
 import Order from '../../src/app/models/Order';
-import Deliveryman from '../../src/app/models/Deliveryman';
 import app from '../../src/app';
 import factory from '../factories';
 
-import {
-  OrderInterface,
-  DistrictInterface,
-  ClientInterface,
-  DeliverymanInterface,
-  ProductInterface,
-} from '../../src/interfaces/base';
+import { OrderInterface, DeliverymanInterface, ProductInterface } from '../../src/interfaces/base';
 
 describe('should a Client', () => {
   beforeAll(() => {
@@ -22,7 +15,6 @@ describe('should a Client', () => {
     closeConnection();
   });
   beforeEach(async () => {
-    // await Deliveryman.deleteMany({});
     await Order.deleteMany({});
   });
 
@@ -78,5 +70,117 @@ describe('should a Client', () => {
       })
     );
     expect(response.body).toHaveProperty('netValue');
+  });
+
+  it('should list dispense and gain of all products', async () => {
+    const product = await factory.create<ProductInterface>('Product', { cost: 10, stock: 6 });
+    const product1 = await factory.create<ProductInterface>('Product', { stock: undefined });
+    const product2 = await factory.create<ProductInterface>('Product');
+    const product3 = await factory.create<ProductInterface>('Product');
+    await factory.createMany('Order', 2, {
+      items: [
+        {
+          product: product._id,
+          quantity: 3,
+        },
+        {
+          product: product1._id,
+          quantity: 2,
+        },
+      ],
+    });
+    await factory.createMany('Order', 2, {
+      items: [
+        {
+          product: product2._id,
+          quantity: 4,
+        },
+      ],
+    });
+    await factory.createMany('Order', 2, {
+      items: [
+        {
+          product: product3._id,
+          quantity: 3,
+        },
+        {
+          product: product1._id,
+          quantity: 2,
+        },
+      ],
+    });
+
+    const response = await request(app).get('/reports/products/dispense_gain');
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          dispense: 60,
+        }),
+      ])
+    );
+  });
+
+  it('should list an amount of all products', async () => {
+    const product = await factory.create<ProductInterface>('Product', { cost: 10, stock: 6 });
+    const product1 = await factory.create<ProductInterface>('Product', { stock: undefined });
+    const product2 = await factory.create<ProductInterface>('Product');
+    const product3 = await factory.create<ProductInterface>('Product');
+    await factory.createMany('Order', 2, {
+      items: [
+        {
+          product: product._id,
+          quantity: 3,
+        },
+        {
+          product: product1._id,
+          quantity: 2,
+        },
+      ],
+    });
+    await factory.createMany('Order', 2, {
+      items: [
+        {
+          product: product2._id,
+          quantity: 4,
+        },
+      ],
+    });
+    await factory.createMany('Order', 2, {
+      items: [
+        {
+          product: product3._id,
+          quantity: 3,
+        },
+        {
+          product: product1._id,
+          quantity: 2,
+        },
+      ],
+    });
+
+    const response = await request(app).get('/reports/products/amount');
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          amount: 8,
+        }),
+      ])
+    );
+  });
+
+  it('should delete finished order with more than 2 years', async () => {
+    await factory.createMany('Order', 3, {
+      createdAt: sub(new Date(), { years: 2 }),
+      finished: true,
+    });
+    await factory.create('Order');
+
+    const response = await request(app).delete('/reports');
+
+    const sales = await Order.find().countDocuments();
+    expect(response.status).toBe(200);
+    expect(sales).toBe(1);
   });
 });

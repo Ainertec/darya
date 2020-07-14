@@ -1,7 +1,14 @@
 import { Request, Response } from 'express';
 import { Types } from 'mongoose';
-import { startOfHour, endOfHour } from 'date-fns';
+import { startOfHour, endOfHour, sub } from 'date-fns';
 import Order from '../models/Order';
+import { ProductInterface } from '../../interfaces/base';
+
+interface InterfaceDispenseAndGain {
+  _id: ProductInterface;
+  dispense: number;
+  gain: number;
+}
 
 class ReportController {
   async deliverymanPayment(request: Request, response: Response) {
@@ -51,6 +58,73 @@ class ReportController {
     const filteredTotal = totalOrders - (totalProducts + totalRate);
 
     return response.json({ orders: ordersProfit, total: totalOrders, netValue: filteredTotal });
+  }
+
+  async productsDispenseAndGain(request: Request, response: Response) {
+    const orders = await Order.aggregate<InterfaceDispenseAndGain>()
+      .unwind('items')
+      .lookup({
+        from: 'products',
+        localField: 'items.product',
+        foreignField: '_id',
+        as: 'products',
+      })
+      .unwind('products')
+      .group({
+        _id: {
+          id: '$products._id',
+          name: '$products.name',
+          description: '$products.description',
+          price: '$products.price',
+          cost: '$products.cost',
+          stock: '$products.stock',
+        },
+        gain: { $sum: { $multiply: ['$products.price', '$items.quantity'] } },
+      });
+
+    const productDispenseAndGain = orders.map((order) => {
+      return {
+        ...order,
+        dispense: order._id.cost * (order._id.stock ? order._id.stock : 0),
+      };
+    });
+    return response.json(productDispenseAndGain);
+  }
+
+  async productsAmount(request: Request, response: Response) {
+    const productsAmount = await Order.aggregate()
+      .unwind('items')
+      .lookup({
+        from: 'products',
+        localField: 'items.product',
+        foreignField: '_id',
+        as: 'products',
+      })
+      .unwind('products')
+      .group({
+        _id: {
+          id: '$products._id',
+          name: '$products.name',
+          description: '$products.description',
+          price: '$products.price',
+          cost: '$products.cost',
+          stock: '$products.stock',
+        },
+        amount: { $sum: '$items.quantity' },
+      });
+
+    return response.json(productsAmount);
+  }
+
+  public async delete(req: Request, res: Response) {
+    const date = sub(new Date(), { years: 2 });
+
+    await Order.deleteMany({
+      createdAt: { $lte: date },
+      finished: true,
+    });
+
+    return res.status(200).send();
   }
 }
 

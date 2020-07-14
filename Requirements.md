@@ -18,8 +18,8 @@ D* Efetuar venda - contém o cliente e os produtos ok
 D* Calcular valor total do pedido com taxa ok
 D* Emitir relatório diário - lucro total, detalhes das vendas ok total liquido ok
 
-* relatório de total gasto com produtos e total ganho com produtos
-* relatório produtos mais vendidos em quantidade
+D* relatório de total gasto com produtos e total ganho com produtos
+D* relatório produtos mais vendidos em quantidade
 D* Emitir comanda 
 D* Segunda via de comanda
 

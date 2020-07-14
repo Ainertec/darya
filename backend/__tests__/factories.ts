@@ -19,6 +19,7 @@ factory.define('Product', Product, {
   name: faker.commerce.productName(),
   price: faker.commerce.price(),
   cost: faker.commerce.price(),
+  stock: faker.random.number(100),
   description: faker.commerce.productAdjective(),
 });
 
