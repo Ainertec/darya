@@ -62,17 +62,21 @@ describe('should a Client', () => {
   });
 
   it('should list a total profit of the day orders', async () => {
-    await factory.createMany<OrderInterface>('Order', 5, {
-      total: 30,
+    const product = await factory.create<ProductInterface>('Product', {
+      cost: 10,
+    });
+    await factory.createMany('Order', 5, {
+      total: 200,
+      items: [{ product: product._id, quantity: 1 }],
     });
 
     const response = await request(app).get('/reports/orders/profit');
-
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({
-        total: 150,
+        total: 1000,
       })
     );
+    expect(response.body).toHaveProperty('netValue');
   });
 });

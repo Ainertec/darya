@@ -21,8 +21,8 @@ D* listar motoboys disponíveis dia de trabalho e fora de entrega ok
 <!-- * Selecionar motoboys por dia -->
 D* Crud de produtos,  preço de custo ok
 D* Efetuar venda - contém o cliente e os produtos ok
-D* Calcular valor total do pedido com taxa
-* Emitir relatório diário - lucro total, detalhes das vendas ok total liquido
+D* Calcular valor total do pedido com taxa ok
+D* Emitir relatório diário - lucro total, detalhes das vendas ok total liquido ok
 * Emitir comanda 
 * Segunda via de comanda
 
@@ -46,7 +46,7 @@ D* Ao concluir a venda o motoboy vai para o estado "Livre" ok
 
 D* O pedido deve ter origem “pedido do iFood” “ pedido WhatsApp “, “ pronta entrega “, “ pedido do Instagram “. ok
 
-###### * Apagar o pedido ao emitir o relátorio, relatorio baseado em data. delete de 2 anos
+###### * Apagar o pedido ao emitir o relatório, relatório baseado em data. delete de 2 anos
 
 ### Venda Ifood
 

@@ -20,17 +20,10 @@ class ReportController {
         rate: { $sum: '$address.district_rate' },
       });
 
-    // const delivaryman = await Deliveryman.findOne({ _id: deliveryman_id });
-    // console.log(deliveryRate, delivaryman);
     return response.json(deliveryRate);
   }
 
   async ordersProfit(request: Request, response: Response) {
-    // {
-    //   total:
-    //   order:[],
-    //   totalLiquido:
-    // }
     const initial = startOfHour(new Date());
     const final = endOfHour(new Date());
 
@@ -41,7 +34,23 @@ class ReportController {
     const totalOrders = ordersProfit.reduce((sum, order) => {
       return sum + order.total;
     }, 0);
-    return response.json({ orders: ordersProfit, total: totalOrders });
+
+    const totalRate = ordersProfit.reduce((sum, order) => {
+      return sum + order.address.district_rate;
+    }, 0);
+
+    const totalProducts = ordersProfit.reduce((sum, order) => {
+      return (
+        sum +
+        order.items.reduce((sum, item) => {
+          return sum + item.product.cost * item.quantity;
+        }, 0)
+      );
+    }, 0);
+
+    const filteredTotal = totalOrders - (totalProducts + totalRate);
+
+    return response.json({ orders: ordersProfit, total: totalOrders, netValue: filteredTotal });
   }
 }
 
