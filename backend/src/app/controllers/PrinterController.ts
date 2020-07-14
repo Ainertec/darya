@@ -6,7 +6,7 @@ import jsRTF from 'jsrtf';
 import { format } from 'date-fns';
 import { exec } from 'shelljs';
 
-import { ItemsInterface } from '../../interfaces/base';
+import { ItemsInterface, OrderInterfaceDeliveryman } from '../../interfaces/base';
 
 class PrinterController {
   public constructor() {
@@ -16,7 +16,7 @@ class PrinterController {
   private printProducts(items: ItemsInterface[]) {
     let products = '';
     items.map((item) => {
-      products += `* Produto: ${item.product.name}\n - Quantidade: ${item.quantity}`;
+      products += `* ${item.product.name} Qtd.: ${item.quantity}`;
     });
 
     return products;
@@ -25,12 +25,13 @@ class PrinterController {
   async store(request: Request, response: Response) {
     const { id } = request.body;
 
-    const order = await Order.findOne({ _id: id })
+    const order = ((await Order.findOne({ _id: id })
       .populate('items.product')
-      .populate('deliveryman');
+      .populate('deliveryman')) as unknown) as OrderInterfaceDeliveryman;
     if (!order) return response.status(400).json('Order does not exist');
 
     const date = order.createdAt && format(order.createdAt, 'dd/MM/yyyy HH:mm:ss');
+
     const myDoc = new jsRTF({
       language: jsRTF.Language.BR,
       pageWidth: jsRTF.Utils.mm2twips(58),
@@ -41,17 +42,17 @@ class PrinterController {
     const contentStyle = new jsRTF.Format({
       spaceBefore: 20,
       spaceAfter: 20,
-      // align: 'center',
       fontSize: 8,
-      //paragraph: true,
+      paragraph: true,
     });
     const contentBorder = new jsRTF.Format({
-      spaceBefore: 100,
-      spaceAfter: 100,
+      spaceBefore: 80,
+      spaceAfter: 80,
       fontSize: 8,
+      // paragraph: true,
       align: 'center',
       paragraph: true,
-      borderBottom: { type: 'single', width: 10 },
+      // borderBottom: { type: 'single', width: 10 },
     });
     const header = new jsRTF.Format({
       spaceBefore: 20,
@@ -62,15 +63,29 @@ class PrinterController {
       align: 'center',
       borderTop: { size: 2, spacing: 100, color: jsRTF.Colors.GREEN },
     });
+
     const items = this.printProducts(order.items);
+
     myDoc.writeText('', contentBorder);
-    myDoc.writeText('>>>>>>>>> Comanda <<<<<<<<<<', header);
-    myDoc.writeText(`Número: ${order.identification}`, header);
-    myDoc.writeText('=========== Itens ============', header);
-    myDoc.writeText(`${items}\n`, contentStyle);
-    myDoc.writeText('========== Observação =========', header);
-    myDoc.writeText(`- ${order.note}\n`, contentStyle);
+    myDoc.writeText('>>>>>>>>> Pedido <<<<<<<<<<', header);
+    myDoc.writeText(`Código: ${order.identification}`, header);
     myDoc.writeText(`Data: ${date}`, contentStyle);
+    myDoc.writeText('=========== Cliente ============', contentBorder);
+    myDoc.writeText(`Nome: ${order.client.name}`, contentStyle);
+    myDoc.writeText(`Telefone: ${order.client.phone}`, contentStyle);
+    myDoc.writeText('========== Endereço ===========', contentBorder);
+    myDoc.writeText(`Rua: ${order.address.street}`, contentStyle);
+    myDoc.writeText(`Número: ${order.address.number}`, contentStyle);
+    myDoc.writeText(`Bairro: ${order.address.district_name}`, contentStyle);
+    myDoc.writeText(`Referência: ${order.address.reference}`, contentStyle);
+    myDoc.writeText('=========== Itens ============', contentBorder);
+    myDoc.writeText(`${items}`, contentStyle);
+    myDoc.writeText('========== Motoboy ===========', contentBorder);
+    myDoc.writeText(`Nome: ${order.deliveryman.name}`, contentStyle);
+    myDoc.writeText(`Telefone: ${order.deliveryman.phone}`, contentStyle);
+    myDoc.writeText(`Taxa: ${order.address.district_rate}`, contentStyle);
+    myDoc.writeText('========== Observação =========', contentBorder);
+    myDoc.writeText(`- ${order.note}`, contentStyle);
 
     const content = myDoc.createDocument();
 

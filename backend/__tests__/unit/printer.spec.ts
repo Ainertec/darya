@@ -1,19 +1,12 @@
 import request from 'supertest';
 import { closeConnection, openConnection } from '../utils/connection';
-import Client from '../../src/app/models/Client';
+import path from 'path';
+import fs from 'fs';
 import Order from '../../src/app/models/Order';
-import Deliveryman from '../../src/app/models/Deliveryman';
 import app from '../../src/app';
 import factory from '../factories';
 
-import {
-  OrderInterface,
-  DistrictInterface,
-  ClientInterface,
-  DeliverymanInterface,
-  ProductInterface,
-} from '../../src/interfaces/base';
-import { response } from 'express';
+import { OrderInterface } from '../../src/interfaces/base';
 
 describe('Teste a printer', () => {
   beforeAll(() => {
@@ -32,7 +25,9 @@ describe('Teste a printer', () => {
     const response = await request(app).post('/printers').send({
       id: order.id,
     });
-
     expect(response.status).toBe(200);
+    setTimeout(async () => {
+      await fs.unlinkSync(path.resolve(__dirname, '..', 'recipes', `${order._id}.rtf`));
+    }, 1000);
   });
 });
