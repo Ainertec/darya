@@ -17,24 +17,24 @@ describe('should test', () => {
     await Product.deleteMany({});
   });
 
-  it('sould create a product', async () => {
+  it('should create a product', async () => {
     const response = await request(app).post('/products').send({
       name: 'roquinha',
       price: 4.5,
-      cust: 3.0,
+      cost: 3.0,
       description: 'como que é o nome daquele negocio?',
     });
 
     expect(response.status).toBe(200);
   });
 
-  it('sould update a product', async () => {
+  it('should update a product', async () => {
     const product = await factory.create<ProductInterface>('Product');
 
     const response = await request(app).put(`/products/${product._id}`).send({
       name: 'roquinha',
       price: product.price,
-      cust: product.cust,
+      cost: product.cost,
       description: product.description,
     });
 
@@ -46,7 +46,7 @@ describe('should test', () => {
     );
   });
 
-  it('shoud delete a product', async () => {
+  it('should delete a product', async () => {
     const product = await factory.create<ProductInterface>('Product');
 
     const response = await request(app).delete(`/products/${product._id}`);

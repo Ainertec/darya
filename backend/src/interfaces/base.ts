@@ -4,7 +4,7 @@ export interface ProductInterface extends Document {
   name: string;
   price: number;
   description?: string;
-  cust: number;
+  cost: number;
   stock?: number;
 }
 
@@ -33,7 +33,7 @@ export interface ClientInterface extends Document {
 }
 export interface ItemsInterface extends Document {
   product: ProductInterface;
-  quantity: Number;
+  quantity: number;
 }
 
 export interface OrderInterface extends Document {

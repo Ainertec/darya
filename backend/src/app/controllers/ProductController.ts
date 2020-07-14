@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import Product from '../models/Product';
 
-class ProductControler {
+class ProductController {
   async index(request: Request, response: Response) {
     const products = await Product.find({});
 
@@ -14,18 +14,18 @@ class ProductControler {
     return response.json(products);
   }
   async store(request: Request, response: Response) {
-    const { name, price, cust, description } = request.body;
+    const { name, price, cost, description } = request.body;
     const product = await Product.create({
       name,
       price,
-      cust,
+      cost,
       description,
     });
 
     return response.json(product);
   }
   async update(request: Request, response: Response) {
-    const { name, price, cust, description } = request.body;
+    const { name, price, cost, description } = request.body;
     const { id } = request.params;
 
     const product = await Product.findOneAndUpdate(
@@ -34,7 +34,7 @@ class ProductControler {
         name,
         price,
         description,
-        cust,
+        cost,
       },
       { new: true }
     );
@@ -50,4 +50,4 @@ class ProductControler {
   }
 }
 
-export default new ProductControler();
+export default new ProductController();

@@ -18,21 +18,23 @@ const clientFactory = async () => {
 factory.define('Product', Product, {
   name: faker.commerce.productName(),
   price: faker.commerce.price(),
-  cust: faker.commerce.price(),
+  cost: faker.commerce.price(),
   description: faker.commerce.productAdjective(),
 });
 
 factory.define('Deliveryman', Deliveryman, {
   name: faker.name.findName(),
-  avaliable: faker.random.boolean(),
+  available: faker.random.boolean(),
   working_day: faker.random.boolean(),
   phone: faker.phone.phoneNumber(),
 });
+
 factory.define('District', District, {
   name: faker.address.streetName(),
   city: faker.address.city(),
   rate: faker.random.number(100),
 });
+
 factory.define('Client', Client, {
   name: faker.name.findName(),
   address: [
