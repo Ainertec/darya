@@ -13,6 +13,7 @@ import {
   DeliverymanInterface,
   ProductInterface,
 } from '../../src/interfaces/base';
+import { response } from 'express';
 
 describe('should a Client', () => {
   beforeAll(() => {
@@ -30,7 +31,7 @@ describe('should a Client', () => {
   it('should create an order', async () => {
     const client = await factory.create<ClientInterface>('Client');
     const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman');
-    const products = await factory.create<ProductInterface>('Product');
+    const products = await factory.create<ProductInterface>('Product', { price: 10 });
 
     const response = await request(app)
       .post('/orders')
@@ -47,7 +48,7 @@ describe('should a Client', () => {
         source: 'Ifood',
       });
     // console.log(response.body);
-
+    expect(response.body).toHaveProperty('total');
     expect(response.status).toBe(200);
   });
 
@@ -109,6 +110,7 @@ describe('should a Client', () => {
     // const client = await factory.create<ClientInterface>('Client');
     const product = await factory.create<ProductInterface>('Product', {
       name: 'Chocolate',
+      price: 10,
     });
 
     const response = await request(app)
@@ -119,7 +121,6 @@ describe('should a Client', () => {
         deliveryman: order.deliveryman,
         client_address_id: order.address.client_address_id,
         note: 'Brabo',
-        total: 100,
         source: 'Whatsapp',
         items: [
           {
@@ -129,6 +130,7 @@ describe('should a Client', () => {
         ],
       });
     // console.log(response.body);
+    expect(response.body).toHaveProperty('total');
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({
@@ -142,11 +144,9 @@ describe('should a Client', () => {
   it('should finish a order', async () => {
     const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman');
     const order = await factory.create<OrderInterface>('Order', { deliveryman: deliveryman._id });
-    console.log('teste', order.deliveryman);
     const response = await request(app).put(`/orders/${order._id}`).send({
       finished: true,
     });
-    console.log(response.body);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({
@@ -199,24 +199,22 @@ describe('should a Client', () => {
       name: 'Chocolate',
     });
 
-    const response = await request(app)
-      .put(`/orders/${order._id}`)
-      .send({
-        identification: '1234567',
-        client_id: client._id,
-        deliveryman: order.deliveryman,
-        client_address_id: client.address[0]._id,
-        note: 'Brabo',
-        total: 100,
-        source: 'Whatsapp',
-        items: [
-          {
-            product: product._id,
-            quantity: 12,
-          },
-        ],
-      });
-
+    const response = await request(app).put(`/orders/${order._id}`).send({
+      identification: '1234567',
+      client_id: client._id,
+      deliveryman: order.deliveryman,
+      client_address_id: client.address[0]._id,
+      note: 'Brabo',
+      total: 100,
+      source: 'Whatsapp',
+      // items: [
+      //   {
+      //     product: product._id,
+      //     quantity: 12,
+      //   },
+      // ],
+    });
+    // console.log(response.body);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({

@@ -5,12 +5,26 @@ import Order, { Source } from '../models/Order';
 import Client from '../models/Client';
 import District from '../models/District';
 import Deliveryman from '../models/Deliveryman';
-import { OrderInterface } from '../../interfaces/base';
+import { OrderInterface, ItemsInterface } from '../../interfaces/base';
+import Product from '../models/Product';
 
 class OrderController {
   public constructor() {
     this.store = this.store.bind(this);
     this.update = this.update.bind(this);
+  }
+  private async getTotal(items: ItemsInterface[], rate: number) {
+    let totalProducts = 0;
+    await Promise.all(
+      items.map(async (item) => {
+        const product = await Product.findOne({ _id: item.product });
+        if (product) {
+          totalProducts += product.price * item.quantity;
+        }
+      })
+    );
+
+    return totalProducts + rate;
   }
 
   private async addOrUpdateAddress(
@@ -106,7 +120,7 @@ class OrderController {
 
     const identification =
       crypto.randomBytes(4).toString('hex') + client.phone[0].slice(client.phone[0].length - 2);
-
+    const total = await this.getTotal(items, district.rate);
     const order = await Order.create({
       identification,
       client: {
@@ -128,7 +142,7 @@ class OrderController {
       source,
       note,
       payment,
-      total: 20,
+      total: total,
     });
 
     await order.populate('deliveryman').populate('items.product').execPopulate();
@@ -163,7 +177,10 @@ class OrderController {
     if (!order) return response.status(400).json('Order does not exist');
 
     if (identification) order.identification = identification;
-    if (items) order.items = items;
+    if (items) {
+      order.items = items;
+      order.total = await this.getTotal(items, order.address.district_rate);
+    }
     if (source) order.source = source;
     if (deliveryman) order.deliveryman = deliveryman;
 
@@ -191,6 +208,7 @@ class OrderController {
       String(order.address.client_address_id) !== String(client_address_id)
     ) {
       const error = await this.addOrUpdateAddress(order, client_id, client_address_id);
+      order.total = await this.getTotal(order.items, order.address.district_rate);
       if (error) {
         return response.status(400).json(error);
       }
