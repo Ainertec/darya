@@ -273,7 +273,6 @@ describe('should a Client', () => {
         deliveryman: order.deliveryman,
         client_address_id: order.address.client_address_id,
         note: 'Brabo',
-        total: 100,
         payment: 'Dinheiro',
         source: 'Whatsapp',
         items: [
@@ -284,7 +283,6 @@ describe('should a Client', () => {
         ],
       });
     const deliverymanUpdated = await Deliveryman.findOne({ _id: delivaryman._id });
-
     expect(response.status).toBe(200);
     expect(deliverymanUpdated?.available).toBe(false);
   });
@@ -303,14 +301,7 @@ describe('should a Client', () => {
       deliveryman: order.deliveryman,
       client_address_id: client.address[0]._id,
       note: 'Brabo',
-      total: 100,
       source: 'Whatsapp',
-      // items: [
-      //   {
-      //     product: product._id,
-      //     quantity: 12,
-      //   },
-      // ],
     });
     // console.log(response.body);
     expect(response.status).toBe(200);

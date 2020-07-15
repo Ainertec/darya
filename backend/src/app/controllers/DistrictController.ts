@@ -10,6 +10,7 @@ class DistrictController {
 
   async show(request: Request, response: Response) {
     const { name } = request.params;
+
     const districts = await District.find({ name: { $regex: new RegExp(name), $options: 'i' } });
 
     return response.json(districts);
