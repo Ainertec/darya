@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link href="../fontawesome-free/css/all.css" rel="stylesheet">
+  <link rel="stylesheet" href="./../bootstrap/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <title>Gresp Pro</title>
+  <link rel="stylesheet" type="text/css" href="../bootstrap/css/escopo-css-pagina.css">
+</head>
+
+<body>
+
+  <nav class="navbar navCor"
+    style="padding-top: 0px; padding-right: 2px; border-radius: 20px; margin: 5px; box-shadow: 3px 3px 3px rgba(0,0,0,0.5);">
+    <img src="../img/logo.png" class="navbar-brand" style="width: 60px;" alt="...">
+    <div id="mensagemDeErro" class="justify-content-center"></div>
+  </nav>
+
+  <div id="janelaTotal" class="container">
+
+    <hr class="my-6 bg-dark">
+
+    <div class="row" style="box-shadow: 5px 5px 5px rgba(0,0,0,0.5);">
+
+      <section class="col-3 bg.bg-transparent" style="height: 530px;">
+        <h3 class="text-center">Acesso</h3>
+        <form class="text-center" style="margin-top:30px;">
+          <h1><span class="fas fa-user-circle"></span></h1>
+          <div class="form-row col-11 rounded mx-auto d-block">
+            <input id="senha" type="password" class="form-control mb-2" placeholder="Senha">
+            <button onclick="autenticacaoSerial();" type="button" class="btn btn-light border border-dark">
+              <span class="fas fa-key"></span> Acessar
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <main class="col-9">
+        <div class="col-11 layer1" style="position: absolute; height: 430px; z-index: 1; overflow: scroll;">
+          <div id="janela2" style="margin-top: 10px;">
+            <h6 style="color: brown;">Atenção seu acesso ao sistema foi bloqueado por um dos motivos abaixo:</h6>
+            <h6 style="color: brown;">* Seu relógio se encontra atrasado.</h6>
+            <h6 style="color: brown;">* Sua licença expirou.</h6>
+            <h6 style="color: brown;">Caso o problema persista contate o suporte técnico (22) 98153-3173 (whatsapp).
+            </h6>
+          </div>
+        </div>
+      </main>
+
+    </div>
+
+    <hr class="my-6 bg-dark">
+
+    <footer style="margin-top: 10px;">
+      <a class="nav-link text-dark disabled" href="#"><span class="fab fa-dev iconsTam rounded float-right">
+          Ainertec</span></a>
+    </footer>
+
+  </div>
+
+
+  <script src="./../axios/axios.js"></script>
+  <script src="./../bootstrap/js/jquery.min.js"></script>
+  <script src="./../bootstrap/js/qrcode.js"></script>
+  <script src="./../bootstrap/js/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+  <script src="./../bootstrap/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+    crossorigin="anonymous"></script>
+
+
+  <script src="./Serial.js"></script>
+
+</body>
+
+</html>

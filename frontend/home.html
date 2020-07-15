@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link href="fontawesome-free/css/all.css" rel="stylesheet">
+  <link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <title>Darya</title>
+  <link rel="stylesheet" type="text/css" href="./bootstrap/css/escopo-css-pagina.css">
+</head>
+
+<body>
+
+  <nav id="navbarTotal" class="navbar navCor"
+    style="padding-top: 0px; padding-bottom: 0px; padding-right: 2px; border-radius: 20px; margin: 5px; box-shadow: 3px 3px 3px rgba(0,0,0,0.5);">
+    <img src="img/logo.png" class="navbar-brand" style="width: 60px;" alt="...">
+    <div id="mensagemDeErro" class="justify-content-center"></div>
+    <ul class="nav justify-content-end">
+
+    </ul>
+  </nav>
+
+  <div id="janelaTotal" class="container-fluid">
+    <div id="modal"></div>
+    <div id="modal2"></div>
+    <div id="alert2"></div>
+
+    <div class="row">
+
+      <section class="col-12 bg.bg-transparent">
+        <div id="mensagemSubMenu"></div>
+        <ul id="submenu" class="list-group list-group-horizontal-sm">
+          <a onclick="subMenuPedido()" class="list-group-item list-group-item-action list-group-item-dark text-center"
+            href="#" style="border-radius: 20px; padding-top: 5px; padding-bottom: 5px;"><span
+              class="fas fa-shopping-basket"></span> Pedido</a>
+          <a onclick="telaDeBuscarCliente();"
+            class="list-group-item list-group-item-action list-group-item-dark text-center" href="#"
+            style="border-radius: 20px; padding-top: 5px; padding-bottom: 5px;"><span class="fas fa-user"></span>
+            Cliente</a>
+          <a onclick="telaDeBuscarMotoboyParaTrabalho();"
+            class="list-group-item list-group-item-action list-group-item-dark text-center" href="#"
+            style="border-radius: 20px; padding-top: 5px; padding-bottom: 5px;"><span class="fas fa-motorcycle"></span>
+            Motoboy</a>
+          <a onclick="telaDeRelatorio();"
+            class="list-group-item list-group-item-action list-group-item-dark text-center" href="#"
+            style="border-radius: 20px; padding-top: 5px; padding-bottom: 5px;"><span class="fas fa-chart-pie"></span>
+            Relatório</a>
+          <a onclick="telaDeBuscarProduto();"
+            class="list-group-item list-group-item-action list-group-item-dark text-center" href="#"
+            style="border-radius: 20px; padding-top: 5px; padding-bottom: 5px;"><span class="fas fa-hamburger"></span>
+            Produto</a>
+          <a onclick="telaDeBuscarEstoque();"
+            class="list-group-item list-group-item-action list-group-item-dark text-center" href="#"
+            style="border-radius: 20px; padding-top: 5px; padding-bottom: 5px;"><span class="fas fa-boxes"></span>
+            Estoque</a>
+          <a onclick="telaDeBuscarBairro();"
+            class="list-group-item list-group-item-action list-group-item-dark text-center" href="#"
+            style="border-radius: 20px; padding-top: 5px; padding-bottom: 5px;"><span
+              class="fas fa-map-marked-alt"></span>
+            Bairro</a>
+        </ul>
+      </section>
+
+      <main class="col-12" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px;">
+        <div class="col-12 layer1"
+          style="position: relative; height: 81vh; z-index: 1; overflow: scroll; margin-right: 0px;">
+          <div id="janela2" style="margin-top: 30px;">
+            <div class="row">
+              <div class="col">
+                <div style="background-color:#880016; border-radius: 60px;  width: 35vw;">
+                  <img src="img/logo.png" class="rounded mx-auto d-block" style="width: 50px; margin-top:33vh"></div>
+              </div>
+              <div class="col">
+                <h3 class="text-center" style="margin-top: 33vh;">Bem Vindo!</h3>
+              </div>
+              <div class="col">
+                <div style="background-color:#880016; border-radius: 60px; width: 35vw;">
+                  <img src="img/logo.png" class="rounded mx-auto d-block" style="width: 50px; margin-top:33vh"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+    </div>
+
+    <footer>
+      <a class="nav-link text-dark rounded float-right" href="serial/serial.html" style="padding: 0px;"><span
+          class="fab fa-dev iconsTam rounded float-right"> Ainertec</span></a>
+    </footer>
+
+
+  </div>
+
+
+  <script src="./axios/axios.js"></script>
+  <script src="./bootstrap/js/jquery.min.js"></script>
+  <script src="./bootstrap/js/qrcode.js"></script>
+  <script src="./bootstrap/js/popper.min.js" crossorigin="anonymous"></script>
+  <script src="./bootstrap/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+    crossorigin="anonymous"></script>
+  <script src="./bootstrap/js/instascan.min.js"></script>
+  <script src="./bootstrap/js/highchartsgrafico.js"></script>
+  <script src="./bootstrap/js/printThis.js"></script>
+  <script src="./bootstrap/js/socketio.js"></script>
+
+
+  <script src="./classes/Produto.js"></script>
+  <script src="./classes/Cliente.js"></script>
+  <script src="./classes/Bairro.js"></script>
+  <script src="./classes/Estoque.js"></script>
+  <script src="./classes/Motoboy.js"></script>
+  <script src="./classes/Pedido.js"></script>
+  <script src="./classes/Relatorio.js"></script>
+  <script src="./classes/Impressao.js"></script>
+  <script src="./classes/Funcionalidade.js"></script>
+  <script src="./classes/SubMenu.js"></script>
+
+</body>
+
+</html>
