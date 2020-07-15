@@ -6,7 +6,7 @@ class SerialController {
     if (Number(password) === 52164521655455362) {
       process.exit(0);
     } else {
-      return res.json({ alert: 'invalid acess!' });
+      return res.json({ alert: 'invalid access!' });
     }
   }
 }

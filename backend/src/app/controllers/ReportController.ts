@@ -50,7 +50,7 @@ class ReportController {
       return (
         sum +
         order.items.reduce((sum, item) => {
-          return sum + item.product.cost * item.quantity;
+          return sum + item.product?.cost * item.quantity;
         }, 0)
       );
     }, 0);
@@ -85,7 +85,7 @@ class ReportController {
     const productDispenseAndGain = orders.map((order) => {
       return {
         ...order,
-        dispense: order._id.cost * (order._id.stock ? order._id.stock : 0),
+        dispense: order._id?.cost * (order._id.stock ? order._id.stock : 0),
       };
     });
     return response.json(productDispenseAndGain);

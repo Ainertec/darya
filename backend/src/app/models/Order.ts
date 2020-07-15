@@ -50,11 +50,11 @@ const AddressSchema = new Schema({
   },
   number: {
     type: Number,
-    required: true,
+    // required: true,
   },
   reference: {
     type: String,
-    required: true,
+    // required: true,
   },
 });
 
