@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, response } from 'express';
 import Product from '../models/Product';
 
 class ProductController {
@@ -14,18 +14,19 @@ class ProductController {
     return response.json(products);
   }
   async store(request: Request, response: Response) {
-    const { name, price, cost, description } = request.body;
+    const { name, price, cost, description, stock } = request.body;
     const product = await Product.create({
       name,
       price,
       cost,
       description,
+      stock,
     });
 
     return response.json(product);
   }
   async update(request: Request, response: Response) {
-    const { name, price, cost, description } = request.body;
+    const { name, price, cost, description, stock } = request.body;
     const { id } = request.params;
 
     const product = await Product.findOneAndUpdate(
@@ -38,6 +39,10 @@ class ProductController {
       },
       { new: true }
     );
+    if (!product) return response.status(400).json('product not found');
+    if (stock) product.stock = stock;
+
+    await product.save();
 
     return response.json(product);
   }

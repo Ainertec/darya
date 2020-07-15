@@ -10,7 +10,7 @@ export interface ProductInterface extends Document {
 
 export interface DeliverymanInterface extends Document {
   name: string;
-  working_day: boolean;
+  working_day?: boolean;
   available?: boolean;
   hasDelivery?: boolean;
   phone: string;

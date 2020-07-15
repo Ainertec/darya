@@ -13,6 +13,7 @@ class OrderController {
     this.store = this.store.bind(this);
     this.update = this.update.bind(this);
   }
+
   private async getTotal(items: ItemsInterface[], rate: number) {
     let totalProducts = 0;
     await Promise.all(
@@ -115,7 +116,7 @@ class OrderController {
     if (!client) return response.status(400).json('That client does not exist');
     const address = client.address.find((add) => add._id == client_address_id);
     if (!address) return response.status(400).json('That address does not exist');
-    const district = await District.findOne({ _id: address?.district });
+    const district = await District.findOne({ _id: address.district });
     if (!district) return response.status(400).json('That district does not exist');
 
     const identification =
@@ -207,7 +208,7 @@ class OrderController {
       client_address_id &&
       String(order.address.client_address_id) !== String(client_address_id)
     ) {
-      const error = await this.addOrUpdateAddress(order, client_id, client_address_id);
+      const error = await this.addOrUpdateAddress(order, order.client.client_id, client_address_id);
       order.total = await this.getTotal(order.items, order.address.district_rate);
       if (error) {
         return response.status(400).json(error);

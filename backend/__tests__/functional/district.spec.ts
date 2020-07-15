@@ -36,6 +36,8 @@ describe('should test', () => {
       city: district.city,
       rate: 10,
     });
+
+    // console.log(response.body);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({
@@ -87,7 +89,7 @@ describe('should test', () => {
       name: 'São Pedro',
     });
 
-    const response = await request(app).get(`/districts/sa`);
+    const response = await request(app).get(`/districts/s`);
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual(

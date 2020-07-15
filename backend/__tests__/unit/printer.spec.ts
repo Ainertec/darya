@@ -30,4 +30,13 @@ describe('Teste a printer', () => {
       await fs.unlinkSync(path.resolve(__dirname, '..', 'recipes', `${order._id}.rtf`));
     }, 1000);
   });
+
+  it('Should not print a recipe with invalid order', async () => {
+    const order = await factory.create<OrderInterface>('Order');
+
+    const response = await request(app).post('/printers').send({
+      id: '5f05febbd43fb02cb0b83d64',
+    });
+    expect(response.status).toBe(400);
+  });
 });
