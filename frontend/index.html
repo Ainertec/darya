@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link href="fontawesome-free/css/all.css" rel="stylesheet">
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <title>Inno Gresp</title>
+  <style>
+    body {
+      background-color: #880016;
+    }
+
+    .iconsTam {
+      font-size: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+
+    <img src="img/logo.png" class="rounded mx-auto d-block" style="width: 100px; margin-top: 35vh;" alt="...">
+    <img src="./img/loading.gif" class="rounded mx-auto d-block" style="height: 40px; width: 40px; margin-top: 20px;">
+    <div id="mensagemDeErro" style="margin-top:50px;" class="text-center"></div>
+
+  </div>
+
+
+  <script src="bootstrap/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+    crossorigin="anonymous"></script>
+
+
+  <script src="./axios/axios.js"></script>
+  <script src="./serial/Serial.js"></script>
+  <script src="./classes/Requisicao.js"></script>
+  <script>
+    function mensagemDeErro(msg) {
+      document.getElementById('mensagemDeErro').innerHTML = '<span class="badge badge-danger h5">' + msg + '</span>'
+    };
+  </script>
+  <script>
+    setTimeout(function () { window.location.href = "home.html"; }, 3000);
+    /*if (verificarValidadeSerial()) {
+      setTimeout(function () { window.location.href = "home.html"; }, 3000);
+    } else {
+      setTimeout(async function () {
+        await requisicaoGET("serial_false/?password=" + 52164521655455362);
+        window.location.href = "serial/serial.html";
+      }, 3000);
+    }*/
+  </script>
+
+
+</body>
+
+</html>
