@@ -95,7 +95,7 @@ class PrinterController {
       process.env.NODE_ENV === 'test'
         ? path.resolve(__dirname, '..', '..', '..', '__tests__', 'recipes')
         : process.env.DIR_PRODUCTION;
-
+    console.log('dir production', process.env.DIR_PRODUCTION);
     await fs.writeFile(`${dir}/${id}.rtf`, buffer, { encoding: 'utf-8', flag: 'w' }, (err) => {
       if (err) return response.status(400).json(`${err}`);
     });

@@ -3,6 +3,10 @@
 
 ### Requisitos funcionais
 
+##### validação para cliente com mesmo nome
+##### array de telefone para motoboy
+
+
 D* Crud de cliente ok
 D* Crud de motoboy ok
 D* Crude de bairro ok

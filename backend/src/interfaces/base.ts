@@ -71,8 +71,8 @@ export interface ClientOrderInterface {
 }
 export interface AddressOrderInterface {
   street: string;
-  reference: string;
-  number: number;
+  reference?: string;
+  number?: number;
   district_rate: number;
   district_name: string;
   district_id: Types.ObjectId;

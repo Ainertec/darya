@@ -60,9 +60,9 @@ class ClientController {
   async delete(request: Request, response: Response) {
     const { id } = request.params;
 
-    const client = await Client.deleteOne({ _id: id });
+    await Client.deleteOne({ _id: id });
 
-    return response.json(client);
+    return response.status(200).send();
   }
 }
 
