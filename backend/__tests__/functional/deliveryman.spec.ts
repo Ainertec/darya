@@ -180,6 +180,7 @@ describe('should test', () => {
       ])
     );
   });
+
   it('should list a deliveryman by available', async () => {
     const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman', {
       working_day: true,

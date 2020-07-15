@@ -13,7 +13,6 @@ import {
   DeliverymanInterface,
   ProductInterface,
 } from '../../src/interfaces/base';
-import { response } from 'express';
 
 describe('should a Client', () => {
   beforeAll(() => {
@@ -105,6 +104,75 @@ describe('should a Client', () => {
     expect(response.status).toBe(400);
   });
 
+  it('should not create an order with invalid client_address_id', async () => {
+    const client = await factory.create<ClientInterface>('Client');
+    const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman');
+    const products = await factory.create<ProductInterface>('Product');
+
+    const response = await request(app)
+      .post('/orders')
+      .send({
+        client_id: client._id,
+        deliveryman: deliveryman._id,
+        client_address_id: '5f05febbd43fb02cb0b83d64',
+        items: [
+          {
+            product: products._id,
+            quantity: 5,
+          },
+        ],
+        source: 'Ifood',
+      });
+
+    expect(response.status).toBe(400);
+  });
+
+  it('should not create an order with invalid client', async () => {
+    const client = await factory.create<ClientInterface>('Client');
+    const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman');
+    const products = await factory.create<ProductInterface>('Product');
+
+    const response = await request(app)
+      .post('/orders')
+      .send({
+        client_id: '5f05febbd43fb02cb0b83d64',
+        deliveryman: deliveryman._id,
+        client_address_id: client.address[0]._id,
+        items: [
+          {
+            product: products._id,
+            quantity: 5,
+          },
+        ],
+        source: 'Ifood',
+      });
+
+    expect(response.status).toBe(400);
+  });
+
+  it('should not create an order with invalid deliveryman', async () => {
+    const client = await factory.create<ClientInterface>('Client');
+    const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman');
+    const products = await factory.create<ProductInterface>('Product');
+
+    const response = await request(app)
+      .post('/orders')
+      .send({
+        client_id: client._id,
+        deliveryman: '5f05febbd43fb02cb0b83d64',
+        client_address_id: client.address[0]._id,
+        items: [
+          {
+            product: products._id,
+            quantity: 5,
+          },
+        ],
+        source: 'Ifood',
+      });
+
+    expect(response.status).toBe(400);
+  });
+
   it('should update a order', async () => {
     const order = await factory.create<OrderInterface>('Order');
     // const client = await factory.create<ClientInterface>('Client');
@@ -141,6 +209,26 @@ describe('should a Client', () => {
     );
   });
 
+  it('should update a order total with address change', async () => {
+    const district = await factory.create<DistrictInterface>('District');
+    const client = await factory.create<ClientInterface>('Client');
+    const order = await factory.create<OrderInterface>('Order', {
+      client: {
+        client_id: client._id,
+        name: 'asdf',
+        phone: ['1324'],
+      },
+    });
+
+    const response = await request(app).put(`/orders/${order._id}`).send({
+      client_address_id: client.address[0]._id,
+    });
+    const isEqual = order.total === response.body.total ? true : false;
+    expect(response.body).toHaveProperty('total');
+    expect(response.status).toBe(200);
+    expect(isEqual).toBe(false);
+  });
+
   it('should finish a order', async () => {
     const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman');
     const order = await factory.create<OrderInterface>('Order', { deliveryman: deliveryman._id });
@@ -153,6 +241,16 @@ describe('should a Client', () => {
         finished: true,
       })
     );
+  });
+
+  it('should finish a order with a invalid deliveryman', async () => {
+    const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman');
+    const order = await factory.create<OrderInterface>('Order', { deliveryman: deliveryman._id });
+    const response = await request(app).put(`/orders/${order._id}`).send({
+      finished: true,
+      deliveryman: '5f05febbd43fb02cb0b83d64',
+    });
+    expect(response.status).toBe(400);
   });
 
   it('should update a order and update a deliveryman available', async () => {
@@ -226,6 +324,46 @@ describe('should a Client', () => {
         }),
       })
     );
+  });
+
+  it('should not update a order client invalid', async () => {
+    const client = await factory.create<ClientInterface>('Client', { name: 'Cleiton' });
+
+    const order = await factory.create<OrderInterface>('Order');
+    const product = await factory.create<ProductInterface>('Product', {
+      name: 'Chocolate',
+    });
+
+    const response = await request(app).put(`/orders/${order._id}`).send({
+      identification: '1234567',
+      client_id: '5f05febbd43fb02cb0b83d64',
+      deliveryman: order.deliveryman,
+      client_address_id: client.address[0]._id,
+      note: 'Brabo',
+      total: 100,
+      source: 'Whatsapp',
+    });
+    expect(response.status).toBe(400);
+  });
+
+  it('should not update a order address invalid', async () => {
+    const client = await factory.create<ClientInterface>('Client', { name: 'Cleiton' });
+
+    const order = await factory.create<OrderInterface>('Order');
+    const product = await factory.create<ProductInterface>('Product', {
+      name: 'Chocolate',
+    });
+
+    const response = await request(app).put(`/orders/${order._id}`).send({
+      identification: '1234567',
+      deliveryman: order.deliveryman,
+      client_address_id: '5f05febbd43fb02cb0b83d64',
+      note: 'Brabo',
+      total: 100,
+      source: 'Whatsapp',
+    });
+
+    expect(response.status).toBe(400);
   });
 
   it('should not update a inexistent order', async () => {
