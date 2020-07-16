@@ -8,13 +8,6 @@ import District from '../src/app/models/District';
 import Client from '../src/app/models/Client';
 import Order from '../src/app/models/Order';
 
-import { ClientInterface } from '../src/interfaces/base';
-
-const clientFactory = async () => {
-  const client = await factory.create<ClientInterface>('Client');
-  return client;
-};
-
 factory.define('Product', Product, {
   name: faker.commerce.productName(),
   price: faker.commerce.price(),
@@ -46,7 +39,7 @@ factory.define('Client', Client, {
       number: faker.random.number(1000),
     },
   ],
-  phone: faker.phone.phoneNumber(),
+  phone: [faker.phone.phoneNumber()],
 });
 
 factory.define('Order', Order, {

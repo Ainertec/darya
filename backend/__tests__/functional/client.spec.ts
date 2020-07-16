@@ -31,7 +31,7 @@ describe('should a Client', () => {
             reference: 'Pousada encontro dos rios',
           },
         ],
-        phone: '22 992726852, 22 992865120 ',
+        phone: ['22 992726852', '22 992865120'],
       });
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
@@ -39,6 +39,30 @@ describe('should a Client', () => {
         name: 'Cleiton',
       })
     );
+  });
+
+  it('should not create a client with the same name and phone number', async () => {
+    const district = await factory.create<DistrictInterface>('District');
+    const client = await factory.create<ClientInterface>('Client', {
+      name: 'Cleiton',
+      phone: ['22992865120', '22992726852'],
+    });
+
+    const response = await request(app)
+      .post('/clients')
+      .send({
+        name: 'Cleiton',
+        address: [
+          {
+            district: district._id,
+            street: 'Encontro dos Rios',
+            reference: 'Pousada encontro dos rios',
+          },
+        ],
+        phone: ['22992865120', '22134123412'],
+      });
+    // console.log(response.body);
+    expect(response.status).toBe(400);
   });
 
   it('should update a client', async () => {
@@ -55,7 +79,7 @@ describe('should a Client', () => {
             number: client.address[0].number,
           },
         ],
-        phone: '22 992726852, 22 992865120 ',
+        phone: ['22 992726852', '22 992865120'],
       });
     // console.log(response.body);
     expect(response.status).toBe(200);
@@ -69,11 +93,13 @@ describe('should a Client', () => {
   it('should not update an inexistent client', async () => {
     const client = await factory.create<ClientInterface>('Client');
 
-    const response = await request(app).put(`/clients/5f06fefdd0607c2cde1b9cc2`).send({
-      name: 'Cleiton',
-      address: client.address,
-      phone: '22 992726852, 22 992865120 ',
-    });
+    const response = await request(app)
+      .put(`/clients/5f06fefdd0607c2cde1b9cc2`)
+      .send({
+        name: 'Cleiton',
+        address: client.address,
+        phone: ['22 992726852', '22 992865120 '],
+      });
 
     expect(response.status).toBe(400);
   });
