@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node-dev --transpileOnly --ignore-watch node_modules src/server.ts",
+    "dev": "ts-node-dev --ignore-watch node_modules src/server.ts",
     "test": "cross-env NODE_ENV=test jest",
     "build": "tsc",
     "prod": "node dist/src/server.js"
