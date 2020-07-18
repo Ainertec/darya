@@ -3,6 +3,7 @@ import Order from '../models/Order';
 import path from 'path';
 import fs from 'fs';
 import jsRTF from 'jsrtf';
+// import '../../@types/jsrtg.d.ts'
 import { format } from 'date-fns';
 import { exec } from 'shelljs';
 

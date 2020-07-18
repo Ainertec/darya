@@ -60,9 +60,9 @@ class DeliverymanController {
     );
     if (!deliveryman) return response.status(400).json('deliveryman was not found');
 
-    if (working_day) deliveryman.working_day = working_day;
-    if (available) deliveryman.available = available;
-    if (hasDelivery) deliveryman.hasDelivery = hasDelivery;
+    if (working_day !== undefined) deliveryman.working_day = working_day;
+    if (available !== undefined) deliveryman.available = available;
+    if (hasDelivery !== undefined) deliveryman.hasDelivery = hasDelivery;
 
     await deliveryman.save();
 
