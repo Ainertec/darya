@@ -33,9 +33,9 @@ function gerarListaDeBairros(json) {
     let codigoHTML = ``
 
     codigoHTML += `<tr>
-        <td class="table-warning"><strong><span class="fas fa-map-marker-alt"></span> ${json.bairro}</strong></td>
-        <td class="table-warning"><strong>${json.cidade}</strong></td>
-        <td class="table-warning text-danger"><strong>R$${(parseFloat(json.taxa)).toFixed(2)}</strong></td>
+        <td class="table-warning"><strong><span class="fas fa-map-marker-alt"></span> ${json.name}</strong></td>
+        <td class="table-warning"><strong>${json.city}</strong></td>
+        <td class="table-warning text-danger"><strong>R$${(parseFloat(json.rate)).toFixed(2)}</strong></td>
         <td class="table-warning"><button onclick="carregarDadosBairro('${json._id}')" type="button" class="btn btn-primary btn-sm"><span class="fas fa-edit"></span> Editar</button></td>
         <td class="table-warning"><button onclick="excluirBairro('${json._id}')" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span> Excluir</button></td>
     </tr>`
@@ -90,8 +90,16 @@ function modalTelaCadastrarouAtualizarBairro(tipo) {
 }
 
 //funcao responsavel por buscar o bairro
-function buscarDadosBairro(tipo) {
+async function buscarDadosBairro(tipo) {
     let codigoHTML = ``, json = null;
+
+    VETORDEBAIRROSCLASSEBAIRRO = []
+
+    if (tipo == 'nome') {
+        json = await requisicaoGET(`districts/${document.getElementById('nome').value}`)
+    } else if (tipo == 'todos') {
+        json = await requisicaoGET(`districts`)
+    }
 
     codigoHTML += `<h5 class="text-center" style="margin-top:80px">Listagem de bairros</h5>
     <table class="table table-sm col-8 mx-auto" style="margin-top:10px">
@@ -106,23 +114,10 @@ function buscarDadosBairro(tipo) {
         </thead>
         <tbody>`
 
-    if (tipo == 'nome') {
-        json = testeBairro(document.getElementById('nome').value)
-
-        VETORDEBAIRROSCLASSEBAIRRO = []
-        json.forEach(function (item) {
-            VETORDEBAIRROSCLASSEBAIRRO.push(item)
-            codigoHTML += gerarListaDeBairros(item)
-        });
-    } else if (tipo == 'todos') {
-        json = testeBairro('')
-
-        VETORDEBAIRROSCLASSEBAIRRO = []
-        json.forEach(function (item) {
-            VETORDEBAIRROSCLASSEBAIRRO.push(item)
-            codigoHTML += gerarListaDeBairros(item)
-        });
-    }
+    json.data.forEach(function (item) {
+        VETORDEBAIRROSCLASSEBAIRRO.push(item)
+        codigoHTML += gerarListaDeBairros(item)
+    });
 
     codigoHTML += `</tbody>
     </table>`
@@ -136,33 +131,38 @@ function carregarDadosBairro(id) {
 
     const dado = VETORDEBAIRROSCLASSEBAIRRO.find(element => element._id == id)
 
-    document.getElementById('nomebairro').value = dado.bairro
-    document.getElementById('nomecidade').value = dado.cidade
-    document.getElementById('precotaxa').value = (parseFloat(dado.taxa)).toFixed(2)
+    document.getElementById('nomebairro').value = dado.name
+    document.getElementById('nomecidade').value = dado.city
+    document.getElementById('precotaxa').value = (parseFloat(dado.rate)).toFixed(2)
     document.getElementById('botaoAtualizar').value = (dado._id).toString()
 }
 
 //funcao responsavel por cadastrar um bairro
-function cadastrarBairro() {
-    let json = `{"cidade":"${$('#nomebairro').val()}",
-    "bairro":"${$('#nomecidade').val()}",
-    "taxa":${$('#precotaxa').val()}}`
+async function cadastrarBairro() {
+    let json = `{"name":"${$('#nomebairro').val()}",
+    "city":"${$('#nomecidade').val()}",
+    "rate":${$('#precotaxa').val()}}`
+
+    await requisicaoPOST('districts', JSON.parse(json))
 
     console.log(JSON.parse(json))
 }
 
 //funcao responsavel por atualizar um bairro
-function atualizarBairro(id) {
-    let dado = VETORDEBAIRROSCLASSEBAIRRO.find(element => element._id == id)
+async function atualizarBairro(id) {
+    let dado = VETORDEBAIRROSCLASSEBAIRRO.filter(function (element) { return element._id == id });
 
-    dado.bairro = document.getElementById('nomebairro').value
-    dado.cidade = document.getElementById('nomecidade').value
-    dado.taxa = document.getElementById('precotaxa').value
-    dado._id = delete
+    dado[0].name = document.getElementById('nomebairro').value
+    dado[0].city = document.getElementById('nomecidade').value
+    dado[0].rate = parseFloat(document.getElementById('precotaxa').value)
+    delete dado[0]._id
+    delete dado[0].updatedAt
+    delete dado[0].createdAt
+    delete dado[0].__v
 
-        console.log(VETORDEBAIRROSCLASSEBAIRRO)
+    console.log(dado[0])
 
-    console.log(dado)
+    await requisicaoPUT(`districts/${id}`, dado[0])
 
     if (validaDadosCampo(['#nome'])) {
         buscarDadosBairro('nome');
@@ -173,22 +173,7 @@ function atualizarBairro(id) {
 }
 
 //funcao responsavel por excluir um bairro
-function excluirBairro(id) {
+async function excluirBairro(id) {
+    await requisicaoDELETE(`districts/${id}`, '')
     console.log(id)
-}
-
-
-
-
-
-
-
-
-//funcao de teste
-function testeBairro(teste) {
-    if (teste == 'lumiar') {
-        return JSON.parse(`[{"_id":"gfd52","cidade":"Nova Friburgo" ,"bairro":"Lumiar" ,"taxa":20.00 }]`)
-    } else {
-        return JSON.parse(`[{"_id":"odg64","cidade":"Nova Friburgo" ,"bairro":"São Pedro" ,"taxa":10.00 },{"_id":"gfd52","cidade":"Nova Friburgo" ,"bairro":"Lumiar" ,"taxa":20.00 }]`)
-    }
 }

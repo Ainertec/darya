@@ -3,7 +3,6 @@
 // funcao de requisicao get sem paramentro JSON
 async function requisicaoGET(url, authorization) {
     let retorno
-
     await axios
         .get(`http://localhost:3333/${url}`, authorization)
         .then(function (response) {
