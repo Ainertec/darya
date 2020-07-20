@@ -17,7 +17,7 @@ var SerialController_1 = __importDefault(require("./app/controllers/SerialContro
 var productSchema_1 = __importDefault(require("./validations/productSchema"));
 var deliverymanSchema_1 = __importDefault(require("./validations/deliverymanSchema"));
 var districtSchema_1 = __importDefault(require("./validations/districtSchema"));
-var clientSchema_1 = __importDefault(require("./validations/clientSchema"));
+var clientSchema_1 = require("./validations/clientSchema");
 var reportSchema_1 = __importDefault(require("./validations/reportSchema"));
 var serialSchema_1 = __importDefault(require("./validations/serialSchema"));
 var printerSchema_1 = __importDefault(require("./validations/printerSchema"));
@@ -49,8 +49,8 @@ routes.delete('/districts/:id', celebrate_1.celebrate({ params: commonSchema_1.p
 // Client
 routes.get('/clients', ClientController_1.default.index);
 routes.get('/clients/:name', celebrate_1.celebrate({ params: commonSchema_1.paramName }), ClientController_1.default.show);
-routes.post('/clients', celebrate_1.celebrate({ body: clientSchema_1.default }), ClientController_1.default.store);
-routes.put('/clients/:id', celebrate_1.celebrate({ body: clientSchema_1.default, params: commonSchema_1.paramId }), ClientController_1.default.update);
+routes.post('/clients', celebrate_1.celebrate({ body: clientSchema_1.client }), ClientController_1.default.store);
+routes.put('/clients/:id', celebrate_1.celebrate({ body: clientSchema_1.clientUpdate, params: commonSchema_1.paramId }), ClientController_1.default.update);
 routes.delete('/clients/:id', celebrate_1.celebrate({ params: commonSchema_1.paramId }), ClientController_1.default.delete);
 // Order
 routes.get('/orders', OrderController_1.default.index);

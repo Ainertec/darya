@@ -14,7 +14,7 @@ import SerialController from './app/controllers/SerialController';
 import product from './validations/productSchema';
 import deliveryman from './validations/deliverymanSchema';
 import district from './validations/districtSchema';
-import client from './validations/clientSchema';
+import { client, clientUpdate } from './validations/clientSchema';
 import report from './validations/reportSchema';
 import serial from './validations/serialSchema';
 import printer from './validations/printerSchema';
@@ -69,7 +69,7 @@ routes.delete('/districts/:id', celebrate({ params: paramId }), DistrictControll
 routes.get('/clients', ClientController.index);
 routes.get('/clients/:name', celebrate({ params: paramName }), ClientController.show);
 routes.post('/clients', celebrate({ body: client }), ClientController.store);
-routes.put('/clients/:id', celebrate({ body: client, params: paramId }), ClientController.update);
+routes.put('/clients/:id', celebrate({ body: clientUpdate, params: paramId }), ClientController.update);
 routes.delete('/clients/:id', celebrate({ params: paramId }), ClientController.delete);
 
 // Order

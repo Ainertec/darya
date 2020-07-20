@@ -245,31 +245,31 @@ async function adicionarDadosNaTabelaTelefoneeEndereco(tipo, id) {
     let tamanhoListaTel = cliente.phone.length;
     $('#tabelatelefone').append(`<tr id="linhatel${tamanhoListaTel - 1}">
             <td class="table-warning"><span class="fas fa-phone"></span> ${
-              document.getElementById('telefonecliente').value
-            }</td>
+      document.getElementById('telefonecliente').value
+      }</td>
             <td class="table-warning"><button onclick="removerDadosNaTabelaTelefoneeEndereco('telefone','${
-              document.getElementById('telefonecliente').value
-            }', '${id}', ${
+      document.getElementById('telefonecliente').value
+      }', '${id}', ${
       tamanhoListaTel - 1
-    });" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span> Excluir</button></td>
+      });" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span> Excluir</button></td>
         </tr>`);
   } else if (tipo == 'endereco') {
     cliente.address.push(
       JSON.parse(`{     "_id":"${CONTADORDEENDERECO}",
                                                 "district":"${
-                                                  document.getElementById('bairrocidadecliente')
-                                                    .value
-                                                }",
+        document.getElementById('bairrocidadecliente')
+          .value
+        }",
                                                 "street":"${
-                                                  document.getElementById('ruacliente').value
-                                                }",
+        document.getElementById('ruacliente').value
+        }",
                                                 "number":"${
-                                                  document.getElementById('numerocasacliente').value
-                                                }",
+        document.getElementById('numerocasacliente').value
+        }",
                                                 "reference":"${
-                                                  document.getElementById('complementocliente')
-                                                    .value
-                                                }"}`)
+        document.getElementById('complementocliente')
+          .value
+        }"}`)
     );
     let BAIRROCLIENTE = await requisicaoGET(`districts`);
     let bairro = BAIRROCLIENTE.data.find(
@@ -277,8 +277,8 @@ async function adicionarDadosNaTabelaTelefoneeEndereco(tipo, id) {
     );
     $('#tabelaendereco').append(`<tr id="linhaend${CONTADORDEENDERECO}">
             <td class="table-warning"><span class="fas fa-map-marker-alt"></span> ${
-              document.getElementById('ruacliente').value
-            }</td>
+      document.getElementById('ruacliente').value
+      }</td>
             <td class="table-warning">${document.getElementById('numerocasacliente').value}</td>
             <td class="table-warning">${bairro.name} - ${bairro.city}</td>
             <td class="table-warning">${document.getElementById('complementocliente').value}</td>
@@ -334,15 +334,20 @@ async function cadastrarCliente() {
 async function atualizarCliente(id) {
   const cliente = VETORDECLIENTESCLASSECLIENTE.find((element) => element._id == id);
   const serializadedAddress = cliente.address.map((addressElement) => {
+
+    const name = document.getElementById('nomecliente').value
+
     return {
       ...addressElement,
       _id: undefined,
+      district: addressElement.district._id
     };
   });
+
   await requisicaoPUT(`clients/${id}`, {
     address: serializadedAddress,
     phone: cliente.phone,
-    name: cliente.name,
+    name: (name === cliente.name) ? name : undefined,
   });
 
   console.log(cliente);
