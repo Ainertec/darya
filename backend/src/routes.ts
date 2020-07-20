@@ -69,7 +69,11 @@ routes.delete('/districts/:id', celebrate({ params: paramId }), DistrictControll
 routes.get('/clients', ClientController.index);
 routes.get('/clients/:name', celebrate({ params: paramName }), ClientController.show);
 routes.post('/clients', celebrate({ body: client }), ClientController.store);
-routes.put('/clients/:id', celebrate({ body: clientUpdate, params: paramId }), ClientController.update);
+routes.put(
+  '/clients/:id',
+  celebrate({ body: clientUpdate, params: paramId }),
+  ClientController.update
+);
 routes.delete('/clients/:id', celebrate({ params: paramId }), ClientController.delete);
 
 // Order

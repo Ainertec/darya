@@ -22,3 +22,4 @@ exports.clientUpdate = celebrate_1.Joi.object().keys({
     address: celebrate_1.Joi.array().items(address).required(),
     phone: celebrate_1.Joi.array().items(celebrate_1.Joi.string()).required(),
 });
+exports.default = exports.client;
