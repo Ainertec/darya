@@ -12,7 +12,8 @@ interface InterfaceDispenseAndGain {
 
 class ReportController {
   async deliverymanPayment(request: Request, response: Response) {
-    const deliveryman_id = String(request.query.deliveryman_id);
+    const { deliveryman_id } = request.params;
+    console.log(deliveryman_id)
     const initial = startOfHour(new Date());
     const final = endOfHour(new Date());
     const ObjectId = Types.ObjectId;
@@ -21,6 +22,7 @@ class ReportController {
       .match({
         deliveryman: ObjectId(deliveryman_id),
         createdAt: { $gte: initial, $lte: final },
+        finished: true,
       })
       .group({
         _id: '$deliveryman',

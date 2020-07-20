@@ -6,6 +6,7 @@ import app from '../../src/app';
 import factory from '../factories';
 
 import { OrderInterface, DeliverymanInterface, ProductInterface } from '../../src/interfaces/base';
+import { response } from 'express';
 
 describe('should a Client', () => {
   beforeAll(() => {
@@ -24,14 +25,12 @@ describe('should a Client', () => {
     });
     await factory.createMany<OrderInterface>('Order', 3, {
       deliveryman: deliveryman._id,
+      finished: true,
     });
 
     const response = await request(app)
-      .get('/reports/deliveryman/rate')
-      .query({
-        deliveryman_id: String(deliveryman._id),
-      });
-
+      .get(`/reports/deliveryman/rate/${deliveryman._id}`)
+    console.log(response.body);
     expect(response.status).toBe(200);
   });
 
@@ -42,13 +41,11 @@ describe('should a Client', () => {
     await factory.createMany<OrderInterface>('Order', 3, {
       deliveryman: deliveryman._id,
       createdAt: new Date(2020, 6, 12),
+      finished: true,
     });
 
     const response = await request(app)
-      .get('/reports/deliveryman/rate')
-      .query({
-        deliveryman_id: String(deliveryman._id),
-      });
+      .get(`/reports/deliveryman/rate/${deliveryman._id}`)
     expect(response.body.length).toBe(0);
     expect(response.status).toBe(200);
   });

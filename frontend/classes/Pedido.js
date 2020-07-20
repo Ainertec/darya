@@ -565,7 +565,7 @@ async function atualizarPedido(id) {
         "note":"${document.getElementById('observacao').value}"
     }`
 
-    await requisicaoPUT(`orders/${id}`, JSON.parse(json))
+    //await requisicaoPUT(`orders/${id}`, JSON.parse(json))
 
     console.log(JSON.parse(json))
     console.log(id)

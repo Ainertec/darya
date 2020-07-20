@@ -90,8 +90,8 @@ routes.delete('/orders/:id', celebrate({ params: paramId }), OrderController.del
 // Reports
 
 routes.get(
-  '/reports/deliveryman/rate',
-  celebrate({ query: report }),
+  '/reports/deliveryman/rate/:deliveryman_id',
+  celebrate({ params: report }),
   ReportController.deliverymanPayment
 );
 routes.get('/reports/orders/profit', ReportController.ordersProfit);

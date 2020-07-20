@@ -51,7 +51,7 @@ function gerarListaDeMotoboyParaTrabalho(json) {
     codigoHTML += `<label class="custom-control-label" for="${json._id}">Trabalhando</label>
             </div>
         </td>
-        <td class="table-warning text-dark"><button type="button" class="btn btn-outline-primary btn-sm"><span class="fas fa-chart-bar"></span> Exibir</button></td>
+        <td class="table-warning text-dark"><button onclick="gerarGraficoMotoboy('${json._id}');" type="button" class="btn btn-outline-primary btn-sm"><span class="fas fa-chart-bar"></span> Exibir</button></td>
     </tr>`
 
     return codigoHTML;
@@ -139,7 +139,7 @@ async function buscarDadosMotoboyTrabalhando(tipo) {
     VETORDEMOTOBOYSCLASSEMOTOBOY = []
 
     if (tipo == 'nome') {
-        //json = await requisicaoGET(`deliverymans/${document.getElementById('nome').value}`)
+        json = await requisicaoGET(`deliverymans/${document.getElementById('nome').value}`)
     } else if (tipo == 'todos') {
         json = await requisicaoGET(`deliverymans`)
     } else if (tipo == 'ativos') {
@@ -180,7 +180,7 @@ async function buscarDadosMotoboy(tipo) {
     VETORDEMOTOBOYSCLASSEMOTOBOY = []
 
     if (tipo == 'nome') {
-        //json = await requisicaoGET(`deliverymans/${}`document.getElementById('nomeemmodal').value)
+        json = await requisicaoGET(`deliverymans/${document.getElementById('nomeemmodal').value}`)
     } else if (tipo == 'todos') {
         json = await requisicaoGET('deliverymans')
     } else if (tipo == 'ativos') {
@@ -284,4 +284,36 @@ async function exluirMotoboy(id) {
     console.log(id)
 
     await requisicaoDELETE(`deliverymans/${id}`, '')
+}
+
+//funcao responsavel por gerar o grafico de dados sobre o motoboy
+async function gerarGraficoMotoboy(id) {
+    let codigoHTML = ``, json = await requisicaoGET(`reports/deliveryman/rate/${id}`)
+
+    console.log(json)
+
+    codigoHTML += `<div class="modal fade" id="modalRelatorioMotoboy" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel"><span class="fas fa-motorcycle"></span> Grafico Motoboy</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <h1> Valor de pagamento total:${json.data[0].rate}</h1>
+                        </div>
+                        <div class="modal-footer">
+                            <button onclick="cadastrarMotoboy();" type="button" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Adicionar</button>
+                            <button onclick="atualizarMotoboy(this.value)" id="botaoatualizarmotoboy" type="button" class="btn btn-success btn-block"><span class="fas fa-edit"></span> Modificar</button>
+                            <button onclick="exluirMotoboy(this.value)" id="botaoexcluirmotoboy" type="button" class="btn btn-outline-danger btn-block"><span class="fas fa-trash"></span> Excluir</button>
+                        </div>
+                    </div>
+                </div>`
+
+    document.getElementById('modal').innerHTML = codigoHTML;
+
+    $('#modalRelatorioMotoboy').modal('show')
+
 }
