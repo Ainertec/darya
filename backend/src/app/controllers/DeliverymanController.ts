@@ -14,6 +14,16 @@ class DeliverymanController {
     return response.json(deliveryman);
   }
 
+  async showByName(request: Request, response: Response) {
+    const { name } = request.params;
+
+    const deliveryman = await Deliveryman.find({
+      name: { $regex: new RegExp(name), $options: 'i' },
+    });
+
+    return response.json(deliveryman);
+  }
+
   async showByWorking(request: Request, response: Response) {
     const deliveryman = await Deliveryman.find({ working_day: true });
 
