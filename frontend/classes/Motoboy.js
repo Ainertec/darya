@@ -29,24 +29,24 @@ function telaDeBuscarMotoboyParaTrabalho() {
                             </button>
                         </div>
                     </div>
-                    <div id="resposta"></div>`
+                    <div id="resposta"></div>`;
 
     document.getElementById('janela2').innerHTML = codigoHTML;
 }
 
 //funcao responsavel por gerar a lista com os motoboy para trabalho
 function gerarListaDeMotoboyParaTrabalho(json) {
-    let codigoHTML = ``
+    let codigoHTML = ``;
 
     codigoHTML += `<tr>
         <td class="table-warning text-dark"><strong><span class="fas fa-biking"></span> ${json.name}</strong></td>
         <td class="table-warning text-dark">${json.phone}</td>
         <td class="table-warning text-dark">
-            <div class="custom-control custom-switch">`
+            <div class="custom-control custom-switch">`;
     if (json.working_day) {
-        codigoHTML += `<input type="checkbox" onclick="this.checked? alterarEstadoDeTrabalhoMotoboy('ativar','${json._id}'): alterarEstadoDeTrabalhoMotoboy('desativar','${json._id}')" class="custom-control-input custom-switch" id="${json._id}" checked="checked">`
+        codigoHTML += `<input type="checkbox" onclick="this.checked? alterarEstadoDeTrabalhoMotoboy('ativar','${json._id}'): alterarEstadoDeTrabalhoMotoboy('desativar','${json._id}')" class="custom-control-input custom-switch" id="${json._id}" checked="checked">`;
     } else {
-        codigoHTML += `<input type="checkbox" onclick="this.checked? alterarEstadoDeTrabalhoMotoboy('ativar','${json._id}'): alterarEstadoDeTrabalhoMotoboy('desativar','${json._id}')" class="custom-control-input custom-switch" id="${json._id}">`
+        codigoHTML += `<input type="checkbox" onclick="this.checked? alterarEstadoDeTrabalhoMotoboy('ativar','${json._id}'): alterarEstadoDeTrabalhoMotoboy('desativar','${json._id}')" class="custom-control-input custom-switch" id="${json._id}">`;
     }
     codigoHTML += `<label class="custom-control-label" for="${json._id}">Trabalhando</label>
             </div>
@@ -59,7 +59,7 @@ function gerarListaDeMotoboyParaTrabalho(json) {
 
 //funcao responsavel por gerar o modal da tela de cadastar/atualizar/remover motoboy
 function modalTelaCadastrarouAtualizarMotoboy(tipo) {
-    let codigoHTML = ``
+    let codigoHTML = ``;
 
     codigoHTML += `<div class="modal fade" id="modalClasseMotoboy" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-scrollable">
@@ -70,7 +70,7 @@ function modalTelaCadastrarouAtualizarMotoboy(tipo) {
                             <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">`
+                        <div class="modal-body">`;
 
     if (tipo == 'atualizar') {
         codigoHTML += `<h5 class="text-center">Buscar Motoboy</h5>
@@ -86,7 +86,7 @@ function modalTelaCadastrarouAtualizarMotoboy(tipo) {
                                     </button>
                                 </div>
                             </div>
-                            <div id="resposta2"></div>`
+                            <div id="resposta2"></div>`;
     }
 
     codigoHTML += `<form>
@@ -100,43 +100,42 @@ function modalTelaCadastrarouAtualizarMotoboy(tipo) {
                                 </div>
                             </form>
                         </div>
-                        <div class="modal-footer">`
+                        <div class="modal-footer">`;
     if (tipo == 'cadastrar') {
-        codigoHTML += `<button onclick="cadastrarMotoboy();" type="button" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Adicionar</button>`
+        codigoHTML += `<button onclick="cadastrarMotoboy();" type="button" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Adicionar</button>`;
     } else if (tipo == 'atualizar') {
         codigoHTML += `<button onclick="atualizarMotoboy(this.value)" id="botaoatualizarmotoboy" type="button" class="btn btn-success btn-block"><span class="fas fa-edit"></span> Modificar</button>
-                                 <button onclick="exluirMotoboy(this.value)" id="botaoexcluirmotoboy" type="button" class="btn btn-outline-danger btn-block"><span class="fas fa-trash"></span> Excluir</button>`
+                                 <button onclick="exluirMotoboy(this.value)" id="botaoexcluirmotoboy" type="button" class="btn btn-outline-danger btn-block"><span class="fas fa-trash"></span> Excluir</button>`;
     }
     codigoHTML += `</div>
                         </div>
                     </div>
-                </div>`
+                </div>`;
 
     document.getElementById('modal').innerHTML = codigoHTML;
 
-    $('#modalClasseMotoboy').modal('show')
-
+    $('#modalClasseMotoboy').modal('show');
 }
 
 //funcao responsavel por gerar a lista com motoboy para atualizar
 function gerarListaDeMotoboyParaAtualizar(json) {
-    let codigoHTML = ``
+    let codigoHTML = ``;
 
     codigoHTML += `<tr>
         <td class="table-warning text-dark"><strong><span class="fas fa-biking"></span> ${json.name}</strong></td>
         <td class="table-warning text-dark">${json.phone}</td>
         <td class="table-warning text-center"><button onclick="carregarDadosMotoboy('${json._id}');" type="button" class="btn btn-primary btn-sm"><span class="fas fa-check"></span></button></td>
-    </tr>`
+    </tr>`;
 
     return codigoHTML;
-
 }
 
 //funcao responsavel por buscar os dados do motoboy para tabela de trabalho
 async function buscarDadosMotoboyTrabalhando(tipo) {
-    let codigoHTML = ``, json = null;
+    let codigoHTML = ``,
+        json = null;
 
-    VETORDEMOTOBOYSCLASSEMOTOBOY = []
+    VETORDEMOTOBOYSCLASSEMOTOBOY = [];
 
     if (tipo == 'nome') {
         json = await requisicaoGET(`deliverymans/${document.getElementById('nome').value}`)
@@ -159,25 +158,25 @@ async function buscarDadosMotoboyTrabalhando(tipo) {
                 <th scope="col">Relatório</th>
             </tr>
         </thead>
-        <tbody>`
+        <tbody>`;
 
     json.data.forEach(function (item) {
-        VETORDEMOTOBOYSCLASSEMOTOBOY.push(item)
-        codigoHTML += gerarListaDeMotoboyParaTrabalho(item)
+        VETORDEMOTOBOYSCLASSEMOTOBOY.push(item);
+        codigoHTML += gerarListaDeMotoboyParaTrabalho(item);
     });
 
     codigoHTML += `</tbody>
-        </table>`
+        </table>`;
 
     document.getElementById('resposta').innerHTML = codigoHTML;
-
 }
 
 //funcao responsavel por buscar os dados do motoboy para tabela de trabalho
 async function buscarDadosMotoboy(tipo) {
-    let codigoHTML = ``, json = null;
+    let codigoHTML = ``,
+        json = null;
 
-    VETORDEMOTOBOYSCLASSEMOTOBOY = []
+    VETORDEMOTOBOYSCLASSEMOTOBOY = [];
 
     if (tipo == 'nome') {
         json = await requisicaoGET(`deliverymans/${document.getElementById('nomeemmodal').value}`)
@@ -196,62 +195,65 @@ async function buscarDadosMotoboy(tipo) {
                 <th scope="col">Selecionar</th>
             </tr>
         </thead>
-        <tbody>`
+        <tbody>`;
 
     json.data.forEach(function (item) {
-        VETORDEMOTOBOYSCLASSEMOTOBOY.push(item)
-        codigoHTML += gerarListaDeMotoboyParaAtualizar(item)
+        VETORDEMOTOBOYSCLASSEMOTOBOY.push(item);
+        codigoHTML += gerarListaDeMotoboyParaAtualizar(item);
     });
 
     codigoHTML += `</tbody>
-        </table>`
+        </table>`;
 
     document.getElementById('resposta2').innerHTML = codigoHTML;
-
 }
 
 //funcao responsavel por carregar os dados do motoboy para atualizar/excluir
 function carregarDadosMotoboy(id) {
-    let dado = VETORDEMOTOBOYSCLASSEMOTOBOY.find(element => element._id == id)
+    let dado = VETORDEMOTOBOYSCLASSEMOTOBOY.find((element) => element._id == id);
 
-    document.getElementById('nomemotoboy').value = dado.name
-    document.getElementById('telefonemotoboy').value = dado.phone
-    document.getElementById('botaoatualizarmotoboy').value = dado._id
-    document.getElementById('botaoexcluirmotoboy').value = dado._id
+    document.getElementById('nomemotoboy').value = dado.name;
+    document.getElementById('telefonemotoboy').value = dado.phone;
+    document.getElementById('botaoatualizarmotoboy').value = dado._id;
+    document.getElementById('botaoexcluirmotoboy').value = dado._id;
 }
 
 //funcao responsavel por alterar estado de trabalho do motoboy
 async function alterarEstadoDeTrabalhoMotoboy(tipo, id) {
     if (tipo == 'desativarTodos') {
-        console.log('Todos foram desativados')
-        await requisicaoPUT(`deliverymans`)
+        console.log('Todos foram desativados');
+        await requisicaoPUT(`deliverymans`);
     } else if (tipo == 'ativar') {
-        let dado = VETORDEMOTOBOYSCLASSEMOTOBOY.filter(function (element) { return element._id == id });
+        let dado = VETORDEMOTOBOYSCLASSEMOTOBOY.filter(function (element) {
+            return element._id == id;
+        });
 
-        console.log(id + ' foi ativado')
-        console.log(dado[0])
+        console.log(id + ' foi ativado');
+        console.log(dado[0]);
 
         await requisicaoPUT(`deliverymans/${id}`, {
             working_day: true,
             name: dado[0].name,
             phone: dado[0].phone,
-        })
+        });
     } else if (tipo == 'desativar') {
-        let dado = VETORDEMOTOBOYSCLASSEMOTOBOY.filter(function (element) { return element._id == id });
+        let dado = VETORDEMOTOBOYSCLASSEMOTOBOY.filter(function (element) {
+            return element._id == id;
+        });
 
-        console.log(id + ' foi desativado')
+        console.log(id + ' foi desativado');
 
         await requisicaoPUT(`deliverymans/${id}`, {
             working_day: false,
             name: dado[0].name,
             phone: dado[0].phone,
-        })
+        });
     }
 
     if (validaDadosCampo(['#nome'])) {
-        buscarDadosMotoboyTrabalhando('nome')
+        buscarDadosMotoboyTrabalhando('nome');
     } else {
-        buscarDadosMotoboyTrabalhando('todos')
+        buscarDadosMotoboyTrabalhando('todos');
     }
 }
 
@@ -259,31 +261,33 @@ async function alterarEstadoDeTrabalhoMotoboy(tipo, id) {
 async function cadastrarMotoboy() {
     let json = `{
         "name":"${document.getElementById('nomemotoboy').value}",
-        "phone":"${document.getElementById('telefonemotoboy').value}"}`
+        "phone":"${document.getElementById('telefonemotoboy').value}"}`;
 
-    console.log(json)
+    console.log(json);
 
-    await requisicaoPOST('deliverymans', JSON.parse(json))
+    await requisicaoPOST('deliverymans', JSON.parse(json));
 }
 
 //funcao responsavel por atualizar um motoboy
 async function atualizarMotoboy(id) {
-    let dado = VETORDEMOTOBOYSCLASSEMOTOBOY.filter(function (element) { return element._id == id });
-    dado[0].name = document.getElementById('nomemotoboy').value
-    dado[0].phone = document.getElementById('telefonemotoboy').value
-    delete dado[0]._id
-    delete dado[0].createdAt
-    delete dado[0].updatedAt
-    delete dado[0].__v
+    let dado = VETORDEMOTOBOYSCLASSEMOTOBOY.filter(function (element) {
+        return element._id == id;
+    });
+    dado[0].name = document.getElementById('nomemotoboy').value;
+    dado[0].phone = document.getElementById('telefonemotoboy').value;
+    delete dado[0]._id;
+    delete dado[0].createdAt;
+    delete dado[0].updatedAt;
+    delete dado[0].__v;
 
-    await requisicaoPUT(`deliverymans/${id}`, dado[0])
+    await requisicaoPUT(`deliverymans/${id}`, dado[0]);
 }
 
 //funcao responsavel por excluir um motoboy
 async function exluirMotoboy(id) {
-    console.log(id)
+    console.log(id);
 
-    await requisicaoDELETE(`deliverymans/${id}`, '')
+    await requisicaoDELETE(`deliverymans/${id}`, '');
 }
 
 //funcao responsavel por gerar o grafico de dados sobre o motoboy

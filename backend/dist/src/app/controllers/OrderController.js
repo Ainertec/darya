@@ -173,7 +173,7 @@ var OrderController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         identification = request.params.identification;
-                        return [4 /*yield*/, Order_1.default.findOne({ identification: identification })
+                        return [4 /*yield*/, Order_1.default.findOne({ identification: identification, finished: false })
                                 .populate('deliveryman')
                                 .populate('items.product')];
                     case 1:
@@ -193,6 +193,7 @@ var OrderController = /** @class */ (function () {
                         ObjectId = mongoose_1.Types.ObjectId;
                         return [4 /*yield*/, Order_1.default.find({
                                 deliveryman: ObjectId(deliveryman),
+                                finished: false,
                             })
                                 .populate('deliveryman')
                                 .populate('items.product')];

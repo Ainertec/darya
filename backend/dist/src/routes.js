@@ -35,6 +35,7 @@ routes.get('/deliverymans', DeliverymanController_1.default.index);
 routes.get('/deliverymans/hasDelivery', DeliverymanController_1.default.showByDelivery);
 routes.get('/deliverymans/availables', DeliverymanController_1.default.show);
 routes.get('/deliverymans/working_days', DeliverymanController_1.default.showByWorking);
+routes.get('/deliverymans/:name', DeliverymanController_1.default.showByName);
 routes.post('/deliverymans', celebrate_1.celebrate({ body: deliverymanSchema_1.default }), DeliverymanController_1.default.store);
 routes.put('/deliverymans/:id', celebrate_1.celebrate({ body: deliverymanSchema_1.default, params: commonSchema_1.paramId }), DeliverymanController_1.default.update);
 routes.put('/deliverymans', DeliverymanController_1.default.reset);

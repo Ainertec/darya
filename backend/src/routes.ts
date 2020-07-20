@@ -43,6 +43,7 @@ routes.get('/deliverymans', DeliverymanController.index);
 routes.get('/deliverymans/hasDelivery', DeliverymanController.showByDelivery);
 routes.get('/deliverymans/availables', DeliverymanController.show);
 routes.get('/deliverymans/working_days', DeliverymanController.showByWorking);
+routes.get('/deliverymans/:name', DeliverymanController.showByName);
 routes.post('/deliverymans', celebrate({ body: deliveryman }), DeliverymanController.store);
 routes.put(
   '/deliverymans/:id',

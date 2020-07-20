@@ -607,7 +607,7 @@ describe('should a Client', function () {
         var order, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.createMany('Order', 3)];
+                case 0: return [4 /*yield*/, factories_1.default.createMany('Order', 3, { finished: false })];
                 case 1:
                     order = _a.sent();
                     return [4 /*yield*/, supertest_1.default(app_1.default).get("/orders")];
@@ -622,10 +622,13 @@ describe('should a Client', function () {
         var order, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.createMany('Order', 3)];
+                case 0: return [4 /*yield*/, factories_1.default.createMany('Order', 3, { finished: false })];
                 case 1:
                     _a.sent();
-                    return [4 /*yield*/, factories_1.default.create('Order', { identification: '1234543' })];
+                    return [4 /*yield*/, factories_1.default.create('Order', {
+                            identification: '1234543',
+                            finished: false,
+                        })];
                 case 2:
                     order = _a.sent();
                     return [4 /*yield*/, supertest_1.default(app_1.default).get("/orders/" + order.identification)];
@@ -643,7 +646,7 @@ describe('should a Client', function () {
         var deliveryman, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.createMany('Order', 3)];
+                case 0: return [4 /*yield*/, factories_1.default.createMany('Order', 3, { finished: false })];
                 case 1:
                     _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Deliveryman')];

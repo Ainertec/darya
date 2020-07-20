@@ -251,6 +251,37 @@ describe('should test', function () {
             }
         });
     }); });
+    it('should list all deliveryman by name', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var deliveryman, deliveryman2, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, factories_1.default.create('Deliveryman', {
+                        name: 'jãozin',
+                        working_day: true,
+                        available: true,
+                    })];
+                case 1:
+                    deliveryman = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Deliveryman', {
+                            name: 'carlos',
+                            working_day: true,
+                            available: true,
+                        })];
+                case 2:
+                    deliveryman2 = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/deliverymans/j")];
+                case 3:
+                    response = _a.sent();
+                    expect(response.status).toBe(200);
+                    expect(response.body).toEqual(expect.arrayContaining([
+                        expect.objectContaining({
+                            name: 'jãozin',
+                        }),
+                    ]));
+                    return [2 /*return*/];
+            }
+        });
+    }); });
     it('should list a deliveryman by hasDelivery', function () { return __awaiter(void 0, void 0, void 0, function () {
         var deliveryman, deliveryman2, response;
         return __generator(this, function (_a) {

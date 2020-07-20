@@ -76,7 +76,7 @@ class OrderController {
 
   async show(request: Request, response: Response) {
     const { identification } = request.params;
-    const order = await Order.findOne({ identification: identification })
+    const order = await Order.findOne({ identification: identification, finished: false })
       .populate('deliveryman')
       .populate('items.product');
 
@@ -88,6 +88,7 @@ class OrderController {
     const ObjectId = Types.ObjectId;
     const order = await Order.find({
       deliveryman: ObjectId(deliveryman),
+      finished: false,
     })
       .populate('deliveryman')
       .populate('items.product');

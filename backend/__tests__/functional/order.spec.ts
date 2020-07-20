@@ -395,7 +395,7 @@ describe('should a Client', () => {
   });
 
   it('should list all orders', async () => {
-    const order = await factory.createMany<OrderInterface>('Order', 3);
+    const order = await factory.createMany<OrderInterface>('Order', 3, { finished: false });
 
     const response = await request(app).get(`/orders`);
 
@@ -405,8 +405,11 @@ describe('should a Client', () => {
   });
 
   it('should list a order by identification', async () => {
-    await factory.createMany<OrderInterface>('Order', 3);
-    const order = await factory.create<OrderInterface>('Order', { identification: '1234543' });
+    await factory.createMany<OrderInterface>('Order', 3, { finished: false });
+    const order = await factory.create<OrderInterface>('Order', {
+      identification: '1234543',
+      finished: false,
+    });
 
     const response = await request(app).get(`/orders/${order.identification}`);
 
@@ -419,7 +422,7 @@ describe('should a Client', () => {
   });
 
   it('should list a order by deliveryman identification', async () => {
-    await factory.createMany<OrderInterface>('Order', 3);
+    await factory.createMany<OrderInterface>('Order', 3, { finished: false });
     const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman');
     await factory.create<OrderInterface>('Order', {
       deliveryman: deliveryman._id,

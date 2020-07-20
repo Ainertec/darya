@@ -69,6 +69,23 @@ var DeliverymanController = /** @class */ (function () {
             });
         });
     };
+    DeliverymanController.prototype.showByName = function (request, response) {
+        return __awaiter(this, void 0, void 0, function () {
+            var name, deliveryman;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        name = request.params.name;
+                        return [4 /*yield*/, Deliveryman_1.default.find({
+                                name: { $regex: new RegExp(name), $options: 'i' },
+                            })];
+                    case 1:
+                        deliveryman = _a.sent();
+                        return [2 /*return*/, response.json(deliveryman)];
+                }
+            });
+        });
+    };
     DeliverymanController.prototype.showByWorking = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
             var deliveryman;

@@ -156,6 +156,31 @@ describe('should test', () => {
     );
   });
 
+  it('should list all deliveryman by name', async () => {
+    const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman', {
+      name: 'jãozin',
+      working_day: true,
+      available: true,
+    });
+    const deliveryman2 = await factory.create<DeliverymanInterface>('Deliveryman', {
+      name: 'carlos',
+      working_day: true,
+      available: true,
+    });
+
+    const response = await request(app).get(`/deliverymans/j`);
+
+    expect(response.status).toBe(200);
+
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: 'jãozin',
+        }),
+      ])
+    );
+  });
+
   it('should list a deliveryman by hasDelivery', async () => {
     const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman', {
       working_day: true,
