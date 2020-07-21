@@ -123,6 +123,8 @@ function telaModalDeCriacaoDePedido(tipo) {
   $('#pagMotoboy').animate({ height: 'hide' });
   $('#pagExtra').animate({ height: 'hide' });
   $('#botaoConfirmacao').animate({ height: 'hide' });
+
+  VETORDEPRODUTOSCLASSEPEDIDO = []
 }
 
 //funcao responsavel pela navegacao do modal de criacao de pedido
@@ -422,8 +424,6 @@ async function preencherDadosPedidoIncluirDadosEmPedido(tipo, id, quantidade) {
     let json = await requisicaoGET(`products`);
     let dado = json.data.find((element) => element._id == id);
 
-    console.log(dado);
-
     VETORDEPRODUTOSCLASSEPEDIDO.push(
       JSON.parse(`{"_id":"${dado._id}","ref":"lisProdPed${dado._id}"}`)
     );
@@ -485,11 +485,11 @@ function listaDePedidosAbertosParaPagamento(json) {
         <td class="table-warning">${json.deliveryman.name}</td>
         <td class="table-warning">
             <button onclick="atualizarDadoPedido('${json._id}');" type="button" class="btn btn-primary btn-sm"><span class="fas fa-edit"></span> Alterar</button>
-            <button type="button" class="btn btn-primary btn-sm" style="margin-left:5px;"><span class="fas fa-print"></span> Reimprimir</button>
+            <button onclick="reImprimirPedido('${json._id}');" type="button" class="btn btn-primary btn-sm" style="margin-left:5px;"><span class="fas fa-print"></span> Reimprimir</button>
         </td>
         <td class="table-warning">
-            <button type="button" class="btn btn-success btn-sm"><span class="fas fa-dolly"></span> Entregue</button>
-            <button type="button" class="btn btn-outline-danger btn-sm" style="margin-left:5px;"><span class="fas fa-ban"></span> Cancelar</button>
+            <button onclick="finalizarPedido('${json._id}');" type="button" class="btn btn-success btn-sm"><span class="fas fa-dolly"></span> Entregue</button>
+            <button onclick="excluirPedido('${json._id}');" type="button" class="btn btn-outline-danger btn-sm" style="margin-left:5px;"><span class="fas fa-ban"></span> Cancelar</button>
         </td>
     </tr>`;
 
@@ -500,6 +500,9 @@ function listaDePedidosAbertosParaPagamento(json) {
 async function buscarDadosAtualizar(tipo) {
   let codigoHTML = ``,
     json = null;
+
+  inicializarVariaveisClassePedido();
+  VETORDEPEDIDOSCLASSEPEDIDO = [];
 
   if (tipo == 'codigo') {
     json = await requisicaoGET(`orders/${document.getElementById('nomePedidoPagamento').value}`);
@@ -534,55 +537,89 @@ async function buscarDadosAtualizar(tipo) {
 
 //funcao responsavel por cadastrar um pedido
 async function cadastrarPedido() {
-  let json = `{
+  let aux = true, json = `{
         "client_id":"${DADOSPEDIDO.cliente_id}",
         "deliveryman":"${DADOSPEDIDO.motoboy_id}",
         "client_address_id":"${document.getElementById('enderecocliente').value}",
         "source":"${document.getElementById('formaDeRequisicaoPedido').value}",
         "items":[`;
   VETORDEPRODUTOSCLASSEPEDIDO.forEach(function (item) {
-    json += `{
-                "product":"${item._id}",
-                "quantity":${document.getElementById('lisProdPed' + item._id).value}
-            }`;
+    if (aux) {
+      json += `{
+        "product":"${item._id}",
+        "quantity":${document.getElementById('lisProdPed' + item._id).value}
+      }`;
+      aux = false;
+    } else {
+      json += `,{
+        "product":"${item._id}",
+        "quantity":${document.getElementById('lisProdPed' + item._id).value}
+    }`;
+    }
   });
   json += `],
         "payment":"${document.getElementById('formaPagamento').value}",
         "note":"${document.getElementById('observacao').value}"
     }`;
 
-  await requisicaoPOST('orders', JSON.parse(json));
+  let result = await requisicaoPOST('orders', JSON.parse(json));
+
+  reImprimirPedido(result.data._id);
+
   console.log(JSON.parse(json));
+  inicializarVariaveisClassePedido();
 }
 
 //funcao responsavel por atualizar um pedido
 async function atualizarPedido(id) {
-  let json = `{
+  let aux = true, json = `{
         "client_id":"${DADOSPEDIDO.cliente_id}",
         "deliveryman":"${DADOSPEDIDO.motoboy_id}",
         "client_address_id":"${document.getElementById('enderecocliente').value}",
         "source":"${document.getElementById('formaDeRequisicaoPedido').value}",
         "items":[`;
   VETORDEPRODUTOSCLASSEPEDIDO.forEach(function (item) {
-    json += `{
-                "product":"${item._id}",
-                "quantity":${document.getElementById('lisProdPed' + item._id).value}
-            }`;
+    if (aux) {
+      json += `{
+        "product":"${item._id}",
+        "quantity":${document.getElementById('lisProdPed' + item._id).value}
+      }`;
+      aux = false;
+    } else {
+      json += `,{
+        "product":"${item._id}",
+        "quantity":${document.getElementById('lisProdPed' + item._id).value}
+      }`;
+    }
   });
   json += `],
         "payment":"${document.getElementById('formaPagamento').value}",
         "note":"${document.getElementById('observacao').value}"
     }`;
 
-  //await requisicaoPUT(`orders/${id}`, JSON.parse(json))
+  await requisicaoPUT(`orders/${id}`, JSON.parse(json))
 
   console.log(JSON.parse(json));
   console.log(id);
+
+  inicializarVariaveisClassePedido();
 }
 
 //funcao responsavel por excluir um pedido
 async function excluirPedido(id) {
   await requisicaoDELETE(`orders/${id}`, '');
+}
+
+//funcao responsavel por finalizar pedido
+async function finalizarPedido(id) {
+  await requisicaoPUT(`orders/${id}`, { "finished": true })
+}
+
+//funcao responsavel por imprimir/reimprimir comanda
+async function reImprimirPedido(id) {
+  await requisicaoPOST(`printers`, {
+    id: id
+  })
 }
 
 //funcao responsavel por inicializar variaveis globais do classe pedido

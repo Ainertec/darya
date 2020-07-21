@@ -19,3 +19,4 @@ export const clientUpdate = Joi.object().keys({
   phone: Joi.array().items(Joi.string()).required(),
 });
 
+export default client

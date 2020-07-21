@@ -6,21 +6,20 @@ let VETORDEITENSESTOQUE = [];
 function telaDeBuscarEstoque() {
   let codigoHTML = '';
 
-  codigoHTML += '<h4 class="text-center">Buscar Produto</h4>';
-  codigoHTML += '<div class="card-deck col-4 mx-auto d-block">';
-  codigoHTML += '<div class="input-group mb-3">';
-  codigoHTML +=
-    '<input id="nome" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do produto">';
-  codigoHTML += `<button onclick="if(validaDadosCampo(['#nome'])){buscarEstoque('nome');}else{mensagemDeErro('Preencha o campo nome!'); mostrarCamposIncorrreto(['nome']);}" type="button" class="btn btn-outline-info btn-sm">`;
-  codigoHTML += '<span class="fas fa-search"></span> Buscar';
-  codigoHTML += '</button>';
-  codigoHTML += '<br/>';
-  codigoHTML += `<button onclick="buscarEstoque('todos');" type="button" class="btn btn-outline-info btn-block btn-sm" style="margin-top:10px;">`;
-  codigoHTML += '<span class="fas fa-search-plus"></span> Exibir todos';
-  codigoHTML += '</button>';
-  codigoHTML += '</div>';
-  codigoHTML += '</div>';
-  codigoHTML += '<div id="resposta"></div>';
+  codigoHTML += `<h4 class="text-center">Buscar Produto</h4>
+    <div class="card-deck col-4 mx-auto d-block">
+      <div class="input-group mb-3">
+        <input id="nome" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do produto">
+        <button onclick="if(validaDadosCampo(['#nome'])){buscarEstoque('nome');}else{mensagemDeErro('Preencha o campo nome!'); mostrarCamposIncorrreto(['nome']);}" type="button" class="btn btn-outline-info btn-sm">
+          <span class="fas fa-search"></span> Buscar
+        </button>
+        <br/>
+        <button onclick="buscarEstoque('todos');" type="button" class="btn btn-outline-info btn-block btn-sm" style="margin-top:10px;">
+          <span class="fas fa-search-plus"></span> Exibir todos
+        </button>
+      </div>
+    </div>
+  <div id="resposta"></div>`
 
   document.getElementById('janela2').innerHTML = codigoHTML;
 }
@@ -31,55 +30,34 @@ async function buscarEstoque(tipoBusca) {
     json = null;
 
   if (tipoBusca == 'nome') {
-    json = await requisicaoGET('items/' + $('#nome').val(), {
-      headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
-    });
+    json = await requisicaoGET(`products/${$('#nome').val()}`);
   } else if (tipoBusca == 'todos') {
-    json = await requisicaoGET('items', {
-      headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
-    });
+    json = await requisicaoGET('products');
   }
 
   VETORDEITENSESTOQUE = [];
 
-  codigoHTML +=
-    '<div id="grafico" class="col-10 mx-auto" style="margin-top:30px; height: 50vh"></div>';
-
-  codigoHTML += '<h5 class="text-center" style="margin-top:50px">Atualizar estoque</h5>';
-  codigoHTML +=
-    '<table class="table table-bordered table-sm col-8 mx-auto" style="margin-top:10px">';
-  codigoHTML +=
-    '<thead class="thead-dark"><tr><th scope="col">Nome</th><th scope="col">Descrição</th><th scope="col">Quantidade</th><th scope="col">Adicionar</th><th scope="col">#</th></tr></thead>';
-  codigoHTML += '<tbody>';
+  codigoHTML += `<div id="grafico" class="col-10 mx-auto" style="margin-top:30px; height: 50vh"></div>
+  <h5 class="text-center" style="margin-top:50px">Atualizar estoque</h5>
+  <table class="table table-bordered table-sm col-8 mx-auto" style="margin-top:10px">
+  <thead class="thead-dark"><tr><th scope="col">Nome</th><th scope="col">Descrição</th><th scope="col">Quantidade</th><th scope="col">Adicionar</th><th scope="col">#</th></tr></thead>
+  <tbody>`
   json.data.forEach(function (item) {
     VETORDEITENSESTOQUE.push(item);
-    codigoHTML += '<tr>';
-    if (item.drink) {
-      codigoHTML += `<td class="table-secondary text-dark"><strong><span class="fas fa-wine-glass-alt"></span> ${corrigirTamanhoString(
-        20,
-        item.name
-      )}</strong></td>`;
-    } else {
-      codigoHTML += `<td class="table-secondary text-dark"><strong><span class="fas fa-utensils"></span> ${corrigirTamanhoString(
-        20,
-        item.name
-      )}</strong></td>`;
-    }
-    codigoHTML += `<td class="table-secondary text-dark">${corrigirTamanhoString(
-      40,
-      item.description
-    )}</td>`;
+    codigoHTML += `<tr>
+    <td class="table-secondary text-dark"><strong><span class="fas fa-utensils"></span> ${corrigirTamanhoString(20, item.name)}</strong></td>
+    <td class="table-secondary text-dark">${corrigirTamanhoString(40, item.description)}</td>`
     if (parseInt(item.stock) > 5) {
-      codigoHTML += `<td class="table-success text-dark text-center"><strong>${item.stock}</strong></td>`;
+      codigoHTML += `<td class="table-success text-dark text-center"><strong>${item.stock}</strong></td>`
     } else {
-      codigoHTML += `<td class="table-danger text-dark text-center"><strong>${item.stock}</strong></td>`;
+      codigoHTML += `<td class="table-danger text-dark text-center"><strong>${item.stock}</strong></td>`
     }
-    codigoHTML += `<td class="table-warning text-dark"><input class="form-control form-control-sm mousetrap" type="Number" id="quantidade${item._id}" value=1 /></td>`;
-    codigoHTML += `<td class="table-secondary text-dark"><button onclick="if(validaDadosCampo(['#quantidade${item._id}']) && validaValoresCampo(['#quantidade${item._id}'])){confirmarAcao('Atualizar quantidade!', 'atualizarEstoque(this.value)', '${item._id}');}else{mensagemDeErro('Preencha o campo quantidade com um valor válido!'); mostrarCamposIncorrreto(['quantidade${item._id}']);}" class="btn btn-success"><span class="fas fa-sync"></span></button></td>`;
-    codigoHTML += '</tr>';
+    codigoHTML += `<td class="table-warning text-dark"><input class="form-control form-control-sm mousetrap" type="Number" id="quantidade${item._id}" value=1 /></td>
+    <td class="table-secondary text-dark"><button onclick="atualizarEstoque(this.value)" value="${item._id}" class="btn btn-success"><span class="fas fa-sync"></span></button></td>
+    </tr>`
   });
-  codigoHTML += '</tbody>';
-  codigoHTML += '</table>';
+  codigoHTML += `</tbody>
+  </table>`
 
   if (json.data[0] == null) {
     document.getElementById('resposta').innerHTML =
@@ -107,11 +85,12 @@ async function atualizarEstoque(id) {
     delete json.createdAt;
     delete json.updatedAt;
     delete json.__v;
+    delete json.description;
     json.stock = parseInt(json.stock) + parseInt($('#quantidade' + id).val());
 
-    await requisicaoPUT('items/' + id, json, {
-      headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
-    });
+    console.log(json)
+
+    await requisicaoPUT(`products/${id}`);
     mensagemDeAviso('Atualizado com sucesso!');
     telaDeBuscarEstoque();
   } catch (error) {

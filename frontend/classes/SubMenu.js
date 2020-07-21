@@ -2,15 +2,12 @@
 
 //funcao responsavel por gerar o sub menu de pedido
 function subMenuPedido() {
-  let codigoHTML = ``;
+    let codigoHTML = ``;
 
-  codigoHTML += `<h4 class="text-center"><span class="fas fa-shopping-basket"></span> Opções de Pedido</h4>
+    codigoHTML += `<h4 class="text-center"><span class="fas fa-shopping-basket"></span> Opções de Pedido</h4>
     <div class="card-deck mx-auto col-6" style="margin-top:5vh;">
         <button onclick="telaModalDeCriacaoDePedido('cadastrar');" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px; width: 50px; height: 150px;">
             <span class="fas fa-plus"></span> Criar Pedido <span class="fas fa-shopping-basket"></span>
-        </button>
-        <button type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px; width: 50px; height: 150px;">
-            <span class="fas fa-globe-americas"></span> Pedidos-Online <span class="fas fa-shopping-basket"></span>
         </button>
     </div>
 
@@ -29,5 +26,5 @@ function subMenuPedido() {
     </div>
     <div id="respostaListaDePedidosAbertosPagamento"></div>`;
 
-  document.getElementById('janela2').innerHTML = codigoHTML;
+    document.getElementById('janela2').innerHTML = codigoHTML;
 }

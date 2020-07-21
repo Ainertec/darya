@@ -25,7 +25,7 @@ function telaDeRelatorio() {
   codigoHTML += '<div class="btn-group btn-lg btn-block" role="group" aria-label="Basic example">';
   codigoHTML += `<button type="button" class="btn btn-outline-primary"><span class="fas fa-search"></span> Relatórios periódicos</button>`;
   codigoHTML +=
-    '<button onclick="gerarGraficoLucroTotalPeriodico(); gerarGraficoGastoseGanhosSobreproduto();" type="button" class="btn btn-outline-primary"><span class="fas fa-search"></span> Relatórios completos</button>';
+    '<button onclick="gerarGraficoLucroTotalPeriodico(); gerarGraficoGastoseGanhosSobreproduto(); gerarGraficoProdutosMaiseMenosVendidos();" type="button" class="btn btn-outline-primary"><span class="fas fa-search"></span> Relatórios completos</button>';
   codigoHTML += '</div>';
   codigoHTML += '</div>';
 
@@ -44,7 +44,9 @@ function telaDeRelatorio() {
 }
 
 //funcao responsavel por gerar o relatorio de lucro total periodico(bruto/liquido)
-function gerarGraficoLucroTotalPeriodico() {
+async function gerarGraficoLucroTotalPeriodico() {
+  let json = await requisicaoGET('reports/orders/profit')
+
   Highcharts.chart('grafico0', {
     chart: {
       type: 'column',
@@ -90,7 +92,7 @@ function gerarGraficoLucroTotalPeriodico() {
       {
         name: 'Valor Bruto',
         color: 'rgba(248,161,63,1)',
-        data: [203.6],
+        data: [json.data.total],
         tooltip: {
           valuePrefix: 'R$',
           valueSuffix: ' (reais)',
@@ -102,7 +104,7 @@ function gerarGraficoLucroTotalPeriodico() {
       {
         name: 'Valor Líquido',
         color: 'rgba(186,60,61,.9)',
-        data: [183.6],
+        data: [json.data.netValue],
         tooltip: {
           valuePrefix: 'R$',
           valueSuffix: ' (reais)',
@@ -113,10 +115,21 @@ function gerarGraficoLucroTotalPeriodico() {
       },
     ],
   });
+
+  gerarListaDePedidosFechados(json.data.orders);
 }
 
 //funcao responsavel por gerar o relatorio de relacao de gastos e gganhos sobre produto
-function gerarGraficoGastoseGanhosSobreproduto() {
+async function gerarGraficoGastoseGanhosSobreproduto() {
+  let categoria = [], vetorLucro = [], vetorDispesa = [], json = await requisicaoGET('reports/products/dispense_gain')
+
+  json.data.forEach(function (item) {
+    vetorLucro.push(item.gain)
+    vetorDispesa.push(item.dispense)
+    categoria.push(item._id.name)
+  });
+
+
   Highcharts.chart('grafico1', {
     chart: {
       zoomType: 'xy',
@@ -125,11 +138,11 @@ function gerarGraficoGastoseGanhosSobreproduto() {
       text: 'Demonstrativo de Gasto e Ganho sobre Produto',
     },
     subtitle: {
-      text: 'Gráifco responsavel por demonstrar o ganho em relação com o gasto de cada produto.',
+      text: 'Gráfico responsavel por demonstrar o ganho em relação com o gasto de cada produto.',
     },
     xAxis: [
       {
-        categories: ['Produto1', 'Produto2', 'Produto3', 'Produto4'],
+        categories: categoria,
         crosshair: true,
       },
     ],
@@ -181,19 +194,19 @@ function gerarGraficoGastoseGanhosSobreproduto() {
     },
     series: [
       {
-        name: 'Ganho sobre produto',
+        name: 'Lucro sobre produto',
         type: 'column',
         yAxis: 1,
-        data: [49.9, 71.5, 106.4, 129.2],
+        data: vetorLucro,
         tooltip: {
           valuePrefix: 'R$',
           valueSuffix: ' (reais)',
         },
       },
       {
-        name: 'Gasto sobre produto',
+        name: 'Dispesa sobre produto',
         type: 'spline',
-        data: [7.0, 106.9, 9.5, 60.5],
+        data: vetorDispesa,
         tooltip: {
           valuePrefix: 'R$',
           valueSuffix: ' (reais)',
@@ -201,4 +214,96 @@ function gerarGraficoGastoseGanhosSobreproduto() {
       },
     ],
   });
+}
+
+//funcao responsavel por gerar o relatorio de produtos vendidos
+async function gerarGraficoProdutosMaiseMenosVendidos() {
+  let categoria = [], vetorDeProduto = [], json = await requisicaoGET('reports/products/amount')
+
+  json.data.forEach(function (item) {
+    categoria.push(item._id.name)
+    vetorDeProduto.push(item.amount)
+  });
+
+
+  Highcharts.chart('grafico2', {
+    chart: {
+      type: 'column'
+    },
+    title: {
+      text: 'Relatório de Produtos Mais e Menos Vendidos'
+    },
+    subtitle: {
+      text: 'Gráfico responsavel por demonstrar os produto que foram mais e menos vendidos.'
+    },
+    xAxis: {
+      categories: categoria,
+      crosshair: true
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: 'Quantidade (Unidade)'
+      }
+    },
+    tooltip: {
+      headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+      pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+        '<td style="padding:0"><b>{point.y:.0f} (Unid.)</b></td></tr>',
+      footerFormat: '</table>',
+      shared: true,
+      useHTML: true
+    },
+    plotOptions: {
+      column: {
+        pointPadding: 0.2,
+        borderWidth: 0
+      }
+    },
+    series: [{
+      name: 'QuantidadeTotal',
+      data: vetorDeProduto
+
+    }]
+  });
+}
+
+//funcao responsavel por gerar a listagem de pedidos fechados
+function gerarListaDePedidosFechados(json) {
+  let codigoHTML = ``
+
+  codigoHTML += `<table class="table table-sm table-bordered">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Código</th>
+        <th scope="col">Cliente</th>
+        <th scope="col">Motoboy</th>
+        <th scope="col">Itens/Quant.</th>
+        <th scope="col">Forma de pagamento</th>
+        <th scope="col">Valor total</th>
+        <th scope="col">Forma de requerimento</th>
+        <th scope="col">Data/hora</th>
+      </tr>
+    </thead>
+    <tbody class="table-warning">`
+  json.forEach(function (item) {
+    codigoHTML += `<tr>
+      <td>${item.identification}</td>
+      <td>${item.client.name}</td>
+      <td>${item.deliveryman.name}</td>
+      <td>`
+    item.items.forEach(function (item2) {
+      codigoHTML += `(${item2.product.name}/${item2.quantity}),`
+    });
+    codigoHTML += `</td>
+    <td>${item.payment}</td>
+      <td class="text-danger">R$${(parseFloat(item.total)).toFixed(2)}</td>
+      <td>${item.source}</td>
+      <td>${item.createdAt.split('.')[0]}</td>
+    </tr>`
+  });
+  codigoHTML += `</tbody>
+  </table>`
+
+  document.getElementById('listaItens').innerHTML = codigoHTML;
 }
