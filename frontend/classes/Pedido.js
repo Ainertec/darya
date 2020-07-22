@@ -124,8 +124,6 @@ function telaModalDeCriacaoDePedido(tipo) {
   $('#pagMotoboy').animate({ height: 'hide' });
   $('#pagExtra').animate({ height: 'hide' });
   $('#botaoConfirmacao').animate({ height: 'hide' });
-
-  VETORDEPRODUTOSCLASSEPEDIDO = []
 }
 
 //funcao responsavel pela navegacao do modal de criacao de pedido

@@ -69,7 +69,11 @@ routes.delete('/districts/:id', celebrate({ params: paramId }), DistrictControll
 routes.get('/clients', ClientController.index);
 routes.get('/clients/:name', celebrate({ params: paramName }), ClientController.show);
 routes.post('/clients', celebrate({ body: client }), ClientController.store);
-routes.put('/clients/:id', celebrate({ body: clientUpdate, params: paramId }), ClientController.update);
+routes.put(
+  '/clients/:id',
+  celebrate({ body: clientUpdate, params: paramId }),
+  ClientController.update
+);
 routes.delete('/clients/:id', celebrate({ params: paramId }), ClientController.delete);
 
 // Order
@@ -96,6 +100,7 @@ routes.get(
   ReportController.deliverymanPayment
 );
 routes.get('/reports/orders/profit', ReportController.ordersProfit);
+routes.get('/reports/orders/all', ReportController.allFinishedOrders);
 routes.get('/reports/products/dispense_gain', ReportController.productsDispenseAndGain);
 routes.get('/reports/products/amount', ReportController.productsAmount);
 routes.delete('/reports', ReportController.delete);

@@ -13,7 +13,7 @@ interface InterfaceDispenseAndGain {
 class ReportController {
   async deliverymanPayment(request: Request, response: Response) {
     const { deliveryman_id } = request.params;
-    console.log(deliveryman_id)
+    console.log(deliveryman_id);
     const initial = startOfHour(new Date());
     const final = endOfHour(new Date());
     const ObjectId = Types.ObjectId;
@@ -28,6 +28,17 @@ class ReportController {
         _id: '$deliveryman',
         rate: { $sum: '$address.district_rate' },
       });
+
+    return response.json(deliveryRate);
+  }
+  async allFinishedOrders(request: Request, response: Response) {
+    const initial = startOfHour(new Date());
+    const final = endOfHour(new Date());
+
+    const deliveryRate = await Order.find({
+      createdAt: { $gte: initial, $lte: final },
+      finished: true,
+    });
 
     return response.json(deliveryRate);
   }
