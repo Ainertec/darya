@@ -28,8 +28,21 @@ describe('should a Client', () => {
       finished: true,
     });
 
-    const response = await request(app)
-      .get(`/reports/deliveryman/rate/${deliveryman._id}`)
+    const response = await request(app).get(`/reports/deliveryman/rate/${deliveryman._id}`);
+    // console.log(response.body);
+    expect(response.status).toBe(200);
+  });
+
+  it('should list all finished orders', async () => {
+    const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman', {
+      name: 'Gustavo',
+    });
+    await factory.createMany<OrderInterface>('Order', 3, {
+      deliveryman: deliveryman._id,
+      finished: true,
+    });
+
+    const response = await request(app).get(`/reports/orders/all`);
     console.log(response.body);
     expect(response.status).toBe(200);
   });
@@ -44,8 +57,7 @@ describe('should a Client', () => {
       finished: true,
     });
 
-    const response = await request(app)
-      .get(`/reports/deliveryman/rate/${deliveryman._id}`)
+    const response = await request(app).get(`/reports/deliveryman/rate/${deliveryman._id}`);
     expect(response.body.length).toBe(0);
     expect(response.status).toBe(200);
   });
