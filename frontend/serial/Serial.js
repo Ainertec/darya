@@ -7,16 +7,16 @@ function TelaConfigurarSerial() {
   codigoHTML = '<h4 class="text-center">Serial Atual</h4>';
   codigoHTML +=
     '<h5 class="text-center" style="margin-top:50px">Data Atual: <span class="badge badge-success">' +
-    localStorage.getItem('dataAtual') +
+    localStorage.getItem('dataAtualDarya') +
     '</span> - Licença até: <span class="badge badge-danger">' +
-    localStorage.getItem('dataFim') +
+    localStorage.getItem('dataFimDarya') +
     '</span></h5>';
   codigoHTML += '<hr class="my-6 bg-dark" style="margin-top:50px">';
   codigoHTML += '<h4 class="text-center" style="margin-top:50px">Cadastrar Novo Serial</h4>';
   codigoHTML += '<form style="margin-top:50px">';
   codigoHTML += '<div class="form-row">';
   codigoHTML +=
-    '<input id="dataFim" type="date" class="form-control col-md-8" placeholder="Número Pedido">';
+    '<input id="dataFimDarya" type="date" class="form-control col-md-8" placeholder="Número Pedido">';
   codigoHTML +=
     '<button onclick="cadastrarSerial();" type="button" class="btn btn-light border border-dark col-md-3">';
   codigoHTML += '<span class="fas fa-search"></span> Cadastrar';
@@ -42,11 +42,11 @@ function autenticacaoSerial() {
 function cadastrarSerial() {
   var date = new Date();
 
-  localStorage.removeItem('dataFim');
-  localStorage.removeItem('dataAtual');
-  localStorage.setItem('dataFim', $('#dataFim').val());
+  localStorage.removeItem('dataFimDarya');
+  localStorage.removeItem('dataAtualDarya');
+  localStorage.setItem('dataFimDarya', $('#dataFimDarya').val());
   localStorage.setItem(
-    'dataAtual',
+    'dataAtualDarya',
     date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
   );
 }
@@ -55,19 +55,19 @@ function cadastrarSerial() {
 
 //function para verificar o serial
 function verificarValidadeSerial() {
-  var dataFim = new Date(localStorage.getItem('dataFim'));
-  var dataEmMemoria = new Date(localStorage.getItem('dataAtual'));
+  var dataFim = new Date(localStorage.getItem('dataFimDarya'));
+  var dataEmMemoria = new Date(localStorage.getItem('dataAtualDarya'));
   var date = new Date();
   var dataAtual = new Date(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate());
   var codicao = false;
 
-  if (localStorage.getItem('dataFim') == '') {
+  if (localStorage.getItem('dataFimDarya') == '') {
     codicao = true;
   } else {
     if (dataEmMemoria <= dataAtual) {
-      localStorage.removeItem('dataAtual');
+      localStorage.removeItem('dataAtualDarya');
       localStorage.setItem(
-        'dataAtual',
+        'dataAtualDarya',
         date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
       );
 

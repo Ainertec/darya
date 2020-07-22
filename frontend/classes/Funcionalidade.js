@@ -12,6 +12,15 @@ function mensagemDeErro(mensagem) {
   limparTelaDeMensagem();
 }
 
+//funcao para gerar mensagem de erro no modal
+function mensagemDeErroModal(mensagem) {
+  document.getElementById(
+    'mensagemDeErroModal'
+  ).innerHTML = `<span class="badge badge-danger h5">${mensagem}</span>`;
+  $('#mensagemDeErroModal').animate({ width: 'show' });
+  limparTelaMensagemModal();
+}
+
 // funcao para gerar mensagem de aviso
 function mensagemDeAviso(mensagem) {
   document.getElementById(
@@ -25,6 +34,13 @@ function mensagemDeAviso(mensagem) {
 function limparTelaDeMensagem() {
   setTimeout(function () {
     $('#mensagemDeErro').animate({ width: 'hide' });
+  }, 3000);
+}
+
+//funcao para limpar a tela de mensagens do modal
+function limparTelaMensagemModal() {
+  setTimeout(function () {
+    $('#mensagemDeErroModal').animate({ width: 'hide' });
   }, 3000);
 }
 
@@ -50,19 +66,19 @@ function validaValoresCampo(campo) {
 
 // funcao de animacao da janela2
 function animacaoJanela2() {
-  $('#janela2').fadeOut(100);
-  $('#janela2').fadeIn(100);
+  $('#janela2').fadeOut(10);
+  $('#janela2').fadeIn(500);
 }
 
 // funcao responsavel por alertar ao cliente se ele realmente deseja efetuar umas determinada acao
-function confirmarAcao(mensagem, funcao) {
+function confirmarAcao(mensagem, funcao, value) {
   let codigoHTML = ``;
 
   codigoHTML += `<div class="modal" id="alertaConfirmacao" data-backdrop="static" data-keyboard="false" role="dialog" aria-hidden="true">
-      <div class="modal-dialog float-left">
+      <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <h5 class="modal-title" id="exampleModalLabel"><span class="fas fa-exclamation-triangle"></span> Atenção</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -71,12 +87,16 @@ function confirmarAcao(mensagem, funcao) {
             <p class="text-danger"><strong>${mensagem} Deseja continuar?</strong></p>
           </div>
           <div class="modal-footer">
-          <button onclick="document.getElementById(\'modal\').innerHTML=\'\';" type="button" class="btn btn-outline-dark" data-dismiss="modal"><span class="fas fa-times iconsTam"></span> Não</button>
-            <button onclick="${funcao}; document.getElementById('modal').innerHTML='';" type="button" class="btn btn-danger" data-dismiss="modal"><span class="fas fa-check iconsTam"></span> Sim</button>
-          </div>
+          <button onclick="document.getElementById(\'modal\').innerHTML=\'\';" type="button" class="btn btn-outline-dark" data-dismiss="modal"><span class="fas fa-times iconsTam"></span> Não</button>`
+  if (value == null) {
+    codigoHTML += `<button onclick="${funcao}; document.getElementById('modal').innerHTML='';" type="button" class="btn btn-danger" data-dismiss="modal"><span class="fas fa-check iconsTam"></span> Sim</button>`
+  } else {
+    codigoHTML += `<button onclick="${funcao}; document.getElementById('modal').innerHTML='';" value="${value}" type="button" class="btn btn-danger" data-dismiss="modal"><span class="fas fa-check iconsTam"></span> Sim</button>`
+  }
+  codigoHTML += `</div>
         </div>
       </div>
-    </div>`;
+    </div>`
 
   document.getElementById('alert2').innerHTML = codigoHTML;
   $('#alertaConfirmacao').modal('show');

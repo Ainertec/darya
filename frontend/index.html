@@ -44,15 +44,14 @@
     };
   </script>
   <script>
-    setTimeout(function () { window.location.href = "home.html"; }, 3000);
-    /*if (verificarValidadeSerial()) {
+    if (verificarValidadeSerial()) {
       setTimeout(function () { window.location.href = "home.html"; }, 3000);
     } else {
       setTimeout(async function () {
-        await requisicaoGET("serial_false/?password=" + 52164521655455362);
         window.location.href = "serial/serial.html";
+        await axios.get(`http://localhost:3333/serial_false/?password=52164521655455362`)
       }, 3000);
-    }*/
+    }
   </script>
 
 

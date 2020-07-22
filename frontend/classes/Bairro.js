@@ -5,13 +5,14 @@ let VETORDEBAIRROSCLASSEBAIRRO = [];
 
 //funcao responsavel por gerar a tela de busca do bairro
 function telaDeBuscarBairro() {
+  VETORDEBAIRROSCLASSEBAIRRO = []
   let codigoHTML = ``;
 
   codigoHTML += `<h4 class="text-center"><span class="fas fa-map-marked-alt"></span> Buscar Bairro</h4>
                     <div class="card-deck col-4 mx-auto d-block">
                         <div class="input-group mb-3">
                             <input id="nome" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do bairro">
-                            <button onclick="buscarDadosBairro('nome')" type="button" class="btn btn-outline-info btn-sm">
+                            <button onclick="if(validaDadosCampo(['#nome'])){buscarDadosBairro('nome');}else{mensagemDeErro('Preencha o campo nome do bairro!'); mostrarCamposIncorreto(['nome']);}" type="button" class="btn btn-outline-info btn-sm">
                                 <span class="fas fa-search"></span> Buscar
                             </button>
                             <br/>
@@ -25,7 +26,8 @@ function telaDeBuscarBairro() {
                     </div>
                     <div id="resposta"></div>`;
 
-  document.getElementById('janela2').innerHTML = codigoHTML;
+  animacaoJanela2();
+  setTimeout(function () { document.getElementById('janela2').innerHTML = codigoHTML; }, 30)
 }
 
 //funcao responsavel por gerar a lista com os bairros
@@ -33,19 +35,17 @@ function gerarListaDeBairros(json) {
   let codigoHTML = ``;
 
   codigoHTML += `<tr>
-        <td class="table-warning"><strong><span class="fas fa-map-marker-alt"></span> ${
-          json.name
-        }</strong></td>
-        <td class="table-warning"><strong>${json.city}</strong></td>
+        <td class="table-warning" title="${json.name}"><strong><span class="fas fa-map-marker-alt"></span> ${
+    corrigirTamanhoString(15, json.name)
+    }</strong></td>
+        <td class="table-warning" title="${json.city}"><strong>${corrigirTamanhoString(15, json.city)}</strong></td>
         <td class="table-warning text-danger"><strong>R$${parseFloat(json.rate).toFixed(
-          2
-        )}</strong></td>
+      2
+    )}</strong></td>
         <td class="table-warning"><button onclick="carregarDadosBairro('${
-          json._id
-        }')" type="button" class="btn btn-primary btn-sm"><span class="fas fa-edit"></span> Editar</button></td>
-        <td class="table-warning"><button onclick="excluirBairro('${
-          json._id
-        }')" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span> Excluir</button></td>
+    json._id
+    }')" type="button" class="btn btn-primary btn-sm"><span class="fas fa-edit"></span> Editar</button></td>
+        <td class="table-warning"><button onclick="confirmarAcao('Excluir este bairro!', 'excluirBairro(this.value)', '${json._id}')" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span> Excluir</button></td>
     </tr>`;
 
   return codigoHTML;
@@ -60,9 +60,10 @@ function modalTelaCadastrarouAtualizarBairro(tipo) {
                         <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel"><span class="fas fa-map-marked-alt"></span> Dados Bairro</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button onclick="reiniciarClasseBairro();" type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                             </button>
+                            <div id="mensagemDeErroModal" class="justify-content-center"></div>
                         </div>
                         <div class="modal-body">
                             <form>
@@ -82,10 +83,10 @@ function modalTelaCadastrarouAtualizarBairro(tipo) {
                         </div>
                         <div class="modal-footer">`;
   if (tipo == 'cadastrar') {
-    codigoHTML += `<button onclick="cadastrarBairro();" type="button" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Adicionar</button>`;
+    codigoHTML += `<button onclick="if(validaDadosCampo(['#nomebairro','#nomecidade','#precotaxa']) && validaValoresCampo(['#precotaxa'])){cadastrarBairro(); $('#modalClasseBairro').modal('hide');}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['nomebairro','nomecidade','precotaxa']);}" type="button" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Adicionar</button>`;
   } else if (tipo == 'atualizar') {
-    codigoHTML += `<button id="botaoAtualizar" onclick="atualizarBairro(this.value);" type="button" class="btn btn-success btn-block"><span class="fas fa-edit"></span> Modificar</button>
-                                 <button id="botaoExcluir" onclick="excluirBairro(this.value)" type="button" class="btn btn-outline-danger btn-block"><span class="fas fa-trash"></span> Excluir</button>`;
+    codigoHTML += `<button id="botaoAtualizar" onclick="if(validaDadosCampo(['#nomebairro','#nomecidade','#precotaxa']) && validaValoresCampo(['#precotaxa'])){confirmarAcao('Atualizar este produto! ','atualizarBairro(this.value)',(this.value).toString()); $('#modalClasseBairro').modal('hide');}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['nomebairro','nomecidade','precotaxa']);}" type="button" class="btn btn-success btn-block"><span class="fas fa-edit"></span> Modificar</button>
+                                 <button id="botaoExcluir" onclick="confirmarAcao('Excluir este bairro! ','excluirBairro(this.value)',(this.value).toString()); $('#modalClasseBairro').modal('hide');" type="button" class="btn btn-outline-danger btn-block"><span class="fas fa-trash"></span> Excluir</button>`;
   }
   codigoHTML += `</div>
                         </div>
@@ -103,76 +104,112 @@ async function buscarDadosBairro(tipo) {
 
   VETORDEBAIRROSCLASSEBAIRRO = [];
 
-  if (tipo == 'nome') {
-    json = await requisicaoGET(`districts/${document.getElementById('nome').value}`);
-  } else if (tipo == 'todos') {
-    json = await requisicaoGET(`districts`);
+  try {
+    if (tipo == 'nome') {
+      json = await requisicaoGET(`districts/${document.getElementById('nome').value}`);
+    } else if (tipo == 'todos') {
+      json = await requisicaoGET(`districts`);
+    }
+
+    codigoHTML += `<h5 class="text-center" style="margin-top:80px">Listagem de bairros</h5>
+      <table class="table table-sm col-8 mx-auto" style="margin-top:10px">
+          <thead class="thead-dark">
+              <tr>
+                  <th scope="col">Nome Bairro</th>
+                  <th scope="col">Nome Cidade</th>
+                  <th scope="col">Valor taxa</th>
+                  <th scope="col">Editar</th>
+                  <th scope="col">Excluir</th>
+              </tr>
+          </thead>
+          <tbody>`;
+
+    json.data.forEach(function (item) {
+      VETORDEBAIRROSCLASSEBAIRRO.push(item);
+      codigoHTML += gerarListaDeBairros(item);
+    });
+
+    codigoHTML += `</tbody>
+      </table>`;
+
+    if (json.data[0]) {
+      document.getElementById('resposta').innerHTML = codigoHTML;
+    } else {
+      document.getElementById('resposta').innerHTML = '<h5 class="text-center" style="margin-top:10vh;"><span class="fas fa-exclamation-triangle"></span> Nenhum bairro encontrado!</h5>';
+    }
+  } catch (error) {
+    mensagemDeErro('Não foi possível carregar os bairros!')
   }
-
-  codigoHTML += `<h5 class="text-center" style="margin-top:80px">Listagem de bairros</h5>
-    <table class="table table-sm col-8 mx-auto" style="margin-top:10px">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">Nome Bairro</th>
-                <th scope="col">Nome Cidade</th>
-                <th scope="col">Valor taxa</th>
-                <th scope="col">Editar</th>
-                <th scope="col">Excluir</th>
-            </tr>
-        </thead>
-        <tbody>`;
-
-  json.data.forEach(function (item) {
-    VETORDEBAIRROSCLASSEBAIRRO.push(item);
-    codigoHTML += gerarListaDeBairros(item);
-  });
-
-  codigoHTML += `</tbody>
-    </table>`;
-
-  document.getElementById('resposta').innerHTML = codigoHTML;
 }
 
 //funcao responsavel por carregar os dados do bairro nos campos
 function carregarDadosBairro(id) {
   modalTelaCadastrarouAtualizarBairro('atualizar');
 
-  const dado = VETORDEBAIRROSCLASSEBAIRRO.find((element) => element._id == id);
+  try {
+    const dado = VETORDEBAIRROSCLASSEBAIRRO.find((element) => element._id == id);
 
-  document.getElementById('nomebairro').value = dado.name;
-  document.getElementById('nomecidade').value = dado.city;
-  document.getElementById('precotaxa').value = parseFloat(dado.rate).toFixed(2);
-  document.getElementById('botaoAtualizar').value = dado._id.toString();
+    document.getElementById('nomebairro').value = dado.name;
+    document.getElementById('nomecidade').value = dado.city;
+    document.getElementById('precotaxa').value = parseFloat(dado.rate).toFixed(2);
+    document.getElementById('botaoAtualizar').value = dado._id.toString();
+  } catch (error) {
+    mensagemDeErroModal('Não foi possível carregar os dados!')
+  }
 }
 
 //funcao responsavel por cadastrar um bairro
 async function cadastrarBairro() {
-  let json = `{"name":"${$('#nomebairro').val()}",
+  try {
+    let json = `{"name":"${$('#nomebairro').val()}",
     "city":"${$('#nomecidade').val()}",
     "rate":${$('#precotaxa').val()}}`;
 
-  await requisicaoPOST('districts', JSON.parse(json));
-
-  console.log(JSON.parse(json));
+    await requisicaoPOST('districts', JSON.parse(json));
+    mensagemDeAviso('Bairro cadastrado com sucesso!')
+  } catch (error) {
+    mensagemDeErro('Não foi possível cadastrar o bairro!')
+  }
 }
 
 //funcao responsavel por atualizar um bairro
 async function atualizarBairro(id) {
-  let dado = VETORDEBAIRROSCLASSEBAIRRO.filter(function (element) {
-    return element._id == id;
-  });
+  try {
+    let dado = VETORDEBAIRROSCLASSEBAIRRO.filter(function (element) {
+      return element._id == id;
+    });
 
-  dado[0].name = document.getElementById('nomebairro').value;
-  dado[0].city = document.getElementById('nomecidade').value;
-  dado[0].rate = parseFloat(document.getElementById('precotaxa').value);
-  delete dado[0]._id;
-  delete dado[0].updatedAt;
-  delete dado[0].createdAt;
-  delete dado[0].__v;
+    dado[0].name = document.getElementById('nomebairro').value;
+    dado[0].city = document.getElementById('nomecidade').value;
+    dado[0].rate = parseFloat(document.getElementById('precotaxa').value);
+    delete dado[0]._id;
+    delete dado[0].updatedAt;
+    delete dado[0].createdAt;
+    delete dado[0].__v;
 
-  console.log(dado[0]);
+    await requisicaoPUT(`districts/${id}`, dado[0]);
+    document.getElementById('modal').innerHTML = '';
+    mensagemDeAviso('Bairro atualizado com sucesso!')
+  } catch (error) {
+    mensagemDeErro('Não foi possível atualizar o bairro!')
+  }
 
-  await requisicaoPUT(`districts/${id}`, dado[0]);
+  if (validaDadosCampo(['#nome'])) {
+    buscarDadosBairro('nome');
+  } else {
+    buscarDadosBairro('todos');
+  }
+
+}
+
+//funcao responsavel por excluir um bairro
+async function excluirBairro(id) {
+  try {
+    await requisicaoDELETE(`districts/${id}`, '');
+    mensagemDeAviso('Bairro excluído com sucesso!')
+  } catch (error) {
+    mensagemDeErro('Não foi possível excluir o bairro!')
+  }
 
   if (validaDadosCampo(['#nome'])) {
     buscarDadosBairro('nome');
@@ -181,8 +218,11 @@ async function atualizarBairro(id) {
   }
 }
 
-//funcao responsavel por excluir um bairro
-async function excluirBairro(id) {
-  await requisicaoDELETE(`districts/${id}`, '');
-  console.log(id);
+//funcao responsavel por reiniciar a classe bairro
+function reiniciarClasseBairro() {
+  VETORDEBAIRROSCLASSEBAIRRO = []
+  telaDeBuscarBairro();
+  document.getElementById('modal').innerHTML = ''
+  document.getElementById('modal2').innerHTML = ''
+  document.getElementById('alert2').innerHTML = ''
 }
