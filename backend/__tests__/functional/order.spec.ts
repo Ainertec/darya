@@ -427,11 +427,13 @@ describe('should a Client', () => {
     await factory.create<OrderInterface>('Order', {
       deliveryman: deliveryman._id,
       identification: '123123',
+      finished: false,
     });
 
     const response = await request(app).get(`/orders/deliveryman/${deliveryman._id}`);
 
     expect(response.status).toBe(200);
+    // console.log(response.body);
 
     expect(response.body).toEqual(
       expect.arrayContaining([

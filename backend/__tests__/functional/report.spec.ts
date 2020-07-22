@@ -7,6 +7,7 @@ import factory from '../factories';
 
 import { OrderInterface, DeliverymanInterface, ProductInterface } from '../../src/interfaces/base';
 import { response } from 'express';
+import deliveryman from '../../src/validations/deliverymanSchema';
 
 describe('should a Client', () => {
   beforeAll(() => {
@@ -29,11 +30,11 @@ describe('should a Client', () => {
     });
 
     const response = await request(app).get(`/reports/deliveryman/rate/${deliveryman._id}`);
-    // console.log(response.body);
+    console.log(response.body);
     expect(response.status).toBe(200);
   });
 
-  it('should list all finished orders', async () => {
+  it('should list all finished orders by deliveryman', async () => {
     const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman', {
       name: 'Gustavo',
     });
@@ -42,8 +43,8 @@ describe('should a Client', () => {
       finished: true,
     });
 
-    const response = await request(app).get(`/reports/orders/all`);
-    console.log(response.body);
+    const response = await request(app).get(`/reports/deliveryman/orders/${deliveryman._id}`);
+    // console.log(response.body);
     expect(response.status).toBe(200);
   });
 
@@ -69,6 +70,7 @@ describe('should a Client', () => {
     await factory.createMany('Order', 5, {
       total: 200,
       items: [{ product: product._id, quantity: 1 }],
+      finished: true,
     });
 
     const response = await request(app).get('/reports/orders/profit');
@@ -97,6 +99,7 @@ describe('should a Client', () => {
           quantity: 2,
         },
       ],
+      finished: true,
     });
     await factory.createMany('Order', 2, {
       items: [
@@ -105,6 +108,7 @@ describe('should a Client', () => {
           quantity: 4,
         },
       ],
+      finished: true,
     });
     await factory.createMany('Order', 2, {
       items: [
@@ -117,6 +121,7 @@ describe('should a Client', () => {
           quantity: 2,
         },
       ],
+      finished: true,
     });
 
     const response = await request(app).get('/reports/products/dispense_gain');
@@ -146,6 +151,7 @@ describe('should a Client', () => {
           quantity: 2,
         },
       ],
+      finished: true,
     });
     await factory.createMany('Order', 2, {
       items: [
@@ -154,6 +160,7 @@ describe('should a Client', () => {
           quantity: 4,
         },
       ],
+      finished: true,
     });
     await factory.createMany('Order', 2, {
       items: [
@@ -166,6 +173,7 @@ describe('should a Client', () => {
           quantity: 2,
         },
       ],
+      finished: true,
     });
 
     const response = await request(app).get('/reports/products/amount');

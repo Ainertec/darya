@@ -100,7 +100,11 @@ routes.get(
   ReportController.deliverymanPayment
 );
 routes.get('/reports/orders/profit', ReportController.ordersProfit);
-routes.get('/reports/orders/all', ReportController.allFinishedOrders);
+routes.get(
+  '/reports/deliveryman/orders/:deliveryman_id',
+  celebrate({ params: report }),
+  ReportController.allFinishedOrdersByDeliveryman
+);
 routes.get('/reports/products/dispense_gain', ReportController.productsDispenseAndGain);
 routes.get('/reports/products/amount', ReportController.productsAmount);
 routes.delete('/reports', ReportController.delete);

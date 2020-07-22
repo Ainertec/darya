@@ -86,6 +86,7 @@ class OrderController {
   async showByDeliveryman(request: Request, response: Response) {
     const { deliveryman } = request.params;
     const ObjectId = Types.ObjectId;
+
     const order = await Order.find({
       deliveryman: ObjectId(deliveryman),
       finished: false,

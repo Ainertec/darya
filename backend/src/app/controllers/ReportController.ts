@@ -12,11 +12,11 @@ interface InterfaceDispenseAndGain {
 
 class ReportController {
   async deliverymanPayment(request: Request, response: Response) {
-    const { deliveryman_id } = request.params;
-    console.log(deliveryman_id);
+    const deliveryman_id = String(request.params.deliveryman_id);
     const initial = startOfHour(new Date());
     const final = endOfHour(new Date());
     const ObjectId = Types.ObjectId;
+    console.log(deliveryman_id);
 
     const deliveryRate = await Order.aggregate()
       .match({
@@ -31,23 +31,32 @@ class ReportController {
 
     return response.json(deliveryRate);
   }
-  async allFinishedOrders(request: Request, response: Response) {
+
+  async allFinishedOrdersByDeliveryman(request: Request, response: Response) {
+    const { deliveryman_id } = request.params;
     const initial = startOfHour(new Date());
     const final = endOfHour(new Date());
+    const ObjectId = Types.ObjectId;
 
-    const deliveryRate = await Order.find({
+    const orders = await Order.find({
+      deliveryman: ObjectId(deliveryman_id),
       createdAt: { $gte: initial, $lte: final },
       finished: true,
-    });
+    })
+      .populate('deliveryman')
+      .populate('items.product');
 
-    return response.json(deliveryRate);
+    return response.json(orders);
   }
 
   async ordersProfit(request: Request, response: Response) {
     const initial = startOfHour(new Date());
     const final = endOfHour(new Date());
 
-    const ordersProfit = await Order.find({ createdAt: { $gte: initial, $lte: final } })
+    const ordersProfit = await Order.find({
+      createdAt: { $gte: initial, $lte: final },
+      finished: true,
+    })
       .populate('items.product')
       .populate('deliveryman');
 
@@ -75,6 +84,9 @@ class ReportController {
 
   async productsDispenseAndGain(request: Request, response: Response) {
     const orders = await Order.aggregate<InterfaceDispenseAndGain>()
+      .match({
+        finished: true,
+      })
       .unwind('items')
       .lookup({
         from: 'products',
@@ -106,6 +118,9 @@ class ReportController {
 
   async productsAmount(request: Request, response: Response) {
     const productsAmount = await Order.aggregate()
+      .match({
+        finished: true,
+      })
       .unwind('items')
       .lookup({
         from: 'products',
