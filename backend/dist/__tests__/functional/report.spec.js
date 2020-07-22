@@ -77,11 +77,34 @@ describe('should a Client', function () {
                         })];
                 case 2:
                     _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default)
-                            .get("/reports/deliveryman/rate/" + deliveryman._id)];
+                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/reports/deliveryman/rate/" + deliveryman._id)];
                 case 3:
                     response = _a.sent();
                     console.log(response.body);
+                    expect(response.status).toBe(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('should list all finished orders by deliveryman', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var deliveryman, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, factories_1.default.create('Deliveryman', {
+                        name: 'Gustavo',
+                    })];
+                case 1:
+                    deliveryman = _a.sent();
+                    return [4 /*yield*/, factories_1.default.createMany('Order', 3, {
+                            deliveryman: deliveryman._id,
+                            finished: true,
+                        })];
+                case 2:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/reports/deliveryman/orders/" + deliveryman._id)];
+                case 3:
+                    response = _a.sent();
+                    // console.log(response.body);
                     expect(response.status).toBe(200);
                     return [2 /*return*/];
             }
@@ -103,8 +126,7 @@ describe('should a Client', function () {
                         })];
                 case 2:
                     _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default)
-                            .get("/reports/deliveryman/rate/" + deliveryman._id)];
+                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/reports/deliveryman/rate/" + deliveryman._id)];
                 case 3:
                     response = _a.sent();
                     expect(response.body.length).toBe(0);
@@ -125,6 +147,7 @@ describe('should a Client', function () {
                     return [4 /*yield*/, factories_1.default.createMany('Order', 5, {
                             total: 200,
                             items: [{ product: product._id, quantity: 1 }],
+                            finished: true,
                         })];
                 case 2:
                     _a.sent();
@@ -167,6 +190,7 @@ describe('should a Client', function () {
                                     quantity: 2,
                                 },
                             ],
+                            finished: true,
                         })];
                 case 5:
                     _a.sent();
@@ -177,6 +201,7 @@ describe('should a Client', function () {
                                     quantity: 4,
                                 },
                             ],
+                            finished: true,
                         })];
                 case 6:
                     _a.sent();
@@ -191,6 +216,7 @@ describe('should a Client', function () {
                                     quantity: 2,
                                 },
                             ],
+                            finished: true,
                         })];
                 case 7:
                     _a.sent();
@@ -234,6 +260,7 @@ describe('should a Client', function () {
                                     quantity: 2,
                                 },
                             ],
+                            finished: true,
                         })];
                 case 5:
                     _a.sent();
@@ -244,6 +271,7 @@ describe('should a Client', function () {
                                     quantity: 4,
                                 },
                             ],
+                            finished: true,
                         })];
                 case 6:
                     _a.sent();
@@ -258,6 +286,7 @@ describe('should a Client', function () {
                                     quantity: 2,
                                 },
                             ],
+                            finished: true,
                         })];
                 case 7:
                     _a.sent();

@@ -62,11 +62,11 @@ var ReportController = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        deliveryman_id = request.params.deliveryman_id;
-                        console.log(deliveryman_id);
+                        deliveryman_id = String(request.params.deliveryman_id);
                         initial = date_fns_1.startOfHour(new Date());
                         final = date_fns_1.endOfHour(new Date());
                         ObjectId = mongoose_1.Types.ObjectId;
+                        console.log(deliveryman_id);
                         return [4 /*yield*/, Order_1.default.aggregate()
                                 .match({
                                 deliveryman: ObjectId(deliveryman_id),
@@ -84,6 +84,30 @@ var ReportController = /** @class */ (function () {
             });
         });
     };
+    ReportController.prototype.allFinishedOrdersByDeliveryman = function (request, response) {
+        return __awaiter(this, void 0, void 0, function () {
+            var deliveryman_id, initial, final, ObjectId, orders;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        deliveryman_id = request.params.deliveryman_id;
+                        initial = date_fns_1.startOfHour(new Date());
+                        final = date_fns_1.endOfHour(new Date());
+                        ObjectId = mongoose_1.Types.ObjectId;
+                        return [4 /*yield*/, Order_1.default.find({
+                                deliveryman: ObjectId(deliveryman_id),
+                                createdAt: { $gte: initial, $lte: final },
+                                finished: true,
+                            })
+                                .populate('deliveryman')
+                                .populate('items.product')];
+                    case 1:
+                        orders = _a.sent();
+                        return [2 /*return*/, response.json(orders)];
+                }
+            });
+        });
+    };
     ReportController.prototype.ordersProfit = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
             var initial, final, ordersProfit, totalOrders, totalRate, totalProducts, filteredTotal;
@@ -92,7 +116,10 @@ var ReportController = /** @class */ (function () {
                     case 0:
                         initial = date_fns_1.startOfHour(new Date());
                         final = date_fns_1.endOfHour(new Date());
-                        return [4 /*yield*/, Order_1.default.find({ createdAt: { $gte: initial, $lte: final } })
+                        return [4 /*yield*/, Order_1.default.find({
+                                createdAt: { $gte: initial, $lte: final },
+                                finished: true,
+                            })
                                 .populate('items.product')
                                 .populate('deliveryman')];
                     case 1:
@@ -122,6 +149,9 @@ var ReportController = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, Order_1.default.aggregate()
+                            .match({
+                            finished: true,
+                        })
                             .unwind('items')
                             .lookup({
                             from: 'products',
@@ -158,6 +188,9 @@ var ReportController = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, Order_1.default.aggregate()
+                            .match({
+                            finished: true,
+                        })
                             .unwind('items')
                             .lookup({
                             from: 'products',

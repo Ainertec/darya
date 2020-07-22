@@ -62,6 +62,7 @@ routes.delete('/orders/:id', celebrate_1.celebrate({ params: commonSchema_1.para
 // Reports
 routes.get('/reports/deliveryman/rate/:deliveryman_id', celebrate_1.celebrate({ params: reportSchema_1.default }), ReportController_1.default.deliverymanPayment);
 routes.get('/reports/orders/profit', ReportController_1.default.ordersProfit);
+routes.get('/reports/deliveryman/orders/:deliveryman_id', celebrate_1.celebrate({ params: reportSchema_1.default }), ReportController_1.default.allFinishedOrdersByDeliveryman);
 routes.get('/reports/products/dispense_gain', ReportController_1.default.productsDispenseAndGain);
 routes.get('/reports/products/amount', ReportController_1.default.productsAmount);
 routes.delete('/reports', ReportController_1.default.delete);

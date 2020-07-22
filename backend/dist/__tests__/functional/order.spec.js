@@ -655,6 +655,7 @@ describe('should a Client', function () {
                     return [4 /*yield*/, factories_1.default.create('Order', {
                             deliveryman: deliveryman._id,
                             identification: '123123',
+                            finished: false,
                         })];
                 case 3:
                     _a.sent();
@@ -662,6 +663,7 @@ describe('should a Client', function () {
                 case 4:
                     response = _a.sent();
                     expect(response.status).toBe(200);
+                    // console.log(response.body);
                     expect(response.body).toEqual(expect.arrayContaining([
                         expect.objectContaining({
                             identification: '123123',
