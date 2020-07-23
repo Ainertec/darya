@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Types } from 'mongoose';
-import { startOfHour, endOfHour, sub } from 'date-fns';
+import { startOfDay, endOfDay, sub } from 'date-fns';
 import Order from '../models/Order';
 import { ProductInterface } from '../../interfaces/base';
 
@@ -13,10 +13,11 @@ interface InterfaceDispenseAndGain {
 class ReportController {
   async deliverymanPayment(request: Request, response: Response) {
     const deliveryman_id = String(request.params.deliveryman_id);
-    const initial = startOfHour(new Date());
-    const final = endOfHour(new Date());
+    const initial = startOfDay(new Date());
+    const final = endOfDay(new Date());
     const ObjectId = Types.ObjectId;
     console.log(deliveryman_id);
+    console.log(initial, final);
 
     const deliveryRate = await Order.aggregate()
       .match({
@@ -34,8 +35,8 @@ class ReportController {
 
   async allFinishedOrdersByDeliveryman(request: Request, response: Response) {
     const { deliveryman_id } = request.params;
-    const initial = startOfHour(new Date());
-    const final = endOfHour(new Date());
+    const initial = startOfDay(new Date());
+    const final = endOfDay(new Date());
     const ObjectId = Types.ObjectId;
 
     const orders = await Order.find({
@@ -50,8 +51,8 @@ class ReportController {
   }
 
   async ordersProfit(request: Request, response: Response) {
-    const initial = startOfHour(new Date());
-    const final = endOfHour(new Date());
+    const initial = startOfDay(new Date());
+    const final = endOfDay(new Date());
 
     const ordersProfit = await Order.find({
       createdAt: { $gte: initial, $lte: final },

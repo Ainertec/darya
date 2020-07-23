@@ -63,10 +63,11 @@ var ReportController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         deliveryman_id = String(request.params.deliveryman_id);
-                        initial = date_fns_1.startOfHour(new Date());
-                        final = date_fns_1.endOfHour(new Date());
+                        initial = date_fns_1.startOfDay(new Date());
+                        final = date_fns_1.endOfDay(new Date());
                         ObjectId = mongoose_1.Types.ObjectId;
                         console.log(deliveryman_id);
+                        console.log(initial, final);
                         return [4 /*yield*/, Order_1.default.aggregate()
                                 .match({
                                 deliveryman: ObjectId(deliveryman_id),
@@ -91,8 +92,8 @@ var ReportController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         deliveryman_id = request.params.deliveryman_id;
-                        initial = date_fns_1.startOfHour(new Date());
-                        final = date_fns_1.endOfHour(new Date());
+                        initial = date_fns_1.startOfDay(new Date());
+                        final = date_fns_1.endOfDay(new Date());
                         ObjectId = mongoose_1.Types.ObjectId;
                         return [4 /*yield*/, Order_1.default.find({
                                 deliveryman: ObjectId(deliveryman_id),
@@ -114,8 +115,8 @@ var ReportController = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        initial = date_fns_1.startOfHour(new Date());
-                        final = date_fns_1.endOfHour(new Date());
+                        initial = date_fns_1.startOfDay(new Date());
+                        final = date_fns_1.endOfDay(new Date());
                         return [4 /*yield*/, Order_1.default.find({
                                 createdAt: { $gte: initial, $lte: final },
                                 finished: true,
