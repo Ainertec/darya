@@ -1,3 +1,6 @@
+//importacao
+const { format, parseISO } = require('date-fns')
+
 // ---------------------------------------------- Classe Relatorio ------------------------------------------
 
 //funcao para gerar tela de busca de relatorio
@@ -263,6 +266,7 @@ async function gerarGraficoProdutosMaiseMenosVendidos() {
 
 //funcao responsavel por gerar a listagem de pedidos fechados
 function gerarListaDePedidosFechados(json) {
+  // const date = order.createdAt && format(jason.createdAt, 'dd/MM/yyyy HH:mm:ss');
   let codigoHTML = ``
 
   try {
@@ -282,6 +286,7 @@ function gerarListaDePedidosFechados(json) {
         </thead>
         <tbody class="table-warning">`
     json.forEach(function (item) {
+      const date = format(parseISO(item.createdAt), 'dd/MM/yyyy HH:mm:ss')
       codigoHTML += `<tr>
           <td><strong>${item.identification}</strong></td>
           <td title="${item.client.name}"><strong>${corrigirTamanhoString(15, item.client.name)}</strong></td>
@@ -294,7 +299,7 @@ function gerarListaDePedidosFechados(json) {
         <td><strong>${item.payment}</strong></td>
           <td class="text-danger"><strong>R$${(parseFloat(item.total)).toFixed(2)}</strong></td>
           <td><strong>${item.source}</strong></td>
-          <td><strong>${item.createdAt.split('.')[0]}</strong></td>
+          <td><strong>${date}</strong></td>
         </tr>`
     });
     codigoHTML += `</tbody>

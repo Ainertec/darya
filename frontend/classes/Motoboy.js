@@ -348,11 +348,11 @@ async function exluirMotoboy(id) {
 
 //funcao responsavel por gerar o grafico de dados sobre o motoboy
 async function gerarGraficoMotoboy(id) {
-    try {
-        let codigoHTML = ``, json = await requisicaoGET(`reports/deliveryman/rate/${id}`), json2 = await requisicaoGET(`orders/deliveryman/${id}`)
+    //try {
+    let codigoHTML = ``, json = await requisicaoGET(`reports/deliveryman/rate/${id}`), json2 = await requisicaoGET(`orders/deliveryman/${id}`)
 
-        if (json.data.rate) {
-            codigoHTML += `<div class="modal fade" id="modalRelatorioMotoboy" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    //if (json.data.rate) {
+    codigoHTML += `<div class="modal fade" id="modalRelatorioMotoboy" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-lg modal-dialog-scrollable">
                                 <div class="modal-content">
                                 <div class="modal-header">
@@ -377,37 +377,37 @@ async function gerarGraficoMotoboy(id) {
                                         </tr>
                                         </thead>
                                         <tbody class="table-warning">`
-            json2.data.forEach(function (item) {
-                codigoHTML += `<tr>
+    json2.data.forEach(function (item) {
+        codigoHTML += `<tr>
                                         <td>${item.identification}</td>
                                         <td title="${item.client.name}">${corrigirTamanhoString(15, item.client.name)}</td>
                                         <td title="${item.deliveryman.name}"><strong>${corrigirTamanhoString(15, item.deliveryman.name)}</strong></td>
                                         <td>`
-                item.items.forEach(function (item2) {
-                    codigoHTML += `(${corrigirTamanhoString(15, item2.product.name)}/${item2.quantity}),`
-                });
-                codigoHTML += `</td>
+        item.items.forEach(function (item2) {
+            codigoHTML += `(${corrigirTamanhoString(15, item2.product.name)}/${item2.quantity}),`
+        });
+        codigoHTML += `</td>
                                         <td>${item.payment}</td>
                                         <td class="text-danger"><strong>R$${(parseFloat(item.total)).toFixed(2)}</strong></td>
                                         <td>${item.source}</td>
                                         <td>${item.createdAt.split('.')[0]}</td>
                                         </tr>`
-            });
-            codigoHTML += `</tbody>
+    });
+    codigoHTML += `</tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>`
 
-            document.getElementById('modal').innerHTML = codigoHTML;
-        } else {
-            mensagemDeErro('Existem pedidos em aberto para este motoboy, finalize os pedidos antes!')
-        }
+    document.getElementById('modal').innerHTML = codigoHTML;
+    //} else {
+    //mensagemDeErro('Existem pedidos em aberto para este motoboy, finalize os pedidos antes!')
+    //}
 
-        $('#modalRelatorioMotoboy').modal('show')
-    } catch (error) {
-        mensagemDeErro('Não foi possível carregar o demostrativo do motoboy!')
-    }
+    $('#modalRelatorioMotoboy').modal('show')
+    //} catch (error) {
+    //mensagemDeErro('Não foi possível carregar o demostrativo do motoboy!')
+    //}
 }
 
 //funcao reiniciar classe motoboy

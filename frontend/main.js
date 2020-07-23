@@ -12,6 +12,9 @@ home.on('ready', function () {
     show: false,
     title: 'Darya',
     autoHideMenuBar: true,
+    webPreferences: {
+      nodeIntegration: true
+    }
   });
   //janelaPrincipal.on('close', () =>{janelaPrincipal=null; shell.openItem("C://gresppro-x64//executaveis_modulos//impressaoClose.vbs");})
   janelaPrincipal.loadURL(`file://${__dirname}/index.html`);
