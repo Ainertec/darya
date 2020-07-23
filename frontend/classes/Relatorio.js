@@ -1,7 +1,7 @@
 // ---------------------------------------------- Classe Relatorio ------------------------------------------
 
 //funcao para gerar tela de busca de relatorio
-function telaDeRelatorio() {
+async function telaDeRelatorio() {
   let codigoHTML = '';
 
   codigoHTML += `<h4 class="text-center"><span class="fas fa-chart-pie"></span> Relatórios</h4>
@@ -16,6 +16,7 @@ function telaDeRelatorio() {
 
   animacaoJanela2();
   setTimeout(function () { document.getElementById('janela2').innerHTML = codigoHTML }, 30)
+  await requisicaoDELETE(`reports`, '')
   setTimeout(function () {
     gerarGraficoLucroTotalPeriodico();
     gerarGraficoGastoseGanhosSobreproduto();
