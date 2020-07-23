@@ -37,7 +37,7 @@ async function gerarGraficoLucroTotalPeriodico() {
       },
       subtitle: {
         text:
-          'Gráfico responsavel por demonstrar o lucro líquido e bruto arrecadados dentro de um determinado período.',
+          'Gráfico responsável por demonstrar o lucro líquido e bruto arrecadados dentro de um determinado período(Valor líquido = valor total - valor de gasto com produtos - valor da taxa de entrega).',
       },
       xAxis: {
         categories: ['Lucro total'],

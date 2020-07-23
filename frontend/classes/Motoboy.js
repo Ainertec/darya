@@ -348,62 +348,66 @@ async function exluirMotoboy(id) {
 
 //funcao responsavel por gerar o grafico de dados sobre o motoboy
 async function gerarGraficoMotoboy(id) {
-    //try {
-    let codigoHTML = ``, json = await requisicaoGET(`reports/deliveryman/rate/${id}`), json2 = await requisicaoGET(`orders/deliveryman/${id}`)
+    try {
+        let codigoHTML = ``, json = await requisicaoGET(`reports/deliveryman/rate/${id}`), json2 = await requisicaoGET(`orders/deliveryman/${id}`)
 
-    codigoHTML += `<div class="modal fade" id="modalRelatorioMotoboy" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg modal-dialog-scrollable">
-                            <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="staticBackdropLabel"><span class="fas fa-motorcycle"></span> Grafico Motoboy</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>
+        if (json.data.rate) {
+            codigoHTML += `<div class="modal fade" id="modalRelatorioMotoboy" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel"><span class="fas fa-motorcycle"></span> Grafico Motoboy</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <h3 class="text-center" style="margin-top:40px; margin-bottom:40px;"> Valor de pagamento motoboy: <span class="badge badge-success">R$${(parseFloat(json.data[0].rate)).toFixed(2)}</span></h3>
+                                    <table class="table table-sm table-bordered">
+                                        <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col">Código</th>
+                                            <th scope="col">Cliente</th>
+                                            <th scope="col">Motoboy</th>
+                                            <th scope="col">Itens/Quant.</th>
+                                            <th scope="col">Forma de pagamento</th>
+                                            <th scope="col">Valor total</th>
+                                            <th scope="col">Forma de requerimento</th>
+                                            <th scope="col">Data/hora</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="table-warning">`
+            json2.data.forEach(function (item) {
+                codigoHTML += `<tr>
+                                        <td>${item.identification}</td>
+                                        <td title="${item.client.name}">${corrigirTamanhoString(15, item.client.name)}</td>
+                                        <td title="${item.deliveryman.name}"><strong>${corrigirTamanhoString(15, item.deliveryman.name)}</strong></td>
+                                        <td>`
+                item.items.forEach(function (item2) {
+                    codigoHTML += `(${corrigirTamanhoString(15, item2.product.name)}/${item2.quantity}),`
+                });
+                codigoHTML += `</td>
+                                        <td>${item.payment}</td>
+                                        <td class="text-danger"><strong>R$${(parseFloat(item.total)).toFixed(2)}</strong></td>
+                                        <td>${item.source}</td>
+                                        <td>${item.createdAt.split('.')[0]}</td>
+                                        </tr>`
+            });
+            codigoHTML += `</tbody>
+                                    </table>
+                                </div>
                             </div>
-                            <div class="modal-body">
-                                <h3 class="text-center" style="margin-top:40px; margin-bottom:40px;"> Valor de pagamento motoboy: <span class="badge badge-success">R$${(parseFloat(json.data[0].rate)).toFixed(2)}</span></h3>
-                                <table class="table table-sm table-bordered">
-                                    <thead class="thead-dark">
-                                    <tr>
-                                        <th scope="col">Código</th>
-                                        <th scope="col">Cliente</th>
-                                        <th scope="col">Motoboy</th>
-                                        <th scope="col">Itens/Quant.</th>
-                                        <th scope="col">Forma de pagamento</th>
-                                        <th scope="col">Valor total</th>
-                                        <th scope="col">Forma de requerimento</th>
-                                        <th scope="col">Data/hora</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody class="table-warning">`
-    json2.data.forEach(function (item) {
-        codigoHTML += `<tr>
-                                    <td>${item.identification}</td>
-                                    <td title="${item.client.name}">${corrigirTamanhoString(15, item.client.name)}</td>
-                                    <td title="${item.deliveryman.name}"><strong>${corrigirTamanhoString(15, item.deliveryman.name)}</strong></td>
-                                    <td>`
-        item.items.forEach(function (item2) {
-            codigoHTML += `(${corrigirTamanhoString(15, item2.product.name)}/${item2.quantity}),`
-        });
-        codigoHTML += `</td>
-                                    <td>${item.payment}</td>
-                                    <td class="text-danger"><strong>R$${(parseFloat(item.total)).toFixed(2)}</strong></td>
-                                    <td>${item.source}</td>
-                                    <td>${item.createdAt.split('.')[0]}</td>
-                                    </tr>`
-    });
-    codigoHTML += `</tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>`
+                        </div>`
 
-    document.getElementById('modal').innerHTML = codigoHTML;
+            document.getElementById('modal').innerHTML = codigoHTML;
+        } else {
+            mensagemDeErro('Existem pedidos em aberto para este motoboy, finalize os pedidos antes!')
+        }
 
-    $('#modalRelatorioMotoboy').modal('show')
-    //} catch (error) {
-    //mensagemDeErro('não foi possível carregar o demostrativo do motoboy!')
-    //}
+        $('#modalRelatorioMotoboy').modal('show')
+    } catch (error) {
+        mensagemDeErro('Não foi possível carregar o demostrativo do motoboy!')
+    }
 }
 
 //funcao reiniciar classe motoboy
