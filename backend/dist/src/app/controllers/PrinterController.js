@@ -45,6 +45,7 @@ var fs_1 = __importDefault(require("fs"));
 var jsrtf_1 = __importDefault(require("jsrtf"));
 // import '../../@types/jsrtg.d.ts'
 var date_fns_1 = require("date-fns");
+var shelljs_1 = require("shelljs");
 var PrinterController = /** @class */ (function () {
     function PrinterController() {
         this.store = this.store.bind(this);
@@ -58,7 +59,7 @@ var PrinterController = /** @class */ (function () {
     };
     PrinterController.prototype.store = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, order, date, myDoc, contentStyle, contentBorder, header, items, content, buffer, dir;
+            var id, order, date, myDoc, contentStyle, contentBorder, header, items, content, buffer, dir, vbs;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -127,22 +128,23 @@ var PrinterController = /** @class */ (function () {
                         dir = process.env.NODE_ENV === 'test'
                             ? path_1.default.resolve(__dirname, '..', '..', '..', '__tests__', 'recipes')
                             : process.env.DIR_PRODUCTION;
-                        // console.log('dir production', process.env.DIR_PRODUCTION);
+                        console.log('dir production', process.env.DIR_PRODUCTION, dir);
                         return [4 /*yield*/, fs_1.default.writeFile(dir + "/" + id + ".rtf", buffer, { encoding: 'utf-8', flag: 'w' }, function (err) {
                                 if (err)
                                     return response.status(400).json("" + err);
                             })];
                     case 2:
-                        // console.log('dir production', process.env.DIR_PRODUCTION);
                         _a.sent();
-                        // const vbs =
-                        //   process.env.NODE_ENV === 'test'
-                        //     ? path.resolve(__dirname, '..', '..', '..', '__tests__', 'recipes', 'impressao.vbs')
-                        //     : process.env.DIR_INITIALIZE_PRINT;
-                        // setTimeout(() => {
-                        //   exec(vbs);
-                        // }, 1000);
-                        return [2 /*return*/, response.status(200).json('success')];
+                        vbs = process.env.NODE_ENV === 'test'
+                            ? path_1.default.resolve(__dirname, '..', '..', '..', '__tests__', 'recipes', 'impressao.vbs')
+                            : process.env.DIR_INITIALIZE_PRINT;
+                        if (vbs) {
+                            setTimeout(function () {
+                                shelljs_1.exec(vbs);
+                            }, 1000);
+                            return [2 /*return*/, response.status(200).json('success')];
+                        }
+                        return [2 /*return*/];
                 }
             });
         });

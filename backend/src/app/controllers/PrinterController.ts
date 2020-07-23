@@ -96,20 +96,23 @@ class PrinterController {
       process.env.NODE_ENV === 'test'
         ? path.resolve(__dirname, '..', '..', '..', '__tests__', 'recipes')
         : process.env.DIR_PRODUCTION;
-    // console.log('dir production', process.env.DIR_PRODUCTION);
+    console.log('dir production', process.env.DIR_PRODUCTION, dir);
     await fs.writeFile(`${dir}/${id}.rtf`, buffer, { encoding: 'utf-8', flag: 'w' }, (err) => {
       if (err) return response.status(400).json(`${err}`);
     });
 
-    // const vbs =
-    //   process.env.NODE_ENV === 'test'
-    //     ? path.resolve(__dirname, '..', '..', '..', '__tests__', 'recipes', 'impressao.vbs')
-    //     : process.env.DIR_INITIALIZE_PRINT;
+    const vbs =
+      process.env.NODE_ENV === 'test'
+        ? path.resolve(__dirname, '..', '..', '..', '__tests__', 'recipes', 'impressao.vbs')
+        : process.env.DIR_INITIALIZE_PRINT;
 
-    // setTimeout(() => {
-    //   exec(vbs);
-    // }, 1000);
-    return response.status(200).json('success');
+    if (vbs) {
+      setTimeout(() => {
+        exec(vbs);
+      }, 1000);
+      return response.status(200).json('success');
+    }
   }
+
 }
 export default new PrinterController();
