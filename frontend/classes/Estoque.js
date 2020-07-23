@@ -54,7 +54,14 @@ async function buscarEstoque(tipoBusca) {
       } else {
         codigoHTML += `<td class="table-danger text-dark text-center"><strong>${item.stock}</strong></td>`
       }
-      codigoHTML += `<td class="table-warning text-dark"><input class="form-control form-control-sm mousetrap" type="Number" id="quantidade${item._id}" value=1 /></td>
+      codigoHTML += `<td class="table-warning text-dark">
+        <div class="input-group input-group-sm">
+          <div class="input-group-prepend">
+            <span class="input-group-text">(Unid.)</span>
+          </div>  
+          <input class="form-control form-control-sm mousetrap" type="Number" id="quantidade${item._id}" value=1 />
+        </div>
+      </td>
       <td class="table-secondary text-dark"><button onclick="if(validaDadosCampo(['#quantidade${item._id}']) && validaValoresCampo(['#quantidade${item._id}'])){atualizarEstoque(this.value)}else{mensagemDeErro('Preencha o campo adicionar com valor válido!'); mostrarCamposIncorreto(['quantidade${item._id}']);}" value="${item._id}" class="btn btn-success"><span class="fas fa-sync"></span></button></td>
       </tr>`
     });
@@ -86,8 +93,6 @@ async function atualizarEstoque(id) {
     delete produto.updatedAt;
     delete produto.__v;
     produto.stock = parseInt(produto.stock) + parseInt($('#quantidade' + id).val());
-
-    console.log(produto)
 
     await requisicaoPUT(`products/${id}`, produto);
     mensagemDeAviso('Atualizado com sucesso!');

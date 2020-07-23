@@ -1,6 +1,3 @@
-//importacao
-const { format, parseISO } = require('date-fns')
-
 // ---------------------------------------------- Classe Relatorio ------------------------------------------
 
 //funcao para gerar tela de busca de relatorio

@@ -72,16 +72,31 @@ function modalTelaCadastrarouAtualizarProduto(tipo) {
                                     <input type="text" class="form-control" id="nomeproduto" placeholder="Nome">
                                 </div>
                                 <div class="form-group">
-                                    <label for="precocusto">Preço de custo:</label>
+                                  <label for="precocusto">Preço de custo:</label>
+                                  <div class="input-group">
+                                    <div class="input-group-prepend">
+                                      <span class="input-group-text">R$</span>
+                                    </div>
                                     <input type="Number" class="form-control" id="precocusto" placeholder="Preço de custo">
+                                  </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="precovenda">Preço de venda:</label>
-                                    <input type="Number" class="form-control" id="precovenda" placeholder="Preço de venda">
+                                    <div class="input-group">
+                                      <div class="input-group-prepend">
+                                        <span class="input-group-text">R$</span>
+                                      </div>
+                                      <input type="Number" class="form-control" id="precovenda" placeholder="Preço de venda">
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="quantidadeproduto">Quantidade:</label>
-                                    <input type="Number" class="form-control" id="quantidadeproduto" value=0>
+                                    <div class="input-group">
+                                      <div class="input-group-prepend">
+                                        <span class="input-group-text">(Unid.)</span>
+                                      </div>
+                                      <input type="Number" class="form-control" id="quantidadeproduto" value=0>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="descricao">Descrição</label>
@@ -93,8 +108,8 @@ function modalTelaCadastrarouAtualizarProduto(tipo) {
   if (tipo == 'cadastrar') {
     codigoHTML += `<button onclick="if(validaDadosCampo(['#nomeproduto','#precocusto','#precovenda','#quantidadeproduto','#descricaoproduto']) && validaValoresCampo(['#precocusto','#precovenda'])){cadastrarProduto();}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['nomeproduto','precocusto','precovenda','quantidadeproduto','descricaoproduto']);}" type="button" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Adicionar</button>`;
   } else if (tipo == 'atualizar') {
-    codigoHTML += `<button id="botaoatualizar" onclick="if(validaDadosCampo(['#nomeproduto','#precocusto','#precovenda','#quantidadeproduto','#descricaoproduto']) && validaValoresCampo(['#precocusto','#precovenda'])){confirmarAcao('Atualizar este produto!','atualizarProduto(this.value)',(this.value).toString())}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['nomeproduto','precocusto','precovenda','quantidadeproduto','descricaoproduto']);}" type="button" class="btn btn-success btn-block"><span class="fas fa-edit"></span> Modificar</button>
-                                 <button id="botaoexcluir" onclick="confirmarAcao('Excluir este produto!','excluirProduto(this.value)',(this.value).toString());" type="button" class="btn btn-outline-danger btn-block"><span class="fas fa-check-trash"></span> Excluir</button>`;
+    codigoHTML += `<button id="botaoatualizar" onclick="if(validaDadosCampo(['#nomeproduto','#precocusto','#precovenda','#quantidadeproduto','#descricaoproduto']) && validaValoresCampo(['#precocusto','#precovenda'])){confirmarAcao('Atualizar este produto!','atualizarProduto(this.value)',(this.value).toString()); $('#modalClasseProduto').modal('hide');}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['nomeproduto','precocusto','precovenda','quantidadeproduto','descricaoproduto']);}" type="button" class="btn btn-success btn-block"><span class="fas fa-edit"></span> Modificar</button>
+                                 <button id="botaoexcluir" onclick="confirmarAcao('Excluir este produto!','excluirProduto(this.value)',(this.value).toString()); $('#modalClasseProduto').modal('hide');" type="button" class="btn btn-outline-danger btn-block"><span class="fas fa-check-trash"></span> Excluir</button>`;
   }
   codigoHTML += `</div>
                         </div>
@@ -182,6 +197,7 @@ async function cadastrarProduto() {
     "stock":${parseInt($('#quantidadeproduto').val())}}`;
 
     await requisicaoPOST('products', JSON.parse(json));
+    $('#modalClasseProduto').modal('hide');
     mensagemDeAviso('Produto cadastrado com sucesso!')
   } catch (error) {
     mensagemDeErro('Não foi possível cadastrar o produto!')

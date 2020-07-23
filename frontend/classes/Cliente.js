@@ -38,7 +38,7 @@ function gerarListaDeClientes(json) {
   let codigoHTML = ``;
 
   codigoHTML += `<tr>
-        <td class="table-warning"><strong><span class="fas fa-user"></span> ${json.name}</strong></td>
+        <td class="table-warning" title="${json.name}"><strong><span class="fas fa-user"></span> ${corrigirTamanhoString(15, json.name)}</strong></td>
         <td class="table-warning">
             <select class="form-control form-control-sm">`;
   json.phone.forEach(function (item) {
@@ -332,12 +332,13 @@ async function cadastrarCliente() {
         name: cliente.name,
       });
 
+      $('#modalClasseCliente').modal('hide');
+
       if (result == 400) {
         mensagemDeErro('Atenção já existe um cliente com os mesmo dados!')
       } else {
         mensagemDeAviso('Cliente cadastrado com sucesso!')
       }
-      $('#modalClasseBairro').modal('hide');
 
     } else {
       mensagemDeErroModal('Não foi possível cadastrar pela falta de telefone e endereço!')
@@ -368,7 +369,7 @@ async function atualizarCliente(id) {
       await requisicaoPUT(`clients/${id}`, {
         address: serializadedAddress,
         phone: cliente.phone,
-        name: (name === cliente.name) ? name : undefined,
+        name: (name === cliente.name) ? undefined : name,
       });
 
       mensagemDeAviso('Cliente atualizado com sucesso!')

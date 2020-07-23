@@ -77,7 +77,12 @@ function modalTelaCadastrarouAtualizarBairro(tipo) {
                                 </div>
                                 <div class="form-group">
                                     <label for="precotaxa">Preço da taxa:</label>
-                                    <input type="Number" class="form-control" id="precotaxa" placeholder="Preço da taxa">
+                                    <div class="input-group mb-3">
+                                      <div class="input-group-prepend">
+                                        <span class="input-group-text">R$</span>
+                                      </div>
+                                      <input type="Number" class="form-control" id="precotaxa" placeholder="Preço da taxa">
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -153,6 +158,7 @@ function carregarDadosBairro(id) {
     document.getElementById('nomecidade').value = dado.city;
     document.getElementById('precotaxa').value = parseFloat(dado.rate).toFixed(2);
     document.getElementById('botaoAtualizar').value = dado._id.toString();
+    document.getElementById('botaoExcluir').value = dado._id.toString();
   } catch (error) {
     mensagemDeErroModal('Não foi possível carregar os dados!')
   }

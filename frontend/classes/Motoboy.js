@@ -84,8 +84,8 @@ function modalTelaCadastrarouAtualizarMotoboy(tipo) {
     if (tipo == 'cadastrar') {
         codigoHTML += `<button onclick="if(validaDadosCampo(['#nomemotoboy','#telefonemotoboy'])){cadastrarMotoboy();}else{mensagemDeErroModal('Preencha todos os campos com valores válidos!'); mostrarCamposIncorreto(['nomemotoboy','telefonemotoboy']);}" type="button" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Adicionar</button>`;
     } else if (tipo == 'atualizar') {
-        codigoHTML += `<button onclick="if(validaDadosCampo(['#nomemotoboy','#telefonemotoboy'])){confirmarAcao('Atualizar este motoboy!','atualizarMotoboy(this.value)', (this.value).toString())}else{mensagemDeErroModal('Preencha todos os campos com valores válidos!'); mostrarCamposIncorreto(['nomemotoboy','telefonemotoboy']);}" id="botaoatualizarmotoboy" type="button" class="btn btn-success btn-block"><span class="fas fa-edit"></span> Modificar</button>
-                                 <button onclick="confirmarAcao('Excluir este motoboy!','exluirMotoboy(this.value)',(this.value).toString())" id="botaoexcluirmotoboy" type="button" class="btn btn-outline-danger btn-block"><span class="fas fa-trash"></span> Excluir</button>`;
+        codigoHTML += `<button onclick="if(validaDadosCampo(['#nomemotoboy','#telefonemotoboy'])){confirmarAcao('Atualizar este motoboy!','atualizarMotoboy(this.value)', (this.value).toString()); $('#modalClasseMotoboy').modal('hide');}else{mensagemDeErroModal('Preencha todos os campos com valores válidos!'); mostrarCamposIncorreto(['nomemotoboy','telefonemotoboy']);}" id="botaoatualizarmotoboy" type="button" class="btn btn-success btn-block"><span class="fas fa-edit"></span> Modificar</button>
+                                 <button onclick="confirmarAcao('Excluir este motoboy!','exluirMotoboy(this.value)',(this.value).toString()); $('#modalClasseMotoboy').modal('hide');" id="botaoexcluirmotoboy" type="button" class="btn btn-outline-danger btn-block"><span class="fas fa-trash"></span> Excluir</button>`;
     }
     codigoHTML += `</div>
                         </div>
@@ -103,7 +103,7 @@ function gerarListaDeMotoboyParaTrabalho(json) {
 
     codigoHTML += `<tr>
         <td class="table-warning text-dark" title="${json.name}"><strong><span class="fas fa-biking"></span> ${corrigirTamanhoString(15, json.name)}</strong></td>
-        <td class="table-warning text-dark">${json.phone}</td>
+        <td class="table-warning text-dark"><span class="fas fa-phone"></span> ${json.phone}</td>
         <td class="table-warning text-dark">
             <div class="custom-control custom-switch">`;
     if (json.working_day) {
@@ -126,7 +126,7 @@ function gerarListaDeMotoboyParaAtualizar(json) {
 
     codigoHTML += `<tr>
         <td class="table-warning text-dark" title="${json.name}"><strong><span class="fas fa-biking"></span> ${corrigirTamanhoString(15, json.name)}</strong></td>
-        <td class="table-warning text-dark">${json.phone}</td>
+        <td class="table-warning text-dark"><span class="fas fa-phone"></span> ${json.phone}</td>
         <td class="table-warning text-center"><button onclick="carregarDadosMotoboy('${json._id}');" type="button" class="btn btn-primary btn-sm"><span class="fas fa-check"></span></button></td>
     </tr>`;
 
@@ -348,11 +348,12 @@ async function exluirMotoboy(id) {
 
 //funcao responsavel por gerar o grafico de dados sobre o motoboy
 async function gerarGraficoMotoboy(id) {
-    //try {
-    let codigoHTML = ``, json = await requisicaoGET(`reports/deliveryman/rate/${id}`), json2 = await requisicaoGET(`orders/deliveryman/${id}`)
+    try {
+        let codigoHTML = ``, json = await requisicaoGET(`reports/deliveryman/rate/${id}`), json2 = await requisicaoGET(`reports/deliveryman/orders/${id}`)
 
-    //if (json.data.rate) {
-    codigoHTML += `<div class="modal fade" id="modalRelatorioMotoboy" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        if (json2.data[0]) {
+
+            codigoHTML += `<div class="modal fade" id="modalRelatorioMotoboy" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-lg modal-dialog-scrollable">
                                 <div class="modal-content">
                                 <div class="modal-header">
@@ -362,7 +363,7 @@ async function gerarGraficoMotoboy(id) {
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <h3 class="text-center" style="margin-top:40px; margin-bottom:40px;"> Valor de pagamento motoboy: <span class="badge badge-success">R$${(parseFloat(json.data[0].rate)).toFixed(2)}</span></h3>
+                                    <h3 class="text-center" style="margin-top:40px; margin-bottom:40px;"> Valor total das taxas: <span class="badge badge-success">R$${(parseFloat(json.data[0].rate)).toFixed(2)}</span></h3>
                                     <table class="table table-sm table-bordered">
                                         <thead class="thead-dark">
                                         <tr>
@@ -372,42 +373,43 @@ async function gerarGraficoMotoboy(id) {
                                             <th scope="col">Itens/Quant.</th>
                                             <th scope="col">Forma de pagamento</th>
                                             <th scope="col">Valor total</th>
-                                            <th scope="col">Forma de requerimento</th>
+                                            <th scope="col">Valor taxa</th>
                                             <th scope="col">Data/hora</th>
                                         </tr>
                                         </thead>
                                         <tbody class="table-warning">`
-    json2.data.forEach(function (item) {
-        codigoHTML += `<tr>
+            json2.data.forEach(function (item) {
+                const date = format(parseISO(item.createdAt), 'dd/MM/yyyy HH:mm:ss')
+                codigoHTML += `<tr>
                                         <td>${item.identification}</td>
                                         <td title="${item.client.name}">${corrigirTamanhoString(15, item.client.name)}</td>
                                         <td title="${item.deliveryman.name}"><strong>${corrigirTamanhoString(15, item.deliveryman.name)}</strong></td>
                                         <td>`
-        item.items.forEach(function (item2) {
-            codigoHTML += `(${corrigirTamanhoString(15, item2.product.name)}/${item2.quantity}),`
-        });
-        codigoHTML += `</td>
+                item.items.forEach(function (item2) {
+                    codigoHTML += `(${corrigirTamanhoString(15, item2.product.name)}/${item2.quantity}),`
+                });
+                codigoHTML += `</td>
                                         <td>${item.payment}</td>
                                         <td class="text-danger"><strong>R$${(parseFloat(item.total)).toFixed(2)}</strong></td>
-                                        <td>${item.source}</td>
-                                        <td>${item.createdAt.split('.')[0]}</td>
+                                        <td><strong>R$${(parseFloat(item.address.district_rate)).toFixed(2)}</strong></td>
+                                        <td>${date}</td>
                                         </tr>`
-    });
-    codigoHTML += `</tbody>
+            });
+            codigoHTML += `</tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>`
 
-    document.getElementById('modal').innerHTML = codigoHTML;
-    //} else {
-    //mensagemDeErro('Existem pedidos em aberto para este motoboy, finalize os pedidos antes!')
-    //}
+            document.getElementById('modal').innerHTML = codigoHTML;
+            $('#modalRelatorioMotoboy').modal('show')
+        } else {
+            mensagemDeErro('Nenhum pedido entregue pelo motoboy!')
+        }
 
-    $('#modalRelatorioMotoboy').modal('show')
-    //} catch (error) {
-    //mensagemDeErro('Não foi possível carregar o demostrativo do motoboy!')
-    //}
+    } catch (error) {
+        mensagemDeErro('Não foi possível carregar o demostrativo do motoboy!')
+    }
 }
 
 //funcao reiniciar classe motoboy

@@ -2,6 +2,7 @@
 const $ = require('jquery');
 require('bootstrap');
 const Highcharts = require('highcharts');
+const { format, parseISO } = require('date-fns')
 
 //funcao de inicializacao basica funcionalidade
 $(document).ready(function () {

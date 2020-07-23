@@ -1,3 +1,7 @@
+// importação
+const $ = require('jquery');
+require('bootstrap');
+
 // --------------------------------------------- TELA INICIAL -----------------------------------------------------
 
 //funcao menu de opcaoes para pedido

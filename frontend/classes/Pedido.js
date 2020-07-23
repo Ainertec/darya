@@ -104,8 +104,8 @@ function telaModalDeCriacaoDePedido(tipo) {
                     
                 </div>
                 <div class="modal-footer" id="botaoNavPedido">
-                    <button id="anterior" onclick="if(this.value>1){console.log(this.value=--proximo.value); navegacaoModalDeCriacao(this.value,'${tipo}')}" value=1 type="button" class="btn btn-outline-dark"><span class="fas fa-chevron-left"></span> Voltar</button>
-                    <button id="proximo" onclick="if(this.value<5){console.log(this.value=++anterior.value); navegacaoModalDeCriacao(this.value,'${tipo}')}" value=1 type="button" class="btn btn-success">Próximo <span class="fas fa-chevron-right"></span></button>    
+                    <button id="anterior" onclick="if(this.value>1){this.value=--proximo.value; navegacaoModalDeCriacao(this.value,'${tipo}')}" value=1 type="button" class="btn btn-outline-dark"><span class="fas fa-chevron-left"></span> Voltar</button>
+                    <button id="proximo" onclick="if(this.value<5){this.value=++anterior.value; navegacaoModalDeCriacao(this.value,'${tipo}')}" value=1 type="button" class="btn btn-success">Próximo <span class="fas fa-chevron-right"></span></button>    
                 </div>
                 <div class="modal-footer" id="botaoConfirmacao">`;
   if (tipo == 'cadastrar') {
@@ -581,11 +581,14 @@ async function buscarDadosAtualizar(tipo) {
   try {
     if (tipo == 'codigo') {
       json = await requisicaoGET(`orders/${document.getElementById('nomePedidoPagamento').value}`);
+      json.data = [json.data]
     } else if (tipo == 'todos') {
       json = await requisicaoGET('orders');
     }
 
-    codigoHTML += `<table class="table table-sm col-10 mx-auto" style="margin-top:20px">
+    if (json.data[0]) {
+
+      codigoHTML += `<table class="table table-sm col-10 mx-auto" style="margin-top:20px">
       <thead class="thead-dark">
           <tr>
               <th scope="col">Código</th>
@@ -599,15 +602,15 @@ async function buscarDadosAtualizar(tipo) {
       <tbody>
       `;
 
-    json.data.forEach(function (item) {
-      VETORDEPEDIDOSCLASSEPEDIDO.push(item);
-      codigoHTML += listaDePedidosAbertosParaPagamento(item);
-    });
+      json.data.forEach(function (item) {
+        VETORDEPEDIDOSCLASSEPEDIDO.push(item);
+        codigoHTML += listaDePedidosAbertosParaPagamento(item);
+      });
 
-    codigoHTML += `</tbody>
+      codigoHTML += `</tbody>
       </table>`;
 
-    if (json.data[0]) {
+
       document.getElementById('respostaListaDePedidosAbertosPagamento').innerHTML = codigoHTML;
     } else {
       document.getElementById('respostaListaDePedidosAbertosPagamento').innerHTML = '<h5 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Nenhum pedido em aberto encontrado!</h5>';
@@ -689,7 +692,6 @@ async function atualizarPedido(id) {
     let result = await requisicaoPUT(`orders/${id}`, JSON.parse(json))
 
     reImprimirPedido(result.data._id);
-    modalEnviaMotoboyEntrega(result.data.deliveryman._id)
     inicializarVariaveisClassePedido();
     mensagemDeAviso('Pedido atualizado com sucesso!')
 
@@ -707,7 +709,14 @@ async function atualizarPedido(id) {
 //funcao responsavel por excluir um pedido
 async function excluirPedido(id) {
   try {
+    let result = await requisicaoGET(`orders`)
+    let order = result.data.find(element => element._id == id)
     await requisicaoDELETE(`orders/${id}`, '');
+    let result2 = await requisicaoGET(`orders/deliveryman/${order.deliveryman._id}`)
+    if (result2.data.length == 0) {
+      await requisicaoPUT(`deliverymans/${order.deliveryman._id}`, { "available": false, "hasDelivery": false, "name": order.deliveryman.name, "phone": order.deliveryman.phone })
+    }
+
     mensagemDeAviso('Pedido excluído com sucesso!')
   } catch (error) {
     mensagemDeErro('Não foi possível excluir o pedido!')
@@ -782,8 +791,8 @@ function modalBuscaEnviaMotoboyEntrega() {
                 <h5 class="text-center"><span class="fas fa-motorcycle"></span> Buscar Motoboys</h5>
                 <div class="card-deck col-10 mx-auto d-block">
                     <div class="input-group mb-3">
-                        <input id="nome" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do motoboy">
-                        <button onclick="if(validaDadosCampo(['#nome'])){criarListaEnviarMotoboyEntrega('nome')}else{mensagemDeErroModal('Preencha o campo nome do motoboy!'); mostrarCamposIncorreto(['nome']);}" type="button" class="btn btn-outline-info btn-sm">
+                        <input id="nomeMotoboyAguardo" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do motoboy">
+                        <button onclick="if(validaDadosCampo(['#nomeMotoboyAguardo'])){criarListaEnviarMotoboyEntrega('nome')}else{mensagemDeErroModal('Preencha o campo nome do motoboy!'); mostrarCamposIncorreto(['nomeMotoboyAguardo']);}" type="button" class="btn btn-outline-info btn-sm">
                             <span class="fas fa-search"></span> Buscar
                         </button>
                         <br/>
@@ -805,54 +814,52 @@ function modalBuscaEnviaMotoboyEntrega() {
 //funcao responsavel por gerar a lista de motoboy para enviar entrega
 async function criarListaEnviarMotoboyEntrega(tipo) {
   let codigoHTML = ``,
-    json = null;
+    json = null, aux = false;
 
   try {
     if (tipo == 'nome') {
-      json = await requisicaoGET(`deliverymans/${document.getElementById('nome').value}`);
+      json = await requisicaoGET(`deliverymans/${document.getElementById('nomeMotoboyAguardo').value}`);
       json.data.forEach(function (item, indice) {
         if (item.working_day == false && item.hasDelivery == false) {
           delete json.data[indice]
         }
-        json.data[indice]
       })
-      console.log(json.data)
     } else if (tipo == 'ativos') {
       json = await requisicaoGET('deliverymans/working_days');
       json.data.forEach(function (item, indice) {
         if (item.hasDelivery == false) {
           delete json.data[indice]
         }
-        json.data[indice]
       })
     }
 
     codigoHTML += `<table class="table table-sm col-12 mx-auto" style="margin-top:10px">
-          <thead class="thead-dark">
-              <tr>
-                  <th scope="col">Nome</th>
-                  <th scope="col">Telefone</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Enviar</th>
-              </tr>
-          </thead>
-          <tbody>`;
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Telefone</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Enviar</th>
+                </tr>
+            </thead>
+            <tbody>`;
     json.data.forEach(function (item) {
       if (item.available == false) {
         codigoHTML += `<tr>
-                  <td class="table-light text-dark" title="${item.name}"><strong><span class="fas fa-biking"></span> ${corrigirTamanhoString(15, item.name)}</strong></td>
-                  <td class="table-light"><span class="fas fa-phone"></span> ${item.phone}</td>
-                  <td class="table-light"><span class="badge badge-warning">Aguardo</span></td>
-                  <td class="table-light text-center">
-                    <button onclick="confirmarAcao('Enviar motoboy para entrega!','enviarMotoboyParaEntrega(this.value)','${item._id}');" type="button" data-dismiss="modal" class="btn btn-primary btn-sm"><span class="fas fa-check-circle"></span> </button>
-                  </td>
-                </tr>`
+                    <td class="table-light text-dark" title="${item.name}"><strong><span class="fas fa-biking"></span> ${corrigirTamanhoString(15, item.name)}</strong></td>
+                    <td class="table-light"><span class="fas fa-phone"></span> ${item.phone}</td>
+                    <td class="table-light"><span class="badge badge-warning">Aguardo</span></td>
+                    <td class="table-light text-center">
+                      <button onclick="confirmarAcao('Enviar motoboy para entrega!','enviarMotoboyParaEntrega(this.value)','${item._id}');" type="button" data-dismiss="modal" class="btn btn-primary btn-sm"><span class="fas fa-check-circle"></span> </button>
+                    </td>
+                  </tr>`
+        aux = true;
       }
     });
     codigoHTML += `</tbody>
-      </table>`;
+        </table>`;
 
-    if (json.data == []) {
+    if (aux) {
       document.getElementById('respostaMotoboyParaPedidoEnvairEntrega').innerHTML = codigoHTML
     } else {
       document.getElementById('respostaMotoboyParaPedidoEnvairEntrega').innerHTML = '<h5 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Nenhum motoboy em aguardo encontrado!</h5>'
@@ -878,9 +885,9 @@ async function enviarMotoboyParaEntrega(id) {
 //funcao responsavel por imprimir/reimprimir comanda
 async function reImprimirPedido(id) {
   try {
-    /*await requisicaoPOST(`printers`, {
+    await requisicaoPOST(`printers`, {
       id: id
-    })*/
+    })
     mensagemDeAviso('Pedido impressão com sucesso!')
   } catch (error) {
     mensagemDeErro('Não foi possível imprimir o pedido!')
