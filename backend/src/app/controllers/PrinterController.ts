@@ -17,7 +17,7 @@ class PrinterController {
   private printProducts(items: ItemsInterface[]) {
     let products = '';
     items.map((item) => {
-      products += `* ${item.product.name} Qtd.: ${item.quantity}`;
+      products += `* ${item.product.name} --- R$${item.product.price.toFixed(2)}\nQtd.: ${item.quantity}\n`;
     });
 
     return products;
@@ -84,9 +84,11 @@ class PrinterController {
     myDoc.writeText('========== Motoboy ===========', contentBorder);
     myDoc.writeText(`Nome: ${order.deliveryman.name}`, contentStyle);
     myDoc.writeText(`Telefone: ${order.deliveryman.phone}`, contentStyle);
-    myDoc.writeText(`Taxa: ${order.address.district_rate}`, contentStyle);
+    myDoc.writeText(`Taxa: R$${order.address.district_rate.toFixed(2)}`, contentStyle);
     myDoc.writeText('========== Observação =========', contentBorder);
     myDoc.writeText(`- ${order.note}`, contentStyle);
+    myDoc.writeText('========= Valor total =========', contentBorder);
+    myDoc.writeText(`Valor total: R$${order.total.toFixed(2)}`, contentStyle);
 
     const content = myDoc.createDocument();
 
