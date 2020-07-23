@@ -53,7 +53,7 @@ var PrinterController = /** @class */ (function () {
     PrinterController.prototype.printProducts = function (items) {
         var products = '';
         items.map(function (item) {
-            products += "* " + item.product.name + " Qtd.: " + item.quantity;
+            products += "* " + item.product.name + " --- R$" + item.product.price.toFixed(2) + "\nQtd.: " + item.quantity + "\n";
         });
         return products;
     };
@@ -120,9 +120,11 @@ var PrinterController = /** @class */ (function () {
                         myDoc.writeText('========== Motoboy ===========', contentBorder);
                         myDoc.writeText("Nome: " + order.deliveryman.name, contentStyle);
                         myDoc.writeText("Telefone: " + order.deliveryman.phone, contentStyle);
-                        myDoc.writeText("Taxa: " + order.address.district_rate, contentStyle);
+                        myDoc.writeText("Taxa: R$" + order.address.district_rate.toFixed(2), contentStyle);
                         myDoc.writeText('========== Observação =========', contentBorder);
                         myDoc.writeText("- " + order.note, contentStyle);
+                        myDoc.writeText('========= Valor total =========', contentBorder);
+                        myDoc.writeText("Valor total: R$" + order.total.toFixed(2), contentStyle);
                         content = myDoc.createDocument();
                         buffer = Buffer.from(content, 'binary');
                         dir = process.env.NODE_ENV === 'test'
