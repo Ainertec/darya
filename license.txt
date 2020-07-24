@@ -1,0 +1,86 @@
+
+---------------------------- Licença MIT --------------------------
+
+
+
+Direitos autorais (c) 2020 Ainertec.
+
+
+
+Este Software é de caráter proprietário, dessa forma qualquer pessoa
+que obtenha uma cópia do software e arquivos de documentação 
+associados (o "software") deve ter permissão de licença devidamente 
+liberado pela empresa Ainertec.Para sua utilização é necessário que
+o usuário esteja sujeito às seguintes condições:
+
+
+
+O aviso de direitos autorais acima e este aviso de permissão devem
+ser incluídos em todos os modulos de instalação em todas as cópias.
+
+
+
+O SOFTWARE É FORNECIDO "TAL COMO ESTÁ SOBRE LINCENÇA", SEM GARANTIA
+DE QUALQUER TIPO EXPRESSA OU IMPLÍCITA, INCLUINDO MAS NÃO LIMITADO
+A GARANTIAS DE COMERCIALIZAÇÃO E NÃO INFRACÇÃO. EM NENHUM CASO O(S)
+AUTOR(ES) OU TITULAR(ES) DE DIREITOS AUTORAIS SÃO RESPONSÁVEIS POR
+QUALQUER REIVINDICAÇÃO, DANOS OU OUTRAS RESPONSABILIDADES, SEJA EM
+AÇÃO DE CONTRATO, DELITO OU DE OUTRA FORMA, DECORRENTE DE FORA OU 
+EM CONEXÃO COM O SOFTWARE OU USO OU OUTROS NEGÓCIOS NO PROGRAMA.
+
+
+
+Este software está enquadrado nas especificações da LEI Nº 9.609,
+DE 19 DE FEVEREIRO DE 1998 - CAPÍTULO 1, Art 1º.
+
+
+
+A autoria deste software se enquadra dentro das determinações da
+LEI Nº9.609, DE 19 FEVEREIRO DE 1998 - CÁPITULO 2, Art 2º Cláusula 2º,
+Art 2º Cláusula 5º, Art 2º Cláusula 6º, Art 3º Cláusula 1º,
+Art 5º, Art 6º.
+
+
+
+A negligência e desrespeito as normais estabelecidas para aquisição
+do software implicará em crime a cargo da LEI Nº9.609, DE 19 FEVEREIRO 
+1998 - CAPÍTULO 5.
+
+
+Para mais informações acesse:
+http://www.planalto.gov.br/ccivil_03/leis/L9609.htm
+
+
+
+
+
+
+
+----------------------- Intalação --------------------------------
+
+
+1º - execute o instalador(installmongodb.exe) do mongoDB.
+
+2º - execute o instalador(installdarya.exe) do Gresp Pro.
+
+3º - execute as dependecias na pasta C://darya-x64//dependencias
+
+
+
+
+
+
+------------------------- Citação --------------------------------
+
+Developers:
+
+*Aldair Klein
+*Cleiton Baloneker
+
+Extras:
+
+*NodeJS (c)
+*Bootstrap (c)
+*MongoDB (c)
+*Font Awesome (c)
+*Electron (c)
