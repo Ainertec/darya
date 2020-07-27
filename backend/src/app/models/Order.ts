@@ -76,7 +76,7 @@ const OrderSchema = new Schema(
     deliveryman: {
       type: Schema.Types.ObjectId,
       ref: 'Deliveryman',
-      required: true,
+      default: null,
     },
     items: [ItemsSchema],
     total: {

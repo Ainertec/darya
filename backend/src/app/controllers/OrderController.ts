@@ -131,7 +131,7 @@ class OrderController {
         name: client.name,
         phone: client.phone,
       },
-      deliveryman,
+      // deliveryman,
       address: {
         client_address_id: address._id,
         district_id: district._id,
@@ -148,16 +148,18 @@ class OrderController {
       total: total,
     });
 
-    await order.populate('deliveryman').populate('items.product').execPopulate();
+    if (deliveryman) {
+      const deliverymanPersisted = await Deliveryman.findOne({ _id: deliveryman });
 
-    const deliverymanPersisted = await Deliveryman.findOne({ _id: deliveryman });
-
-    if (!deliverymanPersisted) {
-      return response.status(400).json('Invalid deliveryman');
+      if (!deliverymanPersisted) {
+        return response.status(400).json('Invalid deliveryman');
+      }
+      deliverymanPersisted.hasDelivery = true;
+      await deliverymanPersisted.save();
+      order.deliveryman = deliveryman;
+      await order.save();
     }
-    deliverymanPersisted.hasDelivery = true;
-    await deliverymanPersisted.save();
-
+    await order.populate('deliveryman').populate('items.product').execPopulate();
     return response.json(order);
   }
 

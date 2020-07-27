@@ -40,7 +40,7 @@ export interface OrderInterface extends Document {
   identification: string;
   client: ClientOrderInterface;
   address: AddressOrderInterface;
-  deliveryman: Types.ObjectId;
+  deliveryman?: Types.ObjectId;
   items: ItemsInterface[];
   total: number;
   finished?: boolean;

@@ -16,8 +16,6 @@ class ReportController {
     const initial = startOfDay(new Date());
     const final = endOfDay(new Date());
     const ObjectId = Types.ObjectId;
-    console.log(deliveryman_id);
-    console.log(initial, final);
 
     const deliveryRate = await Order.aggregate()
       .match({

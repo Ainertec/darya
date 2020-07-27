@@ -51,6 +51,35 @@ describe('should a Client', () => {
     expect(response.status).toBe(200);
   });
 
+  it('should create an order without deliveryman', async () => {
+    const client = await factory.create<ClientInterface>('Client');
+    // const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman');
+    const products = await factory.create<ProductInterface>('Product', { price: 10 });
+
+    const response = await request(app)
+      .post('/orders')
+      .send({
+        client_id: client._id,
+        // deliveryman: deliveryman._id,
+        client_address_id: client.address[0]._id,
+        items: [
+          {
+            product: products._id,
+            quantity: 5,
+          },
+        ],
+        source: 'Ifood',
+      });
+    // console.log(response.body);
+    expect(response.body).toHaveProperty('total');
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        deliveryman: null,
+      })
+    );
+    expect(response.status).toBe(200);
+  });
+
   it('should update a deliveryman hasDelivery when create a order', async () => {
     const client = await factory.create<ClientInterface>('Client');
     const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman');
