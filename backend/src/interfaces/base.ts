@@ -7,6 +7,13 @@ export interface ProductInterface extends Document {
   cost: number;
   stock?: number;
 }
+export interface IngredientInterface extends Document {
+  name: string;
+  price: number;
+  description?: string;
+  unit: string;
+  stock: number;
+}
 
 export interface DeliverymanInterface extends Document {
   name: string;
