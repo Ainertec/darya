@@ -17,7 +17,9 @@ class PrinterController {
   private printProducts(items: ItemsInterface[]) {
     let products = '';
     items.map((item) => {
-      products += `* ${item.product.name} --- R$${item.product.price.toFixed(2)}\nQtd.: ${item.quantity}\n`;
+      products += `* ${item.product.name} --- R$${item.product.price.toFixed(2)}\nQtd.: ${
+        item.quantity
+      }\n`;
     });
 
     return products;
@@ -98,7 +100,6 @@ class PrinterController {
       process.env.NODE_ENV === 'test'
         ? path.resolve(__dirname, '..', '..', '..', '__tests__', 'recipes')
         : process.env.DIR_PRODUCTION;
-    console.log('dir production', process.env.DIR_PRODUCTION, dir);
     await fs.writeFile(`${dir}/${id}.rtf`, buffer, { encoding: 'utf-8', flag: 'w' }, (err) => {
       if (err) return response.status(400).json(`${err}`);
     });
@@ -115,6 +116,5 @@ class PrinterController {
       return response.status(200).json('success');
     }
   }
-
 }
 export default new PrinterController();

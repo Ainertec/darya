@@ -1,4 +1,4 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { DeliverymanInterface } from '../../interfaces/base';
 
 const DeliverymanSchema = new Schema(

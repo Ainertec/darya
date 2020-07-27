@@ -1,6 +1,6 @@
 import { Request, Response, response } from 'express';
 import Client from '../models/Client';
-import client from '../../validations/clientSchema';
+
 
 class ClientController {
   public constructor() {

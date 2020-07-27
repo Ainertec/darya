@@ -2,6 +2,7 @@ import express from 'express';
 import { celebrate } from 'celebrate';
 
 import ProductController from './app/controllers/ProductController';
+import IngredientController from './app/controllers/IngredientController';
 import DeliverymanController from './app/controllers/DeliverymanController';
 import DistrictController from './app/controllers/DistrictController';
 import ClientController from './app/controllers/ClientController';
@@ -37,6 +38,9 @@ routes.put(
   ProductController.update
 );
 routes.delete('/products/:id', celebrate({ params: paramId }), ProductController.delete);
+
+// Ingredients
+routes.post('/ingredients', IngredientController.store);
 
 // Deliverymans
 routes.get('/deliverymans', DeliverymanController.index);
