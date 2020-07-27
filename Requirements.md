@@ -1,11 +1,24 @@
 ## Requisitos Sistema integrado com Ifood
 
+### Updates
+D* Não necessario criação de pedidos com motoboys ok
+* Crud de ingredients
+* Controle de estoque de ingredientes (atualizar estoque do ingrediente ao realizar uma venda)
+* Valor unitário do ingredinete, campo price_unit? 
+* Preço de custo do produto, calculo com base nos ingredientes? ingredient price_unit * ingredient quantity
+* Preço de custo do produto ao cria-lo
+* Atualizar preço de custo do produto ao atualiza-lo
+* Atualizar preço de custo do produto ao atualiza preço do ingredient ( price_unit )
+* Usar os dados já cadastrados no db do cliente
+
+## Questions
+* Ao criar coloca-se o deliveryman com hasDelivery true, isso é necessário?
+
+
 
 ### Requisitos funcionais
 
 ##### validação para cliente com mesmo nome
-##### array de telefone para motoboy
-
 
 D* Crud de cliente ok
 D* Crud de motoboy ok
