@@ -46,12 +46,34 @@ describe('should a Client', () => {
         ],
         source: 'Ifood',
       });
+    // console.log('teste', response.body);
+    expect(response.body).toHaveProperty('total');
+    expect(response.status).toBe(200);
+  });
+
+  it('should create an order without a address', async () => {
+    const client = await factory.create<ClientInterface>('Client');
+    // const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman');
+    const products = await factory.create<ProductInterface>('Product', { price: 10 });
+
+    const response = await request(app)
+      .post('/orders')
+      .send({
+        client_id: client._id,
+        items: [
+          {
+            product: products._id,
+            quantity: 5,
+          },
+        ],
+        source: 'Ifood',
+      });
     // console.log(response.body);
     expect(response.body).toHaveProperty('total');
     expect(response.status).toBe(200);
   });
 
-  it('should create an order without deliveryman', async () => {
+  it('should create an order without a deliveryman', async () => {
     const client = await factory.create<ClientInterface>('Client');
     // const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman');
     const products = await factory.create<ProductInterface>('Product', { price: 10 });
@@ -216,7 +238,7 @@ describe('should a Client', () => {
         identification: '1234567',
         client_id: order.client.client_id,
         deliveryman: order.deliveryman,
-        client_address_id: order.address.client_address_id,
+        client_address_id: order.address?.client_address_id,
         note: 'Brabo',
         source: 'Whatsapp',
         items: [
@@ -300,7 +322,7 @@ describe('should a Client', () => {
         identification: '1234567',
         client_id: order.client.client_id,
         deliveryman: order.deliveryman,
-        client_address_id: order.address.client_address_id,
+        client_address_id: order.address?.client_address_id,
         note: 'Brabo',
         payment: 'Dinheiro',
         source: 'Whatsapp',
@@ -399,7 +421,7 @@ describe('should a Client', () => {
         identification: '1234567',
         client_id: order.client.client_id,
         deliveryman: order.deliveryman,
-        client_address_id: order.address.client_address_id,
+        client_address_id: order.address?.client_address_id,
         note: 'Brabo',
         total: 100,
         source: 'Whatsapp',

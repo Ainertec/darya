@@ -28,23 +28,20 @@ class OrderController {
     return totalProducts + rate;
   }
 
-  private async addOrUpdateAddress(
-    order: OrderInterface,
-    client_id: Types.ObjectId,
-    client_address_id: Types.ObjectId
-  ) {
+  private async getAddress(client_id: Types.ObjectId, client_address_id: Types.ObjectId) {
     const client = await Client.findOne({ _id: client_id });
 
-    if (!client) return 'That client does not exist';
+    if (!client) throw Error('That client does not exist');
 
     const address = client.address.find((add) => add._id == client_address_id);
 
-    if (!address) return 'That address does not exist';
+    if (!address) throw Error('That address does not exist');
 
     const district = await District.findOne({ _id: address.district });
 
-    if (!district) return 'That district does not exist';
-    order.address = {
+    if (!district) throw Error('That district does not exist');
+
+    return {
       client_address_id: address._id,
       district_id: district._id,
       district_name: district.name,
@@ -55,11 +52,11 @@ class OrderController {
     };
   }
 
-  private async addOrUpdateClient(order: OrderInterface, client_id: Types.ObjectId) {
+  private async getClient(client_id: Types.ObjectId) {
     const client = await Client.findOne({ _id: client_id });
 
-    if (!client) return 'That client does not exist';
-    order.client = {
+    if (!client) throw Error('That client does not exist');
+    return {
       client_id: client_id,
       name: client.name,
       phone: client.phone,
@@ -116,51 +113,51 @@ class OrderController {
 
     const client = await Client.findOne({ _id: client_id });
     if (!client) return response.status(400).json('That client does not exist');
-    const address = client.address.find((add) => add._id == client_address_id);
-    if (!address) return response.status(400).json('That address does not exist');
-    const district = await District.findOne({ _id: address.district });
-    if (!district) return response.status(400).json('That district does not exist');
 
     const identification =
       crypto.randomBytes(4).toString('hex') + client.phone[0].slice(client.phone[0].length - 2);
-    const total = await this.getTotal(items, district.rate);
-    const order = await Order.create({
-      identification,
-      client: {
-        client_id: client_id,
-        name: client.name,
-        phone: client.phone,
-      },
-      // deliveryman,
-      address: {
-        client_address_id: address._id,
-        district_id: district._id,
-        district_name: district.name,
-        district_rate: district.rate,
-        street: address.street,
-        number: address.number,
-        reference: address.reference,
-      },
-      items,
-      source,
-      note,
-      payment,
-      total: total,
-    });
 
-    if (deliveryman) {
-      const deliverymanPersisted = await Deliveryman.findOne({ _id: deliveryman });
+    try {
+      const address = client_address_id
+        ? await this.getAddress(client_id, client_address_id)
+        : undefined;
 
-      if (!deliverymanPersisted) {
-        return response.status(400).json('Invalid deliveryman');
+      const total = address
+        ? await this.getTotal(items, address.district_rate)
+        : await this.getTotal(items, 0);
+
+      const order = await Order.create({
+        identification,
+        client: {
+          client_id: client_id,
+          name: client.name,
+          phone: client.phone,
+        },
+        address,
+        items,
+        source,
+        note,
+        payment,
+        total,
+      });
+
+      if (deliveryman) {
+        const deliverymanPersisted = await Deliveryman.findOne({ _id: deliveryman });
+
+        if (!deliverymanPersisted) {
+          return response.status(400).json('Invalid deliveryman');
+        }
+        deliverymanPersisted.hasDelivery = true;
+        await deliverymanPersisted.save();
+        order.deliveryman = deliveryman;
+        await order.save();
       }
-      deliverymanPersisted.hasDelivery = true;
-      await deliverymanPersisted.save();
-      order.deliveryman = deliveryman;
-      await order.save();
+
+      await order.populate('deliveryman').populate('items.product').execPopulate();
+      return response.json(order);
+    } catch (error) {
+      return response.status(400).json(error);
     }
-    await order.populate('deliveryman').populate('items.product').execPopulate();
-    return response.json(order);
   }
 
   async update(request: Request, response: Response) {
@@ -184,7 +181,7 @@ class OrderController {
     if (identification) order.identification = identification;
     if (items) {
       order.items = items;
-      order.total = await this.getTotal(items, order.address.district_rate);
+      order.total = await this.getTotal(items, order.address?.district_rate || 0);
     }
     if (source) order.source = source;
     if (deliveryman) order.deliveryman = deliveryman;
@@ -203,18 +200,22 @@ class OrderController {
       order.finished = true;
     }
     if (client_id && String(order.client.client_id) !== String(client_id)) {
-      const error = await this.addOrUpdateClient(order, client_id);
-      if (error) {
+      try {
+        const client = await this.getClient(client_id);
+        order.client = client;
+      } catch (error) {
         return response.status(400).json(error);
       }
     }
     if (
       client_address_id &&
-      String(order.address.client_address_id) !== String(client_address_id)
+      String(order.address?.client_address_id) !== String(client_address_id)
     ) {
-      const error = await this.addOrUpdateAddress(order, order.client.client_id, client_address_id);
-      order.total = await this.getTotal(order.items, order.address.district_rate);
-      if (error) {
+      try {
+        const address = await this.getAddress(order.client.client_id, client_address_id);
+        order.address = address;
+        order.total = await this.getTotal(order.items, order.address?.district_rate || 0);
+      } catch (error) {
         return response.status(400).json(error);
       }
     }

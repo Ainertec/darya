@@ -32,28 +32,35 @@ const ClientSchema = new Schema({
 const AddressSchema = new Schema({
   client_address_id: {
     type: Schema.Types.ObjectId,
+    default: null,
   },
   district_id: {
     type: Schema.Types.ObjectId,
+    default: null,
   },
   district_name: {
     type: String,
-    required: true,
+    default: null,
+    // required: true,
   },
   district_rate: {
     type: Number,
-    required: true,
+    default: null,
+    // required: true,
   },
   street: {
     type: String,
-    required: true,
+    default: null,
+    // required: true,
   },
   number: {
     type: Number,
+    default: null,
     // required: true,
   },
   reference: {
     type: String,
+    default: null,
     // required: true,
   },
 });
