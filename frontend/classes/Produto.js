@@ -1,7 +1,7 @@
 // --------------------------------------------------- Classe Produto ---------------------------------------------------
 
 //vetor responsavel por guardar os dados dos produtos em tempo de execucao
-let VETORDEPRODUTOSCLASSEPRODUTO = [];
+let VETORDEPRODUTOSCLASSEPRODUTO = [], VETORDEINGREDIENTESCLASSEPRODUTO = [];
 
 //funcao responsavel por gerar a tela de busca do produto
 function telaDeBuscarProduto() {
@@ -90,12 +90,29 @@ function modalTelaCadastrarouAtualizarProduto(tipo) {
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="quantidadeproduto">Quantidade:</label>
-                                    <div class="input-group">
-                                      <div class="input-group-prepend">
-                                        <span class="input-group-text">(Unid.)</span>
-                                      </div>
-                                      <input type="Number" class="form-control" id="quantidadeproduto" value=0>
+                                    <label for="quantidadeproduto">Ingredientes/quantidade:</label>
+                                    <div class="col-12" style="position: relative; height: 30vh; z-index: 1; overflow: scroll; margin-right: 0px;">
+                                      <table class="table">
+                                        <tbody>
+                                          <tr class="table-info">
+                                            <td style="width:5vw">
+                                              <div class="custom-control custom-switch">
+                                                <input type="checkbox" onclick="this.checked? console.log('foi'): console.log('nao')" class="custom-control-input custom-switch" id="teste">
+                                                <label class="custom-control-label" for="teste">Add</label>
+                                              </div>                                   
+                                            </td>
+                                            <td style="width:15vw"><span class="fas fa-box"></span> Farinha</td>
+                                            <td style="width:15vw">
+                                              <div class="input-group input-group-sm">
+                                                <div class="input-group-prepend">
+                                                  <span class="input-group-text input-group-text" id="campoqtd">Qtd.:</span>
+                                                </div>
+                                                <input type="Number" class="form-control form-control-sm" aria-describedby="campoqtd">
+                                              </div>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -185,6 +202,23 @@ function carregarDadosProduto(id) {
   } catch (error) {
     mensagemDeErroModal('Não foi possível carregar os dados do produto!')
   }
+}
+
+//funcao responsavel por adicionar um ingrediente ao produto
+function adicionarIngredienteaoProduto(id, tipo, quantidade) {
+  if (tipo == 'cadastrar') {
+    VETORDEINGREDIENTESCLASSEPRODUTO.push(JSON.parse(`{"id_ingrediente":"${id}", "quantity":${parseInt(document.getElementById('quanti' + id).value)}}`))
+  } else if (tipo == 'atualizar') {
+    VETORDEINGREDIENTESCLASSEPRODUTO.push(JSON.parse(`{"id_ingrediente":"${id}", "quantity":${parseInt(quantidade)}`))
+    document.getElementById(`select${id}`).checked = true
+    document.getElementById(`quanti${id}`).value = parseInt(quantidade)
+  }
+}
+
+//funcao responsavel por remover um ingrediente do produto
+function removerIngredientedoProduto(id) {
+  let indice = VETORDEINGREDIENTESCLASSEPRODUTO.findIndex((element) => element.id_ingrediente == id)
+  VETORDEINGREDIENTESCLASSEPRODUTO.splice(indice, 1);
 }
 
 //funcao reposanvel por cadastrar um produto

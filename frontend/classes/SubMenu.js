@@ -9,7 +9,7 @@ function subMenuPedido() {
 
     codigoHTML += `<h4 class="text-center"><span class="fas fa-shopping-basket"></span> Opções de Pedido</h4>
     <div class="card-deck mx-auto col-6" style="margin-top:5vh;">
-        <button onclick="telaModalDeCriacaoDePedido('cadastrar');" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px; width: 50px; height: 150px;">
+        <button onclick="modalRetiradaLocalouEnvio();" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px; width: 50px; height: 150px;">
             <span class="fas fa-plus"></span> Criar Pedido <span class="fas fa-shopping-basket"></span>
         </button>
         <button onclick="modalBuscaEnviaMotoboyEntrega();" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px; width: 50px; height: 150px;">
