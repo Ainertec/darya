@@ -35,8 +35,8 @@ export interface AddressInterface extends Document {
 }
 export interface ClientInterface extends Document {
   name: string;
-  address: AddressInterface[];
-  phone: string[];
+  address?: AddressInterface[];
+  phone?: string[];
 }
 export interface ItemsInterface extends Document {
   product: ProductInterface;

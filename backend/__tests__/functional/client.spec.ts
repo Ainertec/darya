@@ -41,6 +41,54 @@ describe('should a Client', () => {
     );
   });
 
+  it('should create a client without phone', async () => {
+    const distric = await factory.create<DistrictInterface>('District');
+
+    const response = await request(app)
+      .post('/clients')
+      .send({
+        name: 'Cleiton',
+        address: [
+          {
+            district: distric._id,
+            street: 'Encontro dos Rios',
+            reference: 'Pousada encontro dos rios',
+          },
+        ],
+        // phone: ['22 992726852', '22 992865120'],
+      });
+    // console.log(response.body);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        name: 'Cleiton',
+      })
+    );
+  });
+
+  it('should create a client without address', async () => {
+    // const distric = await factory.create<DistrictInterface>('District');
+
+    const response = await request(app).post('/clients').send({
+      name: 'Cleiton',
+      // address: [
+      //   {
+      //     district: distric._id,
+      //     street: 'Encontro dos Rios',
+      //     reference: 'Pousada encontro dos rios',
+      //   },
+      // ],
+      // phone: ['22 992726852', '22 992865120'],
+    });
+    // console.log(response.body);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        name: 'Cleiton',
+      })
+    );
+  });
+
   it('should not create a client with the same name and phone number', async () => {
     const district = await factory.create<DistrictInterface>('District');
     const client = await factory.create<ClientInterface>('Client', {
@@ -67,20 +115,70 @@ describe('should a Client', () => {
 
   it('should update a client', async () => {
     const client = await factory.create<ClientInterface>('Client');
-
+    const distric = await factory.create<DistrictInterface>('District');
     const response = await request(app)
       .put(`/clients/${client._id}`)
       .send({
         name: 'Cleiton',
         address: [
           {
-            district: client.address[0].district,
-            street: client.address[0].street,
-            number: client.address[0].number,
+            district: distric._id,
+            street: 'Estrada Serra Mar Encontro dos Rios',
+            number: 0,
           },
         ],
         phone: ['22 992726852', '22 992865120'],
       });
+    // console.log(response.body);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        name: 'Cleiton',
+      })
+    );
+  });
+
+  it('should update a client without phone number', async () => {
+    const client = await factory.create<ClientInterface>('Client');
+    const distric = await factory.create<DistrictInterface>('District');
+    // console.log('client no teste', client);
+    const response = await request(app)
+      .put(`/clients/${client._id}`)
+      .send({
+        name: 'Cleiton',
+        address: [
+          {
+            district: distric._id,
+            street: 'Estrada Serra Mar Encontro dos Rios',
+            number: 0,
+          },
+        ],
+        // phone: ['22 992726852', '22 992865120'],
+      });
+    // console.log(response.body);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        name: 'Cleiton',
+      })
+    );
+  });
+
+  it('should update a client without address', async () => {
+    const client = await factory.create<ClientInterface>('Client');
+    const distric = await factory.create<DistrictInterface>('District');
+    // console.log('client no teste', client);
+    const response = await request(app).put(`/clients/${client._id}`).send({
+      name: 'Cleiton',
+      // address: [
+      //   {
+      //     district: distric._id,
+      //     street: 'Estrada Serra Mar Encontro dos Rios',
+      //     number: 0,
+      //   },
+      // ],
+      // phone: ['22 992726852', '22 992865120'],
+    });
     // console.log(response.body);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(

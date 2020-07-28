@@ -1,7 +1,6 @@
 import { Request, Response, response } from 'express';
 import Client from '../models/Client';
 
-
 class ClientController {
   public constructor() {
     this.store = this.store.bind(this);
@@ -10,14 +9,17 @@ class ClientController {
 
   private async clientNameValidation(name: string, phone: string[]) {
     const clientWithSameName = await Client.findOne({ name: name });
-    if (clientWithSameName) {
+
+    if (!clientWithSameName || !clientWithSameName.phone) return;
+    else {
       let hasSamePhone = false;
       phone.forEach((element: string) => {
-        if (clientWithSameName.phone.includes(element)) {
+        if (clientWithSameName.phone?.includes(element)) {
           hasSamePhone = true;
           return;
         }
       });
+
       if (hasSamePhone) return 'Client has the same name and phone number';
     }
   }
@@ -40,15 +42,17 @@ class ClientController {
   async store(request: Request, response: Response) {
     const { name, address, phone } = request.body;
 
-    const isInvalidName = await this.clientNameValidation(name, phone);
-    if (isInvalidName) {
-      return response.status(400).json(isInvalidName);
+    if (phone) {
+      const isInvalidName = await this.clientNameValidation(name, phone);
+      if (isInvalidName) {
+        return response.status(400).json(isInvalidName);
+      }
     }
 
     const client = await Client.create({
       name,
-      address,
-      phone,
+      address: address ? address : undefined,
+      phone: phone ? phone : undefined,
     });
 
     await client.populate('address.district').execPopulate();
@@ -60,17 +64,20 @@ class ClientController {
     const { name, address, phone } = request.body;
     const { id } = request.params;
 
-    const client = await Client.findOneAndUpdate(
-      { _id: id },
-      {
-        address,
-        phone,
-      },
-      { new: true }
-    );
+    const client = await Client.findOne({ _id: id });
 
     if (!client) return response.status(400).json('Client does not exist');
-    if (name) {
+
+    if (name && !phone && client.phone) {
+      const isInvalidName = await this.clientNameValidation(name, client.phone);
+
+      if (isInvalidName) {
+        return response.status(400).json(isInvalidName);
+      } else {
+        client.name = name;
+      }
+    }
+    if (name && phone) {
       const isInvalidName = await this.clientNameValidation(name, phone);
 
       if (isInvalidName) {
@@ -78,6 +85,13 @@ class ClientController {
       } else {
         client.name = name;
       }
+    }
+
+    if (phone) {
+      client.phone = phone;
+    }
+    if (address) {
+      client.address = address;
     }
 
     await client.save();

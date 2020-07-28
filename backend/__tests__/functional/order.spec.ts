@@ -31,13 +31,13 @@ describe('should a Client', () => {
     const client = await factory.create<ClientInterface>('Client');
     const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman');
     const products = await factory.create<ProductInterface>('Product', { price: 10 });
-
+    const address = client.address ? client.address[0]._id : undefined;
     const response = await request(app)
       .post('/orders')
       .send({
         client_id: client._id,
         deliveryman: deliveryman._id,
-        client_address_id: client.address[0]._id,
+        client_address_id: address,
         items: [
           {
             product: products._id,
@@ -83,7 +83,7 @@ describe('should a Client', () => {
       .send({
         client_id: client._id,
         // deliveryman: deliveryman._id,
-        client_address_id: client.address[0]._id,
+        client_address_id: client.address ? client.address[0]._id : undefined,
         items: [
           {
             product: products._id,
@@ -112,7 +112,7 @@ describe('should a Client', () => {
       .send({
         client_id: client._id,
         deliveryman: deliveryman._id,
-        client_address_id: client.address[0]._id,
+        client_address_id: client.address ? client.address[0]._id : undefined,
         items: [
           {
             product: products._id,
@@ -142,7 +142,7 @@ describe('should a Client', () => {
       .send({
         client_id: client._id,
         deliveryman: deliveryman._id,
-        client_address_id: client.address[0]._id,
+        client_address_id: client.address ? client.address[0]._id : undefined,
         items: [
           {
             product: products._id,
@@ -188,7 +188,7 @@ describe('should a Client', () => {
       .send({
         client_id: '5f05febbd43fb02cb0b83d64',
         deliveryman: deliveryman._id,
-        client_address_id: client.address[0]._id,
+        client_address_id: client.address ? client.address[0]._id : undefined,
         items: [
           {
             product: products._id,
@@ -211,7 +211,7 @@ describe('should a Client', () => {
       .send({
         client_id: client._id,
         deliveryman: '5f05febbd43fb02cb0b83d64',
-        client_address_id: client.address[0]._id,
+        client_address_id: client.address ? client.address[0]._id : undefined,
         items: [
           {
             product: products._id,
@@ -271,9 +271,11 @@ describe('should a Client', () => {
       },
     });
 
-    const response = await request(app).put(`/orders/${order._id}`).send({
-      client_address_id: client.address[0]._id,
-    });
+    const response = await request(app)
+      .put(`/orders/${order._id}`)
+      .send({
+        client_address_id: client.address ? client.address[0]._id : undefined,
+      });
     const isEqual = order.total === response.body.total ? true : false;
     expect(response.body).toHaveProperty('total');
     expect(response.status).toBe(200);
@@ -346,14 +348,16 @@ describe('should a Client', () => {
       name: 'Chocolate',
     });
 
-    const response = await request(app).put(`/orders/${order._id}`).send({
-      identification: '1234567',
-      client_id: client._id,
-      deliveryman: order.deliveryman,
-      client_address_id: client.address[0]._id,
-      note: 'Brabo',
-      source: 'Whatsapp',
-    });
+    const response = await request(app)
+      .put(`/orders/${order._id}`)
+      .send({
+        identification: '1234567',
+        client_id: client._id,
+        deliveryman: order.deliveryman,
+        client_address_id: client.address ? client.address[0]._id : undefined,
+        note: 'Brabo',
+        source: 'Whatsapp',
+      });
     // console.log(response.body);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
@@ -376,15 +380,17 @@ describe('should a Client', () => {
       name: 'Chocolate',
     });
 
-    const response = await request(app).put(`/orders/${order._id}`).send({
-      identification: '1234567',
-      client_id: '5f05febbd43fb02cb0b83d64',
-      deliveryman: order.deliveryman,
-      client_address_id: client.address[0]._id,
-      note: 'Brabo',
-      total: 100,
-      source: 'Whatsapp',
-    });
+    const response = await request(app)
+      .put(`/orders/${order._id}`)
+      .send({
+        identification: '1234567',
+        client_id: '5f05febbd43fb02cb0b83d64',
+        deliveryman: order.deliveryman,
+        client_address_id: client.address ? client.address[0]._id : undefined,
+        note: 'Brabo',
+        total: 100,
+        source: 'Whatsapp',
+      });
     expect(response.status).toBe(400);
   });
 
