@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { Types } from 'mongoose';
 import { startOfDay, endOfDay, sub } from 'date-fns';
 import Order from '../models/Order';
+import Product from '../models/Product';
 import { ProductInterface } from '../../interfaces/base';
 
 interface InterfaceDispenseAndGain {
@@ -64,7 +65,7 @@ class ReportController {
     }, 0);
 
     const totalRate = ordersProfit.reduce((sum, order) => {
-      return sum + order.address.district_rate;
+      return sum + (order.address ? order.address.district_rate : 0);
     }, 0);
 
     const totalProducts = ordersProfit.reduce((sum, order) => {
@@ -82,6 +83,8 @@ class ReportController {
   }
 
   async productsDispenseAndGain(request: Request, response: Response) {
+    const product = await Product.find({});
+    // console.log(product);
     const orders = await Order.aggregate<InterfaceDispenseAndGain>()
       .match({
         finished: true,
@@ -107,9 +110,10 @@ class ReportController {
       });
 
     const productDispenseAndGain = orders.map((order) => {
+      // console.log(order);
       return {
         ...order,
-        dispense: order._id?.cost * (order._id.stock ? order._id.stock : 0),
+        dispense: order._id.cost * (order._id.stock ? order._id.stock : 0),
       };
     });
     return response.json(productDispenseAndGain);

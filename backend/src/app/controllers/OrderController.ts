@@ -33,7 +33,7 @@ class OrderController {
 
     if (!client) throw Error('That client does not exist');
 
-    const address = client.address.find((add) => add._id == client_address_id);
+    const address = client.address?.find((add) => add._id == client_address_id);
 
     if (!address) throw Error('That address does not exist');
 
@@ -114,8 +114,9 @@ class OrderController {
     const client = await Client.findOne({ _id: client_id });
     if (!client) return response.status(400).json('That client does not exist');
 
-    const identification =
-      crypto.randomBytes(4).toString('hex') + client.phone[0].slice(client.phone[0].length - 2);
+    const identification = client.phone
+      ? crypto.randomBytes(4).toString('hex') + client.phone[0].slice(client.phone[0].length - 2)
+      : crypto.randomBytes(4).toString('hex');
 
     try {
       const address = client_address_id

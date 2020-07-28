@@ -4,12 +4,18 @@ export interface ProductInterface extends Document {
   name: string;
   price: number;
   description?: string;
+  ingredients: Ingredients[];
   cost: number;
   stock?: number;
+}
+export interface Ingredients {
+  material: IngredientInterface;
+  quantity: number;
 }
 export interface IngredientInterface extends Document {
   name: string;
   price: number;
+  priceUnit: number;
   description?: string;
   unit: string;
   stock: number;
@@ -74,7 +80,7 @@ export interface OrderInterfaceDeliveryman extends Document {
 export interface ClientOrderInterface {
   client_id: Types.ObjectId;
   name: string;
-  phone: string[];
+  phone?: string[];
 }
 export interface AddressOrderInterface {
   street: string;

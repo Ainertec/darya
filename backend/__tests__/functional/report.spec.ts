@@ -86,8 +86,8 @@ describe('should a Client', () => {
   it('should list dispense and gain of all products', async () => {
     const product = await factory.create<ProductInterface>('Product', { cost: 10, stock: 6 });
     const product1 = await factory.create<ProductInterface>('Product', { stock: undefined });
-    const product2 = await factory.create<ProductInterface>('Product');
-    const product3 = await factory.create<ProductInterface>('Product');
+    const product2 = await factory.create<ProductInterface>('Product', { stock: 5 });
+    const product3 = await factory.create<ProductInterface>('Product', { stock: 5 });
     await factory.createMany('Order', 2, {
       items: [
         {

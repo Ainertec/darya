@@ -6,12 +6,21 @@ import Product from '../src/app/models/Product';
 import Deliveryman from '../src/app/models/Deliveryman';
 import District from '../src/app/models/District';
 import Client from '../src/app/models/Client';
+import Ingredient from '../src/app/models/Ingredient';
 import Order from '../src/app/models/Order';
 
 factory.define('Product', Product, {
   name: faker.commerce.productName(),
   price: faker.commerce.price(),
   cost: faker.commerce.price(),
+  stock: faker.random.number(100),
+  description: faker.commerce.productAdjective(),
+});
+factory.define('Ingredient', Ingredient, {
+  name: faker.commerce.productName(),
+  price: faker.commerce.price(),
+  priceUnit: faker.commerce.price(),
+  unit: 'g',
   stock: faker.random.number(100),
   description: faker.commerce.productAdjective(),
 });

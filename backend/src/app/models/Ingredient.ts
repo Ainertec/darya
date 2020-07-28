@@ -21,6 +21,10 @@ const IngredientSchema = new Schema(
       type: Number,
       required: true,
     },
+    priceUnit: {
+      type: Number,
+      required: true,
+    },
     description: {
       type: String,
       default: null,

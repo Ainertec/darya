@@ -4,7 +4,7 @@
 D* Não necessario criação de pedidos com motoboys ok
 * Crud de ingredients
 * Controle de estoque de ingredientes (atualizar estoque do ingrediente ao realizar uma venda)
-* Valor unitário do ingredinete, campo price_unit? 
+* Valor unitário do ingredinete, campo price_unit 
 * Preço de custo do produto, calculo com base nos ingredientes? ingredient price_unit * ingredient quantity
 * Preço de custo do produto ao cria-lo
 * Atualizar preço de custo do produto ao atualiza-lo
