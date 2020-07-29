@@ -67,4 +67,20 @@ IngredientSchema.post<IngredientInterface>('findOneAndUpdate', async (document) 
   }
 });
 
+IngredientSchema.post<IngredientInterface>('findOneAndRemove', async (document) => {
+  if (document) {
+    const ingredientID = document._id;
+    const products = await Product.find({ 'ingredients.material': { $in: ingredientID } });
+    await Promise.all(
+      products.map(async (product: ProductInterface) => {
+        const ingredientUpdated = product.ingredients.filter(
+          (ingredient) => String(ingredient.material) !== String(ingredientID)
+        );
+        product.ingredients = ingredientUpdated;
+        await product.save();
+      })
+    );
+  }
+});
+
 export default model<IngredientInterface>('Ingredient', IngredientSchema);

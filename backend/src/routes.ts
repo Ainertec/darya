@@ -40,8 +40,10 @@ routes.put(
 routes.delete('/products/:id', celebrate({ params: paramId }), ProductController.delete);
 
 // Ingredients
+routes.get('/ingredients', IngredientController.index);
 routes.post('/ingredients', IngredientController.store);
 routes.put('/ingredients/:id', IngredientController.update);
+routes.delete('/ingredients/:id', IngredientController.delete);
 
 // Deliverymans
 routes.get('/deliverymans', DeliverymanController.index);

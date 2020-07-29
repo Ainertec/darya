@@ -74,4 +74,21 @@ describe('should test a ingredient', () => {
 
     expect(response.status).toBe(400);
   });
+
+  it('should delete a ingredient', async () => {
+    const ingredient = await factory.create<IngredientInterface>('Ingredient');
+
+    const response = await request(app).delete(`/ingredients/${ingredient._id}`);
+
+    expect(response.status).toBe(200);
+  });
+
+  it('should list all ingredients', async () => {
+    await factory.createMany<IngredientInterface>('Ingredint', 4);
+
+    const response = await request(app).get('/ingredients');
+
+    expect(response.status).toBe(200);
+    expect(response.body.length).toBe(4);
+  });
 });

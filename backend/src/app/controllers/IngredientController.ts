@@ -3,6 +3,10 @@ import Ingredient, { Unit } from '../models/Ingredient';
 import Product from '../models/Product';
 
 class IngredientController {
+  async index(request: Request, response: Response) {
+    const ingredients = await Ingredient.find({});
+    return response.json(ingredients);
+  }
   async store(request: Request, response: Response) {
     const { name, description, price, stock, unit } = request.body;
 
@@ -50,6 +54,13 @@ class IngredientController {
     );
 
     return response.json(ingredient);
+  }
+  async delete(request: Request, response: Response) {
+    const { id } = request.params;
+
+    await Ingredient.findOneAndRemove({ _id: id });
+
+    return response.status(200).send();
   }
 }
 

@@ -8,10 +8,11 @@ D* Valor unitário do ingredinete, campo price_unit, create and update
 D* Preço de custo do produto, calculo com base nos ingredientes? ingredient price_unit * ingredient quantity
 D* Preço de custo do produto ao cria-lo
 D* Atualizar preço de custo do produto ao atualiza-lo
-* Atualizar preço de custo do produto ao atualiza preço do ingredient ( price_unit )
+D* Atualizar preço de custo do produto ao atualiza preço do ingredient ( price_unit )
+D* Delete cascate para essa feature 
 
-* Usar os dados já cadastrados no db do cliente
 * Remover o campo stock, atualizar o report controller para essa mudança
+* Usar os dados já cadastrados no db do cliente
 
 ## Questions
 * Ao criar coloca-se o deliveryman com hasDelivery true, isso é necessário?

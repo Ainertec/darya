@@ -42,4 +42,37 @@ describe('should test a update cascate when update a ingredient price', () => {
     expect(response.status).toBe(200);
     expect(productUpdated?.cost).toBe(20);
   });
+
+  it('should update all products cost when update a ingredint price', async () => {
+    const ingredient = await factory.create<IngredientInterface>('Ingredient');
+    const product = await factory.create<ProductInterface>('Product', {
+      ingredients: [
+        {
+          material: ingredient._id,
+          quantity: 200,
+        },
+      ],
+    });
+    const product2 = await factory.create<ProductInterface>('Product', {
+      ingredients: [
+        {
+          material: ingredient._id,
+          quantity: 200,
+        },
+      ],
+    });
+    const response = await request(app).put(`/ingredients/${ingredient._id}`).send({
+      name: ingredient.name,
+      price: 2,
+      stock: 20,
+      description: ingredient.description,
+      unit: 'g',
+    });
+    const productUpdated = await Product.findOne({ _id: product._id });
+    const productUpdated2 = await Product.findOne({ _id: product2._id });
+    // console.log(product, product2);
+    expect(response.status).toBe(200);
+    expect(productUpdated?.cost).toBe(20);
+    expect(productUpdated2?.cost).toBe(20);
+  });
 });
