@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
-import { IngredientInterface } from '../../interfaces/base';
+import { IngredientInterface, ProductInterface } from '../../interfaces/base';
+import Product from './Product';
+import getCost from '../utils/getProductCost';
 
 const Unit = Object.freeze({
   kilogram: 'g',
@@ -43,5 +45,26 @@ const IngredientSchema = new Schema(
     timestamps: true,
   }
 );
+
+Object.assign(IngredientSchema.statics, {
+  Unit,
+});
+
+export { Unit };
+
+IngredientSchema.post<IngredientInterface>('findOneAndUpdate', async (document) => {
+  if (document) {
+    const ingredientID = document._id;
+
+    const products = await Product.find({ 'ingredients.material': { $in: ingredientID } });
+    await Promise.all(
+      products.map(async (product: ProductInterface) => {
+        const cost = await getCost(product.ingredients);
+        product.cost = cost;
+        await product.save();
+      })
+    );
+  }
+});
 
 export default model<IngredientInterface>('Ingredient', IngredientSchema);

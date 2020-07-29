@@ -41,6 +41,7 @@ routes.delete('/products/:id', celebrate({ params: paramId }), ProductController
 
 // Ingredients
 routes.post('/ingredients', IngredientController.store);
+routes.put('/ingredients/:id', IngredientController.update);
 
 // Deliverymans
 routes.get('/deliverymans', DeliverymanController.index);

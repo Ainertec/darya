@@ -36,7 +36,7 @@ describe('should test a product', () => {
         ],
         description: 'como que é o nome daquele negocio?',
       });
-    console.log(response.body);
+    // console.log(response.body);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({
@@ -47,18 +47,31 @@ describe('should test a product', () => {
 
   it('should update a product', async () => {
     const product = await factory.create<ProductInterface>('Product');
-
-    const response = await request(app).put(`/products/${product._id}`).send({
-      name: 'roquinha',
-      price: product.price,
-      cost: product.cost,
-      description: product.description,
+    const ingredient = await factory.create<IngredientInterface>('Ingredient', {
+      price: 5,
+      stock: 2000,
+      priceUnit: 5 / 2000,
     });
 
+    const response = await request(app)
+      .put(`/products/${product._id}`)
+      .send({
+        name: 'roquinha',
+        price: product.price,
+        ingredients: [
+          {
+            material: ingredient._id,
+            quantity: 500,
+          },
+        ],
+        description: product.description,
+      });
+    // console.log(response.body);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({
         name: 'roquinha',
+        cost: 1.25,
       })
     );
   });

@@ -50,8 +50,9 @@ class ProductController {
     return response.json(product);
   }
   async update(request: Request, response: Response) {
-    const { name, price, cost, description, stock } = request.body;
+    const { name, price, ingredients, description, stock } = request.body;
     const { id } = request.params;
+    const cost = await this.getCost(ingredients);
 
     const product = await Product.findOneAndUpdate(
       { _id: id },
@@ -59,6 +60,7 @@ class ProductController {
         name,
         price,
         description,
+        ingredients,
         cost,
       },
       { new: true }
@@ -67,6 +69,8 @@ class ProductController {
     if (stock) product.stock = stock;
 
     await product.save();
+
+    await product.populate('ingredients.material').execPopulate();
 
     return response.json(product);
   }
