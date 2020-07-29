@@ -5,7 +5,7 @@ import Order, { Source } from '../models/Order';
 import Client from '../models/Client';
 import District from '../models/District';
 import Deliveryman from '../models/Deliveryman';
-import { OrderInterface, ItemsInterface } from '../../interfaces/base';
+import { OrderInterface, Items } from '../../interfaces/base';
 import Product from '../models/Product';
 
 class OrderController {
@@ -14,7 +14,7 @@ class OrderController {
     this.update = this.update.bind(this);
   }
 
-  private async getTotal(items: ItemsInterface[], rate: number) {
+  private async getTotal(items: Items[], rate: number) {
     let totalProducts = 0;
     await Promise.all(
       items.map(async (item) => {
@@ -198,6 +198,9 @@ class OrderController {
       deliverymanPersisted.hasDelivery = false;
 
       await deliverymanPersisted.save();
+      // await Order.findOneAndUpdate({_id:order._id},{
+      //   finished:true
+      // })
       order.finished = true;
     }
     if (client_id && String(order.client.client_id) !== String(client_id)) {

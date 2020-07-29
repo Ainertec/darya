@@ -38,7 +38,7 @@ const IngredientSchema = new Schema(
     },
     stock: {
       type: Number,
-      default: null,
+      required: true,
     },
   },
   {

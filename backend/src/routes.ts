@@ -41,6 +41,7 @@ routes.delete('/products/:id', celebrate({ params: paramId }), ProductController
 
 // Ingredients
 routes.get('/ingredients', IngredientController.index);
+routes.get('/ingredients/:name', IngredientController.show);
 routes.post('/ingredients', IngredientController.store);
 routes.put('/ingredients/:id', IngredientController.update);
 routes.delete('/ingredients/:id', IngredientController.delete);

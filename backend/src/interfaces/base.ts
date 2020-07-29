@@ -6,10 +6,14 @@ export interface ProductInterface extends Document {
   description?: string;
   ingredients: Ingredients[];
   cost: number;
-  stock?: number;
+  stock: number;
 }
 export interface Ingredients {
   material: IngredientInterface;
+  quantity: number;
+}
+export interface Items {
+  product: ProductInterface;
   quantity: number;
 }
 export interface IngredientInterface extends Document {
@@ -54,7 +58,7 @@ export interface OrderInterface extends Document {
   client: ClientOrderInterface;
   address?: AddressOrderInterface;
   deliveryman?: Types.ObjectId;
-  items: ItemsInterface[];
+  items: Items[];
   total: number;
   finished?: boolean;
   source: string;

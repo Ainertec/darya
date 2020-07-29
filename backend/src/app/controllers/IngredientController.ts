@@ -1,10 +1,17 @@
 import { Request, Response } from 'express';
 import Ingredient, { Unit } from '../models/Ingredient';
-import Product from '../models/Product';
 
 class IngredientController {
   async index(request: Request, response: Response) {
     const ingredients = await Ingredient.find({});
+    return response.json(ingredients);
+  }
+  async show(request: Request, response: Response) {
+    const { name } = request.params;
+    const ingredients = await Ingredient.find({
+      name: { $regex: new RegExp(name), $options: 'i' },
+    });
+
     return response.json(ingredients);
   }
   async store(request: Request, response: Response) {

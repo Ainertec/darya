@@ -84,11 +84,27 @@ describe('should test a ingredient', () => {
   });
 
   it('should list all ingredients', async () => {
-    await factory.createMany<IngredientInterface>('Ingredint', 4);
+    await factory.createMany<IngredientInterface>('Ingredient', 4);
 
     const response = await request(app).get('/ingredients');
 
     expect(response.status).toBe(200);
     expect(response.body.length).toBe(4);
+  });
+
+  it('should list all ingredients by name', async () => {
+    await factory.create<IngredientInterface>('Ingredient', { name: 'Farinha' });
+    await factory.create<IngredientInterface>('Ingredient', { name: 'Chocolate' });
+
+    const response = await request(app).get(`/ingredients/far`);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: 'Farinha',
+        }),
+      ])
+    );
   });
 });

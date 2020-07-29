@@ -2,8 +2,8 @@
 
 ### Updates
 D* Não necessario criação de pedidos com motoboys ok
-* Crud de ingredients 40%
-* Controle de estoque de ingredientes (atualizar estoque do ingrediente ao realizar uma venda)
+D* Crud de ingredients
+D* Controle de estoque de ingredientes (atualizar estoque do ingrediente ao realizar uma venda) obs. testar um pouco mais
 D* Valor unitário do ingredinete, campo price_unit, create and update 
 D* Preço de custo do produto, calculo com base nos ingredientes? ingredient price_unit * ingredient quantity
 D* Preço de custo do produto ao cria-lo

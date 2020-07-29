@@ -1,5 +1,7 @@
 import { Schema, model, Model } from 'mongoose';
 import { OrderInterface } from '../../interfaces/base';
+import Product from './Product';
+import Ingredient from './Ingredient';
 
 const ItemsSchema = new Schema({
   product: {
@@ -122,5 +124,26 @@ Object.assign(OrderSchema.statics, {
 });
 
 export { Source };
+
+OrderSchema.post<OrderInterface>('save', async (document) => {
+  if (document && document.finished) {
+    console.log('fala ae meu bom');
+    await Promise.all(
+      document.items.map(async (item) => {
+        const product = await Product.findOne({ _id: item.product });
+        if (product) {
+          product.ingredients.map(async (ingredient) => {
+            const ingredientPersisted = await Ingredient.findOne({ _id: ingredient.material });
+
+            if (ingredientPersisted) {
+              ingredientPersisted.stock -= ingredient.quantity * item.quantity;
+              await ingredientPersisted.save();
+            }
+          });
+        }
+      })
+    );
+  }
+});
 
 export default model<OrderInterface>('Order', OrderSchema);
