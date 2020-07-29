@@ -39,20 +39,28 @@ function gerarListaDeClientes(json) {
 
   codigoHTML += `<tr>
         <td class="table-warning" title="${json.name}"><strong><span class="fas fa-user"></span> ${corrigirTamanhoString(15, json.name)}</strong></td>
-        <td class="table-warning">
-            <select class="form-control form-control-sm">`;
-  json.phone.forEach(function (item) {
-    codigoHTML += `<option>${item}</option>`;
-  });
-  codigoHTML += `</select>
-        </td>
-        <td class="table-warning text-danger">
-            <select class="form-control form-control-sm">`;
-  json.address.forEach(function (item) {
-    codigoHTML += `<option title="${item.street}, nº ${item.number} - ${item.district.name} - ${item.district.city}">${corrigirTamanhoString(15, item.street)}, nº ${item.number} - ${corrigirTamanhoString(15, item.district.name)} - ${corrigirTamanhoString(15, item.district.city)}</option>`;
-  });
-  codigoHTML += `</select>
-        </td>
+        <td class="table-warning">`
+  if (json.phone) {
+    codigoHTML += `<select class="form-control form-control-sm">`
+    json.phone.forEach(function (item) {
+      codigoHTML += `<option>${item}</option>`;
+    });
+    codigoHTML += `</select>`
+  } else {
+    codigoHTML += `Nenhum existente.`
+  }
+  codigoHTML += `</td>
+        <td class="table-warning text-danger">`
+  if (json.address) {
+    codigoHTML += `<select class="form-control form-control-sm">`
+    json.address.forEach(function (item) {
+      codigoHTML += `<option title="${item.street}, nº ${item.number} - ${item.district.name} - ${item.district.city}">${corrigirTamanhoString(15, item.street)}, nº ${item.number} - ${corrigirTamanhoString(15, item.district.name)} - ${corrigirTamanhoString(15, item.district.city)}</option>`;
+    });
+    codigoHTML += `</select>`
+  } else {
+    codigoHTML += `Nenhum existente.`
+  }
+  codigoHTML += `</td>
         <td class="table-warning"><button onclick="carregarDadosCliente('${json._id}');" type="button" class="btn btn-primary btn-sm"><span class="fas fa-edit"></span> Editar</button></td>
         <td class="table-warning"><button onclick="confirmarAcao('Excluir este cliente!','excluirCliente(this.value)','${json._id}')" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span> Excluir</button></td>
     </tr>`;
@@ -62,8 +70,7 @@ function gerarListaDeClientes(json) {
 
 //funcao responsavel por gerar o modal de cadastrar/atualizar/remover bairro
 async function modalTelaCadastrarouAtualizarCliente(tipo) {
-  let codigoHTML = ``,
-    json = await requisicaoGET(`districts`);
+  let codigoHTML = ``
 
   codigoHTML += `<div class="modal fade" id="modalClasseCliente" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-scrollable modal-lg">
@@ -81,77 +88,13 @@ async function modalTelaCadastrarouAtualizarCliente(tipo) {
                                     <label for="nomecliente">Nome:</label>
                                     <input type="text" class="form-control" id="nomecliente" placeholder="Nome do cliente">
                                 </div>
-
-                                <table class="table table-sm col-12 mx-auto" style="margin-top:80px">
-                                    <thead class="thead-dark">
-                                        <tr>
-                                            <th scope="col">Telefone</th>
-                                            <th scope="col">Excluir</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tabelatelefone">
-                                        
-                                    </tbody>
-                                </table>
-
-                                <div class="form-group">
-                                    <label for="telefonecliente">Telefone:</label>
-                                    <div class="input-group mb-3">
-                                        <input type="tel" class="form-control" id="telefonecliente" placeholder="Exemplo:(00) 00000-0000" aria-describedby="botaoadicionartelefone">
-                                        <div class="input-group-append">`;
-  if (tipo == 'cadastrar') {
-    codigoHTML += `<button onclick="if(validaDadosCampo(['#telefonecliente'])){adicionarDadosNaTabelaTelefoneeEndereco('telefone', '-1')}else{mensagemDeErroModal('Preencha o campo telefone!'); mostrarCamposIncorreto(['telefonecliente']);}" id="botaoadicionartelefone" class="btn btn-success" type="button"><span class="fas fa-plus"></span> Adicionar</button>`;
-  } else if (tipo == 'atualizar') {
-    codigoHTML += `<button onclick="if(validaDadosCampo(['#telefonecliente'])){adicionarDadosNaTabelaTelefoneeEndereco('telefone', this.value)}else{mensagemDeErroModal('Preencha o campo telefone!'); mostrarCamposIncorreto(['telefonecliente']);}" id="botaoadicionartelefone" class="btn btn-success" type="button"><span class="fas fa-plus"></span> Adicionar</button>`;
-  }
-  codigoHTML += `</div>
-                                    </div>
+                                <div id="botaoadicionartelefoneendereco">
+                                  <div class="custom-control custom-switch">
+                                    <input type="checkbox" onclick="this.checked? gerarTelaParteTelefoneEnderecoCliente('${tipo}') : document.getElementById('areatelefoneendereco').innerHTML='' " class="custom-control-input custom-switch" id="botaoSelectClientephoneaddress">
+                                    <label class="custom-control-label" for="botaoSelectClientephoneaddress">Adicionar Telefone e Endereço</label>
+                                  </div>
                                 </div>
-
-                                <table class="table table-sm col-12 mx-auto" style="margin-top:80px">
-                                    <thead class="thead-dark">
-                                        <tr>
-                                            <th scope="col">Rua</th>
-                                            <th scope="col">Número</th>
-                                            <th scope="col">Bairro - Cidade</th>
-                                            <th scope="col">Complemento</th>
-                                            <th scope="col">Excluir</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tabelaendereco">
-
-                                    </tbody>
-                                </table>
-
-                                <div class="form-group">
-                                    <label for="ruacliente">Rua:</label>
-                                    <input type="text" class="form-control" id="ruacliente" placeholder="Exemplo: Rua Sete de Setembro">
-                                </div>
-                                <div class="form-group">
-                                    <label for="numerocasacliente">Número da casa:</label>
-                                    <input type="Number" class="form-control" id="numerocasacliente">
-                                </div>
-                                <div class="form-group">
-                                    <label for="bairrocidadecliente">Bairro - Cidade:</label>
-                                    <select class="form-control form-control-sm" id="bairrocidadecliente">`;
-  json.data.forEach(function (item) {
-    codigoHTML += `<option value="${item._id}">${item.name} - ${item.city}</option>`;
-  });
-  codigoHTML += `</select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="complementocliente">Complemento:</label>
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control" id="complementocliente">
-                                        <div class="input-group-append">`;
-  if (tipo == 'cadastrar') {
-    codigoHTML += `<button onclick="if(validaDadosCampo(['#ruacliente','#numerocasacliente','#complementocliente'])){adicionarDadosNaTabelaTelefoneeEndereco('endereco','-1')}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['ruacliente','numerocasacliente','complementocliente']);}" id="botaoadicionarendereco" class="btn btn-success" type="button"><span class="fas fa-plus"></span> Adicionar</button>`;
-  } else if (tipo == 'atualizar') {
-    codigoHTML += `<button onclick="if(validaDadosCampo(['#ruacliente','#numerocasacliente','#complementocliente'])){adicionarDadosNaTabelaTelefoneeEndereco('endereco',this.value)}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['ruacliente','numerocasacliente','complementocliente']);}" id="botaoadicionarendereco" class="btn btn-success" type="button"><span class="fas fa-plus"></span> Adicionar</button>`;
-  }
-  codigoHTML += `</div>
-                                    </div>
-                                </div>
+                                <div id="areatelefoneendereco"></div>
                             </form>
                         </div>
                         <div class="modal-footer">`;
@@ -172,6 +115,85 @@ async function modalTelaCadastrarouAtualizarCliente(tipo) {
   document.getElementById('modal2').innerHTML = codigoHTML;
 
   $('#modalClasseCliente').modal('show');
+}
+
+//funcao responsavel por gerar a parte de telefone e endereco do cliente
+async function gerarTelaParteTelefoneEnderecoCliente(tipo) {
+  let codigoHTML = ``, json = await requisicaoGET(`districts`);
+
+  codigoHTML += `<table class="table table-sm col-12 mx-auto" style="margin-top:80px">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Telefone</th>
+                        <th scope="col">Excluir</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelatelefone">
+                    
+                </tbody>
+              </table>
+
+              <div class="form-group">
+                <label for="telefonecliente">Telefone:</label>
+                <div class="input-group mb-3">
+                    <input type="tel" class="form-control" id="telefonecliente" placeholder="Exemplo:(00) 00000-0000" aria-describedby="botaoadicionartelefone">
+                    <div class="input-group-append">`;
+  if (tipo == 'cadastrar') {
+    codigoHTML += `<button onclick="if(validaDadosCampo(['#telefonecliente'])){adicionarDadosNaTabelaTelefoneeEndereco('telefone', '-1')}else{mensagemDeErroModal('Preencha o campo telefone!'); mostrarCamposIncorreto(['telefonecliente']);}" id="botaoadicionartelefone" class="btn btn-success" type="button"><span class="fas fa-plus"></span> Adicionar</button>`;
+  } else if (tipo == 'atualizar') {
+    codigoHTML += `<button onclick="if(validaDadosCampo(['#telefonecliente'])){adicionarDadosNaTabelaTelefoneeEndereco('telefone', this.value)}else{mensagemDeErroModal('Preencha o campo telefone!'); mostrarCamposIncorreto(['telefonecliente']);}" id="botaoadicionartelefone" class="btn btn-success" type="button"><span class="fas fa-plus"></span> Adicionar</button>`;
+  }
+  codigoHTML += `</div>
+                </div>
+              </div>
+
+              <table class="table table-sm col-12 mx-auto" style="margin-top:80px">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Rua</th>
+                        <th scope="col">Número</th>
+                        <th scope="col">Bairro - Cidade</th>
+                        <th scope="col">Complemento</th>
+                        <th scope="col">Excluir</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaendereco">
+
+                </tbody>
+              </table>
+
+              <div class="form-group">
+                <label for="ruacliente">Rua:</label>
+                <input type="text" class="form-control" id="ruacliente" placeholder="Exemplo: Rua Sete de Setembro">
+              </div>
+              <div class="form-group">
+                <label for="numerocasacliente">Número da casa:</label>
+                <input type="Number" class="form-control" id="numerocasacliente">
+              </div>
+              <div class="form-group">
+                <label for="bairrocidadecliente">Bairro - Cidade:</label>
+                <select class="form-control form-control-sm" id="bairrocidadecliente">`;
+  json.data.forEach(function (item) {
+    codigoHTML += `<option value="${item._id}">${item.name} - ${item.city}</option>`;
+  });
+  codigoHTML += `</select>
+              </div>
+              <div class="form-group">
+                <label for="complementocliente">Complemento:</label>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" id="complementocliente">
+                    <div class="input-group-append">`;
+  if (tipo == 'cadastrar') {
+    codigoHTML += `<button onclick="if(validaDadosCampo(['#ruacliente','#numerocasacliente','#complementocliente'])){adicionarDadosNaTabelaTelefoneeEndereco('endereco','-1')}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['ruacliente','numerocasacliente','complementocliente']);}" id="botaoadicionarendereco" class="btn btn-success" type="button"><span class="fas fa-plus"></span> Adicionar</button>`;
+  } else if (tipo == 'atualizar') {
+    codigoHTML += `<button onclick="if(validaDadosCampo(['#ruacliente','#numerocasacliente','#complementocliente'])){adicionarDadosNaTabelaTelefoneeEndereco('endereco',this.value)}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['ruacliente','numerocasacliente','complementocliente']);}" id="botaoadicionarendereco" class="btn btn-success" type="button"><span class="fas fa-plus"></span> Adicionar</button>`;
+  }
+  codigoHTML += `</div>
+                </div>
+              </div>`
+
+  document.getElementById('areatelefoneendereco').innerHTML = codigoHTML;
+
 }
 
 //funcao responsavel por buscar os dados do cliente
@@ -341,8 +363,18 @@ async function cadastrarCliente() {
       }
 
     } else {
-      mensagemDeErroModal('Não foi possível cadastrar pela falta de telefone e endereço!')
-      mostrarCamposIncorreto(['telefonecliente', 'ruacliente', 'complementocliente', 'numerocliente'])
+      cliente.name = document.getElementById('nomecliente').value;
+
+      let result = await requisicaoPOST(`clients`, {
+        name: cliente.name
+      });
+
+      if (result == 400) {
+        mensagemDeErro('Atenção já existe um cliente com os mesmo dados!')
+      } else {
+        mensagemDeAviso('Cliente cadastrado com sucesso!')
+      }
+
     }
   } catch (error) {
     mensagemDeErro('Não foi possível cadastrar o cliente!')
@@ -374,7 +406,13 @@ async function atualizarCliente(id) {
 
       mensagemDeAviso('Cliente atualizado com sucesso!')
     } else {
-      mensagemDeErro('Não foi possível atualizar devido a falta de telefone e endereço!')
+      const name = document.getElementById('nomecliente').value
+
+      await requisicaoPUT(`clients/${id}`, {
+        name: (name === cliente.name) ? undefined : name
+      });
+
+      mensagemDeAviso('Cliente atualizado com sucesso!')
     }
   } catch (error) {
     mensagemDeErro('Não foi possível atualizar o cliente!')

@@ -4,8 +4,37 @@ let VETORDEPEDIDOSCLASSEPEDIDO = [],
   VETORDEPRODUTOSCLASSEPEDIDO = [],
   DADOSPEDIDO = JSON.parse(`{}`);
 
+//funcao responsavel por gerar o modal de retirada local ou envio
+function modalRetiradaLocalouEnvio() {
+  let codigoHTML = ``;
+
+  codigoHTML += `<div class="modal fade" id="modalRetiradaPedido" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title" id="staticBackdropLabel"><span class="fas fa-pallet"></span> Forma de retirada</h5>
+                              <button onclick="inicializarVariaveisClassePedido();" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                              </button>
+                          </div>
+                          <div class="modal-body">
+                            <button onclick="telaModalDeCriacaoDePedido('cadastrar', true);" type="button" class="btn btn-light btn-lg btn-block border-dark" data-dismiss="modal" style="height: 150px;">
+                              <span class="fas fa-truck-loading"></span> Enviar pedido
+                            </button>
+                            <button onclick="telaModalDeCriacaoDePedido('cadastrar', false);" type="button" class="btn btn-light btn-lg btn-block border-dark" data-dismiss="modal" style="height: 150px;">
+                              <span class="fas fa-people-carry"></span> Retirar no local
+                            </button>  
+                          </div>
+                        </div>
+                    </div>
+                </div>`
+
+  document.getElementById('modal').innerHTML = codigoHTML;
+  $('#modalRetiradaPedido').modal('show');
+}
+
 //funcao responsavel por gerar a tela de criar pedido
-function telaModalDeCriacaoDePedido(tipo) {
+function telaModalDeCriacaoDePedido(tipo, enviarPedido) {
   let codigoHTML = ``;
 
   codigoHTML += `<div class="modal fade" id="modalCriarPedidoClassePedido" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -28,18 +57,20 @@ function telaModalDeCriacaoDePedido(tipo) {
                             <div class="form-group">
                                 <label for="nomecliente">Nome:</label>
                                 <input type="text" class="form-control" id="nomecliente" placeholder="Nome do cliente" disabled>
-                            </div>
-                            <div class="form-group">
+                            </div>`
+  if (enviarPedido) {
+    codigoHTML += `<div class="form-group">
                                 <label for="telefonecliente">Telefone:</label>
                                 <select class="form-control form-control-sm" id="telefonecliente">
                                 </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="enderecocliente">Endereço:</label>
-                                <select class="form-control form-control-sm" id="enderecocliente">
-                                </select>
-                            </div>
-                        </form>
+                              </div>
+                              <div class="form-group">
+                                  <label for="enderecocliente">Endereço:</label>
+                                  <select class="form-control form-control-sm" id="enderecocliente">
+                                  </select>
+                              </div>`
+  }
+  codigoHTML += `</form>
                     </div>
                     
                     <div id="pagProduto">
@@ -61,9 +92,10 @@ function telaModalDeCriacaoDePedido(tipo) {
                     </div>
 
                     <div id="pagMotoboy">
-                        <h5 class="text-center" style="margin-bottom: 40px; margin-top: 30px;"><span class="fas fa-motorcycle"></span> Dados Motoboy</h5>
-                        <button onclick="modalBuscarMotoboy();" type="button" class="btn btn-warning btn-block"><span class="fas fa-check-square"></span> Adicionar Motoboy</button>
-                        <form style="margin-top:20px;">
+                        <h5 class="text-center" style="margin-bottom: 40px; margin-top: 30px;"><span class="fas fa-motorcycle"></span> Dados Motoboy</h5>`
+  if (enviarPedido) {
+    codigoHTML += `<button onclick="modalBuscarMotoboy();" type="button" class="btn btn-warning btn-block"><span class="fas fa-check-square"></span> Adicionar Motoboy</button>
+                          <form style="margin-top:20px;">
                             <div class="form-group">
                                 <label for="nomemotoboy">Nome:</label>
                                 <input type="text" class="form-control" id="nomemotoboy" placeholder="Nome do cliente" disabled>
@@ -72,8 +104,11 @@ function telaModalDeCriacaoDePedido(tipo) {
                                 <label for="telefonemotoboy">Telefone:</label>
                                 <input type="text" class="form-control" id="telefonemotoboy" placeholder="Exemplo: (00)00000-0000" disabled>
                             </div>
-                        </form>
-                    </div>
+                          </form>`
+  } else {
+    codigoHTML += `<h6 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Opção retirar pedido no local selecionada!</h6>`
+  }
+  codigoHTML += `</div>
                     <div id="pagExtra">
                         <h5 class="text-center" style="margin-bottom: 40px; margin-top: 30px;"><span class="fas fa-info"></span> Informações extras</h5>
                         <form style="margin-top:20px;">
@@ -109,9 +144,17 @@ function telaModalDeCriacaoDePedido(tipo) {
                 </div>
                 <div class="modal-footer" id="botaoConfirmacao">`;
   if (tipo == 'cadastrar') {
-    codigoHTML += `<button onclick="if(validaDadosCampo(['#nomecliente','#nomemotoboy','#telefonemotoboy','#observacao']) && VETORDEPRODUTOSCLASSEPEDIDO[0]){cadastrarPedido();}else{mensagemDeErroModal('Preencha todos os campos com valores válidos (obrigatório adicionar produto)!'); mostrarCamposIncorreto(['nomecliente','nomemotoboy','telefonemotoboy','observacao']);}" type="button" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Confirmar e concluir</button>`;
+    if (enviarPedido) {
+      codigoHTML += `<button onclick="if(validaDadosCampo(['#nomecliente','#nomemotoboy','#telefonemotoboy','#observacao']) && VETORDEPRODUTOSCLASSEPEDIDO[0]){cadastrarPedido();}else{mensagemDeErroModal('Preencha todos os campos com valores válidos (obrigatório adicionar produto)!'); mostrarCamposIncorreto(['nomecliente','nomemotoboy','telefonemotoboy','observacao']);}" type="button" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Confirmar e concluir</button>`;
+    } else {
+      codigoHTML += `<button onclick="if(validaDadosCampo(['#nomecliente','#observacao']) && VETORDEPRODUTOSCLASSEPEDIDO[0]){cadastrarPedido();}else{mensagemDeErroModal('Preencha todos os campos com valores válidos (obrigatório adicionar produto)!'); mostrarCamposIncorreto(['nomecliente','observacao']);}" type="button" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Confirmar e concluir</button>`;
+    }
   } else if (tipo == 'atualizar') {
-    codigoHTML += `<button onclick="if(validaDadosCampo(['#nomecliente','#nomemotoboy','#telefonemotoboy','#observacao']) && VETORDEPRODUTOSCLASSEPEDIDO[0]){confirmarAcao('Atualizar este pedido!','atualizarPedido(this.value)',(this.value).toString())}else{mensagemDeErroModal('Preencha todos os campos com valores válidos (obrigatório adicionar produto)!'); mostrarCamposIncorreto(['nomecliente','nomemotoboy','telefonemotoboy','observacao']);}" id="botaoAtualizarPedido" type="button" class="btn btn-primary btn-block" data-dismiss="modal"><span class="fas fa-check-double"></span> Modificar e concluir</button>`;
+    if (enviarPedido) {
+      codigoHTML += `<button onclick="if(validaDadosCampo(['#nomecliente','#nomemotoboy','#telefonemotoboy','#observacao']) && VETORDEPRODUTOSCLASSEPEDIDO[0]){confirmarAcao('Atualizar este pedido!','atualizarPedido(this.value)',(this.value).toString())}else{mensagemDeErroModal('Preencha todos os campos com valores válidos (obrigatório adicionar produto)!'); mostrarCamposIncorreto(['nomecliente','nomemotoboy','telefonemotoboy','observacao']);}" id="botaoAtualizarPedido" type="button" class="btn btn-primary btn-block" data-dismiss="modal"><span class="fas fa-check-double"></span> Modificar e concluir</button>`;
+    } else {
+      codigoHTML += `<button onclick="if(validaDadosCampo(['#nomecliente','#observacao']) && VETORDEPRODUTOSCLASSEPEDIDO[0]){confirmarAcao('Atualizar este pedido!','atualizarPedido(this.value)',(this.value).toString())}else{mensagemDeErroModal('Preencha todos os campos com valores válidos (obrigatório adicionar produto)!'); mostrarCamposIncorreto(['nomecliente','observacao']);}" id="botaoAtualizarPedido" type="button" class="btn btn-primary btn-block" data-dismiss="modal"><span class="fas fa-check-double"></span> Modificar e concluir</button>`;
+    }
   }
   codigoHTML += `</div>
             </div>
@@ -461,14 +504,16 @@ async function preencherDadosPedidoIncluirDadosEmPedido(tipo, id, quantidade) {
 
       document.getElementById('nomecliente').value = corrigirTamanhoString(15, dado.name);
       document.getElementById('nomecliente').title = dado.name
-      dado.phone.forEach(function (item) {
-        $('#telefonecliente').append(`<option>${item}</option>`);
-      });
-      dado.address.forEach(function (item) {
-        $('#enderecocliente').append(
-          `<option value="${item._id}" title="${item.street}, nº ${item.number} - ${item.district.name} - ${item.district.city}">${corrigirTamanhoString(15, item.street)}, nº ${item.number} - ${corrigirTamanhoString(15, item.district.name)} - ${corrigirTamanhoString(15, item.district.city)}</option>`
-        );
-      });
+      if (document.getElementById('telefonecliente') && document.getElementById('enderecocliente')) {
+        dado.phone.forEach(function (item) {
+          $('#telefonecliente').append(`<option>${item}</option>`);
+        });
+        dado.address.forEach(function (item) {
+          $('#enderecocliente').append(
+            `<option value="${item._id}" title="${item.street}, nº ${item.number} - ${item.district.name} - ${item.district.city}">${corrigirTamanhoString(15, item.street)}, nº ${item.number} - ${corrigirTamanhoString(15, item.district.name)} - ${corrigirTamanhoString(15, item.district.city)}</option>`
+          );
+        });
+      }
     } catch (error) {
       mensagemDeErroModal('Não foi possível adicionar o cliente!')
     }
@@ -526,19 +571,27 @@ function removerProdutoDaTabelaeVetor(id) {
 
 //funcao responsavel por atualizar os dados do pedido
 async function atualizarDadoPedido(id) {
-  await telaModalDeCriacaoDePedido('atualizar');
-  await navegacaoModalDeCriacao(5);
-
   try {
 
     let dado = VETORDEPEDIDOSCLASSEPEDIDO.find((element) => element._id == id);
 
+    if (dado.deliveryman._id && dado.address.client_address_id) {
+      await telaModalDeCriacaoDePedido('atualizar', true);
+    } else {
+      await telaModalDeCriacaoDePedido('atualizar', false);
+    }
+    await navegacaoModalDeCriacao(5);
+
     await preencherDadosPedidoIncluirDadosEmPedido('cliente', dado.client.client_id, null);
-    document.getElementById('enderecocliente').value = dado.address.client_address_id.toString();
+    if (dado.address.client_address_id) {
+      document.getElementById('enderecocliente').value = dado.address.client_address_id.toString();
+    }
     dado.items.forEach(function (item) {
       preencherDadosPedidoIncluirDadosEmPedido('produto', item.product._id, item.quantity);
     });
-    preencherDadosPedidoIncluirDadosEmPedido('motoboy', dado.deliveryman._id, null);
+    if (dado.deliveryman._id) {
+      preencherDadosPedidoIncluirDadosEmPedido('motoboy', dado.deliveryman._id, null);
+    }
 
     document.getElementById('formaPagamento').value = dado.payment;
     document.getElementById('formaDeRequisicaoPedido').value = dado.source;
@@ -556,9 +609,13 @@ function listaDePedidosAbertosParaPagamento(json) {
   codigoHTML += `<tr>
         <td class="table-warning text-dark"><strong><span class="fas fa-sticky-note"></span> ${json.identification}</strong></td>
         <td class="table-warning" title="${json.client.name}"><strong>${corrigirTamanhoString(15, json.client.name)}</strong></td>
-        <td class="table-warning text-danger"><strong>R$${(parseFloat(json.total)).toFixed(2)}</strong></td>
-        <td class="table-warning" title="${json.deliveryman.name}">${corrigirTamanhoString(15, json.deliveryman.name)}</td>
-        <td class="table-warning">
+        <td class="table-warning text-danger"><strong>R$${(parseFloat(json.total)).toFixed(2)}</strong></td>`
+  if (json.deliveryman.name) {
+    codigoHTML += `<td class="table-warning" title="${json.deliveryman.name}">${corrigirTamanhoString(15, json.deliveryman.name)}</td>`
+  } else {
+    codigoHTML += `<td class="table-warning">Retirada local</td>`
+  }
+  codigoHTML += `<td class="table-warning">
             <button onclick="atualizarDadoPedido('${json._id}');" type="button" class="btn btn-primary btn-sm"><span class="fas fa-edit"></span> Alterar</button>
             <button onclick="confirmarAcao('Reimprimir este pedido!','reImprimirPedido(this.value)','${json._id}');" type="button" class="btn btn-primary btn-sm" style="margin-left:5px;"><span class="fas fa-print"></span> Reimprimir</button>
         </td>
@@ -624,10 +681,14 @@ async function buscarDadosAtualizar(tipo) {
 async function cadastrarPedido() {
   try {
     let aux = true, json = `{
-      "client_id":"${DADOSPEDIDO.cliente_id}",
-      "deliveryman":"${DADOSPEDIDO.motoboy_id}",
-      "client_address_id":"${document.getElementById('enderecocliente').value}",
-      "source":"${document.getElementById('formaDeRequisicaoPedido').value}",
+      "client_id":"${DADOSPEDIDO.cliente_id}",`
+    if (DADOSPEDIDO.motoboy_id) {
+      json += `"deliveryman":"${DADOSPEDIDO.motoboy_id}",`
+    }
+    if (document.getElementById('enderecocliente')) {
+      json += `"client_address_id":"${document.getElementById('enderecocliente').value}",`
+    }
+    json += `"source":"${document.getElementById('formaDeRequisicaoPedido').value}",
       "items":[`;
     VETORDEPRODUTOSCLASSEPEDIDO.forEach(function (item) {
       if (aux) {
@@ -652,7 +713,9 @@ async function cadastrarPedido() {
 
     reImprimirPedido(result.data._id);
     $('#modalCriarPedidoClassePedido').modal('hide');
-    modalEnviaMotoboyEntrega(result.data.deliveryman._id)
+    if (result.data.deliveryman._id) {
+      modalEnviaMotoboyEntrega(result.data.deliveryman._id)
+    }
     inicializarVariaveisClassePedido();
     mensagemDeAviso('Pedido cadastrado com sucesso!')
 
@@ -665,10 +728,14 @@ async function cadastrarPedido() {
 async function atualizarPedido(id) {
   try {
     let aux = true, json = `{
-      "client_id":"${DADOSPEDIDO.cliente_id}",
-      "deliveryman":"${DADOSPEDIDO.motoboy_id}",
-      "client_address_id":"${document.getElementById('enderecocliente').value}",
-      "source":"${document.getElementById('formaDeRequisicaoPedido').value}",
+      "client_id":"${DADOSPEDIDO.cliente_id}",`
+    if (DADOSPEDIDO.motoboy_id) {
+      json += `"deliveryman":"${DADOSPEDIDO.motoboy_id}",`
+    }
+    if (document.getElementById('enderecocliente')) {
+      json += `"client_address_id":"${document.getElementById('enderecocliente').value}",`
+    }
+    json += `"source":"${document.getElementById('formaDeRequisicaoPedido').value}",
       "items":[`;
     VETORDEPRODUTOSCLASSEPEDIDO.forEach(function (item) {
       if (aux) {

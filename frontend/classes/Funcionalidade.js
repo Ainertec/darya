@@ -64,7 +64,7 @@ function validaDadosCampo(campo) {
 function validaValoresCampo(campo) {
   let validacao = true;
   campo.forEach(function (item) {
-    if (parseFloat($(item).val()) < 0.0 || parseFloat($(item).val()) == 0.0) validacao = false;
+    if (parseFloat($(item).val()) < 0.0) validacao = false;
   });
 
   return validacao;
