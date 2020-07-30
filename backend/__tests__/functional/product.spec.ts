@@ -88,18 +88,37 @@ describe('should test a product', () => {
   });
 
   it('should list products by name', async () => {
+    const ingredient = await factory.create<IngredientInterface>('Ingredient');
     await factory.create<ProductInterface>('Product', {
       name: 'pizza',
+      ingredients: [
+        {
+          material: ingredient._id,
+          quantity: 200,
+        },
+      ],
     });
     await factory.create<ProductInterface>('Product', {
       name: 'pão',
+      ingredients: [
+        {
+          material: ingredient._id,
+          quantity: 200,
+        },
+      ],
     });
     await factory.create<ProductInterface>('Product', {
       name: 'queijo',
+      ingredients: [
+        {
+          material: ingredient._id,
+          quantity: 200,
+        },
+      ],
     });
 
     const response = await request(app).get(`/products/p`);
-
+    // console.log(response.body);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.arrayContaining([
@@ -114,18 +133,36 @@ describe('should test a product', () => {
   });
 
   it('should list all products ', async () => {
+    const ingredient = await factory.create<IngredientInterface>('Ingredient');
     await factory.create<ProductInterface>('Product', {
       name: 'pizza',
+      ingredients: [
+        {
+          material: ingredient._id,
+          quantity: 200,
+        },
+      ],
     });
     await factory.create<ProductInterface>('Product', {
       name: 'pão',
+      ingredients: [
+        {
+          material: ingredient._id,
+          quantity: 200,
+        },
+      ],
     });
     await factory.create<ProductInterface>('Product', {
       name: 'queijo',
+      ingredients: [
+        {
+          material: ingredient._id,
+          quantity: 200,
+        },
+      ],
     });
-
     const response = await request(app).get(`/products`);
-
+    // console.log(response.body);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.arrayContaining([

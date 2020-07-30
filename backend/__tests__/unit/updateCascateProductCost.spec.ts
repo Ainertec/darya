@@ -37,7 +37,7 @@ describe('should test a update cascate when update a ingredient price', () => {
       unit: 'g',
     });
     const productUpdated = await Product.findOne({ _id: product._id });
-    // console.log(product);
+    console.log(response.body);
     // console.log(productUpdated);
     expect(response.status).toBe(200);
     expect(productUpdated?.cost).toBe(20);
@@ -70,7 +70,7 @@ describe('should test a update cascate when update a ingredient price', () => {
     });
     const productUpdated = await Product.findOne({ _id: product._id });
     const productUpdated2 = await Product.findOne({ _id: product2._id });
-    // console.log(product, product2);
+    console.log(response.body);
     expect(response.status).toBe(200);
     expect(productUpdated?.cost).toBe(20);
     expect(productUpdated2?.cost).toBe(20);

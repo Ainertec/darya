@@ -4,6 +4,7 @@
 D* Não necessario criação de pedidos com motoboys ok
 D* Crud de ingredients
 D* Controle de estoque de ingredientes (atualizar estoque do ingrediente ao realizar uma venda) obs. testar um pouco mais
+Populate nos produtos
 D* Valor unitário do ingredinete, campo price_unit, create and update 
 D* Preço de custo do produto, calculo com base nos ingredientes? ingredient price_unit * ingredient quantity
 D* Preço de custo do produto ao cria-lo
@@ -11,7 +12,7 @@ D* Atualizar preço de custo do produto ao atualiza-lo
 D* Atualizar preço de custo do produto ao atualiza preço do ingredient ( price_unit )
 D* Delete cascate para essa feature 
 
-* Remover o campo stock, atualizar o report controller para essa mudança
+D* Remover o campo stock, atualizar o report controller para essa mudança ok
 * Usar os dados já cadastrados no db do cliente
 
 ## Questions

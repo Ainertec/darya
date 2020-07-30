@@ -13,8 +13,13 @@ factory.define('Product', Product, {
   name: faker.commerce.productName(),
   price: faker.commerce.price(),
   cost: faker.commerce.price(),
-  stock: faker.random.number(100),
   description: faker.commerce.productAdjective(),
+  ingredients: [
+    {
+      material: factory.assoc('Ingredient', '_id'),
+      quantity: faker.random.number(10),
+    },
+  ],
 });
 factory.define('Ingredient', Ingredient, {
   name: faker.commerce.productName(),
