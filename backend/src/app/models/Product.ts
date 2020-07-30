@@ -4,12 +4,12 @@ import { ProductInterface } from '../../interfaces/base';
 const IngredientSchema = new Schema({
   material: {
     type: Schema.Types.ObjectId,
-    reference: 'Ingredient',
-    // required: true,
+    ref: 'Ingredient',
+    required: true,
   },
   quantity: {
     type: Number,
-    // required: true,
+    required: true,
   },
 });
 

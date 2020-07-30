@@ -4,10 +4,12 @@ var mongoose_1 = require("mongoose");
 var IngredientSchema = new mongoose_1.Schema({
     material: {
         type: mongoose_1.Schema.Types.ObjectId,
-        reference: 'Ingredient',
+        ref: 'Ingredient',
+        required: true,
     },
     quantity: {
         type: Number,
+        required: true,
     },
 });
 var ProductSchema = new mongoose_1.Schema({

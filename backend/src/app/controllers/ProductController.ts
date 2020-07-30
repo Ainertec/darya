@@ -33,7 +33,7 @@ class ProductController {
       description,
       ingredients,
     });
-    // await product.populate('ingredients.material').execPopulate();
+    await product.populate('ingredients.material').execPopulate();
     return response.json(product);
   }
 
@@ -57,7 +57,7 @@ class ProductController {
 
     await product.save();
 
-    // await product.populate('ingredients.material').execPopulate();
+    await product.populate('ingredients.material').execPopulate();
 
     return response.json(product);
   }

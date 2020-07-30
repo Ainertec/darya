@@ -95,7 +95,9 @@ var ProductController = /** @class */ (function () {
                             })];
                     case 2:
                         product = _b.sent();
-                        // await product.populate('ingredients.material').execPopulate();
+                        return [4 /*yield*/, product.populate('ingredients.material').execPopulate()];
+                    case 3:
+                        _b.sent();
                         return [2 /*return*/, response.json(product)];
                 }
             });
@@ -126,7 +128,9 @@ var ProductController = /** @class */ (function () {
                         return [4 /*yield*/, product.save()];
                     case 3:
                         _b.sent();
-                        // await product.populate('ingredients.material').execPopulate();
+                        return [4 /*yield*/, product.populate('ingredients.material').execPopulate()];
+                    case 4:
+                        _b.sent();
                         return [2 /*return*/, response.json(product)];
                 }
             });
