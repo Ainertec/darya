@@ -8,10 +8,9 @@ const ingredients = Joi.object().keys({
 const product = Joi.object().keys({
   name: Joi.string().required(),
   description: Joi.string(),
-  ingredients: Joi.array().items(ingredients),
+  ingredients: Joi.array().items(ingredients).required(),
   price: Joi.number().required(),
   cost: Joi.number(),
-  stock: Joi.number(),
 });
 
 export default product;

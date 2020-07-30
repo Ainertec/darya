@@ -70,7 +70,7 @@ describe('should a Client', function () {
         });
     }); });
     it('should create an order', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var client, deliveryman, products, response;
+        var client, deliveryman, products, address, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, factories_1.default.create('Client')];
@@ -82,12 +82,13 @@ describe('should a Client', function () {
                     return [4 /*yield*/, factories_1.default.create('Product', { price: 10 })];
                 case 3:
                     products = _a.sent();
+                    address = client.address ? client.address[0]._id : undefined;
                     return [4 /*yield*/, supertest_1.default(app_1.default)
                             .post('/orders')
                             .send({
                             client_id: client._id,
                             deliveryman: deliveryman._id,
-                            client_address_id: client.address[0]._id,
+                            client_address_id: address,
                             items: [
                                 {
                                     product: products._id,
@@ -98,8 +99,75 @@ describe('should a Client', function () {
                         })];
                 case 4:
                     response = _a.sent();
+                    // console.log('teste', response.body);
+                    expect(response.body).toHaveProperty('total');
+                    expect(response.status).toBe(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('should create an order without a address', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var client, products, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, factories_1.default.create('Client')];
+                case 1:
+                    client = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Product', { price: 10 })];
+                case 2:
+                    products = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .post('/orders')
+                            .send({
+                            client_id: client._id,
+                            items: [
+                                {
+                                    product: products._id,
+                                    quantity: 5,
+                                },
+                            ],
+                            source: 'Ifood',
+                        })];
+                case 3:
+                    response = _a.sent();
                     // console.log(response.body);
                     expect(response.body).toHaveProperty('total');
+                    expect(response.status).toBe(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('should create an order without a deliveryman', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var client, products, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, factories_1.default.create('Client')];
+                case 1:
+                    client = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Product', { price: 10 })];
+                case 2:
+                    products = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .post('/orders')
+                            .send({
+                            client_id: client._id,
+                            // deliveryman: deliveryman._id,
+                            client_address_id: client.address ? client.address[0]._id : undefined,
+                            items: [
+                                {
+                                    product: products._id,
+                                    quantity: 5,
+                                },
+                            ],
+                            source: 'Ifood',
+                        })];
+                case 3:
+                    response = _a.sent();
+                    // console.log(response.body);
+                    expect(response.body).toHaveProperty('total');
+                    expect(response.body).toEqual(expect.objectContaining({
+                        deliveryman: null,
+                    }));
                     expect(response.status).toBe(200);
                     return [2 /*return*/];
             }
@@ -123,7 +191,7 @@ describe('should a Client', function () {
                             .send({
                             client_id: client._id,
                             deliveryman: deliveryman._id,
-                            client_address_id: client.address[0]._id,
+                            client_address_id: client.address ? client.address[0]._id : undefined,
                             items: [
                                 {
                                     product: products._id,
@@ -166,7 +234,7 @@ describe('should a Client', function () {
                             .send({
                             client_id: client._id,
                             deliveryman: deliveryman._id,
-                            client_address_id: client.address[0]._id,
+                            client_address_id: client.address ? client.address[0]._id : undefined,
                             items: [
                                 {
                                     product: products._id,
@@ -234,7 +302,7 @@ describe('should a Client', function () {
                             .send({
                             client_id: '5f05febbd43fb02cb0b83d64',
                             deliveryman: deliveryman._id,
-                            client_address_id: client.address[0]._id,
+                            client_address_id: client.address ? client.address[0]._id : undefined,
                             items: [
                                 {
                                     product: products._id,
@@ -268,7 +336,7 @@ describe('should a Client', function () {
                             .send({
                             client_id: client._id,
                             deliveryman: '5f05febbd43fb02cb0b83d64',
-                            client_address_id: client.address[0]._id,
+                            client_address_id: client.address ? client.address[0]._id : undefined,
                             items: [
                                 {
                                     product: products._id,
@@ -286,24 +354,25 @@ describe('should a Client', function () {
     }); });
     it('should update a order', function () { return __awaiter(void 0, void 0, void 0, function () {
         var order, product, response;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var _a;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0: return [4 /*yield*/, factories_1.default.create('Order')];
                 case 1:
-                    order = _a.sent();
+                    order = _b.sent();
                     return [4 /*yield*/, factories_1.default.create('Product', {
                             name: 'Chocolate',
                             price: 10,
                         })];
                 case 2:
-                    product = _a.sent();
+                    product = _b.sent();
                     return [4 /*yield*/, supertest_1.default(app_1.default)
                             .put("/orders/" + order._id)
                             .send({
                             identification: '1234567',
                             client_id: order.client.client_id,
                             deliveryman: order.deliveryman,
-                            client_address_id: order.address.client_address_id,
+                            client_address_id: (_a = order.address) === null || _a === void 0 ? void 0 : _a.client_address_id,
                             note: 'Brabo',
                             source: 'Whatsapp',
                             items: [
@@ -314,7 +383,7 @@ describe('should a Client', function () {
                             ],
                         })];
                 case 3:
-                    response = _a.sent();
+                    response = _b.sent();
                     // console.log(response.body);
                     expect(response.body).toHaveProperty('total');
                     expect(response.status).toBe(200);
@@ -346,8 +415,10 @@ describe('should a Client', function () {
                         })];
                 case 3:
                     order = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).put("/orders/" + order._id).send({
-                            client_address_id: client.address[0]._id,
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .put("/orders/" + order._id)
+                            .send({
+                            client_address_id: client.address ? client.address[0]._id : undefined,
                         })];
                 case 4:
                     response = _a.sent();
@@ -405,30 +476,31 @@ describe('should a Client', function () {
     }); });
     it('should update a order and update a deliveryman available', function () { return __awaiter(void 0, void 0, void 0, function () {
         var delivaryman, order, product, response, deliverymanUpdated;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var _a;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0: return [4 /*yield*/, factories_1.default.create('Deliveryman', {
                         available: false,
                     })];
                 case 1:
-                    delivaryman = _a.sent();
+                    delivaryman = _b.sent();
                     return [4 /*yield*/, factories_1.default.create('Order', {
                             deliveryman: delivaryman._id,
                         })];
                 case 2:
-                    order = _a.sent();
+                    order = _b.sent();
                     return [4 /*yield*/, factories_1.default.create('Product', {
                             name: 'Chocolate',
                         })];
                 case 3:
-                    product = _a.sent();
+                    product = _b.sent();
                     return [4 /*yield*/, supertest_1.default(app_1.default)
                             .put("/orders/" + order._id)
                             .send({
                             identification: '1234567',
                             client_id: order.client.client_id,
                             deliveryman: order.deliveryman,
-                            client_address_id: order.address.client_address_id,
+                            client_address_id: (_a = order.address) === null || _a === void 0 ? void 0 : _a.client_address_id,
                             note: 'Brabo',
                             payment: 'Dinheiro',
                             source: 'Whatsapp',
@@ -440,10 +512,10 @@ describe('should a Client', function () {
                             ],
                         })];
                 case 4:
-                    response = _a.sent();
+                    response = _b.sent();
                     return [4 /*yield*/, Deliveryman_1.default.findOne({ _id: delivaryman._id })];
                 case 5:
-                    deliverymanUpdated = _a.sent();
+                    deliverymanUpdated = _b.sent();
                     expect(response.status).toBe(200);
                     expect(deliverymanUpdated === null || deliverymanUpdated === void 0 ? void 0 : deliverymanUpdated.available).toBe(false);
                     return [2 /*return*/];
@@ -465,11 +537,13 @@ describe('should a Client', function () {
                         })];
                 case 3:
                     product = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).put("/orders/" + order._id).send({
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .put("/orders/" + order._id)
+                            .send({
                             identification: '1234567',
                             client_id: client._id,
                             deliveryman: order.deliveryman,
-                            client_address_id: client.address[0]._id,
+                            client_address_id: client.address ? client.address[0]._id : undefined,
                             note: 'Brabo',
                             source: 'Whatsapp',
                         })];
@@ -504,11 +578,13 @@ describe('should a Client', function () {
                         })];
                 case 3:
                     product = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).put("/orders/" + order._id).send({
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .put("/orders/" + order._id)
+                            .send({
                             identification: '1234567',
                             client_id: '5f05febbd43fb02cb0b83d64',
                             deliveryman: order.deliveryman,
-                            client_address_id: client.address[0]._id,
+                            client_address_id: client.address ? client.address[0]._id : undefined,
                             note: 'Brabo',
                             total: 100,
                             source: 'Whatsapp',
@@ -552,23 +628,24 @@ describe('should a Client', function () {
     }); });
     it('should not update a inexistent order', function () { return __awaiter(void 0, void 0, void 0, function () {
         var order, product, response;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var _a;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0: return [4 /*yield*/, factories_1.default.create('Order')];
                 case 1:
-                    order = _a.sent();
+                    order = _b.sent();
                     return [4 /*yield*/, factories_1.default.create('Product', {
                             name: 'Chocolate',
                         })];
                 case 2:
-                    product = _a.sent();
+                    product = _b.sent();
                     return [4 /*yield*/, supertest_1.default(app_1.default)
                             .put("/orders/5f08ae43157a8a40bae90fd7")
                             .send({
                             identification: '1234567',
                             client_id: order.client.client_id,
                             deliveryman: order.deliveryman,
-                            client_address_id: order.address.client_address_id,
+                            client_address_id: (_a = order.address) === null || _a === void 0 ? void 0 : _a.client_address_id,
                             note: 'Brabo',
                             total: 100,
                             source: 'Whatsapp',
@@ -581,7 +658,7 @@ describe('should a Client', function () {
                             ],
                         })];
                 case 3:
-                    response = _a.sent();
+                    response = _b.sent();
                     // console.log(response.body);
                     expect(response.status).toBe(400);
                     return [2 /*return*/];

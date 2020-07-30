@@ -53,10 +53,13 @@ var ClientController = /** @class */ (function () {
                     case 0: return [4 /*yield*/, Client_1.default.findOne({ name: name })];
                     case 1:
                         clientWithSameName = _a.sent();
-                        if (clientWithSameName) {
+                        if (!clientWithSameName || !clientWithSameName.phone)
+                            return [2 /*return*/];
+                        else {
                             hasSamePhone_1 = false;
                             phone.forEach(function (element) {
-                                if (clientWithSameName.phone.includes(element)) {
+                                var _a;
+                                if ((_a = clientWithSameName.phone) === null || _a === void 0 ? void 0 : _a.includes(element)) {
                                     hasSamePhone_1 = true;
                                     return;
                                 }
@@ -106,21 +109,23 @@ var ClientController = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         _a = request.body, name = _a.name, address = _a.address, phone = _a.phone;
+                        if (!phone) return [3 /*break*/, 2];
                         return [4 /*yield*/, this.clientNameValidation(name, phone)];
                     case 1:
                         isInvalidName = _b.sent();
                         if (isInvalidName) {
                             return [2 /*return*/, response.status(400).json(isInvalidName)];
                         }
-                        return [4 /*yield*/, Client_1.default.create({
-                                name: name,
-                                address: address,
-                                phone: phone,
-                            })];
-                    case 2:
+                        _b.label = 2;
+                    case 2: return [4 /*yield*/, Client_1.default.create({
+                            name: name,
+                            address: address ? address : undefined,
+                            phone: phone ? phone : undefined,
+                        })];
+                    case 3:
                         client = _b.sent();
                         return [4 /*yield*/, client.populate('address.district').execPopulate()];
-                    case 3:
+                    case 4:
                         _b.sent();
                         return [2 /*return*/, response.json(client)];
                 }
@@ -129,22 +134,19 @@ var ClientController = /** @class */ (function () {
     };
     ClientController.prototype.update = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, name, address, phone, id, client, isInvalidName;
+            var _a, name, address, phone, id, client, isInvalidName, isInvalidName;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         _a = request.body, name = _a.name, address = _a.address, phone = _a.phone;
                         id = request.params.id;
-                        return [4 /*yield*/, Client_1.default.findOneAndUpdate({ _id: id }, {
-                                address: address,
-                                phone: phone,
-                            }, { new: true })];
+                        return [4 /*yield*/, Client_1.default.findOne({ _id: id })];
                     case 1:
                         client = _b.sent();
                         if (!client)
                             return [2 /*return*/, response.status(400).json('Client does not exist')];
-                        if (!name) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.clientNameValidation(name, phone)];
+                        if (!(name && !phone && client.phone)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.clientNameValidation(name, client.phone)];
                     case 2:
                         isInvalidName = _b.sent();
                         if (isInvalidName) {
@@ -154,11 +156,30 @@ var ClientController = /** @class */ (function () {
                             client.name = name;
                         }
                         _b.label = 3;
-                    case 3: return [4 /*yield*/, client.save()];
+                    case 3:
+                        if (!(name && phone)) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.clientNameValidation(name, phone)];
                     case 4:
+                        isInvalidName = _b.sent();
+                        if (isInvalidName) {
+                            return [2 /*return*/, response.status(400).json(isInvalidName)];
+                        }
+                        else {
+                            client.name = name;
+                        }
+                        _b.label = 5;
+                    case 5:
+                        if (phone) {
+                            client.phone = phone;
+                        }
+                        if (address) {
+                            client.address = address;
+                        }
+                        return [4 /*yield*/, client.save()];
+                    case 6:
                         _b.sent();
                         return [4 /*yield*/, client.populate('address.district').execPopulate()];
-                    case 5:
+                    case 7:
                         _b.sent();
                         return [2 /*return*/, response.json(client)];
                 }

@@ -43,7 +43,7 @@ var Order_1 = __importDefault(require("../models/Order"));
 var path_1 = __importDefault(require("path"));
 var fs_1 = __importDefault(require("fs"));
 var jsrtf_1 = __importDefault(require("jsrtf"));
-// import '../../@types/jsrtg.d.ts'
+// import '../../@types/jsrtf.d.ts'
 var date_fns_1 = require("date-fns");
 var shelljs_1 = require("shelljs");
 var PrinterController = /** @class */ (function () {
@@ -130,7 +130,6 @@ var PrinterController = /** @class */ (function () {
                         dir = process.env.NODE_ENV === 'test'
                             ? path_1.default.resolve(__dirname, '..', '..', '..', '__tests__', 'recipes')
                             : process.env.DIR_PRODUCTION;
-                        console.log('dir production', process.env.DIR_PRODUCTION, dir);
                         return [4 /*yield*/, fs_1.default.writeFile(dir + "/" + id + ".rtf", buffer, { encoding: 'utf-8', flag: 'w' }, function (err) {
                                 if (err)
                                     return response.status(400).json("" + err);

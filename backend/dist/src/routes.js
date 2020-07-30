@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var celebrate_1 = require("celebrate");
 var ProductController_1 = __importDefault(require("./app/controllers/ProductController"));
+var IngredientController_1 = __importDefault(require("./app/controllers/IngredientController"));
 var DeliverymanController_1 = __importDefault(require("./app/controllers/DeliverymanController"));
 var DistrictController_1 = __importDefault(require("./app/controllers/DistrictController"));
 var ClientController_1 = __importDefault(require("./app/controllers/ClientController"));
@@ -20,6 +21,7 @@ var districtSchema_1 = __importDefault(require("./validations/districtSchema"));
 var clientSchema_1 = require("./validations/clientSchema");
 var reportSchema_1 = __importDefault(require("./validations/reportSchema"));
 var serialSchema_1 = __importDefault(require("./validations/serialSchema"));
+var ingredientSchema_1 = __importDefault(require("./validations/ingredientSchema"));
 var printerSchema_1 = __importDefault(require("./validations/printerSchema"));
 var orderSchema_1 = require("./validations/orderSchema");
 var commonSchema_1 = require("./validations/commonSchema");
@@ -30,6 +32,12 @@ routes.get('/products/:name', celebrate_1.celebrate({ params: commonSchema_1.par
 routes.post('/products', celebrate_1.celebrate({ body: productSchema_1.default }), ProductController_1.default.store);
 routes.put('/products/:id', celebrate_1.celebrate({ body: productSchema_1.default, params: commonSchema_1.paramId }), ProductController_1.default.update);
 routes.delete('/products/:id', celebrate_1.celebrate({ params: commonSchema_1.paramId }), ProductController_1.default.delete);
+// Ingredients
+routes.get('/ingredients', IngredientController_1.default.index);
+routes.get('/ingredients/:name', celebrate_1.celebrate({ params: commonSchema_1.paramName }), IngredientController_1.default.show);
+routes.post('/ingredients', celebrate_1.celebrate({ body: ingredientSchema_1.default }), IngredientController_1.default.store);
+routes.put('/ingredients/:id', celebrate_1.celebrate({ body: ingredientSchema_1.default, params: commonSchema_1.paramId }), IngredientController_1.default.update);
+routes.delete('/ingredients/:id', celebrate_1.celebrate({ params: commonSchema_1.paramId }), IngredientController_1.default.delete);
 // Deliverymans
 routes.get('/deliverymans', DeliverymanController_1.default.index);
 routes.get('/deliverymans/hasDelivery', DeliverymanController_1.default.showByDelivery);

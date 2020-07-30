@@ -18,6 +18,7 @@ import district from './validations/districtSchema';
 import { client, clientUpdate } from './validations/clientSchema';
 import report from './validations/reportSchema';
 import serial from './validations/serialSchema';
+import ingredient from './validations/ingredientSchema';
 import printer from './validations/printerSchema';
 import {
   order,
@@ -41,10 +42,14 @@ routes.delete('/products/:id', celebrate({ params: paramId }), ProductController
 
 // Ingredients
 routes.get('/ingredients', IngredientController.index);
-routes.get('/ingredients/:name', IngredientController.show);
-routes.post('/ingredients', IngredientController.store);
-routes.put('/ingredients/:id', IngredientController.update);
-routes.delete('/ingredients/:id', IngredientController.delete);
+routes.get('/ingredients/:name', celebrate({ params: paramName }), IngredientController.show);
+routes.post('/ingredients', celebrate({ body: ingredient }), IngredientController.store);
+routes.put(
+  '/ingredients/:id',
+  celebrate({ body: ingredient, params: paramId }),
+  IngredientController.update
+);
+routes.delete('/ingredients/:id', celebrate({ params: paramId }), IngredientController.delete);
 
 // Deliverymans
 routes.get('/deliverymans', DeliverymanController.index);

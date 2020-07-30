@@ -198,9 +198,6 @@ class OrderController {
       deliverymanPersisted.hasDelivery = false;
 
       await deliverymanPersisted.save();
-      // await Order.findOneAndUpdate({_id:order._id},{
-      //   finished:true
-      // })
       order.finished = true;
     }
     if (client_id && String(order.client.client_id) !== String(client_id)) {

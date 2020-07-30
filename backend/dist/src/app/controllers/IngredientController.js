@@ -1,4 +1,23 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,111 +54,104 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var Product_1 = __importDefault(require("../models/Product"));
-var getProductCost_1 = __importDefault(require("../utils/getProductCost"));
-var ProductController = /** @class */ (function () {
-    function ProductController() {
-        this.store = this.store.bind(this);
-        this.update = this.update.bind(this);
+var Ingredient_1 = __importStar(require("../models/Ingredient"));
+var IngredientController = /** @class */ (function () {
+    function IngredientController() {
     }
-    ProductController.prototype.index = function (request, response) {
+    IngredientController.prototype.index = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var products;
+            var ingredients;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, Product_1.default.find({}).populate('ingredients.material')];
+                    case 0: return [4 /*yield*/, Ingredient_1.default.find({})];
                     case 1:
-                        products = _a.sent();
-                        return [2 /*return*/, response.json(products)];
+                        ingredients = _a.sent();
+                        return [2 /*return*/, response.json(ingredients)];
                 }
             });
         });
     };
-    ProductController.prototype.show = function (request, response) {
+    IngredientController.prototype.show = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var name, products;
+            var name, ingredients;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         name = request.params.name;
-                        return [4 /*yield*/, Product_1.default.find({
+                        return [4 /*yield*/, Ingredient_1.default.find({
                                 name: { $regex: new RegExp(name), $options: 'i' },
-                            }).populate('ingredients.material')];
-                    case 1:
-                        products = _a.sent();
-                        return [2 /*return*/, response.json(products)];
-                }
-            });
-        });
-    };
-    ProductController.prototype.store = function (request, response) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _a, name, price, description, ingredients, cost, product;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        _a = request.body, name = _a.name, price = _a.price, description = _a.description, ingredients = _a.ingredients;
-                        return [4 /*yield*/, getProductCost_1.default(ingredients)];
-                    case 1:
-                        cost = _b.sent();
-                        return [4 /*yield*/, Product_1.default.create({
-                                name: name,
-                                price: price,
-                                cost: cost,
-                                description: description,
-                                ingredients: ingredients,
                             })];
-                    case 2:
-                        product = _b.sent();
-                        // await product.populate('ingredients.material').execPopulate();
-                        return [2 /*return*/, response.json(product)];
+                    case 1:
+                        ingredients = _a.sent();
+                        return [2 /*return*/, response.json(ingredients)];
                 }
             });
         });
     };
-    ProductController.prototype.update = function (request, response) {
+    IngredientController.prototype.store = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, name, price, ingredients, description, id, cost, product;
+            var _a, name, description, price, stock, unit, validUnit, priceUnit, ingredient;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _a = request.body, name = _a.name, price = _a.price, ingredients = _a.ingredients, description = _a.description;
-                        id = request.params.id;
-                        return [4 /*yield*/, getProductCost_1.default(ingredients)];
-                    case 1:
-                        cost = _b.sent();
-                        return [4 /*yield*/, Product_1.default.findOneAndUpdate({ _id: id }, {
+                        _a = request.body, name = _a.name, description = _a.description, price = _a.price, stock = _a.stock, unit = _a.unit;
+                        validUnit = Ingredient_1.Unit.getUnit().includes(unit);
+                        if (!validUnit) {
+                            return [2 /*return*/, response.status(400).json('Invalide unit')];
+                        }
+                        priceUnit = price / stock;
+                        return [4 /*yield*/, Ingredient_1.default.create({
                                 name: name,
-                                price: price,
                                 description: description,
-                                ingredients: ingredients,
-                                cost: cost,
-                            }, { new: true })];
-                    case 2:
-                        product = _b.sent();
-                        if (!product)
-                            return [2 /*return*/, response.status(400).json('product not found')];
-                        return [4 /*yield*/, product.save()];
-                    case 3:
-                        _b.sent();
-                        // await product.populate('ingredients.material').execPopulate();
-                        return [2 /*return*/, response.json(product)];
+                                price: price,
+                                priceUnit: priceUnit,
+                                stock: stock,
+                                unit: unit,
+                            })];
+                    case 1:
+                        ingredient = _b.sent();
+                        return [2 /*return*/, response.json(ingredient)];
                 }
             });
         });
     };
-    ProductController.prototype.delete = function (request, response) {
+    IngredientController.prototype.update = function (request, response) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, name, description, price, stock, unit, id, priceUnit, validUnit, ingredient;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = request.body, name = _a.name, description = _a.description, price = _a.price, stock = _a.stock, unit = _a.unit;
+                        id = request.params.id;
+                        priceUnit = price / stock;
+                        validUnit = Ingredient_1.Unit.getUnit().includes(unit);
+                        if (!validUnit) {
+                            return [2 /*return*/, response.status(400).json('Invalide unit')];
+                        }
+                        return [4 /*yield*/, Ingredient_1.default.findOneAndUpdate({ _id: id }, {
+                                name: name,
+                                description: description,
+                                price: price,
+                                priceUnit: priceUnit,
+                                stock: stock,
+                                unit: unit,
+                            }, { new: true })];
+                    case 1:
+                        ingredient = _b.sent();
+                        return [2 /*return*/, response.json(ingredient)];
+                }
+            });
+        });
+    };
+    IngredientController.prototype.delete = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
             var id;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         id = request.params.id;
-                        return [4 /*yield*/, Product_1.default.deleteOne({ _id: id })];
+                        return [4 /*yield*/, Ingredient_1.default.findOneAndRemove({ _id: id })];
                     case 1:
                         _a.sent();
                         return [2 /*return*/, response.status(200).send()];
@@ -147,6 +159,6 @@ var ProductController = /** @class */ (function () {
             });
         });
     };
-    return ProductController;
+    return IngredientController;
 }());
-exports.default = new ProductController();
+exports.default = new IngredientController();

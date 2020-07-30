@@ -83,8 +83,6 @@ class ReportController {
   }
 
   async productsDispenseAndGain(request: Request, response: Response) {
-    const product = await Product.find({});
-    // console.log(product);
     const orders = await Order.aggregate<InterfaceDispenseAndGain>()
       .match({
         finished: true,
@@ -107,16 +105,17 @@ class ReportController {
           stock: '$products.stock',
         },
         gain: { $sum: { $multiply: ['$products.price', '$items.quantity'] } },
+        dispense: { $sum: { $multiply: ['$products.cost', '$items.quantity'] } },
       });
 
-    const productDispenseAndGain = orders.map((order) => {
-      // console.log(order);
-      return {
-        ...order,
-        dispense: order._id.cost * (order._id.stock ? order._id.stock : 0),
-      };
-    });
-    return response.json(productDispenseAndGain);
+    // const productDispenseAndGain = orders.map((order) => {
+    //   console.log(order);
+    //   return {
+    //     ...order,
+    //     dispense: order._id.cost * (order._id.stock ? order._id.stock : 0),
+    //   };
+    // });
+    return response.json(orders);
   }
 
   async productsAmount(request: Request, response: Response) {

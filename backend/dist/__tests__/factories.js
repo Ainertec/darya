@@ -10,11 +10,25 @@ var Product_1 = __importDefault(require("../src/app/models/Product"));
 var Deliveryman_1 = __importDefault(require("../src/app/models/Deliveryman"));
 var District_1 = __importDefault(require("../src/app/models/District"));
 var Client_1 = __importDefault(require("../src/app/models/Client"));
+var Ingredient_1 = __importDefault(require("../src/app/models/Ingredient"));
 var Order_1 = __importDefault(require("../src/app/models/Order"));
 factory_girl_1.default.define('Product', Product_1.default, {
     name: faker_1.default.commerce.productName(),
     price: faker_1.default.commerce.price(),
     cost: faker_1.default.commerce.price(),
+    description: faker_1.default.commerce.productAdjective(),
+    ingredients: [
+        {
+            material: factory_girl_1.default.assoc('Ingredient', '_id'),
+            quantity: faker_1.default.random.number(10),
+        },
+    ],
+});
+factory_girl_1.default.define('Ingredient', Ingredient_1.default, {
+    name: faker_1.default.commerce.productName(),
+    price: faker_1.default.commerce.price(),
+    priceUnit: faker_1.default.commerce.price(),
+    unit: 'g',
     stock: faker_1.default.random.number(100),
     description: faker_1.default.commerce.productAdjective(),
 });

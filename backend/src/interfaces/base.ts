@@ -6,7 +6,6 @@ export interface ProductInterface extends Document {
   description?: string;
   ingredients: Ingredients[];
   cost: number;
-  stock: number;
 }
 export interface Ingredients {
   material: IngredientInterface;

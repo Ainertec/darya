@@ -12,8 +12,8 @@ var items = celebrate_1.Joi.object().keys({
 });
 exports.order = celebrate_1.Joi.object().keys({
     client_id: celebrate_1.Joi.custom(validObjectId_1.default, 'valid id').required(),
-    deliveryman: celebrate_1.Joi.custom(validObjectId_1.default, 'valid id').required(),
-    client_address_id: celebrate_1.Joi.custom(validObjectId_1.default, 'valid id').required(),
+    deliveryman: celebrate_1.Joi.custom(validObjectId_1.default, 'valid id'),
+    client_address_id: celebrate_1.Joi.custom(validObjectId_1.default, 'valid id'),
     items: celebrate_1.Joi.array().items(items).required(),
     source: celebrate_1.Joi.string().required(),
     note: celebrate_1.Joi.string(),
