@@ -127,7 +127,6 @@ export { Source };
 
 OrderSchema.post<OrderInterface>('save', async (document) => {
   if (document && document.finished) {
-    console.log('fala ae meu bom');
     await Promise.all(
       document.items.map(async (item) => {
         const product = await Product.findOne({ _id: item.product });

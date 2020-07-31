@@ -79,7 +79,11 @@ class ReportController {
 
     const filteredTotal = totalOrders - (totalProducts + totalRate);
 
-    return response.json({ orders: ordersProfit, total: totalOrders, netValue: filteredTotal });
+    return response.json({
+      orders: ordersProfit,
+      total: totalOrders.toFixed(2),
+      netValue: filteredTotal.toFixed(2),
+    });
   }
 
   async productsDispenseAndGain(request: Request, response: Response) {
@@ -107,15 +111,14 @@ class ReportController {
         gain: { $sum: { $multiply: ['$products.price', '$items.quantity'] } },
         dispense: { $sum: { $multiply: ['$products.cost', '$items.quantity'] } },
       });
-
-    // const productDispenseAndGain = orders.map((order) => {
-    //   console.log(order);
-    //   return {
-    //     ...order,
-    //     dispense: order._id.cost * (order._id.stock ? order._id.stock : 0),
-    //   };
-    // });
-    return response.json(orders);
+    const filteredOrders = orders.map((order) => {
+      return {
+        ...order,
+        gain: order.gain.toFixed(2),
+        dispense: order.dispense.toFixed(2),
+      };
+    });
+    return response.json(filteredOrders);
   }
 
   async productsAmount(request: Request, response: Response) {

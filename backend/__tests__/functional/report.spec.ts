@@ -70,12 +70,12 @@ describe('should a Client', () => {
       items: [{ product: product._id, quantity: 1 }],
       finished: true,
     });
-
+    const total = 1000;
     const response = await request(app).get('/reports/orders/profit');
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({
-        total: 1000,
+        total: total.toFixed(2),
       })
     );
     expect(response.body).toHaveProperty('netValue');
@@ -121,13 +121,13 @@ describe('should a Client', () => {
       ],
       finished: true,
     });
-
+    const total = 60;
     const response = await request(app).get('/reports/products/dispense_gain');
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          dispense: 60,
+          dispense: total.toFixed(2),
         }),
       ])
     );
