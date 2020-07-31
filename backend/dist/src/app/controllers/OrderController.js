@@ -204,48 +204,49 @@ var OrderController = /** @class */ (function () {
         });
     };
     OrderController.prototype.store = function (request, response) {
+        var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var _a, client_id, deliveryman, client_address_id, items, source, note, payment, isValidSource, client, identification, address, _b, total, _c, order, deliverymanPersisted, error_1;
-            return __generator(this, function (_d) {
-                switch (_d.label) {
+            var _b, client_id, deliveryman, client_address_id, items, source, note, payment, isValidSource, client, identification, address, _c, total, _d, order, deliverymanPersisted, error_1;
+            return __generator(this, function (_e) {
+                switch (_e.label) {
                     case 0:
-                        _a = request.body, client_id = _a.client_id, deliveryman = _a.deliveryman, client_address_id = _a.client_address_id, items = _a.items, source = _a.source, note = _a.note, payment = _a.payment;
+                        _b = request.body, client_id = _b.client_id, deliveryman = _b.deliveryman, client_address_id = _b.client_address_id, items = _b.items, source = _b.source, note = _b.note, payment = _b.payment;
                         isValidSource = Order_1.Source.getSource().includes(source);
                         if (!isValidSource) {
                             return [2 /*return*/, response.status(400).json({ message: 'invalid source' })];
                         }
                         return [4 /*yield*/, Client_1.default.findOne({ _id: client_id })];
                     case 1:
-                        client = _d.sent();
+                        client = _e.sent();
                         if (!client)
                             return [2 /*return*/, response.status(400).json('That client does not exist')];
-                        identification = client.phone
+                        identification = client.phone && ((_a = client.phone) === null || _a === void 0 ? void 0 : _a.length) > 0
                             ? crypto_1.default.randomBytes(4).toString('hex') + client.phone[0].slice(client.phone[0].length - 2)
                             : crypto_1.default.randomBytes(4).toString('hex');
-                        _d.label = 2;
+                        _e.label = 2;
                     case 2:
-                        _d.trys.push([2, 16, , 17]);
+                        _e.trys.push([2, 16, , 17]);
                         if (!client_address_id) return [3 /*break*/, 4];
                         return [4 /*yield*/, this.getAddress(client_id, client_address_id)];
                     case 3:
-                        _b = _d.sent();
+                        _c = _e.sent();
                         return [3 /*break*/, 5];
                     case 4:
-                        _b = undefined;
-                        _d.label = 5;
+                        _c = undefined;
+                        _e.label = 5;
                     case 5:
-                        address = _b;
+                        address = _c;
                         if (!address) return [3 /*break*/, 7];
                         return [4 /*yield*/, this.getTotal(items, address.district_rate)];
                     case 6:
-                        _c = _d.sent();
+                        _d = _e.sent();
                         return [3 /*break*/, 9];
                     case 7: return [4 /*yield*/, this.getTotal(items, 0)];
                     case 8:
-                        _c = _d.sent();
-                        _d.label = 9;
+                        _d = _e.sent();
+                        _e.label = 9;
                     case 9:
-                        total = _c;
+                        total = _d;
                         return [4 /*yield*/, Order_1.default.create({
                                 identification: identification,
                                 client: {
@@ -261,29 +262,29 @@ var OrderController = /** @class */ (function () {
                                 total: total,
                             })];
                     case 10:
-                        order = _d.sent();
+                        order = _e.sent();
                         if (!deliveryman) return [3 /*break*/, 14];
                         return [4 /*yield*/, Deliveryman_1.default.findOne({ _id: deliveryman })];
                     case 11:
-                        deliverymanPersisted = _d.sent();
+                        deliverymanPersisted = _e.sent();
                         if (!deliverymanPersisted) {
                             return [2 /*return*/, response.status(400).json('Invalid deliveryman')];
                         }
                         deliverymanPersisted.hasDelivery = true;
                         return [4 /*yield*/, deliverymanPersisted.save()];
                     case 12:
-                        _d.sent();
+                        _e.sent();
                         order.deliveryman = deliveryman;
                         return [4 /*yield*/, order.save()];
                     case 13:
-                        _d.sent();
-                        _d.label = 14;
+                        _e.sent();
+                        _e.label = 14;
                     case 14: return [4 /*yield*/, order.populate('deliveryman').populate('items.product').execPopulate()];
                     case 15:
-                        _d.sent();
+                        _e.sent();
                         return [2 /*return*/, response.json(order)];
                     case 16:
-                        error_1 = _d.sent();
+                        error_1 = _e.sent();
                         return [2 /*return*/, response.status(400).json(error_1)];
                     case 17: return [2 /*return*/];
                 }

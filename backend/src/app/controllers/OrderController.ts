@@ -114,9 +114,10 @@ class OrderController {
     const client = await Client.findOne({ _id: client_id });
     if (!client) return response.status(400).json('That client does not exist');
 
-    const identification = client.phone
-      ? crypto.randomBytes(4).toString('hex') + client.phone[0].slice(client.phone[0].length - 2)
-      : crypto.randomBytes(4).toString('hex');
+    const identification =
+      client.phone && client.phone?.length > 0
+        ? crypto.randomBytes(4).toString('hex') + client.phone[0].slice(client.phone[0].length - 2)
+        : crypto.randomBytes(4).toString('hex');
 
     try {
       const address = client_address_id

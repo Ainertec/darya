@@ -155,7 +155,6 @@ OrderSchema.post('save', function (document) { return __awaiter(void 0, void 0, 
         switch (_a.label) {
             case 0:
                 if (!(document && document.finished)) return [3 /*break*/, 2];
-                console.log('fala ae meu bom');
                 return [4 /*yield*/, Promise.all(document.items.map(function (item) { return __awaiter(void 0, void 0, void 0, function () {
                         var product;
                         return __generator(this, function (_a) {

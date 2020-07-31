@@ -135,7 +135,7 @@ describe('should a Client', function () {
         });
     }); });
     it('should list a total profit of the day orders', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var product, response;
+        var product, total, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, factories_1.default.create('Product')];
@@ -148,12 +148,13 @@ describe('should a Client', function () {
                         })];
                 case 2:
                     _a.sent();
+                    total = 1000;
                     return [4 /*yield*/, supertest_1.default(app_1.default).get('/reports/orders/profit')];
                 case 3:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     expect(response.body).toEqual(expect.objectContaining({
-                        total: 1000,
+                        total: total.toFixed(2),
                     }));
                     expect(response.body).toHaveProperty('netValue');
                     return [2 /*return*/];
@@ -161,7 +162,7 @@ describe('should a Client', function () {
         });
     }); });
     it('should list dispense and gain of all products', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var product, product1, product2, product3, response;
+        var product, product1, product2, product3, total, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, factories_1.default.create('Product', { cost: 10 })];
@@ -217,13 +218,14 @@ describe('should a Client', function () {
                         })];
                 case 7:
                     _a.sent();
+                    total = 60;
                     return [4 /*yield*/, supertest_1.default(app_1.default).get('/reports/products/dispense_gain')];
                 case 8:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     expect(response.body).toEqual(expect.arrayContaining([
                         expect.objectContaining({
-                            dispense: 60,
+                            dispense: total.toFixed(2),
                         }),
                     ]));
                     return [2 /*return*/];
