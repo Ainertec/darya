@@ -94,7 +94,7 @@ describe('should test a update cascate when update a ingredient price', function
                     return [4 /*yield*/, Product_1.default.findOne({ _id: product._id })];
                 case 4:
                     productUpdated = _a.sent();
-                    console.log(response.body);
+                    // console.log(response.body);
                     // console.log(productUpdated);
                     expect(response.status).toBe(200);
                     expect(productUpdated === null || productUpdated === void 0 ? void 0 : productUpdated.cost).toBe(20);
@@ -144,7 +144,7 @@ describe('should test a update cascate when update a ingredient price', function
                     return [4 /*yield*/, Product_1.default.findOne({ _id: product2._id })];
                 case 6:
                     productUpdated2 = _a.sent();
-                    console.log(response.body);
+                    // console.log(response.body);
                     expect(response.status).toBe(200);
                     expect(productUpdated === null || productUpdated === void 0 ? void 0 : productUpdated.cost).toBe(20);
                     expect(productUpdated2 === null || productUpdated2 === void 0 ? void 0 : productUpdated2.cost).toBe(20);
