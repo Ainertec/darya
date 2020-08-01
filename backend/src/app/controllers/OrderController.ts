@@ -194,11 +194,11 @@ class OrderController {
     if (finished) {
       const deliverymanPersisted = await Deliveryman.findOne({ _id: order.deliveryman });
 
-      if (!deliverymanPersisted) return response.status(400).json('Invalid deliveryman');
-      deliverymanPersisted.available = false;
-      deliverymanPersisted.hasDelivery = false;
-
-      await deliverymanPersisted.save();
+      if (deliverymanPersisted) {
+        deliverymanPersisted.available = false;
+        deliverymanPersisted.hasDelivery = false;
+        await deliverymanPersisted.save();
+      }
       order.finished = true;
     }
     if (client_id && String(order.client.client_id) !== String(client_id)) {

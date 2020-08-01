@@ -21,7 +21,7 @@ export interface IngredientInterface extends Document {
   priceUnit: number;
   description?: string;
   unit: string;
-  stock: number;
+  stock: any;
 }
 
 export interface DeliverymanInterface extends Document {

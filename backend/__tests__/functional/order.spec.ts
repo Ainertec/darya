@@ -296,14 +296,18 @@ describe('should a Client', () => {
     );
   });
 
-  it('should finish a order with a invalid deliveryman', async () => {
+  it('should finish a order whitout deliveryman', async () => {
     const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman');
-    const order = await factory.create<OrderInterface>('Order', { deliveryman: deliveryman._id });
+    const order = await factory.create<OrderInterface>('Order', { deliveryman: undefined });
     const response = await request(app).put(`/orders/${order._id}`).send({
       finished: true,
-      deliveryman: '5f05febbd43fb02cb0b83d64',
     });
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        finished: true,
+      })
+    );
   });
 
   it('should update a order and update a deliveryman available', async () => {
