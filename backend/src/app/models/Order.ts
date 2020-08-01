@@ -2,6 +2,8 @@ import { Schema, model, Model } from 'mongoose';
 import { OrderInterface } from '../../interfaces/base';
 import Product from './Product';
 import Ingredient from './Ingredient';
+import { subIngredintStock } from '../utils/subIngredientStock';
+import { sub } from 'date-fns';
 
 const ItemsSchema = new Schema({
   product: {
@@ -123,26 +125,16 @@ Object.assign(OrderSchema.statics, {
   Source,
 });
 
-export { Source };
-
 OrderSchema.post<OrderInterface>('save', async (document) => {
   if (document && document.finished) {
-    await Promise.all(
-      document.items.map(async (item) => {
-        const product = await Product.findOne({ _id: item.product });
-        if (product) {
-          product.ingredients.map(async (ingredient) => {
-            const ingredientPersisted = await Ingredient.findOne({ _id: ingredient.material });
+    for (const item of document.items) {
+      const product = await Product.findOne({ _id: item.product });
 
-            if (ingredientPersisted) {
-              ingredientPersisted.stock -= ingredient.quantity * item.quantity;
-              await ingredientPersisted.save();
-            }
-          });
-        }
-      })
-    );
+      if (product) {
+        await subIngredintStock(product.ingredients, item.quantity);
+      }
+    }
   }
 });
-
+export { Source };
 export default model<OrderInterface>('Order', OrderSchema);

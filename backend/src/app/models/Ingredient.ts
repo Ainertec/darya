@@ -13,7 +13,7 @@ const Unit = Object.freeze({
   },
 });
 
-const IngredientSchema = new Schema(
+const IngredientSchema = new Schema<IngredientInterface>(
   {
     name: {
       type: String,
