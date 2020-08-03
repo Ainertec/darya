@@ -6,7 +6,7 @@ import Order from '../../src/app/models/Order';
 import app from '../../src/app';
 import factory from '../factories';
 
-import { OrderInterface } from '../../src/interfaces/base';
+import { OrderInterface, ClientInterface } from '../../src/interfaces/base';
 
 describe('Teste a printer', () => {
   beforeAll(() => {
@@ -17,6 +17,56 @@ describe('Teste a printer', () => {
   });
   beforeEach(async () => {
     await Order.deleteMany({});
+  });
+
+  it('Should print a recipe without address', async () => {
+    const order = await factory.create<OrderInterface>('Order', {
+      address: undefined,
+    });
+
+    const response = await request(app).post('/printers').send({
+      id: order.id,
+    });
+    expect(response.status).toBe(200);
+    setTimeout(async () => {
+      await fs.unlinkSync(path.resolve(__dirname, '..', 'recipes', `${order._id}.rtf`));
+    }, 1000);
+  });
+
+  it('Should print a recipe without a cleint phone', async () => {
+    const cleint = await factory.create<ClientInterface>('Client');
+    const order = await factory.create<OrderInterface>('Order', {
+      address: undefined,
+      deliveryman: undefined,
+      client: {
+        name: 'cleiton',
+        client_id: cleint._id,
+        phone: undefined,
+      },
+    });
+
+    const response = await request(app).post('/printers').send({
+      id: order.id,
+    });
+    expect(response.status).toBe(200);
+    // setTimeout(async () => {
+    //   await fs.unlinkSync(path.resolve(__dirname, '..', 'recipes', `${order._id}.rtf`));
+    // }, 1000);
+  });
+
+  it('Should print a recipe without deliveryman', async () => {
+    const order = await factory.create<OrderInterface>('Order', {
+      address: undefined,
+      deliveryman: undefined,
+    });
+
+    const response = await request(app).post('/printers').send({
+      id: order.id,
+    });
+    expect(response.status).toBe(200);
+    setTimeout(async () => {
+      await fs.unlinkSync(path.resolve(__dirname, '..', 'recipes', `${order._id}.rtf`));
+    }, 1000);
   });
 
   it('Should print a recipe', async () => {

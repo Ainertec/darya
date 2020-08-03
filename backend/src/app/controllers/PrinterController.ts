@@ -76,19 +76,20 @@ class PrinterController {
     myDoc.writeText('=========== Cliente ============', contentBorder);
     myDoc.writeText(`Nome: ${order.client.name}`, contentStyle);
     myDoc.writeText(`Telefone: ${order.client.phone}`, contentStyle);
-    myDoc.writeText('========== Endereço ===========', contentBorder);
-    myDoc.writeText(`Rua: ${order.address.street}`, contentStyle);
-    myDoc.writeText(`Número: ${order.address.number}`, contentStyle);
-    myDoc.writeText(`Bairro: ${order.address.district_name}`, contentStyle);
-    myDoc.writeText(`Referência: ${order.address.reference}`, contentStyle);
+    order.address && myDoc.writeText('========== Endereço ===========', contentBorder);
+    order.address && myDoc.writeText(`Rua: ${order.address.street}`, contentStyle);
+    order.address && myDoc.writeText(`Número: ${order.address.number}`, contentStyle);
+    order.address && myDoc.writeText(`Bairro: ${order.address.district_name}`, contentStyle);
+    order.address && myDoc.writeText(`Referência: ${order.address.reference}`, contentStyle);
     myDoc.writeText('=========== Itens ============', contentBorder);
     myDoc.writeText(`${items}`, contentStyle);
     myDoc.writeText('========== Motoboy ===========', contentBorder);
-    myDoc.writeText(`Nome: ${order.deliveryman.name}`, contentStyle);
-    myDoc.writeText(`Telefone: ${order.deliveryman.phone}`, contentStyle);
-    myDoc.writeText(`Taxa: R$${order.address.district_rate.toFixed(2)}`, contentStyle);
+    order.deliveryman && myDoc.writeText(`Nome: ${order.deliveryman.name}`, contentStyle);
+    order.deliveryman && myDoc.writeText(`Telefone: ${order.deliveryman.phone}`, contentStyle);
+    order.address &&
+      myDoc.writeText(`Taxa: R$${order.address.district_rate.toFixed(2)}`, contentStyle);
     myDoc.writeText('========== Observação =========', contentBorder);
-    myDoc.writeText(`- ${order.note}`, contentStyle);
+    order.note && myDoc.writeText(`- ${order.note}`, contentStyle);
     myDoc.writeText('========= Valor total =========', contentBorder);
     myDoc.writeText(`Valor total: R$${order.total.toFixed(2)}`, contentStyle);
 

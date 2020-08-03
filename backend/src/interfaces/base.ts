@@ -67,10 +67,10 @@ export interface OrderInterface extends Document {
 }
 
 export interface OrderInterfaceDeliveryman extends Document {
-  deliveryman: DeliverymanInterface;
+  deliveryman?: DeliverymanInterface;
   identification: string;
   client: ClientOrderInterface;
-  address: AddressOrderInterface;
+  address?: AddressOrderInterface;
   items: ItemsInterface[];
   total: number;
   finished?: boolean;

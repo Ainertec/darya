@@ -45,6 +45,7 @@ var Ingredient_1 = __importDefault(require("../../src/app/models/Ingredient"));
 var Product_1 = __importDefault(require("../../src/app/models/Product"));
 var app_1 = __importDefault(require("../../src/app"));
 var factories_1 = __importDefault(require("../factories"));
+var subIngredientStock_1 = require("../../src/app/utils/subIngredientStock");
 describe('should sub ingredinet stock when a order is finished', function () {
     beforeAll(function () {
         connection_1.openConnection();
@@ -164,6 +165,153 @@ describe('should sub ingredinet stock when a order is finished', function () {
                     expect(response.status).toBe(200);
                     expect(ingredientUpdated === null || ingredientUpdated === void 0 ? void 0 : ingredientUpdated.stock).toBe(1600);
                     expect(ingredientUpdated2 === null || ingredientUpdated2 === void 0 ? void 0 : ingredientUpdated2.stock).toBe(1800);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('should update an ingredient stock with subIngredientStock function', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var ingredient, ingredient2, product, product2, orderArray, _i, orderArray_1, item, ingredientUpdated, ingredientUpdated2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, factories_1.default.create('Ingredient', {
+                        stock: 2000,
+                        name: 'farinha',
+                    })];
+                case 1:
+                    ingredient = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Ingredient', {
+                            stock: 2000,
+                            name: 'Chocolate',
+                        })];
+                case 2:
+                    ingredient2 = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Product', {
+                            ingredients: [
+                                {
+                                    material: ingredient._id,
+                                    quantity: 200,
+                                },
+                                {
+                                    material: ingredient2._id,
+                                    quantity: 200,
+                                },
+                            ],
+                        })];
+                case 3:
+                    product = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Product', {
+                            ingredients: [
+                                {
+                                    material: ingredient._id,
+                                    quantity: 400,
+                                },
+                                {
+                                    material: ingredient2._id,
+                                    quantity: 100,
+                                },
+                            ],
+                        })];
+                case 4:
+                    product2 = _a.sent();
+                    orderArray = [product, product2];
+                    _i = 0, orderArray_1 = orderArray;
+                    _a.label = 5;
+                case 5:
+                    if (!(_i < orderArray_1.length)) return [3 /*break*/, 8];
+                    item = orderArray_1[_i];
+                    return [4 /*yield*/, subIngredientStock_1.subIngredintStock(item.ingredients, 2)];
+                case 6:
+                    _a.sent();
+                    _a.label = 7;
+                case 7:
+                    _i++;
+                    return [3 /*break*/, 5];
+                case 8: return [4 /*yield*/, Ingredient_1.default.findOne({ _id: ingredient._id })];
+                case 9:
+                    ingredientUpdated = _a.sent();
+                    return [4 /*yield*/, Ingredient_1.default.findOne({ _id: ingredient2._id })];
+                case 10:
+                    ingredientUpdated2 = _a.sent();
+                    expect(ingredientUpdated === null || ingredientUpdated === void 0 ? void 0 : ingredientUpdated.stock).toBe(800);
+                    expect(ingredientUpdated2 === null || ingredientUpdated2 === void 0 ? void 0 : ingredientUpdated2.stock).toBe(1400);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('should sub all product ingredients stock when a order is finished(same ingredients)', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var ingredient, ingredient2, product, product2, order, response, ingredientUpdated, ingredientUpdated2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, factories_1.default.create('Ingredient', {
+                        stock: 2000,
+                        name: 'farinha',
+                    })];
+                case 1:
+                    ingredient = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Ingredient', {
+                            stock: 2000,
+                            name: 'Chocolate',
+                        })];
+                case 2:
+                    ingredient2 = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Product', {
+                            ingredients: [
+                                {
+                                    material: ingredient._id,
+                                    quantity: 200,
+                                },
+                                {
+                                    material: ingredient2._id,
+                                    quantity: 200,
+                                },
+                            ],
+                        })];
+                case 3:
+                    product = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Product', {
+                            ingredients: [
+                                {
+                                    material: ingredient._id,
+                                    quantity: 400,
+                                },
+                                {
+                                    material: ingredient2._id,
+                                    quantity: 100,
+                                },
+                            ],
+                        })];
+                case 4:
+                    product2 = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Order', {
+                            items: [
+                                {
+                                    product: product._id,
+                                    quantity: 2,
+                                },
+                                {
+                                    product: product2._id,
+                                    quantity: 3,
+                                },
+                            ],
+                            finished: false,
+                        })];
+                case 5:
+                    order = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default).put("/orders/" + order._id).send({
+                            finished: true,
+                        })];
+                case 6:
+                    response = _a.sent();
+                    return [4 /*yield*/, Ingredient_1.default.findOne({ _id: ingredient._id })];
+                case 7:
+                    ingredientUpdated = _a.sent();
+                    return [4 /*yield*/, Ingredient_1.default.findOne({ _id: ingredient2._id })];
+                case 8:
+                    ingredientUpdated2 = _a.sent();
+                    // console.log(ingredientUpdated);
+                    expect(response.status).toBe(200);
+                    expect(ingredientUpdated === null || ingredientUpdated === void 0 ? void 0 : ingredientUpdated.stock).toBe(400);
+                    expect(ingredientUpdated2 === null || ingredientUpdated2 === void 0 ? void 0 : ingredientUpdated2.stock).toBe(1300);
                     return [2 /*return*/];
             }
         });

@@ -453,23 +453,25 @@ describe('should a Client', function () {
             }
         });
     }); });
-    it('should finish a order with a invalid deliveryman', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('should finish a order whitout deliveryman', function () { return __awaiter(void 0, void 0, void 0, function () {
         var deliveryman, order, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, factories_1.default.create('Deliveryman')];
                 case 1:
                     deliveryman = _a.sent();
-                    return [4 /*yield*/, factories_1.default.create('Order', { deliveryman: deliveryman._id })];
+                    return [4 /*yield*/, factories_1.default.create('Order', { deliveryman: undefined })];
                 case 2:
                     order = _a.sent();
                     return [4 /*yield*/, supertest_1.default(app_1.default).put("/orders/" + order._id).send({
                             finished: true,
-                            deliveryman: '5f05febbd43fb02cb0b83d64',
                         })];
                 case 3:
                     response = _a.sent();
-                    expect(response.status).toBe(400);
+                    expect(response.status).toBe(200);
+                    expect(response.body).toEqual(expect.objectContaining({
+                        finished: true,
+                    }));
                     return [2 /*return*/];
             }
         });
