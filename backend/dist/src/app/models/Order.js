@@ -42,7 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Source = void 0;
 var mongoose_1 = require("mongoose");
 var Product_1 = __importDefault(require("./Product"));
-var Ingredient_1 = __importDefault(require("./Ingredient"));
+var subIngredientStock_1 = require("../utils/subIngredientStock");
 var ItemsSchema = new mongoose_1.Schema({
     product: {
         type: mongoose_1.Schema.Types.ObjectId,
@@ -151,44 +151,28 @@ Object.assign(OrderSchema.statics, {
     Source: Source,
 });
 OrderSchema.post('save', function (document) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var _i, _a, item, product;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                if (!(document && document.finished)) return [3 /*break*/, 2];
-                return [4 /*yield*/, Promise.all(document.items.map(function (item) { return __awaiter(void 0, void 0, void 0, function () {
-                        var product;
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, Product_1.default.findOne({ _id: item.product })];
-                                case 1:
-                                    product = _a.sent();
-                                    if (product) {
-                                        product.ingredients.map(function (ingredient) { return __awaiter(void 0, void 0, void 0, function () {
-                                            var ingredientPersisted;
-                                            return __generator(this, function (_a) {
-                                                switch (_a.label) {
-                                                    case 0: return [4 /*yield*/, Ingredient_1.default.findOne({ _id: ingredient.material })];
-                                                    case 1:
-                                                        ingredientPersisted = _a.sent();
-                                                        if (!ingredientPersisted) return [3 /*break*/, 3];
-                                                        ingredientPersisted.stock -= ingredient.quantity * item.quantity;
-                                                        return [4 /*yield*/, ingredientPersisted.save()];
-                                                    case 2:
-                                                        _a.sent();
-                                                        _a.label = 3;
-                                                    case 3: return [2 /*return*/];
-                                                }
-                                            });
-                                        }); });
-                                    }
-                                    return [2 /*return*/];
-                            }
-                        });
-                    }); }))];
+                if (!(document && document.finished)) return [3 /*break*/, 5];
+                _i = 0, _a = document.items;
+                _b.label = 1;
             case 1:
-                _a.sent();
-                _a.label = 2;
-            case 2: return [2 /*return*/];
+                if (!(_i < _a.length)) return [3 /*break*/, 5];
+                item = _a[_i];
+                return [4 /*yield*/, Product_1.default.findOne({ _id: item.product })];
+            case 2:
+                product = _b.sent();
+                if (!product) return [3 /*break*/, 4];
+                return [4 /*yield*/, subIngredientStock_1.subIngredintStock(product.ingredients, item.quantity)];
+            case 3:
+                _b.sent();
+                _b.label = 4;
+            case 4:
+                _i++;
+                return [3 /*break*/, 1];
+            case 5: return [2 /*return*/];
         }
     });
 }); });

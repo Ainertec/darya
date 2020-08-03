@@ -323,55 +323,56 @@ var OrderController = /** @class */ (function () {
                             order.note = note;
                         if (payment)
                             order.payment = payment;
-                        if (!finished) return [3 /*break*/, 6];
+                        if (!finished) return [3 /*break*/, 7];
                         return [4 /*yield*/, Deliveryman_1.default.findOne({ _id: order.deliveryman })];
                     case 4:
                         deliverymanPersisted = _g.sent();
-                        if (!deliverymanPersisted)
-                            return [2 /*return*/, response.status(400).json('Invalid deliveryman')];
+                        if (!deliverymanPersisted) return [3 /*break*/, 6];
                         deliverymanPersisted.available = false;
                         deliverymanPersisted.hasDelivery = false;
                         return [4 /*yield*/, deliverymanPersisted.save()];
                     case 5:
                         _g.sent();
-                        order.finished = true;
                         _g.label = 6;
                     case 6:
-                        if (!(client_id && String(order.client.client_id) !== String(client_id))) return [3 /*break*/, 10];
+                        order.finished = true;
                         _g.label = 7;
                     case 7:
-                        _g.trys.push([7, 9, , 10]);
-                        return [4 /*yield*/, this.getClient(client_id)];
+                        if (!(client_id && String(order.client.client_id) !== String(client_id))) return [3 /*break*/, 11];
+                        _g.label = 8;
                     case 8:
+                        _g.trys.push([8, 10, , 11]);
+                        return [4 /*yield*/, this.getClient(client_id)];
+                    case 9:
                         client = _g.sent();
                         order.client = client;
-                        return [3 /*break*/, 10];
-                    case 9:
+                        return [3 /*break*/, 11];
+                    case 10:
                         error_2 = _g.sent();
                         return [2 /*return*/, response.status(400).json(error_2)];
-                    case 10:
-                        if (!(client_address_id &&
-                            String((_b = order.address) === null || _b === void 0 ? void 0 : _b.client_address_id) !== String(client_address_id))) return [3 /*break*/, 15];
-                        _g.label = 11;
                     case 11:
-                        _g.trys.push([11, 14, , 15]);
-                        return [4 /*yield*/, this.getAddress(order.client.client_id, client_address_id)];
+                        if (!(client_address_id &&
+                            String((_b = order.address) === null || _b === void 0 ? void 0 : _b.client_address_id) !== String(client_address_id))) return [3 /*break*/, 16];
+                        _g.label = 12;
                     case 12:
+                        _g.trys.push([12, 15, , 16]);
+                        return [4 /*yield*/, this.getAddress(order.client.client_id, client_address_id)];
+                    case 13:
                         address = _g.sent();
                         order.address = address;
                         _f = order;
                         return [4 /*yield*/, this.getTotal(order.items, ((_c = order.address) === null || _c === void 0 ? void 0 : _c.district_rate) || 0)];
-                    case 13:
-                        _f.total = _g.sent();
-                        return [3 /*break*/, 15];
                     case 14:
+                        _f.total = _g.sent();
+                        return [3 /*break*/, 16];
+                    case 15:
                         error_3 = _g.sent();
                         return [2 /*return*/, response.status(400).json(error_3)];
-                    case 15: return [4 /*yield*/, order.save()];
-                    case 16:
+                    case 16: return [4 /*yield*/, order.save()];
+                    case 17:
                         _g.sent();
                         return [4 /*yield*/, order.populate('deliveryman').populate('items.product').execPopulate()];
-                    case 17:
+                    case 18:
                         _g.sent();
                         return [2 /*return*/, response.json(order)];
                 }
