@@ -40,7 +40,7 @@ function gerarListaDeClientes(json) {
   codigoHTML += `<tr>
         <td class="table-warning" title="${json.name}"><strong><span class="fas fa-user"></span> ${corrigirTamanhoString(15, json.name)}</strong></td>
         <td class="table-warning">`
-  if (json.phone) {
+  if (json.phone[0]) {
     codigoHTML += `<select class="form-control form-control-sm">`
     json.phone.forEach(function (item) {
       codigoHTML += `<option>${item}</option>`;
@@ -51,7 +51,7 @@ function gerarListaDeClientes(json) {
   }
   codigoHTML += `</td>
         <td class="table-warning text-danger">`
-  if (json.address) {
+  if (json.address[0]) {
     codigoHTML += `<select class="form-control form-control-sm">`
     json.address.forEach(function (item) {
       codigoHTML += `<option title="${item.street}, nº ${item.number} - ${item.district.name} - ${item.district.city}">${corrigirTamanhoString(15, item.street)}, nº ${item.number} - ${corrigirTamanhoString(15, item.district.name)} - ${corrigirTamanhoString(15, item.district.city)}</option>`;
@@ -90,7 +90,7 @@ async function modalTelaCadastrarouAtualizarCliente(tipo) {
                                 </div>
                                 <div id="botaoadicionartelefoneendereco">
                                   <div class="custom-control custom-switch">
-                                    <input type="checkbox" onclick="this.checked? gerarTelaParteTelefoneEnderecoCliente('${tipo}') : document.getElementById('areatelefoneendereco').innerHTML='' " class="custom-control-input custom-switch" id="botaoSelectClientephoneaddress">
+                                    <input type="checkbox" onclick="this.checked? $('#areatelefoneendereco').fadeIn(10) : $('#areatelefoneendereco').fadeOut(10) " class="custom-control-input custom-switch" id="botaoSelectClientephoneaddress">
                                     <label class="custom-control-label" for="botaoSelectClientephoneaddress">Adicionar Telefone e Endereço</label>
                                   </div>
                                 </div>
@@ -113,8 +113,10 @@ async function modalTelaCadastrarouAtualizarCliente(tipo) {
                 </div>`;
 
   document.getElementById('modal2').innerHTML = codigoHTML;
+  await gerarTelaParteTelefoneEnderecoCliente(tipo);
 
   $('#modalClasseCliente').modal('show');
+  $('#areatelefoneendereco').fadeOut(10);
 }
 
 //funcao responsavel por gerar a parte de telefone e endereco do cliente
@@ -248,25 +250,34 @@ async function carregarDadosCliente(id) {
     let dado = VETORDECLIENTESCLASSECLIENTE.find((element) => element._id == id);
 
     document.getElementById('nomecliente').value = dado.name;
-    dado.phone.forEach(function (item, indice) {
-      $('#tabelatelefone').append(`<tr id="linhatel${indice}">
-              <td class="table-warning"><span class="fas fa-phone"></span> ${item}</td>
-              <td class="table-warning"><button onclick="removerDadosNaTabelaTelefoneeEndereco('telefone', '${item}' ,'${id}', ${indice});" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span> Excluir</button></td>
-          </tr>`);
-    });
-    dado.address.forEach(function (item, indice) {
-      $('#tabelaendereco').append(`<tr id="linhaend${item._id}">
-              <td class="table-warning" title="${item.street}"><span class="fas fa-map-marker-alt"></span> ${corrigirTamanhoString(15, item.street)}</td>
-              <td class="table-warning">${item.number}</td>
-              <td class="table-warning" title="${item.district.name} - ${item.district.city}">${corrigirTamanhoString(15, item.district.name)} - ${corrigirTamanhoString(15, item.district.city)}</td>
-              <td class="table-warning" title="${item.reference}">${corrigirTamanhoString(20, item.reference)}</td>
-              <td class="table-warning"><button onclick="removerDadosNaTabelaTelefoneeEndereco('endereco', '','${id}','${item._id}');" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span> Excluir</button></td>
-          </tr>`);
-    });
+
+    if (dado.phone[0] && dado.address[0]) {
+
+      $('#areatelefoneendereco').fadeIn(10)
+      document.getElementById('botaoSelectClientephoneaddress').checked = true;
+
+      dado.phone.forEach(function (item, indice) {
+        $('#tabelatelefone').append(`<tr id="linhatel${indice}">
+                <td class="table-warning"><span class="fas fa-phone"></span> ${item}</td>
+                <td class="table-warning"><button onclick="removerDadosNaTabelaTelefoneeEndereco('telefone', '${item}' ,'${id}', ${indice});" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span> Excluir</button></td>
+            </tr>`);
+      });
+      dado.address.forEach(function (item, indice) {
+        $('#tabelaendereco').append(`<tr id="linhaend${item._id}">
+                <td class="table-warning" title="${item.street}"><span class="fas fa-map-marker-alt"></span> ${corrigirTamanhoString(15, item.street)}</td>
+                <td class="table-warning">${item.number}</td>
+                <td class="table-warning" title="${item.district.name} - ${item.district.city}">${corrigirTamanhoString(15, item.district.name)} - ${corrigirTamanhoString(15, item.district.city)}</td>
+                <td class="table-warning" title="${item.reference}">${corrigirTamanhoString(20, item.reference)}</td>
+                <td class="table-warning"><button onclick="removerDadosNaTabelaTelefoneeEndereco('endereco', '','${id}','${item._id}');" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span> Excluir</button></td>
+            </tr>`);
+      });
+    }
+
     document.getElementById('botaoadicionartelefone').value = dado._id.toString();
     document.getElementById('botaoadicionarendereco').value = dado._id.toString();
     document.getElementById('botaoatualizarcliente').value = dado._id.toString();
     document.getElementById('botaoexcluircliente').value = dado._id.toString();
+
   } catch (error) {
     mensagemDeErroModal('Não foi possível carregar os dados do cliente!')
   }
@@ -292,7 +303,7 @@ async function adicionarDadosNaTabelaTelefoneeEndereco(tipo, id) {
   } else if (tipo == 'endereco') {
     cliente.address.push(
       JSON.parse(`{"_id":"${CONTADORDEENDERECO}",
-      "district":"${document.getElementById('bairrocidadecliente').value}",
+      "district":{"_id":"${document.getElementById('bairrocidadecliente').value}"},
       "street":"${document.getElementById('ruacliente').value}",
       "number":"${document.getElementById('numerocasacliente').value}",
       "reference":"${document.getElementById('complementocliente').value}"}`)
@@ -368,6 +379,8 @@ async function cadastrarCliente() {
       let result = await requisicaoPOST(`clients`, {
         name: cliente.name
       });
+
+      $('#modalClasseCliente').modal('hide');
 
       if (result == 400) {
         mensagemDeErro('Atenção já existe um cliente com os mesmo dados!')

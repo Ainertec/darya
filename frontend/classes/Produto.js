@@ -39,7 +39,6 @@ function gerarListaDeProdutos(json) {
     corrigirTamanhoString(15, json.name)
     }</strong></td>
         <td class="table-warning" title="${json.description}">${corrigirTamanhoString(40, json.description)}</td>
-        <td class="table-warning">${parseInt(json.stock)}</td>
         <td class="table-warning"><strong>R$ ${parseFloat(json.cost).toFixed(2)}</strong></td>
         <td class="table-warning text-danger"><strong>R$ ${parseFloat(json.price).toFixed(
       2
@@ -52,8 +51,8 @@ function gerarListaDeProdutos(json) {
 }
 
 //funcao responsavel por gerar o modal de cadastrar/atualizar/remover produto
-function modalTelaCadastrarouAtualizarProduto(tipo) {
-  let codigoHTML = ``;
+async function modalTelaCadastrarouAtualizarProduto(tipo) {
+  let codigoHTML = ``, json = await requisicaoGET(`ingredients`);
 
   codigoHTML += `<div class="modal fade" id="modalClasseProduto" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-scrollable">
@@ -72,15 +71,6 @@ function modalTelaCadastrarouAtualizarProduto(tipo) {
                                     <input type="text" class="form-control" id="nomeproduto" placeholder="Nome">
                                 </div>
                                 <div class="form-group">
-                                  <label for="precocusto">Preço de custo:</label>
-                                  <div class="input-group">
-                                    <div class="input-group-prepend">
-                                      <span class="input-group-text">R$</span>
-                                    </div>
-                                    <input type="Number" class="form-control" id="precocusto" placeholder="Preço de custo">
-                                  </div>
-                                </div>
-                                <div class="form-group">
                                     <label for="precovenda">Preço de venda:</label>
                                     <div class="input-group">
                                       <div class="input-group-prepend">
@@ -93,25 +83,29 @@ function modalTelaCadastrarouAtualizarProduto(tipo) {
                                     <label for="quantidadeproduto">Ingredientes/quantidade:</label>
                                     <div class="col-12" style="position: relative; height: 30vh; z-index: 1; overflow: scroll; margin-right: 0px;">
                                       <table class="table">
-                                        <tbody>
-                                          <tr class="table-info">
+                                        <tbody>`
+
+  json.data.forEach(function (item) {
+    codigoHTML += `<tr class="table-info">
                                             <td style="width:5vw">
                                               <div class="custom-control custom-switch">
-                                                <input type="checkbox" onclick="this.checked? console.log('foi'): console.log('nao')" class="custom-control-input custom-switch" id="teste">
-                                                <label class="custom-control-label" for="teste">Add</label>
+                                                <input type="checkbox" onclick="this.checked? adicionarIngredienteaoProduto('${item._id}', 'cadastrar', null) : removerIngredientedoProduto('${item._id}')" class="custom-control-input custom-switch" id="select${item._id}">
+                                                <label class="custom-control-label" for="select${item._id}">Add</label>
                                               </div>                                   
                                             </td>
-                                            <td style="width:15vw"><span class="fas fa-box"></span> Farinha</td>
-                                            <td style="width:15vw">
+                                            <td style="width:15vw" title="${item.name}"><span class="fas fa-box"></span> ${corrigirTamanhoString(15, item.name)}</td>
+                                            <td style="width:15vw" title="Adicione a quantidade gasta na produção do produto!">
                                               <div class="input-group input-group-sm">
+                                                <input type="Number" class="form-control form-control-sm" id="quanti${item._id}">
                                                 <div class="input-group-prepend">
-                                                  <span class="input-group-text input-group-text" id="campoqtd">Qtd.:</span>
+                                                  <span class="input-group-text input-group-text">${item.unit}</span>
                                                 </div>
-                                                <input type="Number" class="form-control form-control-sm" aria-describedby="campoqtd">
                                               </div>
                                             </td>
-                                          </tr>
-                                        </tbody>
+                                          </tr>`
+  });
+
+  codigoHTML += `</tbody>
                                       </table>
                                     </div>
                                 </div>
@@ -123,9 +117,9 @@ function modalTelaCadastrarouAtualizarProduto(tipo) {
                         </div>
                         <div class="modal-footer">`;
   if (tipo == 'cadastrar') {
-    codigoHTML += `<button onclick="if(validaDadosCampo(['#nomeproduto','#precocusto','#precovenda','#quantidadeproduto','#descricaoproduto']) && validaValoresCampo(['#precocusto','#precovenda'])){cadastrarProduto();}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['nomeproduto','precocusto','precovenda','quantidadeproduto','descricaoproduto']);}" type="button" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Adicionar</button>`;
+    codigoHTML += `<button onclick="if(validaDadosCampo(['#nomeproduto','#precovenda','#descricaoproduto']) && validaValoresCampo(['#precocusto','#precovenda'])){cadastrarProduto();}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['nomeproduto','precovenda','descricaoproduto']);}" type="button" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Adicionar</button>`;
   } else if (tipo == 'atualizar') {
-    codigoHTML += `<button id="botaoatualizar" onclick="if(validaDadosCampo(['#nomeproduto','#precocusto','#precovenda','#quantidadeproduto','#descricaoproduto']) && validaValoresCampo(['#precocusto','#precovenda'])){confirmarAcao('Atualizar este produto!','atualizarProduto(this.value)',(this.value).toString()); $('#modalClasseProduto').modal('hide');}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['nomeproduto','precocusto','precovenda','quantidadeproduto','descricaoproduto']);}" type="button" class="btn btn-success btn-block"><span class="fas fa-edit"></span> Modificar</button>
+    codigoHTML += `<button id="botaoatualizar" onclick="if(validaDadosCampo(['#nomeproduto','#precovenda','#descricaoproduto']) && validaValoresCampo(['#precocusto','#precovenda'])){confirmarAcao('Atualizar este produto!','atualizarProduto(this.value)',(this.value).toString()); $('#modalClasseProduto').modal('hide');}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['nomeproduto','precovenda','descricaoproduto']);}" type="button" class="btn btn-success btn-block"><span class="fas fa-edit"></span> Modificar</button>
                                  <button id="botaoexcluir" onclick="confirmarAcao('Excluir este produto!','excluirProduto(this.value)',(this.value).toString()); $('#modalClasseProduto').modal('hide');" type="button" class="btn btn-outline-danger btn-block"><span class="fas fa-check-trash"></span> Excluir</button>`;
   }
   codigoHTML += `</div>
@@ -144,6 +138,7 @@ async function buscarDadosProduto(tipo) {
     json = null;
 
   VETORDEPRODUTOSCLASSEPRODUTO = [];
+  VETORDEINGREDIENTESCLASSEPRODUTO = [];
 
   try {
     if (tipo == 'nome') {
@@ -158,7 +153,6 @@ async function buscarDadosProduto(tipo) {
               <tr>
                   <th scope="col">Nome</th>
                   <th scope="col">Descrição</th>
-                  <th scope="col">Quantidade</th>
                   <th scope="col">Preço custo</th>
                   <th scope="col">Preço venda</th>
                   <th scope="col">Editar</th>
@@ -186,17 +180,18 @@ async function buscarDadosProduto(tipo) {
 }
 
 //funcao responsavel por carregar os dados do produto selecionado
-function carregarDadosProduto(id) {
-  modalTelaCadastrarouAtualizarProduto('atualizar');
+async function carregarDadosProduto(id) {
+  await modalTelaCadastrarouAtualizarProduto('atualizar');
 
   try {
     let dado = VETORDEPRODUTOSCLASSEPRODUTO.find((element) => element._id == id);
 
     document.getElementById('nomeproduto').value = dado.name;
-    document.getElementById('precocusto').value = parseFloat(dado.cost).toFixed(2);
     document.getElementById('precovenda').value = parseFloat(dado.price).toFixed(2);
-    document.getElementById('quantidadeproduto').value = parseInt(dado.stock);
     document.getElementById('descricaoproduto').value = dado.description;
+    dado.ingredients.forEach(function (item2) {
+      adicionarIngredienteaoProduto(item2.material._id, 'atualizar', item2.quantity);
+    });
     document.getElementById('botaoatualizar').value = dado._id;
     document.getElementById('botaoexcluir').value = dado._id;
   } catch (error) {
@@ -207,9 +202,15 @@ function carregarDadosProduto(id) {
 //funcao responsavel por adicionar um ingrediente ao produto
 function adicionarIngredienteaoProduto(id, tipo, quantidade) {
   if (tipo == 'cadastrar') {
-    VETORDEINGREDIENTESCLASSEPRODUTO.push(JSON.parse(`{"id_ingrediente":"${id}", "quantity":${parseInt(document.getElementById('quanti' + id).value)}}`))
+    if (validaDadosCampo([`#quanti${id}`]) && validaValoresCampo([`#quanti${id}`]) && $(`#quanti${id}`).val() > 0) {
+      VETORDEINGREDIENTESCLASSEPRODUTO.push(JSON.parse(`{"material":"${id}","quantity":${parseInt(document.getElementById('quanti' + id).value)}}`))
+    } else {
+      mostrarCamposIncorreto([`quanti${id}`])
+      document.getElementById(`select${id}`).checked = false
+      mensagemDeErroModal('Preencha o campo quantidade com valores válidos!')
+    }
   } else if (tipo == 'atualizar') {
-    VETORDEINGREDIENTESCLASSEPRODUTO.push(JSON.parse(`{"id_ingrediente":"${id}", "quantity":${parseInt(quantidade)}`))
+    VETORDEINGREDIENTESCLASSEPRODUTO.push(JSON.parse(`{"material":"${id}","quantity":${parseInt(quantidade)}}`))
     document.getElementById(`select${id}`).checked = true
     document.getElementById(`quanti${id}`).value = parseInt(quantidade)
   }
@@ -217,20 +218,25 @@ function adicionarIngredienteaoProduto(id, tipo, quantidade) {
 
 //funcao responsavel por remover um ingrediente do produto
 function removerIngredientedoProduto(id) {
-  let indice = VETORDEINGREDIENTESCLASSEPRODUTO.findIndex((element) => element.id_ingrediente == id)
+  let indice = VETORDEINGREDIENTESCLASSEPRODUTO.findIndex((element) => element.material == id)
   VETORDEINGREDIENTESCLASSEPRODUTO.splice(indice, 1);
 }
 
 //funcao reposanvel por cadastrar um produto
 async function cadastrarProduto() {
   try {
-    let json = `{"name":"${$('#nomeproduto').val()}",
-    "description":"${$('#descricaoproduto').val()}",
-    "price":${$('#precovenda').val()},
-    "cost":${$('#precocusto').val()},
-    "stock":${parseInt($('#quantidadeproduto').val())}}`;
+    let json = `{
+        "name":"${$('#nomeproduto').val()}",
+        "description":"${$('#descricaoproduto').val()}",
+        "price":${$('#precovenda').val()},
+        "ingredients":[]
+      }`;
 
-    await requisicaoPOST('products', JSON.parse(json));
+    json = JSON.parse(json)
+    json.ingredients = VETORDEINGREDIENTESCLASSEPRODUTO;
+
+
+    await requisicaoPOST('products', json);
     $('#modalClasseProduto').modal('hide');
     mensagemDeAviso('Produto cadastrado com sucesso!')
   } catch (error) {
@@ -247,10 +253,11 @@ async function atualizarProduto(id) {
   try {
     dado[0].name = document.getElementById('nomeproduto').value;
     dado[0].description = document.getElementById('descricaoproduto').value;
-    dado[0].cost = document.getElementById('precocusto').value;
     dado[0].price = document.getElementById('precovenda').value;
-    dado[0].stock = document.getElementById('quantidadeproduto').value;
+    dado[0].ingredients = VETORDEINGREDIENTESCLASSEPRODUTO;
     delete dado[0]._id;
+    delete dado[0].cost
+    delete dado[0].stock
     delete dado[0].updatedAt;
     delete dado[0].createdAt;
     delete dado[0].__v;
@@ -287,6 +294,7 @@ async function excluirProduto(id) {
 //funcao responsavel por reiniciar classe produto
 function reiniciarClasseProduto() {
   VETORDEPRODUTOSCLASSEPRODUTO = []
+  VETORDEINGREDIENTESCLASSEPRODUTO = []
   telaDeBuscarProduto();
   document.getElementById('modal').innerHTML = ''
   document.getElementById('modal2').innerHTML = ''

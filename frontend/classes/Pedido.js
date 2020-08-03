@@ -264,11 +264,27 @@ async function criarListagemDeBuscaDeClientes(tipo) {
           </thead>
           <tbody>`;
     json.data.forEach(function (item) {
-      codigoHTML += `<tr>
-                  <td class="table-light text-dark" title="${item.name}"><strong><span class="fas fa-user"></span> ${corrigirTamanhoString(15, item.name)}</strong></td>
-                  <td class="table-light"><strong><span class="fas fa-phone"></span> ${item.phone[0]}</strong></td>
-                  <td class="table-light text-center"><button onclick="preencherDadosPedidoIncluirDadosEmPedido('cliente','${item._id}');" type="button" class="btn btn-primary btn-sm"><span class="fas fa-check"></span></button></td>
-              </tr>`;
+      if ((!item.phone[0] && document.getElementById('telefonecliente'))) {
+        codigoHTML += `<tr>
+                  <td class="table-light text-dark" title="${item.name}"><strong><span class="fas fa-user"></span> ${corrigirTamanhoString(15, item.name)}</strong></td>`
+        if (item.phone[0]) {
+          codigoHTML += `<td class="table-light"><strong><span class="fas fa-phone"></span> ${item.phone[0]}</strong></td>`
+        } else {
+          codigoHTML += `<td class="table-light"><strong><span class="fas fa-phone"></span> Nenhum.</strong></td>`
+        }
+        codigoHTML += `<td class="table-light text-center" title="Não é possível enviar pedidos para clientes sem endereço!"><button  type="button" class="btn btn-danger btn-sm" disabled><span class="fas fa-ban"></span></button></td>
+                </tr>`;
+      } else {
+        codigoHTML += `<tr>
+                  <td class="table-light text-dark" title="${item.name}"><strong><span class="fas fa-user"></span> ${corrigirTamanhoString(15, item.name)}</strong></td>`
+        if (item.phone[0]) {
+          codigoHTML += `<td class="table-light"><strong><span class="fas fa-phone"></span> ${item.phone[0]}</strong></td>`
+        } else {
+          codigoHTML += `<td class="table-light"><strong><span class="fas fa-phone"></span> Nenhum.</strong></td>`
+        }
+        codigoHTML += `<td class="table-light text-center" title="Selecionar cliente!"><button onclick="preencherDadosPedidoIncluirDadosEmPedido('cliente','${item._id}');" type="button" class="btn btn-primary btn-sm"><span class="fas fa-check"></span></button></td>
+                </tr>`;
+      }
     });
     codigoHTML += `</tbody>
       </table>`;
@@ -338,7 +354,7 @@ async function criarListagemDeBuscaDeProduto(tipo) {
               <tr>
                   <th scope="col">Nome</th>
                   <th scope="col">Preço</th>
-                  <th scope="col">Estoque</th>
+                  <th scope="col">Descrição</th>
                   <th scope="col">Quantidade</th>
                   <th scope="col">Selecionar</th>
               </tr>
@@ -347,13 +363,9 @@ async function criarListagemDeBuscaDeProduto(tipo) {
     json.data.forEach(function (item) {
       codigoHTML += `<tr>
                   <td class="table-light col-2" title="${item.name}"><strong><span class="fas fa-hamburger"></span> ${corrigirTamanhoString(15, item.name)}</strong></td>
-                  <td class="table-light text-danger"><strong>R$${(parseFloat(item.price)).toFixed(2)}</strong></td>`
-      if (parseInt(item.stock) > 5) {
-        codigoHTML += `<td class="table-success text-center"><strong>${parseInt(item.stock)}</strong></td>`
-      } else {
-        codigoHTML += `<td class="table-danger text-center"><strong>${parseInt(item.stock)}</strong></td>`
-      }
-      codigoHTML += `<td class="table-light"><input id="quantidadeProduto${item._id}" type="Number" class="form-control form-control-sm" value=1></td>
+                  <td class="table-light text-danger"><strong>R$${(parseFloat(item.price)).toFixed(2)}</strong></td>
+                  <td class="table-light text-center" title="${item.description}"><strong>${corrigirTamanhoString(20, item.description)}</strong></td>
+                  <td class="table-light"><input id="quantidadeProduto${item._id}" type="Number" class="form-control form-control-sm" value=1></td>
                   <td class="table-light text-center"><button onclick="if(validaDadosCampo(['#quantidadeProduto${item._id}']) && validaValoresCampo(['#quantidadeProduto${item._id}'])){preencherDadosPedidoIncluirDadosEmPedido('produto','${item._id}', quantidadeProduto${item._id}.value );}else{mensagemDeErroModal('Preencha o campo quantidade com um valor válido!'); mostrarCamposIncorreto(['quantidadeProduto${item._id}']);}" type="button" class="btn btn-primary btn-sm"><span class="fas fa-check"></span> </button></td>
               </tr>`;
     });
@@ -459,7 +471,7 @@ async function criarListagemDeBuscaDeMotoboy(tipo) {
         codigoHTML += `<td class="table-light text-center"><button onclick="preencherDadosPedidoIncluirDadosEmPedido('motoboy','${item._id}');" type="button" class="btn btn-primary btn-sm"><span class="fas fa-check"></span> </button></td>`;
       } else {
         codigoHTML += `<td class="table-light"><strong><span class="badge badge-danger">Ocupado</span></strong></td>`;
-        codigoHTML += `<td class="table-light text-center"><button onclick="preencherDadosPedidoIncluirDadosEmPedido('motoboy','${item._id}');" type="button" class="btn btn-primary btn-sm" disabled><span class="fas fa-check"></span> </button></td>`;
+        codigoHTML += `<td class="table-light text-center"><button onclick="preencherDadosPedidoIncluirDadosEmPedido('motoboy','${item._id}');" type="button" class="btn btn-danger btn-sm"><span class="fas fa-check"></span> </button></td>`;
       }
       codigoHTML += `</tr>`;
     });
@@ -610,7 +622,7 @@ function listaDePedidosAbertosParaPagamento(json) {
         <td class="table-warning text-dark"><strong><span class="fas fa-sticky-note"></span> ${json.identification}</strong></td>
         <td class="table-warning" title="${json.client.name}"><strong>${corrigirTamanhoString(15, json.client.name)}</strong></td>
         <td class="table-warning text-danger"><strong>R$${(parseFloat(json.total)).toFixed(2)}</strong></td>`
-  if (json.deliveryman.name) {
+  if (json.deliveryman) {
     codigoHTML += `<td class="table-warning" title="${json.deliveryman.name}">${corrigirTamanhoString(15, json.deliveryman.name)}</td>`
   } else {
     codigoHTML += `<td class="table-warning">Retirada local</td>`
@@ -713,7 +725,7 @@ async function cadastrarPedido() {
 
     reImprimirPedido(result.data._id);
     $('#modalCriarPedidoClassePedido').modal('hide');
-    if (result.data.deliveryman._id) {
+    if (result.data.deliveryman) {
       modalEnviaMotoboyEntrega(result.data.deliveryman._id)
     }
     inicializarVariaveisClassePedido();
@@ -779,9 +791,11 @@ async function excluirPedido(id) {
     let result = await requisicaoGET(`orders`)
     let order = result.data.find(element => element._id == id)
     await requisicaoDELETE(`orders/${id}`, '');
-    let result2 = await requisicaoGET(`orders/deliveryman/${order.deliveryman._id}`)
-    if (result2.data.length == 0) {
-      await requisicaoPUT(`deliverymans/${order.deliveryman._id}`, { "available": false, "hasDelivery": false, "name": order.deliveryman.name, "phone": order.deliveryman.phone })
+    if (order.deliveryman) {
+      let result2 = await requisicaoGET(`orders/deliveryman/${order.deliveryman._id}`)
+      if (result2.data.length == 0) {
+        await requisicaoPUT(`deliverymans/${order.deliveryman._id}`, { "available": false, "hasDelivery": false, "name": order.deliveryman.name, "phone": order.deliveryman.phone })
+      }
     }
 
     mensagemDeAviso('Pedido excluído com sucesso!')
