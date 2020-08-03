@@ -74,7 +74,7 @@ async function gerarGraficoLucroTotalPeriodico() {
         {
           name: 'Valor Bruto',
           color: 'rgba(248,161,63,1)',
-          data: [json.data.total],
+          data: [parseFloat(json.data.total)],
           tooltip: {
             valuePrefix: 'R$',
             valueSuffix: ' (reais)',
@@ -86,7 +86,7 @@ async function gerarGraficoLucroTotalPeriodico() {
         {
           name: 'Valor Líquido',
           color: 'rgba(186,60,61,.9)',
-          data: [json.data.netValue],
+          data: [parseFloat(json.data.netValue)],
           tooltip: {
             valuePrefix: 'R$',
             valueSuffix: ' (reais)',
@@ -111,8 +111,8 @@ async function gerarGraficoGastoseGanhosSobreproduto() {
     let categoria = [], vetorLucro = [], vetorDispesa = [], json = await requisicaoGET('reports/products/dispense_gain')
 
     json.data.forEach(function (item) {
-      vetorLucro.push(item.gain)
-      vetorDispesa.push(item.dispense)
+      vetorLucro.push(parseFloat(item.gain))
+      vetorDispesa.push(parseFloat(item.dispense))
       categoria.push(item._id.name)
     });
 
