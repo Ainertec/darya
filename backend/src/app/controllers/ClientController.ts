@@ -39,6 +39,13 @@ class ClientController {
     return response.json(clients);
   }
 
+  async showByPhone(request: Request, response: Response) {
+    const { phone } = request.params;
+
+    const clients = await Client.find({ phone: { $in: [phone] } }).populate('address.district');
+    return response.json(clients);
+  }
+
   async store(request: Request, response: Response) {
     const { name, address, phone } = request.body;
 

@@ -49,9 +49,9 @@ describe('Teste a printer', () => {
       id: order.id,
     });
     expect(response.status).toBe(200);
-    // setTimeout(async () => {
-    //   await fs.unlinkSync(path.resolve(__dirname, '..', 'recipes', `${order._id}.rtf`));
-    // }, 1000);
+    setTimeout(async () => {
+      await fs.unlinkSync(path.resolve(__dirname, '..', 'recipes', `${order._id}.rtf`));
+    }, 1000);
   });
 
   it('Should print a recipe without deliveryman', async () => {
