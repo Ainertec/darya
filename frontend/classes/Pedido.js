@@ -582,35 +582,35 @@ function removerProdutoDaTabelaeVetor(id) {
 
 //funcao responsavel por atualizar os dados do pedido
 async function atualizarDadoPedido(id) {
-  //try {
+  try {
 
-  let dado = VETORDEPEDIDOSCLASSEPEDIDO.find((element) => element._id == id);
+    let dado = VETORDEPEDIDOSCLASSEPEDIDO.find((element) => element._id == id);
 
-  if (dado.deliveryman && dado.address) {
-    await telaModalDeCriacaoDePedido('atualizar', true);
-  } else {
-    await telaModalDeCriacaoDePedido('atualizar', false);
-  }
-  await navegacaoModalDeCriacao(5);
+    if (dado.deliveryman && dado.address) {
+      await telaModalDeCriacaoDePedido('atualizar', true);
+    } else {
+      await telaModalDeCriacaoDePedido('atualizar', false);
+    }
+    await navegacaoModalDeCriacao(5);
 
-  await preencherDadosPedidoIncluirDadosEmPedido('cliente', dado.client.client_id, null);
-  if (dado.address) {
-    document.getElementById('enderecocliente').value = dado.address.client_address_id.toString();
-  }
-  dado.items.forEach(function (item) {
-    preencherDadosPedidoIncluirDadosEmPedido('produto', item.product._id, item.quantity);
-  });
-  if (dado.deliveryman) {
-    preencherDadosPedidoIncluirDadosEmPedido('motoboy', dado.deliveryman._id, null);
-  }
+    await preencherDadosPedidoIncluirDadosEmPedido('cliente', dado.client.client_id, null);
+    if (dado.address) {
+      document.getElementById('enderecocliente').value = dado.address.client_address_id.toString();
+    }
+    dado.items.forEach(function (item) {
+      preencherDadosPedidoIncluirDadosEmPedido('produto', item.product._id, item.quantity);
+    });
+    if (dado.deliveryman) {
+      preencherDadosPedidoIncluirDadosEmPedido('motoboy', dado.deliveryman._id, null);
+    }
 
-  document.getElementById('formaPagamento').value = dado.payment;
-  document.getElementById('formaDeRequisicaoPedido').value = dado.source;
-  document.getElementById('observacao').value = dado.note;
-  document.getElementById('botaoAtualizarPedido').value = dado._id;
-  /*} catch (error) {
+    document.getElementById('formaPagamento').value = dado.payment;
+    document.getElementById('formaDeRequisicaoPedido').value = dado.source;
+    document.getElementById('observacao').value = dado.note;
+    document.getElementById('botaoAtualizarPedido').value = dado._id;
+  } catch (error) {
     mensagemDeErroModal('Não foi possível carregar os dados do pedido!')
-  }*/
+  }
 }
 
 //funcao responsavel por gerar a lista de pedidos abertos para pagamento
@@ -722,7 +722,7 @@ async function cadastrarPedido() {
 
     let result = await requisicaoPOST('orders', JSON.parse(json));
 
-    //reImprimirPedido(result.data._id);
+    reImprimirPedido(result.data._id);
     $('#modalCriarPedidoClassePedido').modal('hide');
     if (result.data.deliveryman) {
       modalEnviaMotoboyEntrega(result.data.deliveryman._id)

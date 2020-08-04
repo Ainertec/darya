@@ -264,7 +264,6 @@ async function gerarGraficoProdutosMaiseMenosVendidos() {
 
 //funcao responsavel por gerar a listagem de pedidos fechados
 function gerarListaDePedidosFechados(json) {
-  // const date = order.createdAt && format(jason.createdAt, 'dd/MM/yyyy HH:mm:ss');
   let codigoHTML = ``
 
   try {
@@ -287,9 +286,13 @@ function gerarListaDePedidosFechados(json) {
       const date = format(parseISO(item.createdAt), 'dd/MM/yyyy HH:mm:ss')
       codigoHTML += `<tr>
           <td><strong>${item.identification}</strong></td>
-          <td title="${item.client.name}"><strong>${corrigirTamanhoString(15, item.client.name)}</strong></td>
-          <td title="item.deliveryman.name"><strong>${corrigirTamanhoString(15, item.deliveryman.name)}</strong></td>
-          <td><strong>`
+          <td title="${item.client.name}"><strong>${corrigirTamanhoString(15, item.client.name)}</strong></td>`
+      if (item.deliveryman) {
+        codigoHTML += `<td title="${item.deliveryman.name}"><strong>${corrigirTamanhoString(15, item.deliveryman.name)}</strong></td>`
+      } else {
+        codigoHTML += `<td><strong>Retirada local.</strong></td>`
+      }
+      codigoHTML += `<td><strong>`
       item.items.forEach(function (item2) {
         codigoHTML += `(${corrigirTamanhoString(15, item2.product.name)}/${item2.quantity}),`
       });
