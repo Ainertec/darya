@@ -235,6 +235,9 @@ describe('should a Client', () => {
     await factory.create<ClientInterface>('Client', {
       name: 'Cleiton',
     });
+    await factory.create<ClientInterface>('Client', {
+      name: 'jaõ',
+    });
 
     const response = await request(app).get(`/clients/cle`);
 
@@ -259,7 +262,7 @@ describe('should a Client', () => {
       name: 'Jão Kleber',
     });
 
-    const response = await request(app).get(`/clients/phone/992726852`);
+    const response = await request(app).get(`/clients/99272`);
 
     expect(response.status).toBe(200);
 

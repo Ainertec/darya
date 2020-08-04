@@ -81,7 +81,6 @@ routes.delete('/districts/:id', celebrate({ params: paramId }), DistrictControll
 // Client
 routes.get('/clients', ClientController.index);
 routes.get('/clients/:name', celebrate({ params: paramName }), ClientController.show);
-routes.get('/clients/phone/:phone', ClientController.showByPhone);
 routes.post('/clients', celebrate({ body: client }), ClientController.store);
 routes.put(
   '/clients/:id',

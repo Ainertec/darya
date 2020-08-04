@@ -32,17 +32,17 @@ class ClientController {
 
   async show(request: Request, response: Response) {
     const { name } = request.params;
+
     const clients = await Client.find({
-      name: { $regex: new RegExp(name), $options: 'i' },
+      $or: [
+        {
+          phone: { $regex: new RegExp(name), $options: 'i' },
+        },
+        {
+          name: { $regex: new RegExp(name), $options: 'i' },
+        },
+      ],
     }).populate('address.district');
-
-    return response.json(clients);
-  }
-
-  async showByPhone(request: Request, response: Response) {
-    const { phone } = request.params;
-
-    const clients = await Client.find({ phone: { $in: [phone] } }).populate('address.district');
     return response.json(clients);
   }
 
