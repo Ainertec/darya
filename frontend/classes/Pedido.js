@@ -127,7 +127,6 @@ function telaModalDeCriacaoDePedido(tipo, enviarPedido) {
                                     <option value="Ifood">Ifood</option>
                                     <option value="Whatsapp">Whatsapp</option>
                                     <option value="Instagram">Instagram</option>
-                                    <option value="Pronta entrega">Pronta entrega</option>
                                 </select>
                             </div>
                             <div class="form-group">
