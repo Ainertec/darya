@@ -356,6 +356,7 @@ async function cadastrarCliente() {
         return {
           ...addressElement,
           _id: undefined,
+          district: addressElement.district._id
         };
       });
 
