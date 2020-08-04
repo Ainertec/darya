@@ -19,7 +19,7 @@ class PrinterController {
     items.map((item) => {
       products += `* ${item.product.name} --- R$${item.product.price.toFixed(2)}\nQtd.: ${
         item.quantity
-        }\n`;
+      }\n`;
     });
 
     return products;
@@ -75,28 +75,21 @@ class PrinterController {
     myDoc.writeText(`Data: ${date}`, contentStyle);
     myDoc.writeText('=========== Cliente ============', contentBorder);
     myDoc.writeText(`Nome: ${order.client.name}`, contentStyle);
-    myDoc.writeText(`Telefone: ${order.client.phone ? order.client.phone : 'Nenhum.'}`, contentStyle);
-    myDoc.writeText('========== Endereço ===========', contentBorder);
-    if (order.address.street) {
-      myDoc.writeText(`Rua: ${order.address.street}`, contentStyle);
-      myDoc.writeText(`Número: ${order.address.number}`, contentStyle);
-      myDoc.writeText(`Bairro: ${order.address.district_name}`, contentStyle);
-      myDoc.writeText(`Referência: ${order.address.reference}`, contentStyle);
-    } else {
-      myDoc.writeText(`Retirada local.`, contentStyle);
-    }
+    myDoc.writeText(`Telefone: ${order.client.phone}`, contentStyle);
+    order.address && myDoc.writeText('========== Endereço ===========', contentBorder);
+    order.address && myDoc.writeText(`Rua: ${order.address.street}`, contentStyle);
+    order.address && myDoc.writeText(`Número: ${order.address.number}`, contentStyle);
+    order.address && myDoc.writeText(`Bairro: ${order.address.district_name}`, contentStyle);
+    order.address && myDoc.writeText(`Referência: ${order.address.reference}`, contentStyle);
     myDoc.writeText('=========== Itens ============', contentBorder);
     myDoc.writeText(`${items}`, contentStyle);
     myDoc.writeText('========== Motoboy ===========', contentBorder);
-    if (order.deliveryman.name) {
-      myDoc.writeText(`Nome: ${order.deliveryman.name}`, contentStyle);
-      myDoc.writeText(`Telefone: ${order.deliveryman.phone}`, contentStyle);
+    order.deliveryman && myDoc.writeText(`Nome: ${order.deliveryman.name}`, contentStyle);
+    order.deliveryman && myDoc.writeText(`Telefone: ${order.deliveryman.phone}`, contentStyle);
+    order.address &&
       myDoc.writeText(`Taxa: R$${order.address.district_rate.toFixed(2)}`, contentStyle);
-    } else {
-      myDoc.writeText(`Retirada local.`, contentStyle);
-    }
     myDoc.writeText('========== Observação =========', contentBorder);
-    myDoc.writeText(`- ${order.note}`, contentStyle);
+    order.note && myDoc.writeText(`- ${order.note}`, contentStyle);
     myDoc.writeText('========= Valor total =========', contentBorder);
     myDoc.writeText(`Valor total: R$${order.total.toFixed(2)}`, contentStyle);
 
