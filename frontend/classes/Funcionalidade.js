@@ -128,3 +128,41 @@ function mostrarCamposIncorreto(campo) {
     }, 2000);
   });
 }
+
+//funcao responsavel por gerar a tela de aguarde o carregamento
+let timerCarregador;
+function aguardeCarregamento(tipo) {
+  let contCarregador = 0, codigoHTML = `<div style="background-color: rgba(0, 0, 0, 0.8); position: absolute; height: 99.2vh; width: 100vw; z-index:1055; border-radius:10px;">
+      <h5 class="text-center text-light">
+        <img src="./img/loading.gif" class="rounded mx-auto d-block" style="height: 40px; width: 40px; margin-top: 48vh;">
+        Aguarde...
+      </h5>
+    <div>`
+
+  if (tipo) {
+    document.getElementById('carregamento').innerHTML = codigoHTML;
+    clearInterval(timerCarregador);
+    timerCarregador = setInterval(function () {
+      contCarregador++;
+
+      if (contCarregador > 3) {
+        codigoHTML = `<div style="background-color: rgba(0, 0, 0, 0.8); position: absolute; height: 99.2vh; width: 100vw; z-index:1055; border-radius:10px;">
+            <h5 class="text-center text-light" style="margin-top: 48vh;">
+              Ops... Ouve algum problema! Tente novamente.
+            </h5>
+            <h6 class="text-center text-light">
+              Aguarde 10 segundos para tentar novemante.
+            </h6>
+          <div>`
+
+        document.getElementById('carregamento').innerHTML = codigoHTML;
+
+        setTimeout(function () { document.getElementById('carregamento').innerHTML = '' }, 10000)
+      }
+
+    }, 1000)
+  } else {
+    clearInterval(timerCarregador);
+    setTimeout(function () { document.getElementById('carregamento').innerHTML = ''; }, 300)
+  }
+}
