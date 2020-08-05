@@ -235,8 +235,34 @@ describe('should a Client', () => {
     await factory.create<ClientInterface>('Client', {
       name: 'Cleiton',
     });
+    await factory.create<ClientInterface>('Client', {
+      name: 'jaõ',
+    });
 
     const response = await request(app).get(`/clients/cle`);
+
+    expect(response.status).toBe(200);
+
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: 'Cleiton',
+        }),
+      ])
+    );
+  });
+
+  it('should list all clients by phone', async () => {
+    await factory.createMany<ClientInterface>('Client', 4);
+    await factory.create<ClientInterface>('Client', {
+      name: 'Cleiton',
+      phone: ['992865120', '992726852'],
+    });
+    await factory.create<ClientInterface>('Client', {
+      name: 'Jão Kleber',
+    });
+
+    const response = await request(app).get(`/clients/99272`);
 
     expect(response.status).toBe(200);
 

@@ -2,8 +2,9 @@ import { Request, Response } from 'express';
 import { Types } from 'mongoose';
 import { startOfDay, endOfDay, sub } from 'date-fns';
 import Order from '../models/Order';
-import Product from '../models/Product';
 import { ProductInterface } from '../../interfaces/base';
+
+import { OrdersProfitUseCase } from '../useCases/Report/OrdersProfit/ordersProfitUseCase';
 
 interface InterfaceDispenseAndGain {
   _id: ProductInterface;
@@ -50,40 +51,11 @@ class ReportController {
   }
 
   async ordersProfit(request: Request, response: Response) {
-    const initial = startOfDay(new Date());
-    const final = endOfDay(new Date());
+    const orderProfitUseCase = new OrdersProfitUseCase(Order);
 
-    const ordersProfit = await Order.find({
-      createdAt: { $gte: initial, $lte: final },
-      finished: true,
-    })
-      .populate('items.product')
-      .populate('deliveryman');
+    const ordersProfitReturn = await orderProfitUseCase.excute();
 
-    const totalOrders = ordersProfit.reduce((sum, order) => {
-      return sum + order.total;
-    }, 0);
-
-    const totalRate = ordersProfit.reduce((sum, order) => {
-      return sum + (order.address ? order.address.district_rate : 0);
-    }, 0);
-
-    const totalProducts = ordersProfit.reduce((sum, order) => {
-      return (
-        sum +
-        order.items.reduce((sum, item) => {
-          return sum + item.product?.cost * item.quantity;
-        }, 0)
-      );
-    }, 0);
-
-    const filteredTotal = totalOrders - (totalProducts + totalRate);
-
-    return response.json({
-      orders: ordersProfit,
-      total: totalOrders.toFixed(2),
-      netValue: filteredTotal.toFixed(2),
-    });
+    return response.json(ordersProfitReturn);
   }
 
   async productsDispenseAndGain(request: Request, response: Response) {
