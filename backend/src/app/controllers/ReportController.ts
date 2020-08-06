@@ -52,8 +52,9 @@ class ReportController {
 
   async ordersProfit(request: Request, response: Response) {
     const orderProfitUseCase = new OrdersProfitUseCase(Order);
-
-    const ordersProfitReturn = await orderProfitUseCase.excute();
+    const test = ""
+    
+    const ordersProfitReturn = await orderProfitUseCase.execute();
 
     return response.json(ordersProfitReturn);
   }
