@@ -1,125 +1,50 @@
 import { Request, Response } from 'express';
-import { Types } from 'mongoose';
-import { startOfDay, endOfDay, sub } from 'date-fns';
+import { sub } from 'date-fns';
 import Order from '../models/Order';
-import { ProductInterface } from '../../interfaces/base';
 
 import { OrdersProfitUseCase } from '../useCases/Report/OrdersProfit/ordersProfitUseCase';
-
-interface InterfaceDispenseAndGain {
-  _id: ProductInterface;
-  dispense: number;
-  gain: number;
-}
+import { DeliverymanPaymentUseCase } from '../useCases/Report/OrdersProfit/deliverymanPaymentUseCase';
+import { ProductDispenseAndGainUseCase } from '../useCases/Report/OrdersProfit/productDispenseAndGainUseCase';
+import { ProductAmountUseCase } from '../useCases/Report/OrdersProfit/productsAmountUseCase';
+import { FinishedOrdersUseCase } from '../useCases/Report/OrdersProfit/finishedOrdersUseCase';
 
 class ReportController {
   async deliverymanPayment(request: Request, response: Response) {
-    const deliveryman_id = String(request.params.deliveryman_id);
-    const initial = startOfDay(new Date());
-    const final = endOfDay(new Date());
-    const ObjectId = Types.ObjectId;
+    const deliverymanPaymentUseCase = new DeliverymanPaymentUseCase(Order);
+    const payment = await deliverymanPaymentUseCase.execute(
+      request.params.deliveryman_id,
+    );
 
-    const deliveryRate = await Order.aggregate()
-      .match({
-        deliveryman: ObjectId(deliveryman_id),
-        createdAt: { $gte: initial, $lte: final },
-        finished: true,
-      })
-      .group({
-        _id: '$deliveryman',
-        rate: { $sum: '$address.district_rate' },
-      });
-
-    return response.json(deliveryRate);
+    return response.json(payment);
   }
 
   async allFinishedOrdersByDeliveryman(request: Request, response: Response) {
-    const { deliveryman_id } = request.params;
-    const initial = startOfDay(new Date());
-    const final = endOfDay(new Date());
-    const ObjectId = Types.ObjectId;
-
-    const orders = await Order.find({
-      deliveryman: ObjectId(deliveryman_id),
-      createdAt: { $gte: initial, $lte: final },
-      finished: true,
-    })
-      .populate('deliveryman')
-      .populate('items.product');
-
-    return response.json(orders);
+    const finishedOrdersInstance = new FinishedOrdersUseCase(Order);
+    const finishedOrders = await finishedOrdersInstance.execute(
+      request.params.deliveryman_id,
+    );
+    return response.json(finishedOrders);
   }
 
   async ordersProfit(request: Request, response: Response) {
     const orderProfitUseCase = new OrdersProfitUseCase(Order);
-    const test = ""
-    
+
     const ordersProfitReturn = await orderProfitUseCase.execute();
 
     return response.json(ordersProfitReturn);
   }
 
   async productsDispenseAndGain(request: Request, response: Response) {
-    const orders = await Order.aggregate<InterfaceDispenseAndGain>()
-      .match({
-        finished: true,
-      })
-      .unwind('items')
-      .lookup({
-        from: 'products',
-        localField: 'items.product',
-        foreignField: '_id',
-        as: 'products',
-      })
-      .unwind('products')
-      .group({
-        _id: {
-          id: '$products._id',
-          name: '$products.name',
-          description: '$products.description',
-          price: '$products.price',
-          cost: '$products.cost',
-          stock: '$products.stock',
-        },
-        gain: { $sum: { $multiply: ['$products.price', '$items.quantity'] } },
-        dispense: { $sum: { $multiply: ['$products.cost', '$items.quantity'] } },
-      });
-    const filteredOrders = orders.map((order) => {
-      return {
-        ...order,
-        gain: order.gain.toFixed(2),
-        dispense: order.dispense.toFixed(2),
-      };
-    });
-    return response.json(filteredOrders);
+    const dispenseAndGain = new ProductDispenseAndGainUseCase(Order);
+    const productDispenseAndGain = await dispenseAndGain.execute();
+
+    return response.json(productDispenseAndGain);
   }
 
   async productsAmount(request: Request, response: Response) {
-    const productsAmount = await Order.aggregate()
-      .match({
-        finished: true,
-      })
-      .unwind('items')
-      .lookup({
-        from: 'products',
-        localField: 'items.product',
-        foreignField: '_id',
-        as: 'products',
-      })
-      .unwind('products')
-      .group({
-        _id: {
-          id: '$products._id',
-          name: '$products.name',
-          description: '$products.description',
-          price: '$products.price',
-          cost: '$products.cost',
-          stock: '$products.stock',
-        },
-        amount: { $sum: '$items.quantity' },
-      });
-
-    return response.json(productsAmount);
+    const productAmountInstance = new ProductAmountUseCase(Order);
+    const amount = await productAmountInstance.execute();
+    return response.json(amount);
   }
 
   public async delete(req: Request, res: Response) {

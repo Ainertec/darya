@@ -1,5 +1,5 @@
 import { Model } from 'mongoose';
-import { startOfDay, endOfDay, sub } from 'date-fns';
+import { startOfDay, endOfDay } from 'date-fns';
 import { OrderInterface } from '../../../../interfaces/base';
 
 export class OrdersProfitUseCase {
@@ -8,7 +8,6 @@ export class OrdersProfitUseCase {
   public async execute() {
     const initial = startOfDay(new Date());
     const final = endOfDay(new Date());
-    const ola = 'hai';
 
     const ordersProfit = await this.OrderModel.find({
       createdAt: { $gte: initial, $lte: final },
