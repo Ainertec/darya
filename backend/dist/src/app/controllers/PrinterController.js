@@ -43,7 +43,6 @@ var Order_1 = __importDefault(require("../models/Order"));
 var path_1 = __importDefault(require("path"));
 var fs_1 = __importDefault(require("fs"));
 var jsrtf_1 = __importDefault(require("jsrtf"));
-// import '../../@types/jsrtf.d.ts'
 var date_fns_1 = require("date-fns");
 var shelljs_1 = require("shelljs");
 var PrinterController = /** @class */ (function () {
@@ -110,16 +109,23 @@ var PrinterController = /** @class */ (function () {
                         myDoc.writeText('=========== Cliente ============', contentBorder);
                         myDoc.writeText("Nome: " + order.client.name, contentStyle);
                         myDoc.writeText("Telefone: " + order.client.phone, contentStyle);
-                        order.address && myDoc.writeText('========== Endereço ===========', contentBorder);
-                        order.address && myDoc.writeText("Rua: " + order.address.street, contentStyle);
-                        order.address && myDoc.writeText("N\u00FAmero: " + order.address.number, contentStyle);
-                        order.address && myDoc.writeText("Bairro: " + order.address.district_name, contentStyle);
-                        order.address && myDoc.writeText("Refer\u00EAncia: " + order.address.reference, contentStyle);
+                        order.address &&
+                            myDoc.writeText('========== Endereço ===========', contentBorder);
+                        order.address &&
+                            myDoc.writeText("Rua: " + order.address.street, contentStyle);
+                        order.address &&
+                            myDoc.writeText("N\u00FAmero: " + order.address.number, contentStyle);
+                        order.address &&
+                            myDoc.writeText("Bairro: " + order.address.district_name, contentStyle);
+                        order.address &&
+                            myDoc.writeText("Refer\u00EAncia: " + order.address.reference, contentStyle);
                         myDoc.writeText('=========== Itens ============', contentBorder);
                         myDoc.writeText("" + items, contentStyle);
                         myDoc.writeText('========== Motoboy ===========', contentBorder);
-                        order.deliveryman && myDoc.writeText("Nome: " + order.deliveryman.name, contentStyle);
-                        order.deliveryman && myDoc.writeText("Telefone: " + order.deliveryman.phone, contentStyle);
+                        order.deliveryman &&
+                            myDoc.writeText("Nome: " + order.deliveryman.name, contentStyle);
+                        order.deliveryman &&
+                            myDoc.writeText("Telefone: " + order.deliveryman.phone, contentStyle);
                         order.address &&
                             myDoc.writeText("Taxa: R$" + order.address.district_rate.toFixed(2), contentStyle);
                         myDoc.writeText('========== Observação =========', contentBorder);

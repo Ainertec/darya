@@ -116,6 +116,16 @@ describe('Teste a printer', function () {
                 case 3:
                     response = _a.sent();
                     expect(response.status).toBe(200);
+                    setTimeout(function () { return __awaiter(void 0, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, fs_1.default.unlinkSync(path_1.default.resolve(__dirname, '..', 'recipes', order._id + ".rtf"))];
+                                case 1:
+                                    _a.sent();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); }, 1000);
                     return [2 /*return*/];
             }
         });

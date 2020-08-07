@@ -5,11 +5,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 require("dotenv/config");
 var express_1 = __importDefault(require("express"));
+var cors_1 = __importDefault(require("cors"));
 var celebrate_1 = require("celebrate");
 var routes_1 = __importDefault(require("./routes"));
 var mongoose_1 = __importDefault(require("mongoose"));
 var app = express_1.default();
-// app.use(cors());
+app.use(cors_1.default());
 app.use(express_1.default.json());
 if (!(process.env.NODE_ENV === 'test'))
     mongoose_1.default.connect("" + process.env.DB_URL, {

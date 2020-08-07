@@ -341,8 +341,44 @@ describe('should a Client', function () {
                         })];
                 case 2:
                     _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/clients/cle")];
+                    return [4 /*yield*/, factories_1.default.create('Client', {
+                            name: 'jaõ',
+                        })];
                 case 3:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/clients/cle")];
+                case 4:
+                    response = _a.sent();
+                    expect(response.status).toBe(200);
+                    expect(response.body).toEqual(expect.arrayContaining([
+                        expect.objectContaining({
+                            name: 'Cleiton',
+                        }),
+                    ]));
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('should list all clients by phone', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, factories_1.default.createMany('Client', 4)];
+                case 1:
+                    _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Client', {
+                            name: 'Cleiton',
+                            phone: ['992865120', '992726852'],
+                        })];
+                case 2:
+                    _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Client', {
+                            name: 'Jão Kleber',
+                        })];
+                case 3:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/clients/99272")];
+                case 4:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     expect(response.body).toEqual(expect.arrayContaining([

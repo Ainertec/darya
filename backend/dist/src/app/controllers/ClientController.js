@@ -93,7 +93,14 @@ var ClientController = /** @class */ (function () {
                     case 0:
                         name = request.params.name;
                         return [4 /*yield*/, Client_1.default.find({
-                                name: { $regex: new RegExp(name), $options: 'i' },
+                                $or: [
+                                    {
+                                        phone: { $regex: new RegExp(name), $options: 'i' },
+                                    },
+                                    {
+                                        name: { $regex: new RegExp(name), $options: 'i' },
+                                    },
+                                ],
                             }).populate('address.district')];
                     case 1:
                         clients = _a.sent();
