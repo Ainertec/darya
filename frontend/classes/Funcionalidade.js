@@ -40,7 +40,7 @@ function mensagemDeAviso(mensagem) {
 function limparTelaDeMensagem() {
   setTimeout(function () {
     $('#mensagemDeErro').animate({ width: 'hide' });
-  }, 3000);
+  }, 5000);
 }
 
 //funcao para limpar a tela de mensagens do modal
@@ -156,6 +156,7 @@ function aguardeCarregamento(tipo) {
           <div>`
 
         document.getElementById('carregamento').innerHTML = codigoHTML;
+        clearInterval(timerCarregador);
 
         setTimeout(function () { document.getElementById('carregamento').innerHTML = '' }, 10000)
       }

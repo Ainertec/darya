@@ -52,7 +52,9 @@ function gerarListaDeProdutos(json) {
 
 //funcao responsavel por gerar o modal de cadastrar/atualizar/remover produto
 async function modalTelaCadastrarouAtualizarProduto(tipo) {
+  await aguardeCarregamento(true);
   let codigoHTML = ``, json = await requisicaoGET(`ingredients`);
+  await aguardeCarregamento(false);
 
   codigoHTML += `<div class="modal fade" id="modalClasseProduto" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-scrollable">
@@ -142,9 +144,13 @@ async function buscarDadosProduto(tipo) {
 
   try {
     if (tipo == 'nome') {
+      await aguardeCarregamento(true);
       json = await requisicaoGET(`products/${document.getElementById('nome').value}`);
+      await aguardeCarregamento(false);
     } else if (tipo == 'todos') {
+      await aguardeCarregamento(true);
       json = await requisicaoGET(`products`);
+      await aguardeCarregamento(false);
     }
 
     codigoHTML += `<h5 class="text-center" style="margin-top:80px">Listagem de produtos</h5>
@@ -236,9 +242,11 @@ async function cadastrarProduto() {
     json.ingredients = VETORDEINGREDIENTESCLASSEPRODUTO;
 
 
+    await aguardeCarregamento(true);
     await requisicaoPOST('products', json);
+    await aguardeCarregamento(false);
     $('#modalClasseProduto').modal('hide');
-    mensagemDeAviso('Produto cadastrado com sucesso!')
+    await mensagemDeAviso('Produto cadastrado com sucesso!')
   } catch (error) {
     mensagemDeErro('Não foi possível cadastrar o produto!')
   }
@@ -262,32 +270,36 @@ async function atualizarProduto(id) {
     delete dado[0].createdAt;
     delete dado[0].__v;
 
+    await aguardeCarregamento(true);
     await requisicaoPUT(`products/${id}`, dado[0]);
-    mensagemDeAviso('Produto atualizado com sucesso!')
+    await aguardeCarregamento(false);
+    await mensagemDeAviso('Produto atualizado com sucesso!')
   } catch (error) {
     mensagemDeErro('Não foi possível atualizar o produto!')
   }
 
   if (validaDadosCampo(['#nome'])) {
-    buscarDadosProduto('nome');
+    await buscarDadosProduto('nome');
   } else {
-    buscarDadosProduto('todos');
+    await buscarDadosProduto('todos');
   }
 }
 
 //funcao responsavel por excuir um produto
 async function excluirProduto(id) {
   try {
+    await aguardeCarregamento(true);
     await requisicaoDELETE(`products/${id}`, '');
-    mensagemDeAviso('Produto excluído com sucesso!')
+    await aguardeCarregamento(false);
+    await mensagemDeAviso('Produto excluído com sucesso!')
   } catch (error) {
     mensagemDeErro('Não foi possível excluir o produto!')
   }
 
   if (validaDadosCampo(['#nome'])) {
-    buscarDadosProduto('nome');
+    await buscarDadosProduto('nome');
   } else {
-    buscarDadosProduto('todos');
+    await buscarDadosProduto('todos');
   }
 }
 

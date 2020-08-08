@@ -14,7 +14,7 @@ function telaDeBuscarCliente() {
   codigoHTML += `<h4 class="text-center"><span class="fas fa-user"></span> Buscar Cliente</h4>
                     <div class="card-deck col-4 mx-auto d-block">
                         <div class="input-group mb-3">
-                            <input id="nome" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do cliente">
+                            <input id="nome" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do cliente ou telefone">
                             <button onclick="if(validaDadosCampo(['#nome'])){buscarDadosCliente('nome');}else{mensagemDeErro('Preencha o campo nome do cliente!'); mostrarCamposIncorreto(['nome']);}" type="button" class="btn btn-outline-info btn-sm">
                                 <span class="fas fa-search"></span> Buscar
                             </button>
@@ -88,13 +88,38 @@ async function modalTelaCadastrarouAtualizarCliente(tipo) {
                                     <label for="nomecliente">Nome:</label>
                                     <input type="text" class="form-control" id="nomecliente" placeholder="Nome do cliente">
                                 </div>
-                                <div id="botaoadicionartelefoneendereco">
-                                  <div class="custom-control custom-switch">
-                                    <input type="checkbox" onclick="this.checked? $('#areatelefoneendereco').fadeIn(10) : $('#areatelefoneendereco').fadeOut(10) " class="custom-control-input custom-switch" id="botaoSelectClientephoneaddress">
-                                    <label class="custom-control-label" for="botaoSelectClientephoneaddress">Adicionar Telefone e Endereço</label>
+                                <table class="table table-sm col-12 mx-auto" style="margin-top:80px">
+                                  <thead class="thead-dark">
+                                      <tr>
+                                          <th scope="col">Telefone</th>
+                                          <th scope="col">Excluir</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody id="tabelatelefone">
+                                      
+                                  </tbody>
+                                </table>
+
+                                <div class="form-group">
+                                  <label for="telefonecliente">Telefone:</label>
+                                  <div class="input-group mb-3">
+                                      <input type="tel" class="form-control" id="telefonecliente" placeholder="Exemplo:(00) 00000-0000" aria-describedby="botaoadicionartelefone">
+                                      <div class="input-group-append">`;
+  if (tipo == 'cadastrar') {
+    codigoHTML += `<button onclick="if(validaDadosCampo(['#telefonecliente'])){adicionarDadosNaTabelaTelefoneeEndereco('telefone', '-1')}else{mensagemDeErroModal('Preencha o campo telefone!'); mostrarCamposIncorreto(['telefonecliente']);}" id="botaoadicionartelefone" class="btn btn-success" type="button"><span class="fas fa-plus"></span> Adicionar</button>`;
+  } else if (tipo == 'atualizar') {
+    codigoHTML += `<button onclick="if(validaDadosCampo(['#telefonecliente'])){adicionarDadosNaTabelaTelefoneeEndereco('telefone', this.value)}else{mensagemDeErroModal('Preencha o campo telefone!'); mostrarCamposIncorreto(['telefonecliente']);}" id="botaoadicionartelefone" class="btn btn-success" type="button"><span class="fas fa-plus"></span> Adicionar</button>`;
+  }
+  codigoHTML += `</div>
                                   </div>
                                 </div>
-                                <div id="areatelefoneendereco"></div>
+                                <div id="botaoadicionartelefoneendereco">
+                                  <div class="custom-control custom-switch">
+                                    <input type="checkbox" onclick="this.checked? $('#areaendereco').fadeIn(10) : $('#areaendereco').fadeOut(10) " class="custom-control-input custom-switch" id="botaoSelectClientephoneaddress">
+                                    <label class="custom-control-label" for="botaoSelectClientephoneaddress">Adicionar Endereço</label>
+                                  </div>
+                                </div>
+                                <div id="areaendereco"></div>
                             </form>
                         </div>
                         <div class="modal-footer">`;
@@ -113,43 +138,21 @@ async function modalTelaCadastrarouAtualizarCliente(tipo) {
                 </div>`;
 
   document.getElementById('modal2').innerHTML = codigoHTML;
-  await gerarTelaParteTelefoneEnderecoCliente(tipo);
+  await aguardeCarregamento(true);
+  await gerarTelaParteEnderecoCliente(tipo);
+  await aguardeCarregamento(false);
 
   $('#modalClasseCliente').modal('show');
-  $('#areatelefoneendereco').fadeOut(10);
+  $('#areaendereco').fadeOut(10);
 }
 
 //funcao responsavel por gerar a parte de telefone e endereco do cliente
-async function gerarTelaParteTelefoneEnderecoCliente(tipo) {
+async function gerarTelaParteEnderecoCliente(tipo) {
+  await aguardeCarregamento(true);
   let codigoHTML = ``, json = await requisicaoGET(`districts`);
+  await aguardeCarregamento(false);
 
   codigoHTML += `<table class="table table-sm col-12 mx-auto" style="margin-top:80px">
-                <thead class="thead-dark">
-                    <tr>
-                        <th scope="col">Telefone</th>
-                        <th scope="col">Excluir</th>
-                    </tr>
-                </thead>
-                <tbody id="tabelatelefone">
-                    
-                </tbody>
-              </table>
-
-              <div class="form-group">
-                <label for="telefonecliente">Telefone:</label>
-                <div class="input-group mb-3">
-                    <input type="tel" class="form-control" id="telefonecliente" placeholder="Exemplo:(00) 00000-0000" aria-describedby="botaoadicionartelefone">
-                    <div class="input-group-append">`;
-  if (tipo == 'cadastrar') {
-    codigoHTML += `<button onclick="if(validaDadosCampo(['#telefonecliente'])){adicionarDadosNaTabelaTelefoneeEndereco('telefone', '-1')}else{mensagemDeErroModal('Preencha o campo telefone!'); mostrarCamposIncorreto(['telefonecliente']);}" id="botaoadicionartelefone" class="btn btn-success" type="button"><span class="fas fa-plus"></span> Adicionar</button>`;
-  } else if (tipo == 'atualizar') {
-    codigoHTML += `<button onclick="if(validaDadosCampo(['#telefonecliente'])){adicionarDadosNaTabelaTelefoneeEndereco('telefone', this.value)}else{mensagemDeErroModal('Preencha o campo telefone!'); mostrarCamposIncorreto(['telefonecliente']);}" id="botaoadicionartelefone" class="btn btn-success" type="button"><span class="fas fa-plus"></span> Adicionar</button>`;
-  }
-  codigoHTML += `</div>
-                </div>
-              </div>
-
-              <table class="table table-sm col-12 mx-auto" style="margin-top:80px">
                 <thead class="thead-dark">
                     <tr>
                         <th scope="col">Rua</th>
@@ -194,7 +197,7 @@ async function gerarTelaParteTelefoneEnderecoCliente(tipo) {
                 </div>
               </div>`
 
-  document.getElementById('areatelefoneendereco').innerHTML = codigoHTML;
+  document.getElementById('areaendereco').innerHTML = codigoHTML;
 
 }
 
@@ -206,9 +209,13 @@ async function buscarDadosCliente(tipo) {
   VETORDECLIENTESCLASSECLIENTE = [];
   try {
     if (tipo == 'nome') {
+      await aguardeCarregamento(true);
       json = await requisicaoGET(`clients/${document.getElementById('nome').value}`);
+      await aguardeCarregamento(false);
     } else if (tipo == 'todos') {
+      await aguardeCarregamento(true);
       json = await requisicaoGET(`clients`);
+      await aguardeCarregamento(false);
     }
 
     codigoHTML += `<h5 class="text-center" style="margin-top:80px">Listagem de bairros</h5>
@@ -244,24 +251,27 @@ async function buscarDadosCliente(tipo) {
 
 //funcao responsavel por carregar os dados do cliente selecionado
 async function carregarDadosCliente(id) {
+  await aguardeCarregamento(true);
   await modalTelaCadastrarouAtualizarCliente('atualizar');
+  await aguardeCarregamento(false);
 
   try {
     let dado = VETORDECLIENTESCLASSECLIENTE.find((element) => element._id == id);
 
     document.getElementById('nomecliente').value = dado.name;
 
-    if (dado.phone[0] && dado.address[0]) {
+    dado.phone.forEach(function (item, indice) {
+      $('#tabelatelefone').append(`<tr id="linhatel${indice}">
+              <td class="table-warning"><span class="fas fa-phone"></span> ${item}</td>
+              <td class="table-warning"><button onclick="removerDadosNaTabelaTelefoneeEndereco('telefone', '${item}' ,'${id}', ${indice});" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span> Excluir</button></td>
+          </tr>`);
+    });
 
-      $('#areatelefoneendereco').fadeIn(10)
+    if (dado.address[0]) {
+
+      $('#areaendereco').fadeIn(10)
       document.getElementById('botaoSelectClientephoneaddress').checked = true;
 
-      dado.phone.forEach(function (item, indice) {
-        $('#tabelatelefone').append(`<tr id="linhatel${indice}">
-                <td class="table-warning"><span class="fas fa-phone"></span> ${item}</td>
-                <td class="table-warning"><button onclick="removerDadosNaTabelaTelefoneeEndereco('telefone', '${item}' ,'${id}', ${indice});" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span> Excluir</button></td>
-            </tr>`);
-      });
       dado.address.forEach(function (item, indice) {
         $('#tabelaendereco').append(`<tr id="linhaend${item._id}">
                 <td class="table-warning" title="${item.street}"><span class="fas fa-map-marker-alt"></span> ${corrigirTamanhoString(15, item.street)}</td>
@@ -308,7 +318,9 @@ async function adicionarDadosNaTabelaTelefoneeEndereco(tipo, id) {
       "number":"${document.getElementById('numerocasacliente').value}",
       "reference":"${document.getElementById('complementocliente').value}"}`)
     );
+    await aguardeCarregamento(true);
     let BAIRROCLIENTE = await requisicaoGET(`districts`);
+    await aguardeCarregamento(false);
     let bairro = BAIRROCLIENTE.data.find(
       (element) => element._id == document.getElementById('bairrocidadecliente').value
     );
@@ -349,46 +361,56 @@ function removerDadosNaTabelaTelefoneeEndereco(tipo, telefone, idCliente, posica
 async function cadastrarCliente() {
   try {
     let cliente = VETORDECLIENTESCLASSECLIENTE.find((element) => element._id == '-1');
-    if (cliente.phone[0] && cliente.address[0]) {
 
-      cliente.name = document.getElementById('nomecliente').value;
-      const addressSerialiazaded = cliente.address.map((addressElement) => {
-        return {
-          ...addressElement,
-          _id: undefined,
-          district: addressElement.district._id
-        };
-      });
+    if (cliente.phone[0]) {
+      if (cliente.address[0]) {
 
-      let result = await requisicaoPOST(`clients`, {
-        address: addressSerialiazaded,
-        phone: cliente.phone,
-        name: cliente.name,
-      });
+        cliente.name = document.getElementById('nomecliente').value;
+        const addressSerialiazaded = cliente.address.map((addressElement) => {
+          return {
+            ...addressElement,
+            _id: undefined,
+            district: addressElement.district._id
+          };
+        });
 
-      $('#modalClasseCliente').modal('hide');
+        await aguardeCarregamento(true);
+        let result = await requisicaoPOST(`clients`, {
+          address: addressSerialiazaded,
+          phone: cliente.phone,
+          name: cliente.name,
+        });
+        await aguardeCarregamento(false);
 
-      if (result == 400) {
-        mensagemDeErro('Atenção já existe um cliente com os mesmo dados!')
+        $('#modalClasseCliente').modal('hide');
+
+        if (result == 400) {
+          await mensagemDeErro('Atenção já existe um cliente com os mesmo dados!')
+        } else {
+          await mensagemDeAviso('Cliente cadastrado com sucesso!')
+        }
+
       } else {
-        mensagemDeAviso('Cliente cadastrado com sucesso!')
-      }
+        cliente.name = document.getElementById('nomecliente').value;
 
+        await aguardeCarregamento(true);
+        let result = await requisicaoPOST(`clients`, {
+          name: cliente.name,
+          phone: cliente.phone
+        });
+        await aguardeCarregamento(false);
+
+        $('#modalClasseCliente').modal('hide');
+
+        if (result == 400) {
+          await mensagemDeErro('Atenção já existe um cliente com os mesmo dados!')
+        } else {
+          await mensagemDeAviso('Cliente cadastrado com sucesso!')
+        }
+      }
     } else {
-      cliente.name = document.getElementById('nomecliente').value;
-
-      let result = await requisicaoPOST(`clients`, {
-        name: cliente.name
-      });
-
-      $('#modalClasseCliente').modal('hide');
-
-      if (result == 400) {
-        mensagemDeErro('Atenção já existe um cliente com os mesmo dados!')
-      } else {
-        mensagemDeAviso('Cliente cadastrado com sucesso!')
-      }
-
+      mensagemDeErroModal('Adicione ao menos um telefone!')
+      mostrarCamposIncorreto(['telefonecliente'])
     }
   } catch (error) {
     mensagemDeErro('Não foi possível cadastrar o cliente!')
@@ -402,56 +424,67 @@ async function atualizarCliente(id) {
   try {
     const cliente = VETORDECLIENTESCLASSECLIENTE.find((element) => element._id == id);
 
-    if (cliente.address[0] && cliente.phone[0]) {
-      const name = document.getElementById('nomecliente').value
-      const serializadedAddress = cliente.address.map((addressElement) => {
-        return {
-          ...addressElement,
-          _id: undefined,
-          district: addressElement.district._id
-        };
-      });
+    if (cliente.phone[0]) {
+      if (cliente.address[0]) {
+        const name = document.getElementById('nomecliente').value
+        const serializadedAddress = cliente.address.map((addressElement) => {
+          return {
+            ...addressElement,
+            _id: undefined,
+            district: addressElement.district._id
+          };
+        });
 
-      await requisicaoPUT(`clients/${id}`, {
-        address: serializadedAddress,
-        phone: cliente.phone,
-        name: (name === cliente.name) ? undefined : name,
-      });
+        await aguardeCarregamento(true);
+        await requisicaoPUT(`clients/${id}`, {
+          address: serializadedAddress,
+          phone: cliente.phone,
+          name: (name === cliente.name) ? undefined : name,
+        });
+        await aguardeCarregamento(false);
 
-      mensagemDeAviso('Cliente atualizado com sucesso!')
+        await mensagemDeAviso('Cliente atualizado com sucesso!')
+      } else {
+        const name = document.getElementById('nomecliente').value
+
+        await aguardeCarregamento(true);
+        await requisicaoPUT(`clients/${id}`, {
+          name: (name === cliente.name) ? undefined : name,
+          phone: cliente.phone
+        });
+        await aguardeCarregamento(false);
+
+        await mensagemDeAviso('Cliente atualizado com sucesso!')
+      }
     } else {
-      const name = document.getElementById('nomecliente').value
-
-      await requisicaoPUT(`clients/${id}`, {
-        name: (name === cliente.name) ? undefined : name
-      });
-
-      mensagemDeAviso('Cliente atualizado com sucesso!')
+      mensagemDeErro('Adicione ao menos um telefone!')
     }
   } catch (error) {
     mensagemDeErro('Não foi possível atualizar o cliente!')
   }
 
   if (validaDadosCampo(['#nome'])) {
-    buscarDadosCliente('nome');
+    await buscarDadosCliente('nome');
   } else {
-    buscarDadosCliente('todos');
+    await buscarDadosCliente('todos');
   }
 }
 
 //funcao responsavel por excluir um cliente
 async function excluirCliente(id) {
   try {
+    await aguardeCarregamento(true);
     await requisicaoDELETE(`clients/${id}`, '')
-    mensagemDeAviso('Cliente excluído com sucesso!')
+    await aguardeCarregamento(false);
+    await mensagemDeAviso('Cliente excluído com sucesso!')
   } catch (error) {
     mensagemDeErro('Não foi possível excluir o cliente!')
   }
 
   if (validaDadosCampo(['#nome'])) {
-    buscarDadosCliente('nome');
+    await buscarDadosCliente('nome');
   } else {
-    buscarDadosCliente('todos');
+    await buscarDadosCliente('todos');
   }
 }
 

@@ -111,9 +111,13 @@ async function buscarDadosBairro(tipo) {
 
   try {
     if (tipo == 'nome') {
+      await aguardeCarregamento(true);
       json = await requisicaoGET(`districts/${document.getElementById('nome').value}`);
+      await aguardeCarregamento(false);
     } else if (tipo == 'todos') {
+      await aguardeCarregamento(true);
       json = await requisicaoGET(`districts`);
+      await aguardeCarregamento(false);
     }
 
     codigoHTML += `<h5 class="text-center" style="margin-top:80px">Listagem de bairros</h5>
@@ -148,8 +152,8 @@ async function buscarDadosBairro(tipo) {
 }
 
 //funcao responsavel por carregar os dados do bairro nos campos
-function carregarDadosBairro(id) {
-  modalTelaCadastrarouAtualizarBairro('atualizar');
+async function carregarDadosBairro(id) {
+  await modalTelaCadastrarouAtualizarBairro('atualizar');
 
   try {
     const dado = VETORDEBAIRROSCLASSEBAIRRO.find((element) => element._id == id);
@@ -171,8 +175,10 @@ async function cadastrarBairro() {
     "city":"${$('#nomecidade').val()}",
     "rate":${$('#precotaxa').val()}}`;
 
-    await requisicaoPOST('districts', JSON.parse(json));
-    mensagemDeAviso('Bairro cadastrado com sucesso!')
+    await aguardeCarregamento(true);
+    let result = await requisicaoPOST('districts', JSON.parse(json));
+    await aguardeCarregamento(false);
+    await mensagemDeAviso('Bairro cadastrado com sucesso!')
   } catch (error) {
     mensagemDeErro('Não foi possível cadastrar o bairro!')
   }
@@ -193,17 +199,19 @@ async function atualizarBairro(id) {
     delete dado[0].createdAt;
     delete dado[0].__v;
 
+    await aguardeCarregamento(true);
     await requisicaoPUT(`districts/${id}`, dado[0]);
+    await aguardeCarregamento(false);
     document.getElementById('modal').innerHTML = '';
-    mensagemDeAviso('Bairro atualizado com sucesso!')
+    await mensagemDeAviso('Bairro atualizado com sucesso!')
   } catch (error) {
     mensagemDeErro('Não foi possível atualizar o bairro!')
   }
 
   if (validaDadosCampo(['#nome'])) {
-    buscarDadosBairro('nome');
+    await buscarDadosBairro('nome');
   } else {
-    buscarDadosBairro('todos');
+    await buscarDadosBairro('todos');
   }
 
 }
@@ -211,16 +219,18 @@ async function atualizarBairro(id) {
 //funcao responsavel por excluir um bairro
 async function excluirBairro(id) {
   try {
+    await aguardeCarregamento(true);
     await requisicaoDELETE(`districts/${id}`, '');
-    mensagemDeAviso('Bairro excluído com sucesso!')
+    await aguardeCarregamento(false);
+    await mensagemDeAviso('Bairro excluído com sucesso!')
   } catch (error) {
     mensagemDeErro('Não foi possível excluir o bairro!')
   }
 
   if (validaDadosCampo(['#nome'])) {
-    buscarDadosBairro('nome');
+    await buscarDadosBairro('nome');
   } else {
-    buscarDadosBairro('todos');
+    await buscarDadosBairro('todos');
   }
 }
 

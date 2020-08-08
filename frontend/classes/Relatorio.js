@@ -5,6 +5,11 @@ async function telaDeRelatorio() {
   let codigoHTML = '';
 
   codigoHTML += `<h4 class="text-center"><span class="fas fa-chart-pie"></span> Relatórios</h4>
+    <div class="card-deck col-6 mx-auto d-block">
+      <button onclick="" type="button" class="btn btn-warning btn-block" style="margin-top:60px; margin-bottom:30px;">
+        <span class="fas fa-print"></span> Imprimir relatório
+      </button>
+    </div>
     <div class="card-deck col-12 mx-auto d-block" style="margin-top:30px;">
       <h6 class="text-center">Os gráficos de representação do dia são:"Demonstrativo de Lucro Periódico (Bruto e Líquido)" e "Lista de Pedidos Fechados".</h6>
       <h6 class="text-center">Os gráficos de respresentação geral são:"Demonstrativo de Lucro e Dispesa sobre Produto" e "Relatório de Produtos Mais e Menos Vendidos".</h6>
@@ -16,18 +21,22 @@ async function telaDeRelatorio() {
 
   animacaoJanela2();
   setTimeout(function () { document.getElementById('janela2').innerHTML = codigoHTML }, 30)
+  await aguardeCarregamento(true);
   await requisicaoDELETE(`reports`, '')
-  setTimeout(function () {
-    gerarGraficoLucroTotalPeriodico();
-    gerarGraficoGastoseGanhosSobreproduto();
-    gerarGraficoProdutosMaiseMenosVendidos();
+  await aguardeCarregamento(false);
+  setTimeout(async function () {
+    await gerarGraficoLucroTotalPeriodico();
+    await gerarGraficoGastoseGanhosSobreproduto();
+    await gerarGraficoProdutosMaiseMenosVendidos();
   }, 300)
 }
 
 //funcao responsavel por gerar o relatorio de lucro total periodico(bruto/liquido)
 async function gerarGraficoLucroTotalPeriodico() {
   try {
+    await aguardeCarregamento(true);
     let json = await requisicaoGET('reports/orders/profit')
+    await aguardeCarregamento(false);
 
     Highcharts.chart('grafico0', {
       chart: {
@@ -98,7 +107,7 @@ async function gerarGraficoLucroTotalPeriodico() {
       ],
     });
 
-    gerarListaDePedidosFechados(json.data.orders);
+    await gerarListaDePedidosFechados(json.data.orders);
 
   } catch (error) {
     document.getElementById('grafico0').innerHTML = '<h5 class="text-center" style="margin-top:10vh;"><span class="fas fa-exclamation-triangle"></span> Dados indisponíveis para o gráfico "Demonstrativo de Lucro Periódico (Bruto e Líquido)"!</h5>'
@@ -108,7 +117,9 @@ async function gerarGraficoLucroTotalPeriodico() {
 //funcao responsavel por gerar o relatorio de relacao de gastos e gganhos sobre produto
 async function gerarGraficoGastoseGanhosSobreproduto() {
   try {
+    await aguardeCarregamento(true);
     let categoria = [], vetorLucro = [], vetorDispesa = [], json = await requisicaoGET('reports/products/dispense_gain')
+    await aguardeCarregamento(false);
 
     json.data.forEach(function (item) {
       vetorLucro.push(parseFloat(item.gain))
@@ -209,7 +220,9 @@ async function gerarGraficoGastoseGanhosSobreproduto() {
 //funcao responsavel por gerar o relatorio de produtos vendidos
 async function gerarGraficoProdutosMaiseMenosVendidos() {
   try {
+    await aguardeCarregamento(true);
     let categoria = [], vetorDeProduto = [], json = await requisicaoGET('reports/products/amount')
+    await aguardeCarregamento(false);
 
     json.data.forEach(function (item) {
       categoria.push(item._id.name)

@@ -114,7 +114,10 @@ function gerarListaDeMotoboyParaTrabalho(json) {
     codigoHTML += `<label class="custom-control-label" for="${json._id}">Trabalhando</label>
             </div>
         </td>
-        <td class="table-warning text-dark"><button onclick="gerarGraficoMotoboy('${json._id}');" type="button" class="btn btn-outline-primary btn-sm"><span class="fas fa-chart-bar"></span> Exibir</button></td>
+        <td class="table-warning text-dark">
+            <button onclick="gerarGraficoMotoboy('${json._id}');" type="button" class="btn btn-outline-primary btn-sm"><span class="fas fa-chart-bar"></span> Exibir</button>
+            <button onclick="" type="button" class="btn btn-outline-primary btn-sm"><span class="fas fa-print"></span> Imprimir</button>
+        </td>
     </tr>`
 
     return codigoHTML;
@@ -140,6 +143,7 @@ async function buscarDadosMotoboyTrabalhando(tipo) {
     VETORDEMOTOBOYSCLASSEMOTOBOY = [];
 
     try {
+        await aguardeCarregamento(true);
         if (tipo == 'nome') {
             json = await requisicaoGET(`deliverymans/${document.getElementById('nome').value}`)
         } else if (tipo == 'todos') {
@@ -147,6 +151,7 @@ async function buscarDadosMotoboyTrabalhando(tipo) {
         } else if (tipo == 'ativos') {
             json = await requisicaoGET(`deliverymans/working_days`)
         }
+        await aguardeCarregamento(false);
 
         codigoHTML += `<h5 class="text-center" style="margin-top:80px">Listagem de motoboys para trabalho</h5>
         <div class="text-center">
@@ -190,11 +195,17 @@ async function buscarDadosMotoboy(tipo) {
 
     try {
         if (tipo == 'nome') {
+            await aguardeCarregamento(true);
             json = await requisicaoGET(`deliverymans/${document.getElementById('nomeemmodal').value}`)
+            await aguardeCarregamento(false);
         } else if (tipo == 'todos') {
+            await aguardeCarregamento(true);
             json = await requisicaoGET('deliverymans')
+            await aguardeCarregamento(false);
         } else if (tipo == 'ativos') {
+            await aguardeCarregamento(true);
             json = await requisicaoGET('deliverymans/working_days')
+            await aguardeCarregamento(false);
         }
 
         codigoHTML += `<h5 class="text-center" style="margin-top:40px;">Listagem de motoboys para trabalho</h5>
@@ -244,8 +255,10 @@ function carregarDadosMotoboy(id) {
 async function alterarEstadoDeTrabalhoMotoboy(tipo, id) {
     if (tipo == 'desativarTodos') {
         try {
+            await aguardeCarregamento(true);
             await requisicaoPUT(`deliverymans`);
-            mensagemDeAviso('Todos os motoboys foram desabilitados!')
+            await aguardeCarregamento(false);
+            await mensagemDeAviso('Todos os motoboys foram desabilitados!')
         } catch (error) {
             mensagemDeErro('Não foi possível desabilitar os motoboys!')
         }
@@ -255,12 +268,14 @@ async function alterarEstadoDeTrabalhoMotoboy(tipo, id) {
                 return element._id == id;
             });
 
+            await aguardeCarregamento(true);
             await requisicaoPUT(`deliverymans/${id}`, {
                 working_day: true,
                 name: dado[0].name,
                 phone: dado[0].phone,
             });
-            mensagemDeAviso('O motoboy foi habilitado!')
+            await aguardeCarregamento(false);
+            await mensagemDeAviso('O motoboy foi habilitado!')
         } catch (error) {
             mensagemDeErro('Não foi possível habilitar o motoboy!')
         }
@@ -270,21 +285,23 @@ async function alterarEstadoDeTrabalhoMotoboy(tipo, id) {
                 return element._id == id;
             });
 
+            await aguardeCarregamento(true);
             await requisicaoPUT(`deliverymans/${id}`, {
                 working_day: false,
                 name: dado[0].name,
                 phone: dado[0].phone,
             });
-            mensagemDeAviso('O motoboy foi desabilitado!')
+            await aguardeCarregamento(false);
+            await mensagemDeAviso('O motoboy foi desabilitado!')
         } catch (error) {
             mensagemDeErro('Não foi possível desabilitar o motoboy!')
         }
     }
 
     if (validaDadosCampo(['#nome'])) {
-        buscarDadosMotoboyTrabalhando('nome');
+        await buscarDadosMotoboyTrabalhando('nome');
     } else {
-        buscarDadosMotoboyTrabalhando('todos');
+        await buscarDadosMotoboyTrabalhando('todos');
     }
 }
 
@@ -295,10 +312,12 @@ async function cadastrarMotoboy() {
             "name":"${document.getElementById('nomemotoboy').value}",
             "phone":"${document.getElementById('telefonemotoboy').value}"}`;
 
-        await requisicaoPOST('deliverymans', JSON.parse(json));
+        await aguardeCarregamento(true);
+        let result = await requisicaoPOST('deliverymans', JSON.parse(json));
+        await aguardeCarregamento(false);
         $('#modalClasseMotoboy').modal('hide');
-        mensagemDeAviso('Motoboy cadastrado com sucesso!')
-        reiniciarClasseMotoboy();
+        await mensagemDeAviso('Motoboy cadastrado com sucesso!')
+        await reiniciarClasseMotoboy();
     } catch (error) {
         mensagemDeErro('Não foi possível cadastrar o motoboy!')
     }
@@ -317,39 +336,45 @@ async function atualizarMotoboy(id) {
         delete dado[0].updatedAt;
         delete dado[0].__v;
 
+        await aguardeCarregamento(true);
         await requisicaoPUT(`deliverymans/${id}`, dado[0]);
-        mensagemDeAviso('Motoboy atualizado com sucesso!')
+        await aguardeCarregamento(false);
+        await mensagemDeAviso('Motoboy atualizado com sucesso!')
     } catch (error) {
         mensagemDeErro('Não foi possível atualizar o motoboy!')
     }
 
     if (validaDadosCampo(['nome'])) {
-        buscarDadosMotoboyTrabalhando('nome')
+        await buscarDadosMotoboyTrabalhando('nome')
     } else {
-        buscarDadosMotoboyTrabalhando('todos')
+        await buscarDadosMotoboyTrabalhando('todos')
     }
 }
 
 //funcao responsavel por excluir um motoboy
 async function exluirMotoboy(id) {
     try {
+        await aguardeCarregamento(true);
         await requisicaoDELETE(`deliverymans/${id}`, '');
-        mensagemDeAviso('Motoboy excluído com sucesso!')
+        await aguardeCarregamento(false);
+        await mensagemDeAviso('Motoboy excluído com sucesso!')
     } catch (error) {
         mensagemDeErro('Não foi possível excluir o motoboy!')
     }
 
     if (validaDadosCampo(['nome'])) {
-        buscarDadosMotoboyTrabalhando('nome')
+        await buscarDadosMotoboyTrabalhando('nome')
     } else {
-        buscarDadosMotoboyTrabalhando('todos')
+        await buscarDadosMotoboyTrabalhando('todos')
     }
 }
 
 //funcao responsavel por gerar o grafico de dados sobre o motoboy
 async function gerarGraficoMotoboy(id) {
     try {
+        await aguardeCarregamento(true);
         let codigoHTML = ``, json = await requisicaoGET(`reports/deliveryman/rate/${id}`), json2 = await requisicaoGET(`reports/deliveryman/orders/${id}`)
+        await aguardeCarregamento(false);
 
         if (json2.data[0]) {
 

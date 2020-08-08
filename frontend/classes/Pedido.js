@@ -18,10 +18,10 @@ function modalRetiradaLocalouEnvio() {
                               </button>
                           </div>
                           <div class="modal-body">
-                            <button onclick="telaModalDeCriacaoDePedido('cadastrar', true);" type="button" class="btn btn-light btn-lg btn-block border-dark" data-dismiss="modal" style="height: 150px;">
+                            <button onclick="modalCriarouBuscarClientePedido(true);" type="button" class="btn btn-light btn-lg btn-block border-dark" data-dismiss="modal" style="height: 150px;">
                               <span class="fas fa-truck-loading"></span> Enviar pedido
                             </button>
-                            <button onclick="telaModalDeCriacaoDePedido('cadastrar', false);" type="button" class="btn btn-light btn-lg btn-block border-dark" data-dismiss="modal" style="height: 150px;">
+                            <button onclick="modalCriarouBuscarClientePedido(false);" type="button" class="btn btn-light btn-lg btn-block border-dark" data-dismiss="modal" style="height: 150px;">
                               <span class="fas fa-people-carry"></span> Retirar no local
                             </button>  
                           </div>
@@ -31,6 +31,167 @@ function modalRetiradaLocalouEnvio() {
 
   document.getElementById('modal').innerHTML = codigoHTML;
   $('#modalRetiradaPedido').modal('show');
+}
+
+//funcao responsavel por gerar o modal de criar ou buscar cliente
+function modalCriarouBuscarClientePedido(envio) {
+  let codigoHTML = ``;
+
+  codigoHTML += `<div class="modal fade" id="modalCriarBuscaCliente" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title" id="staticBackdropLabel"><span class="fas fa-user"></span> Opções Cliente</h5>
+                              <button onclick="inicializarVariaveisClassePedido();" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                              </button>
+                          </div>
+                          <div class="modal-body">
+                            <button onclick="modalCadastrorapidoClientePedido(${envio});" type="button" class="btn btn-light btn-lg btn-block border-dark" data-dismiss="modal" style="height: 150px;">
+                              <span class="fas fa-user-plus"></span> Criar cliente
+                            </button>
+                            <button onclick="telaModalDeCriacaoDePedido('cadastrar', ${envio});" type="button" class="btn btn-light btn-lg btn-block border-dark" data-dismiss="modal" style="height: 150px;">
+                              <span class="fas fa-search"></span> Buscar cliente
+                            </button>
+                          </div>
+                        </div>
+                    </div>
+                </div>`
+
+  document.getElementById('modal').innerHTML = codigoHTML;
+  setTimeout(function () { $('#modalCriarBuscaCliente').modal('show'); }, 500)
+}
+
+//funcao responsavel por gerar a tela de cadastra rapido de cliente
+async function modalCadastrorapidoClientePedido(tipo) {
+  let codigoHTML = ``, json = null;
+
+  if (tipo) {
+    await aguardeCarregamento(true);
+    json = await requisicaoGET(`districts`)
+    await aguardeCarregamento(false);
+  }
+
+  codigoHTML += `<div class="modal fade" id="modalcadastrorapidocliente" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title" id="staticBackdropLabel"><span class="fas fa-user"></span> Cadastro rápido</h5>
+                              <button onclick="inicializarVariaveisClassePedido();" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                              </button>
+                              <div id="mensagemDeErroModal" class="justify-content-center"></div>
+                          </div>
+                          <div class="modal-body">
+                            <h5 class="text-center" style="margin-top: 30px;"><span class="fas fa-user"></span> Criar Cliente</h5>
+                            <form id="formuDadosClientePedido" style="margin-top:20px;">
+                                <div class="form-group">
+                                    <label for="nomeclientecriarpedido">Nome:</label>
+                                    <input type="text" class="form-control" id="nomeclientecriarpedido" placeholder="Nome do cliente">
+                                </div>
+                                <div class="form-group">
+                                    <label for="telefoneclientecriarpedido">Telefone:</label>
+                                    <input type="text" class="form-control" id="telefoneclientecriarpedido" placeholder="Exemplo:(00) 00000-0000">
+                                </div>`
+  if (tipo) {
+    codigoHTML += `<div class="form-group">
+                                  <label for="ruaclientecriarpedido">Rua:</label>
+                                  <input type="text" class="form-control" id="ruaclientecriarpedido" placeholder="Exemplo: Rua Sete de Setembro">
+                                </div>
+                                <div class="form-group">
+                                  <label for="numerocasaclientecriarpedido">Número da casa:</label>
+                                  <input type="Number" class="form-control" id="numerocasaclientecriarpedido">
+                                </div>
+                                <div class="form-group">
+                                  <label for="bairrocidadeclientecriarpedido">Bairro - Cidade:</label>
+                                  <select class="form-control form-control-sm" id="bairrocidadeclientecriarpedido">`;
+    json.data.forEach(function (item) {
+      codigoHTML += `<option value="${item._id}">${item.name} - ${item.city}</option>`;
+    });
+    codigoHTML += `</select>
+                                </div>
+                                <div class="form-group">
+                                  <label for="complementoclientecriarpedido">Complemento:</label>
+                                  <input type="text" class="form-control" id="complementoclientecriarpedido">
+                                </div>`
+  }
+  codigoHTML += `</form>  
+                          </div>
+                          <div class="modal-footer">`
+  if (tipo) {
+    codigoHTML += `<button type="button" onclick="if(validaDadosCampo(['#nomeclientecriarpedido','#telefoneclientecriarpedido','#ruaclientecriarpedido','#numerocasaclientecriarpedido','#complementoclientecriarpedido'])){cadastrarClienteRapidoPedido(${tipo});}else{mensagemDeErroModal('Preencha todos os campos com valores válidos!'); mostrarCamposIncorreto(['nomeclientecriarpedido','telefoneclientecriarpedido','ruaclientecriarpedido','numerocasaclientecriarpedido','complementoclientecriarpedido']);}" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Salvar</button>`
+  } else {
+    codigoHTML += `<button type="button" onclick="if(validaDadosCampo(['#nomeclientecriarpedido','#telefoneclientecriarpedido'])){cadastrarClienteRapidoPedido(${tipo});}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['nomeclientecriarpedido','telefoneclientecriarpedido']);}" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Salvar</button>`
+  }
+  codigoHTML += ` </div>
+                        </div>
+                    </div>
+                </div>`
+
+  document.getElementById('modal').innerHTML = codigoHTML;
+  $('#modalcadastrorapidocliente').modal('show');
+}
+
+//funcao responsavel por cadastrar o cliente da funcao cadastro rapido
+async function cadastrarClienteRapidoPedido(envio) {
+  try {
+    if (envio) {
+
+      let json = `{
+        "name":"${document.getElementById('nomeclientecriarpedido').value}",
+        "phone":["${document.getElementById('telefoneclientecriarpedido').value}"],
+        "address":[
+          {
+            "district":"${document.getElementById('bairrocidadeclientecriarpedido').value}",
+            "street":"${document.getElementById('ruaclientecriarpedido').value}",
+            "number":"${document.getElementById('numerocasaclientecriarpedido').value}",
+            "reference":"${document.getElementById('complementoclientecriarpedido').value}"
+          }
+        ]
+      }`
+
+      await aguardeCarregamento(true);
+      let result = await requisicaoPOST(`clients`, JSON.parse(json));
+      await aguardeCarregamento(false);
+
+      $('#modalcadastrorapidocliente').modal('hide');
+
+      if (result == 400) {
+        await mensagemDeErro('Atenção já existe um cliente com os mesmo dados!')
+      } else {
+        await mensagemDeAviso('Cliente cadastrado com sucesso!')
+        await telaModalDeCriacaoDePedido('cadastrar', true)
+        $('#formuDadosClientePedido').fadeIn()
+        $('#respostaClienteParaPedido').fadeOut()
+        await preencherDadosPedidoIncluirDadosEmPedido('cliente', result.data._id)
+      }
+    } else {
+
+      let json = `{
+        "name":"${document.getElementById('nomeclientecriarpedido').value}",
+        "phone":["${document.getElementById('telefoneclientecriarpedido').value}"]
+      }`
+
+      await aguardeCarregamento(true);
+      let result = await requisicaoPOST(`clients`, JSON.parse(json));
+      await aguardeCarregamento(false);
+
+      $('#modalcadastrorapidocliente').modal('hide');
+
+      if (result == 400) {
+        await mensagemDeErro('Atenção já existe um cliente com os mesmo dados!')
+      } else {
+        await mensagemDeAviso('Cliente cadastrado com sucesso!')
+        await telaModalDeCriacaoDePedido('cadastrar', false)
+        $('#formuDadosClientePedido').fadeIn()
+        $('#respostaClienteParaPedido').fadeOut()
+        await preencherDadosPedidoIncluirDadosEmPedido('cliente', result.data._id)
+      }
+
+    }
+  } catch (error) {
+    mensagemDeErro('Não foi possível cadastrar o cliente!')
+  }
 }
 
 //funcao responsavel por gerar a tela de criar pedido
@@ -49,17 +210,16 @@ function telaModalDeCriacaoDePedido(tipo, enviarPedido) {
                 </div>
                 <div class="modal-body">
 
+
                     <div id="pagCliente">
+
                         <div id="buscarDadosClientes">
                           <h5 class="text-center" style="margin-top: 30px;"><span class="fas fa-user"></span> Buscar Cliente</h5>
                           <div class="card-deck col-10 mx-auto d-block">
                               <div class="input-group mb-3">
-                                  <input id="nometelefonecliente" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do cliente">
+                                  <input id="nometelefonecliente" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome ou telefone do cliente">
                                   <button onclick="if(validaDadosCampo(['#nometelefonecliente'])){criarListagemDeBuscaDeClientes('nome'); $('#formuDadosClientePedido').fadeOut(); $('#respostaClienteParaPedido').fadeIn();}else{mensagemDeErroModal('Preencha o campo nome do cliente!'); mostrarCamposIncorreto(['nometelefonecliente'])}" type="button" class="btn btn-outline-info btn-sm">
-                                      <span class="fas fa-search"></span> Buscar por Telefone
-                                  </button>
-                                  <button onclick="if(validaDadosCampo(['#nometelefonecliente'])){criarListagemDeBuscaDeClientes('nome'); $('#formuDadosClientePedido').fadeOut(); $('#respostaClienteParaPedido').fadeIn();}else{mensagemDeErroModal('Preencha o campo nome do cliente!'); mostrarCamposIncorreto(['nometelefonecliente'])}" type="button" class="btn btn-outline-info btn-sm">
-                                      <span class="fas fa-search"></span> Buscar por Nome
+                                      <span class="fas fa-search"></span> Buscar
                                   </button>
                                   <br/>
                                   <button onclick="criarListagemDeBuscaDeClientes('todos'); $('#formuDadosClientePedido').fadeOut(); $('#respostaClienteParaPedido').fadeIn();" type="button" class="btn btn-outline-info btn-block btn-sm" style="margin-top:10px;">
@@ -74,14 +234,14 @@ function telaModalDeCriacaoDePedido(tipo, enviarPedido) {
                             <div class="form-group">
                                 <label for="nomecliente">Nome:</label>
                                 <input type="text" class="form-control" id="nomecliente" placeholder="Nome do cliente" disabled>
-                            </div>`
-  if (enviarPedido) {
-    codigoHTML += `<div class="form-group">
+                            </div>
+                            <div class="form-group">
                                 <label for="telefonecliente">Telefone:</label>
                                 <select class="form-control form-control-sm" id="telefonecliente">
                                 </select>
-                              </div>
-                              <div class="form-group">
+                              </div>`
+  if (enviarPedido) {
+    codigoHTML += `<div class="form-group">
                                   <label for="enderecocliente">Endereço:</label>
                                   <select class="form-control form-control-sm" id="enderecocliente">
                                   </select>
@@ -196,8 +356,10 @@ function telaModalDeCriacaoDePedido(tipo, enviarPedido) {
                     
                 </div>
                 <div class="modal-footer" id="botaoNavPedido">
+                  <div id="botaoanterior">
                     <button id="anterior" onclick="if(this.value>1){this.value=--proximo.value; navegacaoModalDeCriacao(this.value,'${tipo}')}" value=1 type="button" class="btn btn-outline-dark"><span class="fas fa-chevron-left"></span> Voltar</button>
-                    <button id="proximo" onclick="if(this.value<5){this.value=++anterior.value; navegacaoModalDeCriacao(this.value,'${tipo}')}" value=1 type="button" class="btn btn-success">Próximo <span class="fas fa-chevron-right"></span></button>    
+                  </div>
+                  <button id="proximo" onclick="if(this.value<5){this.value=++anterior.value; navegacaoModalDeCriacao(this.value,'${tipo}')}" value=1 type="button" class="btn btn-success">Próximo <span class="fas fa-chevron-right"></span></button>
                 </div>
                 <div class="modal-footer" id="botaoConfirmacao">`;
   if (tipo == 'cadastrar') {
@@ -225,6 +387,7 @@ function telaModalDeCriacaoDePedido(tipo, enviarPedido) {
   $('#pagMotoboy').animate({ height: 'hide' });
   $('#formuDadoMotoboyPedido').fadeOut(); $('#formuDadosClientePedido').fadeOut();
   $('#pagExtra').animate({ height: 'hide' });
+  $('#botaoanterior').animate({ height: 'hide' });
   $('#botaoConfirmacao').animate({ height: 'hide' });
 }
 
@@ -235,23 +398,27 @@ function navegacaoModalDeCriacao(pag) {
     $('#pagProduto').animate({ height: 'hide' });
     $('#pagMotoboy').animate({ height: 'hide' });
     $('#pagExtra').animate({ height: 'hide' });
+    $('#botaoanterior').animate({ height: 'hide' });
     $('#botaoConfirmacao').animate({ height: 'hide' });
   } else if (pag == 2) {
     $('#pagCliente').animate({ height: 'hide' });
     $('#pagProduto').animate({ height: 'show' });
     $('#pagMotoboy').animate({ height: 'hide' });
+    $('#botaoanterior').animate({ height: 'show' });
     $('#botaoConfirmacao').animate({ height: 'hide' });
   } else if (pag == 3) {
     $('#pagCliente').animate({ height: 'hide' });
     $('#pagProduto').animate({ height: 'hide' });
     $('#pagMotoboy').animate({ height: 'show' });
     $('#pagExtra').animate({ height: 'hide' });
+    $('#botaoanterior').animate({ height: 'show' });
     $('#botaoConfirmacao').animate({ height: 'hide' });
   } else if (pag == 4) {
     $('#pagCliente').animate({ height: 'hide' });
     $('#pagProduto').animate({ height: 'hide' });
     $('#pagMotoboy').animate({ height: 'hide' });
     $('#pagExtra').animate({ height: 'show' });
+    $('#botaoanterior').animate({ height: 'show' });
     $('#botaoConfirmacao').animate({ height: 'hide' });
   } else if (pag == 5) {
     $('#pagCliente').animate({ height: 'show' });
@@ -259,6 +426,7 @@ function navegacaoModalDeCriacao(pag) {
     $('#pagMotoboy').animate({ height: 'show' });
     $('#pagExtra').animate({ height: 'show' });
     $('#botaoConfirmacao').animate({ height: 'show' });
+    $('#respostaProdutoParaPedido').animate({ height: 'hide' });
     $('#botaoNavPedido').animate({ height: 'hide' });
   }
 }
@@ -284,28 +452,27 @@ async function criarListagemDeBuscaDeClientes(tipo) {
               <tr>
                   <th scope="col">Nome</th>
                   <th scope="col">Telefone</th>
-                  <th scope="col">Selecionar</th>
+                  <th scope="col">Endereços</th>
+                  <th class="text-center" scope="col">Selecionar</th>
               </tr>
           </thead>
           <tbody>`;
     json.data.forEach(function (item) {
-      if ((!item.phone[0] && document.getElementById('telefonecliente'))) {
+      if ((!item.address[0] && document.getElementById('enderecocliente'))) {
         codigoHTML += `<tr>
-                  <td class="table-light text-dark" title="${item.name}"><strong><span class="fas fa-user"></span> ${corrigirTamanhoString(15, item.name)}</strong></td>`
-        if (item.phone[0]) {
-          codigoHTML += `<td class="table-light"><strong><span class="fas fa-phone"></span> ${item.phone[0]}</strong></td>`
-        } else {
-          codigoHTML += `<td class="table-light"><strong><span class="fas fa-phone"></span> Nenhum.</strong></td>`
-        }
-        codigoHTML += `<td class="table-light text-center" title="Não é possível enviar pedidos para clientes sem endereço!"><button  type="button" class="btn btn-danger btn-sm" disabled><span class="fas fa-ban"></span></button></td>
+                  <td class="table-light text-danger" title="${item.name}"><strong><span class="fas fa-user"></span> ${corrigirTamanhoString(15, item.name)}</strong></td>
+                  <td class="table-light text-danger"><strong><span class="fas fa-phone"></span> ${item.phone[0]}</strong></td>
+                  <td class="table-light text-danger"><strong><span class="fas fa-map-marker-alt"></span> Nenhum.</strong></td>
+                  <td class="table-light text-center" title="Não é possível enviar pedidos para clientes sem endereço!"><button  type="button" class="btn btn-danger btn-sm" disabled><span class="fas fa-ban"></span></button></td>
                 </tr>`;
       } else {
         codigoHTML += `<tr>
-                  <td class="table-light text-dark" title="${item.name}"><strong><span class="fas fa-user"></span> ${corrigirTamanhoString(15, item.name)}</strong></td>`
-        if (item.phone[0]) {
-          codigoHTML += `<td class="table-light"><strong><span class="fas fa-phone"></span> ${item.phone[0]}</strong></td>`
+                  <td class="table-light text-dark" title="${item.name}"><strong><span class="fas fa-user"></span> ${corrigirTamanhoString(15, item.name)}</strong></td>
+                  <td class="table-light"><strong><span class="fas fa-phone"></span> ${item.phone[0]}</strong></td>`
+        if (item.address[0]) {
+          codigoHTML += `<td class="table-light"><strong><span class="fas fa-map-marker-alt"></span> ${item.phone.length} endereço(s)</strong></td>`
         } else {
-          codigoHTML += `<td class="table-light"><strong><span class="fas fa-phone"></span> Nenhum.</strong></td>`
+          codigoHTML += `<td class="table-light"><strong><span class="fas fa-map-marker-alt"></span> Nenhum.</strong></td>`
         }
         codigoHTML += `<td class="table-light text-center" title="Selecionar cliente!"><button onclick="preencherDadosPedidoIncluirDadosEmPedido('cliente','${item._id}'); $('#formuDadosClientePedido').fadeIn(); $('#respostaClienteParaPedido').fadeOut();" type="button" class="btn btn-primary btn-sm"><span class="fas fa-check"></span></button></td>
                 </tr>`;
@@ -402,7 +569,7 @@ async function criarListagemDeBuscaDeMotoboy(tipo) {
                   <th scope="col">Telefone</th>
                   <th scope="col">Entregas</th>
                   <th scope="col">Status</th>
-                  <th scope="col">Selecionar</th>
+                  <th class="text-center" scope="col">Selecionar</th>
               </tr>
           </thead>
           <tbody>`;
@@ -477,10 +644,10 @@ async function preencherDadosPedidoIncluirDadosEmPedido(tipo, id, quantidade) {
 
       document.getElementById('nomecliente').value = corrigirTamanhoString(15, dado.name);
       document.getElementById('nomecliente').title = dado.name
-      if (document.getElementById('telefonecliente') && document.getElementById('enderecocliente')) {
-        dado.phone.forEach(function (item) {
-          $('#telefonecliente').append(`<option>${item}</option>`);
-        });
+      dado.phone.forEach(function (item) {
+        $('#telefonecliente').append(`<option>${item}</option>`);
+      });
+      if (document.getElementById('enderecocliente')) {
         dado.address.forEach(function (item) {
           $('#enderecocliente').append(
             `<option value="${item._id}" title="${item.street}, nº ${item.number} - ${item.district.name} - ${item.district.city}">${corrigirTamanhoString(15, item.street)}, nº ${item.number} - ${corrigirTamanhoString(15, item.district.name)} - ${corrigirTamanhoString(15, item.district.city)}</option>`
@@ -833,7 +1000,7 @@ function modalEnviaMotoboyEntrega(id) {
                             <h5>Deseja enviar o motoboy para as entregas agora, ou aguardar para adicionar mais pedidos a ele?</h5>
                         </div>
                         <div class="modal-footer">
-                          <button onclick="enviarMotoboyParaEntrega('${id}');" type="button" data-dismiss="modal" class="btn btn-outline-primary btn-block"><span class="fas fa-check-circle"></span> Enviar</button>
+                          <button onclick="enviarMotoboyParaEntrega('${id}');" type="button" data-dismiss="modal" class="btn btn-outline-primary btn-block" disabled><span class="fas fa-check-circle"></span> Enviar</button>
                           <button type="button" data-dismiss="modal" class="btn btn-warning btn-block"><span class="fas fa-hourglass-half"></span> Aguardar</button>
                         </div>
                     </div>

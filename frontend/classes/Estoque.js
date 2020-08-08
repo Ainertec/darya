@@ -92,8 +92,8 @@ function modalTelaCadastrarAtualizarIngrediente(tipo) {
 }
 
 //funcao responsavel por carregar os dados do ingrediente
-function carregarDadosIngrediente(id) {
-  modalTelaCadastrarAtualizarIngrediente('atualizar')
+async function carregarDadosIngrediente(id) {
+  await modalTelaCadastrarAtualizarIngrediente('atualizar')
 
   let dado = VETORDEITENSESTOQUE.find(element => element._id == id)
 
@@ -112,23 +112,28 @@ async function buscarEstoque(tipoBusca) {
 
   try {
     if (tipoBusca == 'nome') {
+      await aguardeCarregamento(true);
       json = await requisicaoGET(`ingredients/${$('#nome').val()}`);
+      await aguardeCarregamento(false);
     } else if (tipoBusca == 'todos') {
+      await aguardeCarregamento(true);
       json = await requisicaoGET('ingredients');
+      await aguardeCarregamento(false);
     }
 
     VETORDEITENSESTOQUE = [];
 
     codigoHTML += `<div id="grafico" class="col-10 mx-auto" style="margin-top:30px; height: 50vh"></div>
     <h5 class="text-center" style="margin-top:50px">Atualizar estoque</h5>
-    <table class="table table-bordered table-sm col-8 mx-auto" style="margin-top:10px">
+    <table class="table table-bordered table-sm col-10 mx-auto" style="margin-top:10px">
     <thead class="thead-dark">
       <tr>
         <th scope="col">Nome</th>
         <th scope="col">Preço</th>
         <th scope="col">Descrição</th>
         <th scope="col">Quantidade</th>
-        <th scope="col">Adicionar</th>
+        <th scope="col">Adicionar quantidade</th>
+        <th scope="col">Alterar Preço</th>
         <th scope="col">#</th>
         <th scope="col">#</th>
       </tr>
@@ -153,7 +158,15 @@ async function buscarEstoque(tipoBusca) {
           </div>
         </div>
       </td>
-      <td class="table-warning text-dark" title="Atualizar a quantidade!"><button onclick="if(validaDadosCampo(['#quantidade${item._id}']) && validaValoresCampo(['#quantidade${item._id}']) && parseInt($('#quantidade${item._id}').val())>0){atualizarEstoque(this.value)}else{mensagemDeErro('Preencha o campo adicionar com valor válido!'); mostrarCamposIncorreto(['quantidade${item._id}']);}" value="${item._id}" class="btn btn-success btn-sm"><span class="fas fa-sync"></span></button></td>
+      <td class="table-warning text-dark">
+        <div class="input-group input-group-sm">
+        <div class="input-group-prepend">
+          <span class="input-group-text">R$</span>
+        </div>
+          <input class="form-control form-control-sm mousetrap" type="Number" id="preco${item._id}" value=${(parseFloat(item.price)).toFixed(2)} />
+        </div>
+      </td>
+      <td class="table-warning text-dark" title="Atualizar a quantidade!"><button onclick="if(validaDadosCampo(['#quantidade${item._id}','#preco${item._id}']) && validaValoresCampo(['#quantidade${item._id}','#preco${item._id}']) && parseInt($('#quantidade${item._id}').val())>0){atualizarEstoque(this.value)}else{mensagemDeErro('Preencha os campos com valor válido!'); mostrarCamposIncorreto(['quantidade${item._id}','preco${item._id}']);}" value="${item._id}" class="btn btn-success btn-sm"><span class="fas fa-sync"></span></button></td>
       <td class="table-warning text-dark">
         <button onclick="carregarDadosIngrediente('${item._id}');" class="btn btn-primary btn-sm"><span class="fas fa-edit"></span> Editar</button>
         <button onclick="confirmarAcao('Excluir este produto!','excluirIngrediente(this.value)','${item._id}');" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span> Excluir</button>
@@ -165,7 +178,7 @@ async function buscarEstoque(tipoBusca) {
 
     if (json.data[0]) {
       document.getElementById('resposta').innerHTML = codigoHTML;
-      setTimeout(function () {
+      await setTimeout(function () {
         gerarGraficoEstoque(json);
       }, 300);
     } else {
@@ -189,17 +202,20 @@ async function atualizarEstoque(id) {
     delete produto.priceUnit;
     delete produto.__v;
     produto.stock = parseInt(produto.stock) + parseInt($('#quantidade' + id).val());
+    produto.price = parseInt($('#preco' + id).val());
 
+    await aguardeCarregamento(true);
     await requisicaoPUT(`ingredients/${id}`, produto);
-    mensagemDeAviso('Atualizado com sucesso!');
+    await aguardeCarregamento(false);
+    await mensagemDeAviso('Atualizado com sucesso!');
   } catch (error) {
     mensagemDeErro('Não foi possível atualizar a quantidade do produto!');
   }
 
   if (validaDadosCampo(['#nome'])) {
-    buscarEstoque('nome');
+    await buscarEstoque('nome');
   } else {
-    buscarEstoque('todos');
+    await buscarEstoque('todos');
   }
 
 }
@@ -251,10 +267,12 @@ async function cadastarIngrediente() {
       "description":"${document.getElementById('descricaoingrediente').value}"
     }`
 
-    await requisicaoPOST(`ingredients`, JSON.parse(json))
+    await aguardeCarregamento(true);
+    let result = await requisicaoPOST(`ingredients`, JSON.parse(json))
+    await aguardeCarregamento(false);
     $('#modalClasseEstoque').modal('hide');
-    reiniciarClasseEstoque();
-    mensagemDeAviso('Ingrediente cadastrado com sucesso!');
+    await reiniciarClasseEstoque();
+    await mensagemDeAviso('Ingrediente cadastrado com sucesso!');
   } catch (error) {
     mensagemDeErro('Não foi possível cadastrar o ingrediente!')
   }
@@ -276,32 +294,36 @@ async function atualizarIngrediente(id) {
     delete dado.createdAt
     delete dado.__v
 
+    await aguardeCarregamento(true);
     await requisicaoPUT(`ingredients/${id}`, dado)
-    mensagemDeAviso('Ingrediente atualizado com sucesso!')
+    await aguardeCarregamento(false);
+    await mensagemDeAviso('Ingrediente atualizado com sucesso!')
   } catch (error) {
     mensagemDeErro('Não foi possível atualizar o ingrediente!')
   }
 
   if (validaDadosCampo(['#nome'])) {
-    buscarEstoque('nome')
+    await buscarEstoque('nome')
   } else {
-    buscarEstoque('todos')
+    await buscarEstoque('todos')
   }
 }
 
 //funcao responsavel por excluir um ingrediente
 async function excluirIngrediente(id) {
   try {
+    await aguardeCarregamento(true);
     await requisicaoDELETE(`ingredients/${id}`, '')
-    mensagemDeAviso('Ingrediente excluído com sucesso!')
+    await aguardeCarregamento(false);
+    await mensagemDeAviso('Ingrediente excluído com sucesso!')
   } catch (error) {
     mensagemDeErro('Não foi possível excluir o ingrediente!')
   }
 
   if (validaDadosCampo(['#nome'])) {
-    buscarEstoque('nome')
+    await buscarEstoque('nome')
   } else {
-    buscarEstoque('todos')
+    await buscarEstoque('todos')
   }
 }
 
