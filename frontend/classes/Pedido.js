@@ -337,6 +337,8 @@ function telaModalDeCriacaoDePedido(tipo, enviarPedido) {
                                     <option value="Dinheiro com troco">Dinheiro com troco</option>
                                     <option value="Cartão crédito">Cartão crédito</option>
                                     <option value="Cartão débito">Cartão débito</option>
+                                    <option value="Transferência Itaú">Transferência Itaú</option>
+                                    <option value="Transferência Bradesco">Transferência Bradesco</option>
                                 </select>
                             </div>
                             <div class="form-group">
