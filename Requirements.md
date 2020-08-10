@@ -4,6 +4,7 @@
 
 - valor separado das vendas, valor total, separar por forma de pagamento
 - adicionar transferência Itaú e Bradesco
+
 - relatório de vendas:
 
 * Quantos pedidos foram feitos

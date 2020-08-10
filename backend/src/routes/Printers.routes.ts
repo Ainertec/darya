@@ -13,6 +13,10 @@ export class PrintersRoutes {
       PrinterController.store,
     );
 
-    this.routes.get('/printers', PrinterController.soldPrint);
+    this.routes.get('/printers/sold_report', PrinterController.soldPrint);
+    this.routes.get(
+      '/printers/deliveryman_report/:deliveryman_id',
+      PrinterController.deliverymanPrint,
+    );
   }
 }

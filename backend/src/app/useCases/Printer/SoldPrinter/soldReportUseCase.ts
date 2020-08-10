@@ -1,7 +1,7 @@
 import { Model, Types } from 'mongoose';
 import { startOfDay, endOfDay } from 'date-fns';
-import { OrderInterface } from '../../../interfaces/base';
-import { ProductAmountUseCase } from '../Report/productsAmountUseCase';
+import { OrderInterface } from '../../../../interfaces/base';
+import { ProductAmountUseCase } from '../../Report/productsAmountUseCase';
 import { ProductsAmount } from './printerUseCaseDTO';
 
 export class SoldReportUseCase {
@@ -10,7 +10,7 @@ export class SoldReportUseCase {
     private productsAmount: ProductAmountUseCase,
   ) {}
 
-  async printer() {
+  async execute() {
     const initial = startOfDay(new Date());
     const final = endOfDay(new Date());
 
@@ -53,8 +53,7 @@ export class SoldReportUseCase {
       productsTotalAmount,
       totalProductsSold,
       dayOrdersByPayment,
-      dayOrders,
-      totalOrders,
+      totalOrders: totalOrders.toFixed(2),
     };
   }
 }

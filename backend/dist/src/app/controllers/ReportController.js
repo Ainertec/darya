@@ -41,11 +41,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var date_fns_1 = require("date-fns");
 var Order_1 = __importDefault(require("../models/Order"));
-var ordersProfitUseCase_1 = require("../useCases/Report/OrdersProfit/ordersProfitUseCase");
-var deliverymanPaymentUseCase_1 = require("../useCases/Report/OrdersProfit/deliverymanPaymentUseCase");
-var productDispenseAndGainUseCase_1 = require("../useCases/Report/OrdersProfit/productDispenseAndGainUseCase");
-var productsAmountUseCase_1 = require("../useCases/Report/OrdersProfit/productsAmountUseCase");
-var finishedOrdersUseCase_1 = require("../useCases/Report/OrdersProfit/finishedOrdersUseCase");
+var ordersProfitUseCase_1 = require("../useCases/Report/ordersProfitUseCase");
+var deliverymanPaymentUseCase_1 = require("../useCases/Report/deliverymanPaymentUseCase");
+var productDispenseAndGainUseCase_1 = require("../useCases/Report/productDispenseAndGainUseCase");
+var productsAmountUseCase_1 = require("../useCases/Report/productsAmountUseCase");
+var finishedOrdersUseCase_1 = require("../useCases/Report/finishedOrdersUseCase");
 var ReportController = /** @class */ (function () {
     function ReportController() {
     }

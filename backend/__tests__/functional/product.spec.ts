@@ -4,7 +4,10 @@ import Product from '../../src/app/models/Product';
 import app from '../../src/app';
 import factory from '../factories';
 
-import { ProductInterface, IngredientInterface } from '../../src/interfaces/base';
+import {
+  ProductInterface,
+  IngredientInterface,
+} from '../../src/interfaces/base';
 
 describe('should test a product', () => {
   beforeAll(() => {
@@ -36,12 +39,11 @@ describe('should test a product', () => {
         ],
         description: 'como que é o nome daquele negocio?',
       });
-    // console.log(response.body);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({
         cost: 1.25,
-      })
+      }),
     );
   });
 
@@ -72,7 +74,7 @@ describe('should test a product', () => {
       expect.objectContaining({
         name: 'roquinha',
         cost: 1.25,
-      })
+      }),
     );
   });
 
@@ -128,7 +130,7 @@ describe('should test a product', () => {
         expect.objectContaining({
           name: 'pão',
         }),
-      ])
+      ]),
     );
   });
 
@@ -175,7 +177,7 @@ describe('should test a product', () => {
         expect.objectContaining({
           name: 'queijo',
         }),
-      ])
+      ]),
     );
   });
 });

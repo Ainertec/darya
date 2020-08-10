@@ -104,8 +104,17 @@ var Source = Object.freeze({
     whatsapp: 'Whatsapp',
     instagram: 'Instagram',
     delivery: 'Pronta Entrega',
+    itau: 'Transferência Itaú',
+    bradesco: 'Transferência Bradesco',
     getSource: function () {
-        var source = [this.ifood, this.whatsapp, this.instagram, this.delivery];
+        var source = [
+            this.ifood,
+            this.whatsapp,
+            this.instagram,
+            this.delivery,
+            this.itau,
+            this.bradesco,
+        ];
         return source;
     },
 });

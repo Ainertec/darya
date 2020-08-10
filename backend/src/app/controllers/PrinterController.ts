@@ -7,14 +7,16 @@ import jsRTF from 'jsrtf';
 import { format } from 'date-fns';
 import { exec } from 'shelljs';
 
-import { DeliverymanPaymentUseCase } from '../useCases/Report/deliverymanPaymentUseCase';
-import { DeliverymanPrinterUseCase } from '../useCases/Printer/deliverymanPrinterUseCase';
-import { SoldReportUseCase } from '../useCases/Printer/soldReportUseCase';
+import { ProductAmountUseCase } from '../useCases/Report/productsAmountUseCase';
+import { SoldReportUseCase } from '../useCases/Printer/SoldPrinter/soldReportUseCase';
+
 import {
   ItemsInterface,
   OrderInterfaceDeliveryman,
 } from '../../interfaces/base';
-import { ProductAmountUseCase } from '../useCases/Report/productsAmountUseCase';
+import { DeliverymanPaymentUseCase } from '../useCases/Report/deliverymanPaymentUseCase';
+import { DeliverymanPrinterUseCase } from '../useCases/Printer/DeliverymanPrinter/deliverymanPrinterUseCase';
+import { SoldPrinterUseCase } from '../useCases/Printer/SoldPrinter/soldPrinterUseCase';
 
 class PrinterController {
   public constructor() {
@@ -151,11 +153,12 @@ class PrinterController {
 
   async deliverymanPrint(request: Request, response: Response) {
     const { deliveryman_id } = request.params;
-    const deliverymanPayment = new DeliverymanPaymentUseCase(Order);
-    const deliverymanPrinter = new DeliverymanPrinterUseCase(
-      deliverymanPayment,
-    );
+
     try {
+      const deliverymanPayment = new DeliverymanPaymentUseCase(Order);
+      const deliverymanPrinter = new DeliverymanPrinterUseCase(
+        deliverymanPayment,
+      );
       await deliverymanPrinter.printer(deliveryman_id);
       return response.status(200).send();
     } catch (err) {
@@ -164,11 +167,15 @@ class PrinterController {
   }
 
   async soldPrint(request: Request, response: Response) {
-    const productsAmount = new ProductAmountUseCase(Order);
-    const soldPrintUseCase = new SoldReportUseCase(Order, productsAmount);
-    const soldReport = await soldPrintUseCase.printer();
-
-    return response.json(soldReport);
+    try {
+      const productsAmount = new ProductAmountUseCase(Order);
+      const soldReportUseCase = new SoldReportUseCase(Order, productsAmount);
+      const soldPrintUseCase = new SoldPrinterUseCase(soldReportUseCase);
+      await soldPrintUseCase.printer();
+      return response.status(200).send();
+    } catch (error) {
+      return response.status(400).json('Failed on print general report');
+    }
   }
 }
 export default new PrinterController();

@@ -76,7 +76,6 @@ describe('should a Client', () => {
     const response = await request(app).get(
       `/reports/deliveryman/rate/${deliveryman._id}`,
     );
-    expect(response.body.ordersDeliveryman.length).toBe(0);
     expect(response.status).toBe(200);
   });
 

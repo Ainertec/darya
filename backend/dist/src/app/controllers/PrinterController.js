@@ -45,6 +45,11 @@ var fs_1 = __importDefault(require("fs"));
 var jsrtf_1 = __importDefault(require("jsrtf"));
 var date_fns_1 = require("date-fns");
 var shelljs_1 = require("shelljs");
+var productsAmountUseCase_1 = require("../useCases/Report/productsAmountUseCase");
+var soldReportUseCase_1 = require("../useCases/Printer/SoldPrinter/soldReportUseCase");
+var deliverymanPaymentUseCase_1 = require("../useCases/Report/deliverymanPaymentUseCase");
+var deliverymanPrinterUseCase_1 = require("../useCases/Printer/DeliverymanPrinter/deliverymanPrinterUseCase");
+var soldPrinterUseCase_1 = require("../useCases/Printer/SoldPrinter/soldPrinterUseCase");
 var PrinterController = /** @class */ (function () {
     function PrinterController() {
         this.store = this.store.bind(this);
@@ -153,6 +158,53 @@ var PrinterController = /** @class */ (function () {
                             return [2 /*return*/, response.status(200).json('success')];
                         }
                         return [2 /*return*/];
+                }
+            });
+        });
+    };
+    PrinterController.prototype.deliverymanPrint = function (request, response) {
+        return __awaiter(this, void 0, void 0, function () {
+            var deliveryman_id, deliverymanPayment, deliverymanPrinter, err_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        deliveryman_id = request.params.deliveryman_id;
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        deliverymanPayment = new deliverymanPaymentUseCase_1.DeliverymanPaymentUseCase(Order_1.default);
+                        deliverymanPrinter = new deliverymanPrinterUseCase_1.DeliverymanPrinterUseCase(deliverymanPayment);
+                        return [4 /*yield*/, deliverymanPrinter.printer(deliveryman_id)];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/, response.status(200).send()];
+                    case 3:
+                        err_1 = _a.sent();
+                        response.status(400).json('Erro on try print deliveryman payment');
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    PrinterController.prototype.soldPrint = function (request, response) {
+        return __awaiter(this, void 0, void 0, function () {
+            var productsAmount, soldReportUseCase, soldPrintUseCase, error_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        productsAmount = new productsAmountUseCase_1.ProductAmountUseCase(Order_1.default);
+                        soldReportUseCase = new soldReportUseCase_1.SoldReportUseCase(Order_1.default, productsAmount);
+                        soldPrintUseCase = new soldPrinterUseCase_1.SoldPrinterUseCase(soldReportUseCase);
+                        return [4 /*yield*/, soldPrintUseCase.printer()];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/, response.status(200).send()];
+                    case 2:
+                        error_1 = _a.sent();
+                        return [2 /*return*/, response.status(400).json('Failed on print general report')];
+                    case 3: return [2 /*return*/];
                 }
             });
         });

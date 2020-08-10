@@ -1,7 +1,11 @@
 import { Model, Types } from 'mongoose';
 import { startOfDay, endOfDay } from 'date-fns';
 import { OrderInterface } from '../../../interfaces/base';
-import { order } from '../../../validations/orderSchema';
+
+interface IDeliveryman {
+  name: string;
+  phone: string;
+}
 
 export class DeliverymanPaymentUseCase {
   constructor(private OrderModel: Model<OrderInterface>) {}
@@ -19,13 +23,20 @@ export class DeliverymanPaymentUseCase {
       .populate('items.product')
       .populate('deliveryman');
 
+    if (ordersDeliveryman.length === 0) {
+      return;
+    }
+
     const deliverymanRate = ordersDeliveryman.reduce((sum, order) => {
       return sum + order.address.district_rate;
     }, 0);
+    const deliverymanAddress = ordersDeliveryman.map(order => order.address);
 
     return {
-      ordersDeliveryman,
-      deliverymanRate,
+      deliverymanAddress,
+      deliverymanRate: deliverymanRate.toFixed(2),
+      deliveryman: (ordersDeliveryman[0]
+        .deliveryman as unknown) as IDeliveryman,
     };
   }
 }

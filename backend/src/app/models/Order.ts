@@ -1,9 +1,7 @@
 import { Schema, model, Model } from 'mongoose';
 import { OrderInterface } from '../../interfaces/base';
 import Product from './Product';
-import Ingredient from './Ingredient';
 import { subIngredintStock } from '../utils/subIngredientStock';
-import { sub } from 'date-fns';
 
 const ItemsSchema = new Schema({
   product: {
@@ -74,8 +72,17 @@ const Source = Object.freeze({
   whatsapp: 'Whatsapp',
   instagram: 'Instagram',
   delivery: 'Pronta Entrega',
+  itau: 'Transferência Itaú',
+  bradesco: 'Transferência Bradesco',
   getSource() {
-    const source = [this.ifood, this.whatsapp, this.instagram, this.delivery];
+    const source = [
+      this.ifood,
+      this.whatsapp,
+      this.instagram,
+      this.delivery,
+      this.itau,
+      this.bradesco,
+    ];
     return source;
   },
 });
@@ -118,14 +125,14 @@ const OrderSchema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 Object.assign(OrderSchema.statics, {
   Source,
 });
 
-OrderSchema.post<OrderInterface>('save', async (document) => {
+OrderSchema.post<OrderInterface>('save', async document => {
   if (document && document.finished) {
     for (const item of document.items) {
       const product = await Product.findOne({ _id: item.product });

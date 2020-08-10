@@ -87,7 +87,6 @@ describe('should test a product', function () {
                         })];
                 case 2:
                     response = _a.sent();
-                    // console.log(response.body);
                     expect(response.status).toBe(200);
                     expect(response.body).toEqual(expect.objectContaining({
                         cost: 1.25,
