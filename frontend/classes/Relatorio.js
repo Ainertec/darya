@@ -6,7 +6,7 @@ async function telaDeRelatorio() {
 
   codigoHTML += `<h4 class="text-center"><span class="fas fa-chart-pie"></span> Relatórios</h4>
     <div class="card-deck col-6 mx-auto d-block">
-      <button onclick="" type="button" class="btn btn-warning btn-block" style="margin-top:60px; margin-bottom:30px;">
+      <button onclick="confirmarAcao('Imprimir relatório geral!','impressaoRelatorioGeral();','')" type="button" class="btn btn-warning btn-block" style="margin-top:60px; margin-bottom:30px;">
         <span class="fas fa-print"></span> Imprimir relatório
       </button>
     </div>
@@ -323,5 +323,17 @@ function gerarListaDePedidosFechados(json) {
 
   } catch (error) {
     document.getElementById('listaItens').innerHTML = '<h5 class="text-center" style="margin-top:10vh;"><span class="fas fa-exclamation-triangle"></span> Dados indisponíveis para "Lista de Pedidos Fechados"!</h5>'
+  }
+}
+
+//funcao responsavel por imprimir o relatorio geral
+async function impressaoRelatorioGeral() {
+  try {
+    await aguardeCarregamento(true);
+    await requisicaoGET(`printers/sold_report`)
+    await aguardeCarregamento(false);
+    await mensagemDeAviso('Imprimindo relatório geral...')
+  } catch (error) {
+    mensagemDeErro('Não foi possível imprimir o relatório!')
   }
 }

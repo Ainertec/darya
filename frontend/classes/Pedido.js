@@ -1134,7 +1134,7 @@ async function reImprimirPedido(id) {
       id: id
     })
     await aguardeCarregamento(false);
-    await mensagemDeAviso('Pedido impressão com sucesso!')
+    await mensagemDeAviso('Imprimindo pedido ...')
   } catch (error) {
     mensagemDeErro('Não foi possível imprimir o pedido!')
   }

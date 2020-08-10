@@ -116,7 +116,7 @@ function gerarListaDeMotoboyParaTrabalho(json) {
         </td>
         <td class="table-warning text-dark">
             <button onclick="gerarGraficoMotoboy('${json._id}');" type="button" class="btn btn-outline-primary btn-sm"><span class="fas fa-chart-bar"></span> Exibir</button>
-            <button onclick="" type="button" class="btn btn-outline-primary btn-sm"><span class="fas fa-print"></span> Imprimir</button>
+            <button onclick="confirmarAcao('Imprimir relatório motoboy!','impressaoRelatorioMotoboy(this.value);','${json._id}')" type="button" class="btn btn-outline-primary btn-sm"><span class="fas fa-print"></span> Imprimir</button>
         </td>
     </tr>`
 
@@ -388,7 +388,7 @@ async function gerarGraficoMotoboy(id) {
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <h3 class="text-center" style="margin-top:40px; margin-bottom:40px;"> Valor total das taxas: <span class="badge badge-success">R$${(parseFloat(json.data[0].rate)).toFixed(2)}</span></h3>
+                                    <h3 class="text-center" style="margin-top:40px; margin-bottom:40px;"> Valor total das taxas: <span class="badge badge-success">R$${(parseFloat(json.data.deliverymanRate)).toFixed(2)}</span></h3>
                                     <table class="table table-sm table-bordered">
                                         <thead class="thead-dark">
                                         <tr>
@@ -444,4 +444,16 @@ function reiniciarClasseMotoboy() {
     document.getElementById('modal').innerHTML = ''
     document.getElementById('modal2').innerHTML = ''
     document.getElementById('alert2').innerHTML = ''
+}
+
+//funcao responsavel por imprimir o relatorio do motoboy
+async function impressaoRelatorioMotoboy(id) {
+    try {
+        await aguardeCarregamento(true);
+        await requisicaoGET(`printers/deliveryman_report/${id}`)
+        await aguardeCarregamento(false);
+        await mensagemDeAviso('Imprimindo relatório ...')
+    } catch (error) {
+        mensagemDeErro('Não foi possível imprimir o relatório!')
+    }
 }
