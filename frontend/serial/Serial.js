@@ -35,7 +35,7 @@ function TelaConfigurarSerial() {
 
 //funcao para autenticar o acesso as configuracao de serial
 function autenticacaoSerial() {
-  if (document.getElementById('senha').value == '52164521655455362') {
+  if (document.getElementById('senha').value == '0xb9535b2726ce80') {
     TelaConfigurarSerial();
   }
 }
