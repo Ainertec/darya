@@ -2,11 +2,11 @@ import { Request, Response } from 'express';
 import { sub } from 'date-fns';
 import Order from '../models/Order';
 
-import { OrdersProfitUseCase } from '../useCases/Report/OrdersProfit/ordersProfitUseCase';
-import { DeliverymanPaymentUseCase } from '../useCases/Report/OrdersProfit/deliverymanPaymentUseCase';
-import { ProductDispenseAndGainUseCase } from '../useCases/Report/OrdersProfit/productDispenseAndGainUseCase';
-import { ProductAmountUseCase } from '../useCases/Report/OrdersProfit/productsAmountUseCase';
-import { FinishedOrdersUseCase } from '../useCases/Report/OrdersProfit/finishedOrdersUseCase';
+import { OrdersProfitUseCase } from '../useCases/Report/ordersProfitUseCase';
+import { DeliverymanPaymentUseCase } from '../useCases/Report/deliverymanPaymentUseCase';
+import { ProductDispenseAndGainUseCase } from '../useCases/Report/productDispenseAndGainUseCase';
+import { ProductAmountUseCase } from '../useCases/Report/productsAmountUseCase';
+import { FinishedOrdersUseCase } from '../useCases/Report/finishedOrdersUseCase';
 
 class ReportController {
   async deliverymanPayment(request: Request, response: Response) {

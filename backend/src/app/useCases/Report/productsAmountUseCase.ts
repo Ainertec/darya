@@ -1,5 +1,5 @@
 import { Model } from 'mongoose';
-import { OrderInterface } from '../../../../interfaces/base';
+import { OrderInterface } from '../../../interfaces/base';
 
 export class ProductAmountUseCase {
   constructor(private OrderModel: Model<OrderInterface>) {}

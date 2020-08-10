@@ -1,6 +1,6 @@
 import { Model, Types } from 'mongoose';
 import { startOfDay, endOfDay } from 'date-fns';
-import { OrderInterface } from '../../../../interfaces/base';
+import { OrderInterface } from '../../../interfaces/base';
 
 export class FinishedOrdersUseCase {
   constructor(private OrderModel: Model<OrderInterface>) {}

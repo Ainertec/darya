@@ -1,5 +1,5 @@
 import { Model } from 'mongoose';
-import { OrderInterface, ProductInterface } from '../../../../interfaces/base';
+import { OrderInterface, ProductInterface } from '../../../interfaces/base';
 
 interface InterfaceDispenseAndGain {
   _id: ProductInterface;
