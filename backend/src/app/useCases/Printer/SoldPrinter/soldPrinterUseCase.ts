@@ -71,7 +71,10 @@ export class SoldPrinterUseCase {
     myDoc.writeText(`Total: R$${totalOrders}`, contentStyle);
 
     const content = myDoc.createDocument();
-
-    printFile(content, 'relatorio_geral');
+    try {
+      printFile(content, 'relatorio_geral');
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 }
