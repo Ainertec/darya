@@ -6,15 +6,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.printFile = void 0;
 var path_1 = __importDefault(require("path"));
 var fs_1 = __importDefault(require("fs"));
+var mongoose_1 = require("mongoose");
 function printFile(content, fileName) {
-    var buffer = Buffer.from(content, 'binary');
-    var dir = process.env.NODE_ENV === 'test'
-        ? path_1.default.resolve(__dirname, '..', '..', '..', '__tests__', 'recipes')
-        : process.env.DIR_PRODUCTION;
-    fs_1.default.writeFile(dir + "/" + fileName + ".rtf", buffer, { encoding: 'utf-8', flag: 'w' }, function (err) {
-        if (err)
-            throw new Error('Erro when try print');
-    });
+    try {
+        var buffer = Buffer.from(content, 'binary');
+        var dir = process.env.NODE_ENV === 'test'
+            ? path_1.default.resolve(__dirname, '..', '..', '..', '__tests__', 'recipes')
+            : process.env.DIR_PRODUCTION;
+        fs_1.default.writeFile(dir + "/" + fileName + ".rtf", buffer, { encoding: 'utf-8', flag: 'w' }, function (err) { });
+    }
+    catch (error) {
+        throw new mongoose_1.Error(error.message);
+    }
     // const vbs =
     //   process.env.NODE_ENV === 'test'
     //     ? path.resolve(

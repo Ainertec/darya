@@ -104,7 +104,12 @@ var SoldPrinterUseCase = /** @class */ (function () {
                         myDoc.writeText("", contentStyle);
                         myDoc.writeText("Total: R$" + totalOrders, contentStyle);
                         content = myDoc.createDocument();
-                        printFile_1.printFile(content, 'relatorio_geral');
+                        try {
+                            printFile_1.printFile(content, 'relatorio_geral');
+                        }
+                        catch (error) {
+                            throw new Error(error);
+                        }
                         return [2 /*return*/];
                 }
             });
