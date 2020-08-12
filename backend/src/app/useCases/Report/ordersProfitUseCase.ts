@@ -27,8 +27,8 @@ export class OrdersProfitUseCase {
     const totalProducts = ordersProfit.reduce((sum, order) => {
       return (
         sum +
-        order.items.reduce((sum, item) => {
-          return sum + item.product?.cost * item.quantity;
+        order.items.reduce((sum2, item) => {
+          return sum2 + item.product?.cost * item.quantity;
         }, 0)
       );
     }, 0);

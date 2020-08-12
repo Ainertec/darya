@@ -16,28 +16,28 @@ export function printFile(content: any, fileName: string) {
       `${dir}/${fileName}.rtf`,
       buffer,
       { encoding: 'utf-8', flag: 'w' },
-      err => {},
+      err => { },
     );
   } catch (error) {
     throw new Error(error.message);
   }
 
-  // const vbs =
-  //   process.env.NODE_ENV === 'test'
-  //     ? path.resolve(
-  //         __dirname,
-  //         '..',
-  //         '..',
-  //         '..',
-  //         '__tests__',
-  //         'recipes',
-  //         'impressao.vbs',
-  //       )
-  //     : process.env.DIR_INITIALIZE_PRINT;
+  const vbs =
+    process.env.NODE_ENV === 'test'
+      ? path.resolve(
+        __dirname,
+        '..',
+        '..',
+        '..',
+        '__tests__',
+        'recipes',
+        'impressao.vbs',
+      )
+      : process.env.DIR_INITIALIZE_PRINT;
 
-  // if (vbs) {
-  //   setTimeout(() => {
-  //     exec(vbs);
-  //   }, 1000);
-  // }
+  if (vbs) {
+    setTimeout(() => {
+      exec(vbs);
+    }, 1000);
+  }
 }
