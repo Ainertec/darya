@@ -642,6 +642,14 @@ async function preencherDadosPedidoIncluirDadosEmPedido(tipo, id, quantidade) {
       await aguardeCarregamento(false);
       let dado = json.data.find((element) => element._id == id);
 
+      document.getElementById('nomecliente').value = ''
+      document.getElementById('nomecliente').title = ''
+      document.getElementById('telefonecliente').innerHTML = ''
+      if (document.getElementById('enderecocliente')) {
+        document.getElementById('enderecocliente').innerHTML = ''
+      }
+
+
       DADOSPEDIDO.cliente_id = dado._id;
 
       document.getElementById('nomecliente').value = corrigirTamanhoString(15, dado.name);
@@ -663,21 +671,27 @@ async function preencherDadosPedidoIncluirDadosEmPedido(tipo, id, quantidade) {
   } else if (tipo == 'produto') {
 
     try {
-      await aguardeCarregamento(true);
-      let json = await requisicaoGET(`products`);
-      await aguardeCarregamento(false);
-      let dado = json.data.find((element) => element._id == id);
+      if (VETORDEPRODUTOSCLASSEPEDIDO.findIndex((element) => element._id == id) == -1) {
 
-      VETORDEPRODUTOSCLASSEPEDIDO.push(
-        JSON.parse(`{"_id":"${dado._id}","ref":"lisProdPed${dado._id}"}`)
-      );
+        await aguardeCarregamento(true);
+        let json = await requisicaoGET(`products`);
+        await aguardeCarregamento(false);
+        let dado = json.data.find((element) => element._id == id);
 
-      $('#listagemDeProdutoSelecionadoPedido').append(`<tr id="linhaProd${dado._id}">
-          <td class="table-warning col-2" title="${dado.name}"><strong><span class="fas fa-hamburger"></span> ${corrigirTamanhoString(15, dado.name)}</strong></td>
-          <td class="table-warning text-danger"><strong>R$${(parseFloat(dado.price)).toFixed(2)}</strong></td>
-          <td class="table-warning"><input id="lisProdPed${dado._id}" type="Number" class="form-control form-control-sm" value=${quantidade}></td>
-          <td class="table-warning text-center"><button onclick="removerProdutoDaTabelaeVetor('${dado._id}');" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span></button></td>
-      </tr>`);
+        VETORDEPRODUTOSCLASSEPEDIDO.push(
+          JSON.parse(`{"_id":"${dado._id}","ref":"lisProdPed${dado._id}"}`)
+        );
+
+        $('#listagemDeProdutoSelecionadoPedido').append(`<tr id="linhaProd${dado._id}">
+            <td class="table-warning col-2" title="${dado.name}"><strong><span class="fas fa-hamburger"></span> ${corrigirTamanhoString(15, dado.name)}</strong></td>
+            <td class="table-warning text-danger"><strong>R$${(parseFloat(dado.price)).toFixed(2)}</strong></td>
+            <td class="table-warning"><input id="lisProdPed${dado._id}" type="Number" class="form-control form-control-sm" value=${quantidade}></td>
+            <td class="table-warning text-center"><button onclick="removerProdutoDaTabelaeVetor('${dado._id}');" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span></button></td>
+        </tr>`);
+
+      } else {
+        mensagemDeErroModal('Produto já adicionado altere a quantidade!')
+      }
     } catch (error) {
       mensagemDeErroModal('Não foi possível adicionar o produto!')
     }

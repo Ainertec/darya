@@ -219,6 +219,8 @@ async function buscarDadosCliente(tipo) {
       await aguardeCarregamento(false);
     }
 
+    console.log(json)
+
     codigoHTML += `<h5 class="text-center" style="margin-top:80px">Listagem de bairros</h5>
       <table class="table table-sm col-8 mx-auto" style="margin-top:10px">
           <thead class="thead-dark">
@@ -376,6 +378,12 @@ async function cadastrarCliente() {
           };
         });
 
+        console.log({
+          address: addressSerialiazaded,
+          phone: cliente.phone,
+          name: cliente.name,
+        })
+
         await aguardeCarregamento(true);
         let result = await requisicaoPOST(`clients`, {
           address: addressSerialiazaded,
@@ -390,6 +398,8 @@ async function cadastrarCliente() {
           await mensagemDeErro('Atenção já existe um cliente com os mesmo dados!')
         } else {
           await mensagemDeAviso('Cliente cadastrado com sucesso!')
+          document.getElementById('nome').value = await result.data.name
+          await buscarDadosCliente('nome')
         }
 
       } else {
@@ -408,6 +418,8 @@ async function cadastrarCliente() {
           await mensagemDeErro('Atenção já existe um cliente com os mesmo dados!')
         } else {
           await mensagemDeAviso('Cliente cadastrado com sucesso!')
+          document.getElementById('nome').value = await result.data.name
+          await buscarDadosCliente('nome')
         }
       }
     } else {

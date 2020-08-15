@@ -38,7 +38,7 @@ function modalTelaCadastrarAtualizarIngrediente(tipo) {
                         <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel"><span class="fas fa-box"></span> Dados Ingrediente</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button onclick="reiniciarClasseEstoque();" type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                             </button>
                             <div id="mensagemDeErroModal" class="justify-content-center"></div>
@@ -145,7 +145,7 @@ async function buscarEstoque(tipoBusca) {
       <td class="table-warning text-dark" title="${item.name}"><strong><span class="fas fa-box"></span> ${corrigirTamanhoString(20, item.name)}</strong></td>
       <td class="table-warning text-danger"><strong>R$${(parseFloat(item.price)).toFixed(2)}</strong></td>
       <td class="table-warning text-dark" title="${item.description}">${corrigirTamanhoString(30, item.description)}</td>`
-      if (parseInt(item.stock) > 200) {
+      if (parseInt(item.stock) > 2000) {
         codigoHTML += `<td class="table-success text-dark text-center"><strong>${parseInt(item.stock)} ${item.unit == 'g' ? 'g' : 'ml'}</strong></td>`
       } else {
         codigoHTML += `<td class="table-danger text-dark text-center"><strong>${parseInt(item.stock)} ${item.unit == 'g' ? 'g' : 'ml'}</strong></td>`

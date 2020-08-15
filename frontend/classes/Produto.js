@@ -194,7 +194,7 @@ async function carregarDadosProduto(id) {
     document.getElementById('nomeproduto').value = dado.name;
     document.getElementById('precovenda').value = parseFloat(dado.price).toFixed(2);
     document.getElementById('descricaoproduto').value = dado.description;
-    for (let item of dado.ingredients) {
+    for (let item2 of dado.ingredients) {
       adicionarIngredienteaoProduto(item2.material._id, 'atualizar', item2.quantity);
     }
     document.getElementById('botaoatualizar').value = dado._id;
@@ -242,10 +242,13 @@ async function cadastrarProduto() {
 
 
     await aguardeCarregamento(true);
-    await requisicaoPOST('products', json);
+    let result = await requisicaoPOST('products', json);
     await aguardeCarregamento(false);
     $('#modalClasseProduto').modal('hide');
     await mensagemDeAviso('Produto cadastrado com sucesso!')
+    console.log(result)
+    document.getElementById('nome').value = await result.data.name
+    await buscarDadosProduto('nome')
   } catch (error) {
     mensagemDeErro('Não foi possível cadastrar o produto!')
   }

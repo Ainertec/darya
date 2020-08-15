@@ -179,6 +179,8 @@ async function cadastrarBairro() {
     let result = await requisicaoPOST('districts', JSON.parse(json));
     await aguardeCarregamento(false);
     await mensagemDeAviso('Bairro cadastrado com sucesso!')
+    document.getElementById('nome').value = await result.data.name
+    await buscarDadosBairro('nome')
   } catch (error) {
     mensagemDeErro('Não foi possível cadastrar o bairro!')
   }
