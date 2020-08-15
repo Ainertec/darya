@@ -86,26 +86,25 @@ async function modalTelaCadastrarouAtualizarProduto(tipo) {
                                     <div class="col-12" style="position: relative; height: 30vh; z-index: 1; overflow: scroll; margin-right: 0px;">
                                       <table class="table">
                                         <tbody>`
-
-  json.data.forEach(function (item) {
+  for (let item of json.data) {
     codigoHTML += `<tr class="table-info">
-                                            <td style="width:5vw">
-                                              <div class="custom-control custom-switch">
-                                                <input type="checkbox" onclick="this.checked? adicionarIngredienteaoProduto('${item._id}', 'cadastrar', null) : removerIngredientedoProduto('${item._id}')" class="custom-control-input custom-switch" id="select${item._id}">
-                                                <label class="custom-control-label" for="select${item._id}">Add</label>
-                                              </div>                                   
-                                            </td>
-                                            <td style="width:15vw" title="${item.name}"><span class="fas fa-box"></span> ${corrigirTamanhoString(15, item.name)}</td>
-                                            <td style="width:15vw" title="Adicione a quantidade gasta na produção do produto!">
-                                              <div class="input-group input-group-sm">
-                                                <input type="Number" class="form-control form-control-sm" id="quanti${item._id}">
-                                                <div class="input-group-prepend">
-                                                  <span class="input-group-text input-group-text">${item.unit}</span>
-                                                </div>
-                                              </div>
-                                            </td>
-                                          </tr>`
-  });
+      <td style="width:5vw">
+        <div class="custom-control custom-switch">
+          <input type="checkbox" onclick="this.checked? adicionarIngredienteaoProduto('${item._id}', 'cadastrar', null) : removerIngredientedoProduto('${item._id}')" class="custom-control-input custom-switch" id="select${item._id}">
+          <label class="custom-control-label" for="select${item._id}">Add</label>
+        </div>                                   
+      </td>
+      <td style="width:15vw" title="${item.name}"><span class="fas fa-box"></span> ${corrigirTamanhoString(15, item.name)}</td>
+      <td style="width:15vw" title="Adicione a quantidade gasta na produção do produto!">
+        <div class="input-group input-group-sm">
+          <input type="Number" class="form-control form-control-sm" id="quanti${item._id}">
+          <div class="input-group-prepend">
+            <span class="input-group-text input-group-text">${item.unit}</span>
+          </div>
+        </div>
+      </td>
+    </tr>`
+  }
 
   codigoHTML += `</tbody>
                                       </table>
@@ -167,10 +166,10 @@ async function buscarDadosProduto(tipo) {
           </thead>
           <tbody>`;
 
-    json.data.forEach(function (item) {
+    for (let item of json.data) {
       VETORDEPRODUTOSCLASSEPRODUTO.push(item);
       codigoHTML += gerarListaDeProdutos(item);
-    });
+    }
 
     codigoHTML += `</tbody>
       </table>`;
@@ -195,9 +194,9 @@ async function carregarDadosProduto(id) {
     document.getElementById('nomeproduto').value = dado.name;
     document.getElementById('precovenda').value = parseFloat(dado.price).toFixed(2);
     document.getElementById('descricaoproduto').value = dado.description;
-    dado.ingredients.forEach(function (item2) {
+    for (let item of dado.ingredients) {
       adicionarIngredienteaoProduto(item2.material._id, 'atualizar', item2.quantity);
-    });
+    }
     document.getElementById('botaoatualizar').value = dado._id;
     document.getElementById('botaoexcluir').value = dado._id;
   } catch (error) {

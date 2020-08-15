@@ -139,7 +139,7 @@ async function buscarEstoque(tipoBusca) {
       </tr>
     </thead>
     <tbody>`
-    json.data.forEach(function (item) {
+    for (let item of json.data) {
       VETORDEITENSESTOQUE.push(item);
       codigoHTML += `<tr>
       <td class="table-warning text-dark" title="${item.name}"><strong><span class="fas fa-box"></span> ${corrigirTamanhoString(20, item.name)}</strong></td>
@@ -172,7 +172,7 @@ async function buscarEstoque(tipoBusca) {
         <button onclick="confirmarAcao('Excluir este produto!','excluirIngrediente(this.value)','${item._id}');" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span> Excluir</button>
       </td>
       </tr>`
-    });
+    }
     codigoHTML += `</tbody>
     </table>`
 
@@ -226,10 +226,10 @@ function gerarGraficoEstoque(json) {
     let vetorNome = [],
       vetorQuantidade = [];
 
-    json.data.forEach(function (item) {
+    for (let item of json.data) {
       vetorNome.push(corrigirTamanhoString(10, item.name));
       vetorQuantidade.push(item.stock);
-    });
+    }
 
     Highcharts.chart('grafico', {
       chart: {

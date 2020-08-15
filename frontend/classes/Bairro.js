@@ -133,10 +133,10 @@ async function buscarDadosBairro(tipo) {
           </thead>
           <tbody>`;
 
-    json.data.forEach(function (item) {
+    for (let item of json.data) {
       VETORDEBAIRROSCLASSEBAIRRO.push(item);
       codigoHTML += gerarListaDeBairros(item);
-    });
+    }
 
     codigoHTML += `</tbody>
       </table>`;

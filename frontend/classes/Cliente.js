@@ -42,9 +42,9 @@ function gerarListaDeClientes(json) {
         <td class="table-warning">`
   if (json.phone[0]) {
     codigoHTML += `<select class="form-control form-control-sm">`
-    json.phone.forEach(function (item) {
+    for (let item of json.phone) {
       codigoHTML += `<option>${item}</option>`;
-    });
+    };
     codigoHTML += `</select>`
   } else {
     codigoHTML += `Nenhum existente.`
@@ -53,9 +53,9 @@ function gerarListaDeClientes(json) {
         <td class="table-warning text-danger">`
   if (json.address[0]) {
     codigoHTML += `<select class="form-control form-control-sm">`
-    json.address.forEach(function (item) {
+    for (let item of json.address) {
       codigoHTML += `<option title="${item.street}, nº ${item.number} - ${item.district.name} - ${item.district.city}">${corrigirTamanhoString(15, item.street)}, nº ${item.number} - ${corrigirTamanhoString(15, item.district.name)} - ${corrigirTamanhoString(15, item.district.city)}</option>`;
-    });
+    }
     codigoHTML += `</select>`
   } else {
     codigoHTML += `Nenhum existente.`
@@ -178,9 +178,10 @@ async function gerarTelaParteEnderecoCliente(tipo) {
               <div class="form-group">
                 <label for="bairrocidadecliente">Bairro - Cidade:</label>
                 <select class="form-control form-control-sm" id="bairrocidadecliente">`;
-  json.data.forEach(function (item) {
+  for (let item of json.data) {
     codigoHTML += `<option value="${item._id}">${item.name} - ${item.city}</option>`;
-  });
+  }
+
   codigoHTML += `</select>
               </div>
               <div class="form-group">
@@ -231,10 +232,10 @@ async function buscarDadosCliente(tipo) {
           </thead>
           <tbody>`;
 
-    json.data.forEach(function (item) {
+    for (let item of json.data) {
       VETORDECLIENTESCLASSECLIENTE.push(item);
       codigoHTML += gerarListaDeClientes(item);
-    });
+    }
 
     codigoHTML += `</tbody>
       </table>`;
@@ -256,31 +257,32 @@ async function carregarDadosCliente(id) {
   await aguardeCarregamento(false);
 
   try {
-    let dado = VETORDECLIENTESCLASSECLIENTE.find((element) => element._id == id);
+    let dado = VETORDECLIENTESCLASSECLIENTE.find((element) => element._id == id), indice = 0;
 
     document.getElementById('nomecliente').value = dado.name;
 
-    dado.phone.forEach(function (item, indice) {
+    for (let item of dado.phone) {
       $('#tabelatelefone').append(`<tr id="linhatel${indice}">
               <td class="table-warning"><span class="fas fa-phone"></span> ${item}</td>
               <td class="table-warning"><button onclick="removerDadosNaTabelaTelefoneeEndereco('telefone', '${item}' ,'${id}', ${indice});" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span> Excluir</button></td>
           </tr>`);
-    });
+      indice++;
+    }
 
     if (dado.address[0]) {
 
       $('#areaendereco').fadeIn(10)
       document.getElementById('botaoSelectClientephoneaddress').checked = true;
 
-      dado.address.forEach(function (item, indice) {
+      for (let item of dado.address) {
         $('#tabelaendereco').append(`<tr id="linhaend${item._id}">
-                <td class="table-warning" title="${item.street}"><span class="fas fa-map-marker-alt"></span> ${corrigirTamanhoString(15, item.street)}</td>
-                <td class="table-warning">${item.number}</td>
-                <td class="table-warning" title="${item.district.name} - ${item.district.city}">${corrigirTamanhoString(15, item.district.name)} - ${corrigirTamanhoString(15, item.district.city)}</td>
-                <td class="table-warning" title="${item.reference}">${corrigirTamanhoString(20, item.reference)}</td>
-                <td class="table-warning"><button onclick="removerDadosNaTabelaTelefoneeEndereco('endereco', '','${id}','${item._id}');" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span> Excluir</button></td>
-            </tr>`);
-      });
+            <td class="table-warning" title="${item.street}"><span class="fas fa-map-marker-alt"></span> ${corrigirTamanhoString(15, item.street)}</td>
+            <td class="table-warning">${item.number}</td>
+            <td class="table-warning" title="${item.district.name} - ${item.district.city}">${corrigirTamanhoString(15, item.district.name)} - ${corrigirTamanhoString(15, item.district.city)}</td>
+            <td class="table-warning" title="${item.reference}">${corrigirTamanhoString(20, item.reference)}</td>
+            <td class="table-warning"><button onclick="removerDadosNaTabelaTelefoneeEndereco('endereco', '','${id}','${item._id}');" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span> Excluir</button></td>
+        </tr>`);
+      }
     }
 
     document.getElementById('botaoadicionartelefone').value = dado._id.toString();

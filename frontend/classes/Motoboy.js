@@ -168,10 +168,10 @@ async function buscarDadosMotoboyTrabalhando(tipo) {
             </thead>
             <tbody>`;
 
-        json.data.forEach(function (item) {
+        for (let item of json.data) {
             VETORDEMOTOBOYSCLASSEMOTOBOY.push(item);
             codigoHTML += gerarListaDeMotoboyParaTrabalho(item);
-        });
+        }
 
         codigoHTML += `</tbody>
             </table>`;
@@ -219,10 +219,10 @@ async function buscarDadosMotoboy(tipo) {
             </thead>
             <tbody>`;
 
-        json.data.forEach(function (item) {
+        for (let item of json.data) {
             VETORDEMOTOBOYSCLASSEMOTOBOY.push(item);
             codigoHTML += gerarListaDeMotoboyParaAtualizar(item);
-        });
+        }
 
         codigoHTML += `</tbody>
             </table>`;
@@ -403,23 +403,23 @@ async function gerarGraficoMotoboy(id) {
                                         </tr>
                                         </thead>
                                         <tbody class="table-warning">`
-            json2.data.forEach(function (item) {
+            for (let item of json2.data) {
                 const date = format(parseISO(item.createdAt), 'dd/MM/yyyy HH:mm:ss')
                 codigoHTML += `<tr>
                                         <td>${item.identification}</td>
                                         <td title="${item.client.name}">${corrigirTamanhoString(15, item.client.name)}</td>
                                         <td title="${item.deliveryman.name}"><strong>${corrigirTamanhoString(15, item.deliveryman.name)}</strong></td>
                                         <td>`
-                item.items.forEach(function (item2) {
+                for (let item2 of item.items) {
                     codigoHTML += `(${corrigirTamanhoString(15, item2.product.name)}/${item2.quantity}),`
-                });
+                }
                 codigoHTML += `</td>
                                         <td>${item.payment}</td>
                                         <td class="text-danger"><strong>R$${(parseFloat(item.total)).toFixed(2)}</strong></td>
                                         <td><strong>R$${(parseFloat(item.address.district_rate)).toFixed(2)}</strong></td>
                                         <td>${date}</td>
                                         </tr>`
-            });
+            }
             codigoHTML += `</tbody>
                                     </table>
                                 </div>
