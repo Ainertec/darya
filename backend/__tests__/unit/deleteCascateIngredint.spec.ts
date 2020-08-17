@@ -5,7 +5,10 @@ import Product from '../../src/app/models/Product';
 import app from '../../src/app';
 import factory from '../factories';
 
-import { IngredientInterface, ProductInterface } from '../../src/interfaces/base';
+import {
+  IngredientInterface,
+  ProductInterface,
+} from '../../src/interfaces/base';
 
 describe('should test a delete cascate when delete a ingredient', () => {
   beforeAll(() => {
@@ -35,7 +38,9 @@ describe('should test a delete cascate when delete a ingredient', () => {
       ],
     });
 
-    const response = await request(app).delete(`/ingredients/${ingredient._id}`);
+    const response = await request(app).delete(
+      `/ingredients/${ingredient._id}`,
+    );
     const productUpdated = await Product.findOne({ _id: product._id });
 
     expect(productUpdated?.ingredients.length).toBe(1);
@@ -54,7 +59,9 @@ describe('should test a delete cascate when delete a ingredient', () => {
       ],
     });
 
-    const response = await request(app).delete(`/ingredients/${ingredient._id}`);
+    const response = await request(app).delete(
+      `/ingredients/${ingredient._id}`,
+    );
     const productUpdated = await Product.findOne({ _id: product._id });
 
     expect(productUpdated?.ingredients.length).toBe(0);
@@ -78,7 +85,9 @@ describe('should test a delete cascate when delete a ingredient', () => {
       ],
     });
 
-    const response = await request(app).delete(`/ingredients/${ingredient3._id}`);
+    const response = await request(app).delete(
+      `/ingredients/${ingredient3._id}`,
+    );
     const productUpdated = await Product.findOne({ _id: product._id });
     expect(productUpdated?.ingredients.length).toBe(2);
     expect(response.status).toBe(200);

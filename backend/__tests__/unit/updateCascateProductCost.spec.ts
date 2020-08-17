@@ -5,9 +5,12 @@ import Product from '../../src/app/models/Product';
 import app from '../../src/app';
 import factory from '../factories';
 
-import { IngredientInterface, ProductInterface } from '../../src/interfaces/base';
+import {
+  IngredientInterface,
+  ProductInterface,
+} from '../../src/interfaces/base';
 
-describe('should test a update cascate when update a ingredient price', () => {
+describe('should test a update cascade when update a ingredient price', () => {
   beforeAll(() => {
     openConnection();
   });
@@ -29,13 +32,15 @@ describe('should test a update cascate when update a ingredient price', () => {
         },
       ],
     });
-    const response = await request(app).put(`/ingredients/${ingredient._id}`).send({
-      name: ingredient.name,
-      price: 2,
-      stock: 20,
-      description: ingredient.description,
-      unit: 'g',
-    });
+    const response = await request(app)
+      .put(`/ingredients/${ingredient._id}`)
+      .send({
+        name: ingredient.name,
+        price: 2,
+        stock: 20,
+        description: ingredient.description,
+        unit: 'g',
+      });
     const productUpdated = await Product.findOne({ _id: product._id });
     // console.log(response.body);
     // console.log(productUpdated);
@@ -61,13 +66,15 @@ describe('should test a update cascate when update a ingredient price', () => {
         },
       ],
     });
-    const response = await request(app).put(`/ingredients/${ingredient._id}`).send({
-      name: ingredient.name,
-      price: 2,
-      stock: 20,
-      description: ingredient.description,
-      unit: 'g',
-    });
+    const response = await request(app)
+      .put(`/ingredients/${ingredient._id}`)
+      .send({
+        name: ingredient.name,
+        price: 2,
+        stock: 20,
+        description: ingredient.description,
+        unit: 'g',
+      });
     const productUpdated = await Product.findOne({ _id: product._id });
     const productUpdated2 = await Product.findOne({ _id: product2._id });
     // console.log(response.body);

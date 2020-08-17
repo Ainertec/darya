@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import Joi from '@hapi/joi';
 
 interface IParamName {

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { Model, Types } from 'mongoose';
 import { startOfDay, endOfDay } from 'date-fns';
 import { OrderInterface } from '../../../interfaces/base';
@@ -8,7 +9,7 @@ export class FinishedOrdersUseCase {
   public async execute(deliveryman_id: string) {
     const initial = startOfDay(new Date());
     const final = endOfDay(new Date());
-    const ObjectId = Types.ObjectId;
+    const { ObjectId } = Types;
 
     const orders = await this.OrderModel.find({
       deliveryman: ObjectId(deliveryman_id),

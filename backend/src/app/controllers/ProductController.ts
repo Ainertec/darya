@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import { Request, Response } from 'express';
 import Product from '../models/Product';
 import getCost from '../utils/getProductCost';
@@ -24,7 +25,7 @@ class ProductController {
   }
 
   async store(request: Request, response: Response) {
-    const { name, price, description,ingredients } = request.body;
+    const { name, price, description, ingredients } = request.body;
     const cost = await getCost(ingredients);
     const product = await Product.create({
       name,
@@ -38,7 +39,7 @@ class ProductController {
   }
 
   async update(request: Request, response: Response) {
-    const { name, price, ingredients, description, } = request.body;
+    const { name, price, ingredients, description } = request.body;
     const { id } = request.params;
     const cost = await getCost(ingredients);
 
@@ -51,7 +52,7 @@ class ProductController {
         ingredients,
         cost,
       },
-      { new: true }
+      { new: true },
     );
     if (!product) return response.status(400).json('product not found');
 

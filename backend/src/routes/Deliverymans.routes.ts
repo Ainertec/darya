@@ -1,6 +1,6 @@
-import DeliverymanController from '../app/controllers/DeliverymanController';
 import { Router } from 'express';
 import { celebrate } from 'celebrate';
+import DeliverymanController from '../app/controllers/DeliverymanController';
 import { IValidationsDeliveryman } from './routesDTO';
 
 export class DeliverymansRoutes {

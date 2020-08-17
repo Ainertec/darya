@@ -1,6 +1,6 @@
-import ReportController from '../app/controllers/ReportController';
 import { Router } from 'express';
 import { celebrate } from 'celebrate';
+import ReportController from '../app/controllers/ReportController';
 import { IDeliverymanID } from './routesDTO';
 
 export class ReportsRoutes {

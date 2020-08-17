@@ -1,19 +1,20 @@
+/* eslint-disable camelcase */
+/* eslint-disable array-callback-return */
+/* eslint-disable consistent-return */
+/* eslint-disable no-unused-expressions */
 import { Request, Response } from 'express';
-import Order from '../models/Order';
 import path from 'path';
 import fs from 'fs';
-import jsRTF from 'jsrtf';
+import JsRTF from 'jsrtf';
 
 import { format } from 'date-fns';
 import { exec } from 'shelljs';
+import Order from '../models/Order';
 
 import { ProductAmountUseCase } from '../useCases/Report/productsAmountUseCase';
 import { SoldReportUseCase } from '../useCases/Printer/SoldPrinter/soldReportUseCase';
 
-import {
-  ItemsInterface,
-  OrderInterfaceDeliveryman,
-} from '../../interfaces/base';
+import { OrderInterfaceDeliveryman } from '../../interfaces/base';
 import { DeliverymanPaymentUseCase } from '../useCases/Report/deliverymanPaymentUseCase';
 import { DeliverymanPrinterUseCase } from '../useCases/Printer/DeliverymanPrinter/deliverymanPrinterUseCase';
 import { SoldPrinterUseCase } from '../useCases/Printer/SoldPrinter/soldPrinterUseCase';
@@ -23,16 +24,16 @@ class PrinterController {
     this.store = this.store.bind(this);
   }
 
-  private printProducts(items: ItemsInterface[]) {
-    let products = '';
-    items.map(item => {
-      products += `* ${item.product.name} --- R$${item.product.price.toFixed(
-        2,
-      )}\nQtd.: ${item.quantity}\n`;
-    });
+  // private printProducts(items: ItemsInterface[]) {
+  //   let products = '';
+  //   items.map(item => {
+  //     products += `* ${item.product.name} --- R$${item.product.price.toFixed(
+  //       2,
+  //     )}\nQtd.: ${item.quantity}\n`;
+  //   });
 
-    return products;
-  }
+  //   return products;
+  // }
 
   async store(request: Request, response: Response) {
     const { id } = request.body;
@@ -45,20 +46,20 @@ class PrinterController {
     const date =
       order.createdAt && format(order.createdAt, 'dd/MM/yyyy HH:mm:ss');
 
-    const myDoc = new jsRTF({
-      language: jsRTF.Language.BR,
-      pageWidth: jsRTF.Utils.mm2twips(58),
+    const myDoc = new JsRTF({
+      language: JsRTF.Language.BR,
+      pageWidth: JsRTF.Utils.mm2twips(58),
       landscape: false,
       marginLeft: 5,
       marginRight: 2,
     });
-    const contentStyle = new jsRTF.Format({
+    const contentStyle = new JsRTF.Format({
       spaceBefore: 20,
       spaceAfter: 20,
       fontSize: 8,
       paragraph: true,
     });
-    const contentBorder = new jsRTF.Format({
+    const contentBorder = new JsRTF.Format({
       spaceBefore: 80,
       spaceAfter: 80,
       fontSize: 8,
@@ -67,17 +68,17 @@ class PrinterController {
       paragraph: true,
       // borderBottom: { type: 'single', width: 10 },
     });
-    const header = new jsRTF.Format({
+    const header = new JsRTF.Format({
       spaceBefore: 20,
       spaceAfter: 100,
       fontSize: 8,
       bold: true,
       paragraph: true,
       align: 'center',
-      borderTop: { size: 2, spacing: 100, color: jsRTF.Colors.GREEN },
+      borderTop: { size: 2, spacing: 100, color: JsRTF.Colors.GREEN },
     });
 
-    const items = this.printProducts(order.items);
+    // const items = this.printProducts(order.items);
 
     myDoc.writeText('', contentBorder);
     myDoc.writeText('>>>>>>>>> Pedido <<<<<<<<<<', header);
@@ -97,7 +98,14 @@ class PrinterController {
     order.address &&
       myDoc.writeText(`Referência: ${order.address.reference}`, contentStyle);
     myDoc.writeText('=========== Itens ============', contentBorder);
-    myDoc.writeText(`${items}`, contentStyle);
+    order.items.map(item => {
+      myDoc.writeText(
+        `* ${item.product.name} --- R$ ${item.product.price.toFixed(2)}`,
+        contentStyle,
+      );
+      myDoc.writeText(`\nQtd.: ${item.quantity}\n`, contentStyle);
+    });
+
     myDoc.writeText('========== Motoboy ===========', contentBorder);
     order.deliveryman &&
       myDoc.writeText(`Nome: ${order.deliveryman.name}`, contentStyle);
@@ -161,7 +169,7 @@ class PrinterController {
       );
       await deliverymanPrinter.printer(deliveryman_id);
       return response.status(200).send();
-    } catch (err) {
+    } catch (error) {
       response.status(400).json('Erro on try print deliveryman payment');
     }
   }

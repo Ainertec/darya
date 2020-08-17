@@ -40,6 +40,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DeliverymanPrinterUseCase = void 0;
+/* eslint-disable array-callback-return */
+/* eslint-disable camelcase */
 var jsrtf_1 = __importDefault(require("jsrtf"));
 var date_fns_1 = require("date-fns");
 var printFile_1 = require("../../../utils/printFile");

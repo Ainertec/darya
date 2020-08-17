@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FinishedOrdersUseCase = void 0;
+/* eslint-disable camelcase */
 var mongoose_1 = require("mongoose");
 var date_fns_1 = require("date-fns");
 var FinishedOrdersUseCase = /** @class */ (function () {

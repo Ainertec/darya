@@ -40,9 +40,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SoldPrinterUseCase = void 0;
+/* eslint-disable array-callback-return */
 var jsrtf_1 = __importDefault(require("jsrtf"));
-var printFile_1 = require("../../../utils/printFile");
 var date_fns_1 = require("date-fns");
+var printFile_1 = require("../../../utils/printFile");
 var SoldPrinterUseCase = /** @class */ (function () {
     function SoldPrinterUseCase(soldReportUseCase) {
         this.soldReportUseCase = soldReportUseCase;

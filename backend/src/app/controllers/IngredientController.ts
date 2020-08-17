@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import { Request, Response } from 'express';
 import Ingredient, { Unit } from '../models/Ingredient';
 
@@ -6,6 +7,7 @@ class IngredientController {
     const ingredients = await Ingredient.find({});
     return response.json(ingredients);
   }
+
   async show(request: Request, response: Response) {
     const { name } = request.params;
     const ingredients = await Ingredient.find({
@@ -14,6 +16,7 @@ class IngredientController {
 
     return response.json(ingredients);
   }
+
   async store(request: Request, response: Response) {
     const { name, description, price, stock, unit } = request.body;
 
@@ -36,6 +39,7 @@ class IngredientController {
 
     return response.json(ingredient);
   }
+
   async update(request: Request, response: Response) {
     const { name, description, price, stock, unit } = request.body;
     const { id } = request.params;
@@ -57,11 +61,12 @@ class IngredientController {
         stock,
         unit,
       },
-      { new: true }
+      { new: true },
     );
 
     return response.json(ingredient);
   }
+
   async delete(request: Request, response: Response) {
     const { id } = request.params;
 

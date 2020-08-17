@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { Document, Types } from 'mongoose';
 
 export interface ProductInterface extends Document {
@@ -21,11 +22,12 @@ export interface IngredientInterface extends Document {
   priceUnit: number;
   description?: string;
   unit: string;
-  stock: any;
+  stock: number;
 }
 
 export interface DeliverymanInterface extends Document {
   name: string;
+  // eslint-disable-next-line camelcase
   working_day?: boolean;
   available?: boolean;
   hasDelivery?: boolean;

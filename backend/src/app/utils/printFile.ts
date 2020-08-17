@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import path from 'path';
 import fs from 'fs';
 import { exec } from 'shelljs';
@@ -16,7 +19,7 @@ export function printFile(content: any, fileName: string) {
       `${dir}/${fileName}.rtf`,
       buffer,
       { encoding: 'utf-8', flag: 'w' },
-      err => { },
+      () => {},
     );
   } catch (error) {
     throw new Error(error.message);
@@ -25,14 +28,14 @@ export function printFile(content: any, fileName: string) {
   const vbs =
     process.env.NODE_ENV === 'test'
       ? path.resolve(
-        __dirname,
-        '..',
-        '..',
-        '..',
-        '__tests__',
-        'recipes',
-        'impressao.vbs',
-      )
+          __dirname,
+          '..',
+          '..',
+          '..',
+          '__tests__',
+          'recipes',
+          'impressao.vbs',
+        )
       : process.env.DIR_INITIALIZE_PRINT;
 
   if (vbs) {

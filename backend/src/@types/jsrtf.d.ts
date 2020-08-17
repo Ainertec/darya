@@ -1,3 +1,1 @@
-declare module 'jsrtf'
-
-
+declare module 'jsrtf';

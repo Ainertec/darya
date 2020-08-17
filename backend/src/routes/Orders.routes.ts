@@ -1,6 +1,6 @@
-import OrderController from '../app/controllers/OrderController';
 import { Router } from 'express';
 import { celebrate } from 'celebrate';
+import OrderController from '../app/controllers/OrderController';
 import { IValidationsOrder } from './routesDTO';
 
 export class OrdersRoutes {

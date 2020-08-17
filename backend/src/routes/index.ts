@@ -1,5 +1,6 @@
 import { Router } from 'express';
 
+import { celebrate } from 'celebrate';
 import { ProductRoutes } from './Products.routes';
 import { ClientsRoutes } from './Clients.routes';
 import { IngredientsRoutes } from './Ingredients.routes';
@@ -26,7 +27,6 @@ import { paramName, paramId } from '../validations/commonSchema';
 import { ReportsRoutes } from './Reports.routes';
 import { PrintersRoutes } from './Printers.routes';
 import SerialController from '../app/controllers/SerialController';
-import { celebrate } from 'celebrate';
 
 const routes = Router();
 

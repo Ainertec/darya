@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 export interface ProductsAmount {
   _id: {
     id: string;

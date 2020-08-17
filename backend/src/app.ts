@@ -2,9 +2,8 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import { errors } from 'celebrate';
-import routes from './routes';
-
 import mongoose from 'mongoose';
+import routes from './routes';
 
 const app = express();
 app.use(cors());

@@ -1,6 +1,6 @@
-import IngredientController from '../app/controllers/IngredientController';
 import { Router } from 'express';
 import { celebrate } from 'celebrate';
+import IngredientController from '../app/controllers/IngredientController';
 import { IValidationsIngredient } from './routesDTO';
 
 export class IngredientsRoutes {

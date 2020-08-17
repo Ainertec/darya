@@ -29,7 +29,7 @@ describe('should test a ingredient', () => {
     expect(response.body).toEqual(
       expect.objectContaining({
         priceUnit: 0.1,
-      })
+      }),
     );
   });
 
@@ -47,30 +47,34 @@ describe('should test a ingredient', () => {
   it('should update  a ingredient', async () => {
     const ingredient = await factory.create<IngredientInterface>('Ingredient');
 
-    const response = await request(app).put(`/ingredients/${ingredient._id}`).send({
-      name: 'chocolate',
-      price: 2.0,
-      stock: 20,
-      unit: 'g',
-    });
+    const response = await request(app)
+      .put(`/ingredients/${ingredient._id}`)
+      .send({
+        name: 'chocolate',
+        price: 2.0,
+        stock: 20,
+        unit: 'g',
+      });
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({
         priceUnit: 0.1,
-      })
+      }),
     );
   });
 
   it('should not update a ingredient with invalid unit', async () => {
     const ingredient = await factory.create<IngredientInterface>('Ingredient');
 
-    const response = await request(app).put(`/ingredients/${ingredient._id}`).send({
-      name: 'chocolate',
-      price: 2.0,
-      stock: 20,
-      unit: 'as',
-    });
+    const response = await request(app)
+      .put(`/ingredients/${ingredient._id}`)
+      .send({
+        name: 'chocolate',
+        price: 2.0,
+        stock: 20,
+        unit: 'as',
+      });
 
     expect(response.status).toBe(400);
   });
@@ -78,7 +82,9 @@ describe('should test a ingredient', () => {
   it('should delete a ingredient', async () => {
     const ingredient = await factory.create<IngredientInterface>('Ingredient');
 
-    const response = await request(app).delete(`/ingredients/${ingredient._id}`);
+    const response = await request(app).delete(
+      `/ingredients/${ingredient._id}`,
+    );
 
     expect(response.status).toBe(200);
   });
@@ -93,8 +99,12 @@ describe('should test a ingredient', () => {
   });
 
   it('should list all ingredients by name', async () => {
-    await factory.create<IngredientInterface>('Ingredient', { name: 'Farinha' });
-    await factory.create<IngredientInterface>('Ingredient', { name: 'Chocolate' });
+    await factory.create<IngredientInterface>('Ingredient', {
+      name: 'Farinha',
+    });
+    await factory.create<IngredientInterface>('Ingredient', {
+      name: 'Chocolate',
+    });
 
     const response = await request(app).get(`/ingredients/far`);
 
@@ -104,7 +114,7 @@ describe('should test a ingredient', () => {
         expect.objectContaining({
           name: 'Farinha',
         }),
-      ])
+      ]),
     );
   });
 });

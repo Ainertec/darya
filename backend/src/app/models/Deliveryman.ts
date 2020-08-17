@@ -29,7 +29,7 @@ const DeliverymanSchema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export default model<DeliverymanInterface>('Deliveryman', DeliverymanSchema);

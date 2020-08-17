@@ -1,6 +1,6 @@
-import DistrictController from '../app/controllers/DistrictController';
 import { Router } from 'express';
 import { celebrate } from 'celebrate';
+import DistrictController from '../app/controllers/DistrictController';
 import { IValidationsDistrict } from './routesDTO';
 
 export class DistrictsRoutes {

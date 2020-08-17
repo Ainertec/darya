@@ -1,6 +1,6 @@
-import PrinterController from '../app/controllers/PrinterController';
 import { Router } from 'express';
 import { celebrate } from 'celebrate';
+import PrinterController from '../app/controllers/PrinterController';
 import { IValidationsPrinter } from './routesDTO';
 
 export class PrintersRoutes {

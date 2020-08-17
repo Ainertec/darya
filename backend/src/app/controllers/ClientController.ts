@@ -1,4 +1,5 @@
-import { Request, Response, response } from 'express';
+/* eslint-disable consistent-return */
+import { Request, Response } from 'express';
 import Client from '../models/Client';
 
 class ClientController {
@@ -8,20 +9,18 @@ class ClientController {
   }
 
   private async clientNameValidation(name: string, phone: string[]) {
-    const clientWithSameName = await Client.findOne({ name: name });
+    const clientWithSameName = await Client.findOne({ name });
 
     if (!clientWithSameName || !clientWithSameName.phone) return;
-    else {
-      let hasSamePhone = false;
-      phone.forEach((element: string) => {
-        if (clientWithSameName.phone?.includes(element)) {
-          hasSamePhone = true;
-          return;
-        }
-      });
 
-      if (hasSamePhone) return 'Client has the same name and phone number';
-    }
+    let hasSamePhone = false;
+    phone.forEach((element: string) => {
+      if (clientWithSameName.phone?.includes(element)) {
+        hasSamePhone = true;
+      }
+    });
+
+    if (hasSamePhone) return 'Client has the same name and phone number';
   }
 
   async index(request: Request, response: Response) {
@@ -58,8 +57,8 @@ class ClientController {
 
     const client = await Client.create({
       name,
-      address: address ? address : undefined,
-      phone: phone ? phone : undefined,
+      address: address || undefined,
+      phone: phone || undefined,
     });
 
     await client.populate('address.district').execPopulate();
@@ -80,18 +79,16 @@ class ClientController {
 
       if (isInvalidName) {
         return response.status(400).json(isInvalidName);
-      } else {
-        client.name = name;
       }
+      client.name = name;
     }
     if (name && phone) {
       const isInvalidName = await this.clientNameValidation(name, phone);
 
       if (isInvalidName) {
         return response.status(400).json(isInvalidName);
-      } else {
-        client.name = name;
       }
+      client.name = name;
     }
 
     if (phone) {

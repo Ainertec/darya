@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { Request, Response } from 'express';
 import Deliveryman from '../models/Deliveryman';
 
@@ -9,7 +10,10 @@ class DeliverymanController {
   }
 
   async show(request: Request, response: Response) {
-    const deliveryman = await Deliveryman.find({ working_day: true, available: true });
+    const deliveryman = await Deliveryman.find({
+      working_day: true,
+      available: true,
+    });
 
     return response.json(deliveryman);
   }
@@ -46,7 +50,7 @@ class DeliverymanController {
     const deliveryman = await Deliveryman.create({
       name,
       working_day,
-      available: available,
+      available,
       phone,
       hasDelivery,
     });
@@ -66,9 +70,10 @@ class DeliverymanController {
       },
       {
         new: true,
-      }
+      },
     );
-    if (!deliveryman) return response.status(400).json('deliveryman was not found');
+    if (!deliveryman)
+      return response.status(400).json('deliveryman was not found');
 
     if (working_day !== undefined) deliveryman.working_day = working_day;
     if (available !== undefined) deliveryman.available = available;
@@ -82,7 +87,7 @@ class DeliverymanController {
   async reset(request: Request, response: Response) {
     await Deliveryman.updateMany(
       {},
-      { $set: { working_day: false, available: false, hasDelivery: false } }
+      { $set: { working_day: false, available: false, hasDelivery: false } },
     );
 
     return response.status(200).send();
@@ -91,7 +96,7 @@ class DeliverymanController {
   async delete(request: Request, response: Response) {
     const { id } = request.params;
 
-    const deliveryman = await Deliveryman.deleteOne({ _id: id });
+    await Deliveryman.deleteOne({ _id: id });
 
     return response.status(200).send();
   }

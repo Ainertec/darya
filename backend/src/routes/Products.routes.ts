@@ -1,6 +1,6 @@
-import ProductController from '../app/controllers/ProductController';
 import { Router } from 'express';
 import { celebrate } from 'celebrate';
+import ProductController from '../app/controllers/ProductController';
 import { IValidationsProduct } from './routesDTO';
 
 export class ProductRoutes {

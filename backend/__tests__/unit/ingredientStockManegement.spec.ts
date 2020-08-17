@@ -1,14 +1,20 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
 import request from 'supertest';
 import { closeConnection, openConnection } from '../utils/connection';
 import Ingredient from '../../src/app/models/Ingredient';
 import Product from '../../src/app/models/Product';
 import app from '../../src/app';
 import factory from '../factories';
+import { subIngredientStock } from '../../src/app/utils/subIngredientStock';
 
-import { IngredientInterface, ProductInterface, OrderInterface } from '../../src/interfaces/base';
-import { subIngredintStock } from '../../src/app/utils/subIngredientStock';
+import {
+  IngredientInterface,
+  ProductInterface,
+  OrderInterface,
+} from '../../src/interfaces/base';
 
-describe('should sub ingredinet stock when a order is finished', () => {
+describe('should sub ingredient stock when a order is finished', () => {
   beforeAll(() => {
     openConnection();
   });
@@ -55,9 +61,12 @@ describe('should sub ingredinet stock when a order is finished', () => {
     const ingredient = await factory.create<IngredientInterface>('Ingredient', {
       stock: 2000,
     });
-    const ingredient2 = await factory.create<IngredientInterface>('Ingredient', {
-      stock: 2200,
-    });
+    const ingredient2 = await factory.create<IngredientInterface>(
+      'Ingredient',
+      {
+        stock: 2200,
+      },
+    );
     const product = await factory.create<ProductInterface>('Product', {
       ingredients: [
         {
@@ -84,7 +93,9 @@ describe('should sub ingredinet stock when a order is finished', () => {
       finished: true,
     });
     const ingredientUpdated = await Ingredient.findOne({ _id: ingredient._id });
-    const ingredientUpdated2 = await Ingredient.findOne({ _id: ingredient2._id });
+    const ingredientUpdated2 = await Ingredient.findOne({
+      _id: ingredient2._id,
+    });
     // console.log(ingredientUpdated);
     expect(response.status).toBe(200);
     expect(ingredientUpdated?.stock).toBe(1600);
@@ -96,10 +107,13 @@ describe('should sub ingredinet stock when a order is finished', () => {
       stock: 2000,
       name: 'farinha',
     });
-    const ingredient2 = await factory.create<IngredientInterface>('Ingredient', {
-      stock: 2000,
-      name: 'Chocolate',
-    });
+    const ingredient2 = await factory.create<IngredientInterface>(
+      'Ingredient',
+      {
+        stock: 2000,
+        name: 'Chocolate',
+      },
+    );
     const product = await factory.create<ProductInterface>('Product', {
       ingredients: [
         {
@@ -128,11 +142,13 @@ describe('should sub ingredinet stock when a order is finished', () => {
     const orderArray = [product, product2];
 
     for (const item of orderArray) {
-      await subIngredintStock(item.ingredients, 2);
+      await subIngredientStock(item.ingredients, 2);
     }
 
     const ingredientUpdated = await Ingredient.findOne({ _id: ingredient._id });
-    const ingredientUpdated2 = await Ingredient.findOne({ _id: ingredient2._id });
+    const ingredientUpdated2 = await Ingredient.findOne({
+      _id: ingredient2._id,
+    });
     expect(ingredientUpdated?.stock).toBe(800);
     expect(ingredientUpdated2?.stock).toBe(1400);
   });
@@ -142,10 +158,13 @@ describe('should sub ingredinet stock when a order is finished', () => {
       stock: 2000,
       name: 'farinha',
     });
-    const ingredient2 = await factory.create<IngredientInterface>('Ingredient', {
-      stock: 2000,
-      name: 'Chocolate',
-    });
+    const ingredient2 = await factory.create<IngredientInterface>(
+      'Ingredient',
+      {
+        stock: 2000,
+        name: 'Chocolate',
+      },
+    );
     const product = await factory.create<ProductInterface>('Product', {
       ingredients: [
         {
@@ -188,7 +207,9 @@ describe('should sub ingredinet stock when a order is finished', () => {
       finished: true,
     });
     const ingredientUpdated = await Ingredient.findOne({ _id: ingredient._id });
-    const ingredientUpdated2 = await Ingredient.findOne({ _id: ingredient2._id });
+    const ingredientUpdated2 = await Ingredient.findOne({
+      _id: ingredient2._id,
+    });
     // console.log(ingredientUpdated);
     expect(response.status).toBe(200);
     expect(ingredientUpdated?.stock).toBe(400);

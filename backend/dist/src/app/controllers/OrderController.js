@@ -110,7 +110,7 @@ var OrderController = /** @class */ (function () {
                         client = _b.sent();
                         if (!client)
                             throw Error('That client does not exist');
-                        address = (_a = client.address) === null || _a === void 0 ? void 0 : _a.find(function (add) { return add._id == client_address_id; });
+                        address = (_a = client.address) === null || _a === void 0 ? void 0 : _a.find(function (add) { return String(add._id) === String(client_address_id); });
                         if (!address)
                             throw Error('That address does not exist');
                         return [4 /*yield*/, District_1.default.findOne({ _id: address.district })];
@@ -172,7 +172,10 @@ var OrderController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         identification = request.params.identification;
-                        return [4 /*yield*/, Order_1.default.findOne({ identification: identification, finished: false })
+                        return [4 /*yield*/, Order_1.default.findOne({
+                                identification: identification,
+                                finished: false,
+                            })
                                 .populate('deliveryman')
                                 .populate('items.product')];
                     case 1:
@@ -221,7 +224,8 @@ var OrderController = /** @class */ (function () {
                         if (!client)
                             return [2 /*return*/, response.status(400).json('That client does not exist')];
                         identification = client.phone && ((_a = client.phone) === null || _a === void 0 ? void 0 : _a.length) > 0
-                            ? crypto_1.default.randomBytes(4).toString('hex') + client.phone[0].slice(client.phone[0].length - 2)
+                            ? crypto_1.default.randomBytes(4).toString('hex') +
+                                client.phone[0].slice(client.phone[0].length - 2)
                             : crypto_1.default.randomBytes(4).toString('hex');
                         _e.label = 2;
                     case 2:
@@ -264,7 +268,9 @@ var OrderController = /** @class */ (function () {
                     case 10:
                         order = _e.sent();
                         if (!deliveryman) return [3 /*break*/, 14];
-                        return [4 /*yield*/, Deliveryman_1.default.findOne({ _id: deliveryman })];
+                        return [4 /*yield*/, Deliveryman_1.default.findOne({
+                                _id: deliveryman,
+                            })];
                     case 11:
                         deliverymanPersisted = _e.sent();
                         if (!deliverymanPersisted) {
@@ -279,7 +285,10 @@ var OrderController = /** @class */ (function () {
                     case 13:
                         _e.sent();
                         _e.label = 14;
-                    case 14: return [4 /*yield*/, order.populate('deliveryman').populate('items.product').execPopulate()];
+                    case 14: return [4 /*yield*/, order
+                            .populate('deliveryman')
+                            .populate('items.product')
+                            .execPopulate()];
                     case 15:
                         _e.sent();
                         return [2 /*return*/, response.json(order)];
@@ -324,7 +333,9 @@ var OrderController = /** @class */ (function () {
                         if (payment)
                             order.payment = payment;
                         if (!finished) return [3 /*break*/, 7];
-                        return [4 /*yield*/, Deliveryman_1.default.findOne({ _id: order.deliveryman })];
+                        return [4 /*yield*/, Deliveryman_1.default.findOne({
+                                _id: order.deliveryman,
+                            })];
                     case 4:
                         deliverymanPersisted = _g.sent();
                         if (!deliverymanPersisted) return [3 /*break*/, 6];
@@ -371,7 +382,10 @@ var OrderController = /** @class */ (function () {
                     case 16: return [4 /*yield*/, order.save()];
                     case 17:
                         _g.sent();
-                        return [4 /*yield*/, order.populate('deliveryman').populate('items.product').execPopulate()];
+                        return [4 /*yield*/, order
+                                .populate('deliveryman')
+                                .populate('items.product')
+                                .execPopulate()];
                     case 18:
                         _g.sent();
                         return [2 /*return*/, response.json(order)];

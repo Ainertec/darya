@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DistrictsRoutes = void 0;
-var DistrictController_1 = __importDefault(require("../app/controllers/DistrictController"));
 var celebrate_1 = require("celebrate");
+var DistrictController_1 = __importDefault(require("../app/controllers/DistrictController"));
 var DistrictsRoutes = /** @class */ (function () {
     function DistrictsRoutes(routes) {
         this.routes = routes;

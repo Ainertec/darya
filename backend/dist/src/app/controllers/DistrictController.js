@@ -63,7 +63,9 @@ var DistrictController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         name = request.params.name;
-                        return [4 /*yield*/, District_1.default.find({ name: { $regex: new RegExp(name), $options: 'i' } })];
+                        return [4 /*yield*/, District_1.default.find({
+                                name: { $regex: new RegExp(name), $options: 'i' },
+                            })];
                     case 1:
                         districts = _a.sent();
                         return [2 /*return*/, response.json(districts)];
@@ -112,14 +114,14 @@ var DistrictController = /** @class */ (function () {
     };
     DistrictController.prototype.delete = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, district;
+            var id;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         id = request.params.id;
                         return [4 /*yield*/, District_1.default.deleteOne({ _id: id })];
                     case 1:
-                        district = _a.sent();
+                        _a.sent();
                         return [2 /*return*/, response.status(200).send()];
                 }
             });

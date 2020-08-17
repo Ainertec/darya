@@ -52,7 +52,9 @@ function getCost(ingredients) {
                             var ingredient;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
-                                    case 0: return [4 /*yield*/, Ingredient_1.default.findOne({ _id: itemIngredient.material })];
+                                    case 0: return [4 /*yield*/, Ingredient_1.default.findOne({
+                                            _id: itemIngredient.material,
+                                        })];
                                     case 1:
                                         ingredient = _a.sent();
                                         if (ingredient) {

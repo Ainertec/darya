@@ -40,6 +40,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Source = void 0;
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
 var mongoose_1 = require("mongoose");
 var Product_1 = __importDefault(require("./Product"));
 var subIngredientStock_1 = require("../utils/subIngredientStock");
@@ -174,7 +176,7 @@ OrderSchema.post('save', function (document) { return __awaiter(void 0, void 0, 
             case 2:
                 product = _b.sent();
                 if (!product) return [3 /*break*/, 4];
-                return [4 /*yield*/, subIngredientStock_1.subIngredintStock(product.ingredients, item.quantity)];
+                return [4 /*yield*/, subIngredientStock_1.subIngredientStock(product.ingredients, item.quantity)];
             case 3:
                 _b.sent();
                 _b.label = 4;

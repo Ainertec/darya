@@ -11,7 +11,9 @@ class DistrictController {
   async show(request: Request, response: Response) {
     const { name } = request.params;
 
-    const districts = await District.find({ name: { $regex: new RegExp(name), $options: 'i' } });
+    const districts = await District.find({
+      name: { $regex: new RegExp(name), $options: 'i' },
+    });
 
     return response.json(districts);
   }
@@ -39,7 +41,7 @@ class DistrictController {
         city,
         rate,
       },
-      { new: true }
+      { new: true },
     );
 
     return response.json(district);
@@ -48,7 +50,7 @@ class DistrictController {
   async delete(request: Request, response: Response) {
     const { id } = request.params;
 
-    const district = await District.deleteOne({ _id: id });
+    await District.deleteOne({ _id: id });
 
     return response.status(200).send();
   }

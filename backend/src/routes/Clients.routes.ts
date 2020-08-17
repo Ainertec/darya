@@ -1,6 +1,6 @@
-import ClientController from '../app/controllers/ClientController';
 import { Router } from 'express';
 import { celebrate } from 'celebrate';
+import ClientController from '../app/controllers/ClientController';
 import { IValidationsClient } from './routesDTO';
 
 export class ClientsRoutes {

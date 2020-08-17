@@ -1,18 +1,23 @@
 import Ingredient from '../models/Ingredient';
 import { Ingredients } from '../../interfaces/base';
 
-async function subIngredintStock(ingredients: Ingredients[], itemQuantity: number) {
+async function subIngredientStock(
+  ingredients: Ingredients[],
+  itemQuantity: number,
+) {
   await Promise.all(
-    ingredients.map(async (itemIngredient) => {
-      const ingredientPersisted = await Ingredient.findOne({ _id: itemIngredient.material });
+    ingredients.map(async itemIngredient => {
+      const ingredientPersisted = await Ingredient.findOne({
+        _id: itemIngredient.material,
+      });
 
       if (ingredientPersisted) {
         ingredientPersisted.stock -= itemIngredient.quantity * itemQuantity;
 
         await ingredientPersisted.save();
       }
-    })
+    }),
   );
 }
 
-export { subIngredintStock };
+export { subIngredientStock };

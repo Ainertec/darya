@@ -40,14 +40,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Unit = void 0;
+/* eslint-disable no-param-reassign */
 var mongoose_1 = require("mongoose");
 var Product_1 = __importDefault(require("./Product"));
 var getProductCost_1 = __importDefault(require("../utils/getProductCost"));
 var Unit = Object.freeze({
     kilogram: 'g',
     liter: 'ml',
+    unity: 'unidade',
     getUnit: function () {
-        var unit = [this.kilogram, this.liter];
+        var unit = [this.kilogram, this.liter, this.unity];
         return unit;
     },
 });
@@ -91,7 +93,9 @@ IngredientSchema.post('findOneAndUpdate', function (document) { return __awaiter
             case 0:
                 if (!document) return [3 /*break*/, 3];
                 ingredientID = document._id;
-                return [4 /*yield*/, Product_1.default.find({ 'ingredients.material': { $in: ingredientID } })];
+                return [4 /*yield*/, Product_1.default.find({
+                        'ingredients.material': { $in: ingredientID },
+                    })];
             case 1:
                 products = _a.sent();
                 return [4 /*yield*/, Promise.all(products.map(function (product) { return __awaiter(void 0, void 0, void 0, function () {
@@ -123,7 +127,9 @@ IngredientSchema.post('findOneAndRemove', function (document) { return __awaiter
             case 0:
                 if (!document) return [3 /*break*/, 3];
                 ingredientID_1 = document._id;
-                return [4 /*yield*/, Product_1.default.find({ 'ingredients.material': { $in: ingredientID_1 } })];
+                return [4 /*yield*/, Product_1.default.find({
+                        'ingredients.material': { $in: ingredientID_1 },
+                    })];
             case 1:
                 products = _a.sent();
                 return [4 /*yield*/, Promise.all(products.map(function (product) { return __awaiter(void 0, void 0, void 0, function () {

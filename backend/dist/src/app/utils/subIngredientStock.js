@@ -39,9 +39,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.subIngredintStock = void 0;
+exports.subIngredientStock = void 0;
 var Ingredient_1 = __importDefault(require("../models/Ingredient"));
-function subIngredintStock(ingredients, itemQuantity) {
+function subIngredientStock(ingredients, itemQuantity) {
     return __awaiter(this, void 0, void 0, function () {
         var _this = this;
         return __generator(this, function (_a) {
@@ -50,7 +50,9 @@ function subIngredintStock(ingredients, itemQuantity) {
                         var ingredientPersisted;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
-                                case 0: return [4 /*yield*/, Ingredient_1.default.findOne({ _id: itemIngredient.material })];
+                                case 0: return [4 /*yield*/, Ingredient_1.default.findOne({
+                                        _id: itemIngredient.material,
+                                    })];
                                 case 1:
                                     ingredientPersisted = _a.sent();
                                     if (!ingredientPersisted) return [3 /*break*/, 3];
@@ -70,4 +72,4 @@ function subIngredintStock(ingredients, itemQuantity) {
         });
     });
 }
-exports.subIngredintStock = subIngredintStock;
+exports.subIngredientStock = subIngredientStock;

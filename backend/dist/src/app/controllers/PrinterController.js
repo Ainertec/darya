@@ -39,12 +39,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var Order_1 = __importDefault(require("../models/Order"));
 var path_1 = __importDefault(require("path"));
 var fs_1 = __importDefault(require("fs"));
 var jsrtf_1 = __importDefault(require("jsrtf"));
 var date_fns_1 = require("date-fns");
 var shelljs_1 = require("shelljs");
+var Order_1 = __importDefault(require("../models/Order"));
 var productsAmountUseCase_1 = require("../useCases/Report/productsAmountUseCase");
 var soldReportUseCase_1 = require("../useCases/Printer/SoldPrinter/soldReportUseCase");
 var deliverymanPaymentUseCase_1 = require("../useCases/Report/deliverymanPaymentUseCase");
@@ -54,16 +54,18 @@ var PrinterController = /** @class */ (function () {
     function PrinterController() {
         this.store = this.store.bind(this);
     }
-    PrinterController.prototype.printProducts = function (items) {
-        var products = '';
-        items.map(function (item) {
-            products += "* " + item.product.name + " --- R$" + item.product.price.toFixed(2) + "\nQtd.: " + item.quantity + "\n";
-        });
-        return products;
-    };
+    // private printProducts(items: ItemsInterface[]) {
+    //   let products = '';
+    //   items.map(item => {
+    //     products += `* ${item.product.name} --- R$${item.product.price.toFixed(
+    //       2,
+    //     )}\nQtd.: ${item.quantity}\n`;
+    //   });
+    //   return products;
+    // }
     PrinterController.prototype.store = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, order, date, myDoc, contentStyle, contentBorder, header, items, content, buffer, dir, vbs;
+            var id, order, date, myDoc, contentStyle, contentBorder, header, content, buffer, dir, vbs;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -106,7 +108,7 @@ var PrinterController = /** @class */ (function () {
                             align: 'center',
                             borderTop: { size: 2, spacing: 100, color: jsrtf_1.default.Colors.GREEN },
                         });
-                        items = this.printProducts(order.items);
+                        // const items = this.printProducts(order.items);
                         myDoc.writeText('', contentBorder);
                         myDoc.writeText('>>>>>>>>> Pedido <<<<<<<<<<', header);
                         myDoc.writeText("C\u00F3digo: " + order.identification, header);
@@ -125,7 +127,10 @@ var PrinterController = /** @class */ (function () {
                         order.address &&
                             myDoc.writeText("Refer\u00EAncia: " + order.address.reference, contentStyle);
                         myDoc.writeText('=========== Itens ============', contentBorder);
-                        myDoc.writeText("" + items, contentStyle);
+                        order.items.map(function (item) {
+                            myDoc.writeText("* " + item.product.name + " --- R$ " + item.product.price.toFixed(2), contentStyle);
+                            myDoc.writeText("\nQtd.: " + item.quantity + "\n", contentStyle);
+                        });
                         myDoc.writeText('========== Motoboy ===========', contentBorder);
                         order.deliveryman &&
                             myDoc.writeText("Nome: " + order.deliveryman.name, contentStyle);
@@ -164,7 +169,7 @@ var PrinterController = /** @class */ (function () {
     };
     PrinterController.prototype.deliverymanPrint = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var deliveryman_id, deliverymanPayment, deliverymanPrinter, err_1;
+            var deliveryman_id, deliverymanPayment, deliverymanPrinter, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -179,7 +184,7 @@ var PrinterController = /** @class */ (function () {
                         _a.sent();
                         return [2 /*return*/, response.status(200).send()];
                     case 3:
-                        err_1 = _a.sent();
+                        error_1 = _a.sent();
                         response.status(400).json('Erro on try print deliveryman payment');
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
@@ -189,7 +194,7 @@ var PrinterController = /** @class */ (function () {
     };
     PrinterController.prototype.soldPrint = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var productsAmount, soldReportUseCase, soldPrintUseCase, error_1;
+            var productsAmount, soldReportUseCase, soldPrintUseCase, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -202,7 +207,7 @@ var PrinterController = /** @class */ (function () {
                         _a.sent();
                         return [2 /*return*/, response.status(200).send()];
                     case 2:
-                        error_1 = _a.sent();
+                        error_2 = _a.sent();
                         return [2 /*return*/, response.status(400).json('Failed on print general report')];
                     case 3: return [2 /*return*/];
                 }

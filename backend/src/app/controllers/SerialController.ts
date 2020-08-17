@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { Request, Response } from 'express';
 
 class SerialController {

@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import request from 'supertest';
 import {
   closeConnection,
@@ -12,7 +13,6 @@ import { ProductAmountUseCase } from '../Report/productsAmountUseCase';
 
 import app from '../../../app';
 import Deliveryman from '../../models/Deliveryman';
-import deliveryman from '../../../validations/deliverymanSchema';
 
 describe('Teste a printer', () => {
   beforeAll(() => {

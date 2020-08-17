@@ -1,7 +1,9 @@
-import { Schema, model, Model } from 'mongoose';
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
+import { Schema, model } from 'mongoose';
 import { OrderInterface } from '../../interfaces/base';
 import Product from './Product';
-import { subIngredintStock } from '../utils/subIngredientStock';
+import { subIngredientStock } from '../utils/subIngredientStock';
 
 const ItemsSchema = new Schema({
   product: {
@@ -138,7 +140,7 @@ OrderSchema.post<OrderInterface>('save', async document => {
       const product = await Product.findOne({ _id: item.product });
 
       if (product) {
-        await subIngredintStock(product.ingredients, item.quantity);
+        await subIngredientStock(product.ingredients, item.quantity);
       }
     }
   }

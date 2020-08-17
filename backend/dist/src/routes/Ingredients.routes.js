@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.IngredientsRoutes = void 0;
-var IngredientController_1 = __importDefault(require("../app/controllers/IngredientController"));
 var celebrate_1 = require("celebrate");
+var IngredientController_1 = __importDefault(require("../app/controllers/IngredientController"));
 var IngredientsRoutes = /** @class */ (function () {
     function IngredientsRoutes(routes) {
         this.routes = routes;

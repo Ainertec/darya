@@ -1,4 +1,4 @@
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { startOfDay, endOfDay } from 'date-fns';
 import { OrderInterface } from '../../../../interfaces/base';
 import { ProductAmountUseCase } from '../../Report/productsAmountUseCase';

@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
+var celebrate_1 = require("celebrate");
 var Products_routes_1 = require("./Products.routes");
 var Clients_routes_1 = require("./Clients.routes");
 var Ingredients_routes_1 = require("./Ingredients.routes");
@@ -24,7 +25,6 @@ var commonSchema_1 = require("../validations/commonSchema");
 var Reports_routes_1 = require("./Reports.routes");
 var Printers_routes_1 = require("./Printers.routes");
 var SerialController_1 = __importDefault(require("../app/controllers/SerialController"));
-var celebrate_1 = require("celebrate");
 var routes = express_1.Router();
 // products
 var productRouters = new Products_routes_1.ProductRoutes(routes);

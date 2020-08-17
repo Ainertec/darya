@@ -37,6 +37,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DeliverymanPaymentUseCase = void 0;
+/* eslint-disable consistent-return */
+/* eslint-disable camelcase */
 var mongoose_1 = require("mongoose");
 var date_fns_1 = require("date-fns");
 var DeliverymanPaymentUseCase = /** @class */ (function () {

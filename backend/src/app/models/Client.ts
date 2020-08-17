@@ -1,4 +1,4 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { ClientInterface } from '../../interfaces/base';
 
 const AddressSchema = new Schema({
@@ -37,7 +37,7 @@ const ClientSchema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export default model<ClientInterface>('Client', ClientSchema);

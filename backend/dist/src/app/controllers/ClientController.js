@@ -47,7 +47,7 @@ var ClientController = /** @class */ (function () {
     }
     ClientController.prototype.clientNameValidation = function (name, phone) {
         return __awaiter(this, void 0, void 0, function () {
-            var clientWithSameName, hasSamePhone_1;
+            var clientWithSameName, hasSamePhone;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, Client_1.default.findOne({ name: name })];
@@ -55,18 +55,15 @@ var ClientController = /** @class */ (function () {
                         clientWithSameName = _a.sent();
                         if (!clientWithSameName || !clientWithSameName.phone)
                             return [2 /*return*/];
-                        else {
-                            hasSamePhone_1 = false;
-                            phone.forEach(function (element) {
-                                var _a;
-                                if ((_a = clientWithSameName.phone) === null || _a === void 0 ? void 0 : _a.includes(element)) {
-                                    hasSamePhone_1 = true;
-                                    return;
-                                }
-                            });
-                            if (hasSamePhone_1)
-                                return [2 /*return*/, 'Client has the same name and phone number'];
-                        }
+                        hasSamePhone = false;
+                        phone.forEach(function (element) {
+                            var _a;
+                            if ((_a = clientWithSameName.phone) === null || _a === void 0 ? void 0 : _a.includes(element)) {
+                                hasSamePhone = true;
+                            }
+                        });
+                        if (hasSamePhone)
+                            return [2 /*return*/, 'Client has the same name and phone number'];
                         return [2 /*return*/];
                 }
             });
@@ -126,8 +123,8 @@ var ClientController = /** @class */ (function () {
                         _b.label = 2;
                     case 2: return [4 /*yield*/, Client_1.default.create({
                             name: name,
-                            address: address ? address : undefined,
-                            phone: phone ? phone : undefined,
+                            address: address || undefined,
+                            phone: phone || undefined,
                         })];
                     case 3:
                         client = _b.sent();
@@ -159,9 +156,7 @@ var ClientController = /** @class */ (function () {
                         if (isInvalidName) {
                             return [2 /*return*/, response.status(400).json(isInvalidName)];
                         }
-                        else {
-                            client.name = name;
-                        }
+                        client.name = name;
                         _b.label = 3;
                     case 3:
                         if (!(name && phone)) return [3 /*break*/, 5];
@@ -171,9 +166,7 @@ var ClientController = /** @class */ (function () {
                         if (isInvalidName) {
                             return [2 /*return*/, response.status(400).json(isInvalidName)];
                         }
-                        else {
-                            client.name = name;
-                        }
+                        client.name = name;
                         _b.label = 5;
                     case 5:
                         if (phone) {
