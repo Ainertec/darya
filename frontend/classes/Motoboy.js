@@ -450,9 +450,15 @@ function reiniciarClasseMotoboy() {
 async function impressaoRelatorioMotoboy(id) {
     try {
         await aguardeCarregamento(true);
-        await requisicaoGET(`printers/deliveryman_report/${id}`)
+        let json2 = await requisicaoGET(`reports/deliveryman/orders/${id}`)
+        if (json2.data[0]) {
+            await requisicaoGET(`printers/deliveryman_report/${id}`)
+            await mensagemDeAviso('Imprimindo relatório ...')
+        } else {
+            mensagemDeErro('Nenhum pedido entregue pelo motoboy!')
+        }
         await aguardeCarregamento(false);
-        await mensagemDeAviso('Imprimindo relatório ...')
+
     } catch (error) {
         mensagemDeErro('Não foi possível imprimir o relatório!')
     }

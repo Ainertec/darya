@@ -7,7 +7,7 @@ import { DeliverymanPaymentUseCase } from '../../Report/deliverymanPaymentUseCas
 import { printFile } from '../../../utils/printFile';
 
 export class DeliverymanPrinterUseCase {
-  constructor(private deliverymanUseCase: DeliverymanPaymentUseCase) {}
+  constructor(private deliverymanUseCase: DeliverymanPaymentUseCase) { }
 
   async printer(deliveryman_id: string) {
     const {
@@ -58,7 +58,7 @@ export class DeliverymanPrinterUseCase {
     myDoc.writeText(`--- Lista de Endereços ---`, header);
     deliverymanAddress.map(address => {
       myDoc.writeText(
-        `${address.street},${address.district_name}`,
+        `Endereço: ${address.street},${address.district_name}`,
         contentStyle,
       );
       myDoc.writeText(

@@ -7,7 +7,7 @@ import { IOrdersByPayment, IProductAmount } from './printerUseCaseDTO';
 import { printFile } from '../../../utils/printFile';
 
 export class SoldPrinterUseCase {
-  constructor(private soldReportUseCase: SoldReportUseCase) {}
+  constructor(private soldReportUseCase: SoldReportUseCase) { }
 
   async printer() {
     const {
@@ -56,10 +56,10 @@ export class SoldPrinterUseCase {
     myDoc.writeText(`Pedidos Total: ${countOrders}`, header);
     myDoc.writeText(`---- Montante Produtos ----`, header);
     productsTotalAmount.map((product: IProductAmount) => {
-      myDoc.writeText(`${product._id.name} ${product.amount}`, contentStyle);
+      myDoc.writeText(`Produto: ${product._id.name} Qtd: ${product.amount}`, contentStyle);
     });
     myDoc.writeText(``, contentStyle);
-    myDoc.writeText(`Total: ${totalProductsSold}`, contentStyle);
+    myDoc.writeText(`Total: ${totalProductsSold} unid.`, contentStyle);
     myDoc.writeText(`---- Montante Pagamento ---`, header);
     dayOrdersByPayment.map((order: IOrdersByPayment) => {
       myDoc.writeText(
