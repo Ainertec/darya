@@ -53,9 +53,9 @@ function limparTelaMensagemModal() {
 // funcao resopnsavel por validar os dados preenchidos nos campos
 function validaDadosCampo(campo) {
   let validacao = true;
-  campo.forEach(function (item) {
+  for (let item of campo) {
     if ($(item).val() == '' || $(item).val() == null) validacao = false;
-  });
+  }
 
   return validacao;
 }
@@ -63,9 +63,9 @@ function validaDadosCampo(campo) {
 // funcao responsavel por validar valores invalidos nos campos(valores negativos e zerados)
 function validaValoresCampo(campo) {
   let validacao = true;
-  campo.forEach(function (item) {
+  for (let item of campo) {
     if (parseFloat($(item).val()) < 0.0) validacao = false;
-  });
+  }
 
   return validacao;
 }
@@ -119,14 +119,14 @@ function corrigirTamanhoString(tamMax, texto) {
 
 //funcao responsavel por exbir cor diferente no campor incorreto
 function mostrarCamposIncorreto(campo) {
-  campo.forEach(function (item) {
+  for (let item of campo) {
     document.getElementById(item).classList.add('border');
     document.getElementById(item).classList.add('border-danger');
     setTimeout(function () {
       document.getElementById(item).classList.remove('border');
       document.getElementById(item).classList.remove('border-danger');
     }, 2000);
-  });
+  }
 }
 
 //funcao responsavel por gerar a tela de aguarde o carregamento

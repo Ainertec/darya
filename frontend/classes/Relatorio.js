@@ -121,11 +121,11 @@ async function gerarGraficoGastoseGanhosSobreproduto() {
     let categoria = [], vetorLucro = [], vetorDispesa = [], json = await requisicaoGET('reports/products/dispense_gain')
     await aguardeCarregamento(false);
 
-    json.data.forEach(function (item) {
+    for (let item of json.data) {
       vetorLucro.push(parseFloat(item.gain))
       vetorDispesa.push(parseFloat(item.dispense))
       categoria.push(item._id.name)
-    });
+    }
 
 
     Highcharts.chart('grafico1', {
@@ -224,10 +224,10 @@ async function gerarGraficoProdutosMaiseMenosVendidos() {
     let categoria = [], vetorDeProduto = [], json = await requisicaoGET('reports/products/amount')
     await aguardeCarregamento(false);
 
-    json.data.forEach(function (item) {
+    for (let item of json.data) {
       categoria.push(item._id.name)
       vetorDeProduto.push(item.amount)
-    });
+    }
 
 
     Highcharts.chart('grafico2', {
@@ -295,7 +295,7 @@ function gerarListaDePedidosFechados(json) {
           </tr>
         </thead>
         <tbody class="table-warning">`
-    json.forEach(function (item) {
+    for (let item of json) {
       const date = format(parseISO(item.createdAt), 'dd/MM/yyyy HH:mm:ss')
       codigoHTML += `<tr>
           <td><strong>${item.identification}</strong></td>
@@ -306,16 +306,16 @@ function gerarListaDePedidosFechados(json) {
         codigoHTML += `<td><strong>Retirada local.</strong></td>`
       }
       codigoHTML += `<td><strong>`
-      item.items.forEach(function (item2) {
+      for (let item2 of item.items) {
         codigoHTML += `(${corrigirTamanhoString(15, item2.product.name)}/${item2.quantity}),`
-      });
+      }
       codigoHTML += `</strong></td>
         <td><strong>${item.payment}</strong></td>
           <td class="text-danger"><strong>R$${(parseFloat(item.total)).toFixed(2)}</strong></td>
           <td><strong>${item.source}</strong></td>
           <td><strong>${date}</strong></td>
         </tr>`
-    });
+    }
     codigoHTML += `</tbody>
       </table>`
 
