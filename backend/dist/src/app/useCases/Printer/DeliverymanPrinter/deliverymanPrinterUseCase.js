@@ -96,7 +96,7 @@ var DeliverymanPrinterUseCase = /** @class */ (function () {
                         myDoc.writeText("Total Taxa: R$" + deliverymanRate, contentStyle);
                         myDoc.writeText("--- Lista de Endere\u00E7os ---", header);
                         deliverymanAddress.map(function (address) {
-                            myDoc.writeText(address.street + "," + address.district_name, contentStyle);
+                            myDoc.writeText("Endere\u00E7o: " + address.street + "," + address.district_name, contentStyle);
                             myDoc.writeText("Taxa: R$" + address.district_rate.toFixed(2), contentStyle);
                         });
                         content = myDoc.createDocument();

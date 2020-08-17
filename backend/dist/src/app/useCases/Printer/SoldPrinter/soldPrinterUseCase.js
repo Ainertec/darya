@@ -93,10 +93,10 @@ var SoldPrinterUseCase = /** @class */ (function () {
                         myDoc.writeText("Pedidos Total: " + countOrders, header);
                         myDoc.writeText("---- Montante Produtos ----", header);
                         productsTotalAmount.map(function (product) {
-                            myDoc.writeText(product._id.name + " " + product.amount, contentStyle);
+                            myDoc.writeText("Produto: " + product._id.name + " Qtd: " + product.amount, contentStyle);
                         });
                         myDoc.writeText("", contentStyle);
-                        myDoc.writeText("Total: " + totalProductsSold, contentStyle);
+                        myDoc.writeText("Total: " + totalProductsSold + " unid.", contentStyle);
                         myDoc.writeText("---- Montante Pagamento ---", header);
                         dayOrdersByPayment.map(function (order) {
                             myDoc.writeText(order._id + ": R$" + order.orders_total_price.toFixed(2), contentStyle);

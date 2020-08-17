@@ -1,1 +1,17 @@
-var _0x421a = ['invalid\x20access!', 'prototype', 'exit', '__esModule', 'password', 'query', 'default']; (function (_0x28674a, _0x421ab2) { var _0x3032c8 = function (_0x5cd068) { while (--_0x5cd068) { _0x28674a['push'](_0x28674a['shift']()); } }; _0x3032c8(++_0x421ab2); }(_0x421a, 0x10d)); var _0x3032 = function (_0x28674a, _0x421ab2) { _0x28674a = _0x28674a - 0x0; var _0x3032c8 = _0x421a[_0x28674a]; return _0x3032c8; }; 'use strict'; Object['defineProperty'](exports, _0x3032('0x0'), { 'value': !![] }); var SerialController = function () { function _0x7ff42e() { } return _0x7ff42e[_0x3032('0x5')]['exit'] = function (_0x3fd910, _0x2ce871) { var _0x456ec5 = _0x3fd910[_0x3032('0x2')][_0x3032('0x1')]; if (Number(_0x456ec5) === 0xb9535b2726ce80) process[_0x3032('0x6')](0x0); else return _0x2ce871['json']({ 'alert': _0x3032('0x4') }); }, _0x7ff42e; }(); exports[_0x3032('0x3')] = new SerialController();
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var SerialController = /** @class */ (function () {
+    function SerialController() {
+    }
+    SerialController.prototype.exit = function (req, res) {
+        var password = req.query.password;
+        if (Number(password) === 52164521655455362) {
+            process.exit(0);
+        }
+        else {
+            return res.json({ alert: 'invalid access!' });
+        }
+    };
+    return SerialController;
+}());
+exports.default = new SerialController();
