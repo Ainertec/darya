@@ -1,4 +1,4 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { DistrictInterface } from '../../interfaces/base';
 
 const DistrictSchema = new Schema(
@@ -18,7 +18,7 @@ const DistrictSchema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export default model<DistrictInterface>('District', DistrictSchema);
