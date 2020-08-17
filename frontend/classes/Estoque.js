@@ -65,6 +65,7 @@ function modalTelaCadastrarAtualizarIngrediente(tipo) {
                                       <select class="custom-select" id="tipoMedida">
                                         <option value="g">G (gramas)</option>
                                         <option value="ml">ML (mililitro)</option>
+                                        <option value="unidade">Unid. (Unidade)</option>
                                       </select>
                                     </div>
                                 </div>
@@ -130,7 +131,6 @@ async function buscarEstoque(tipoBusca) {
       <tr>
         <th scope="col">Nome</th>
         <th scope="col">Preço</th>
-        <th scope="col">Descrição</th>
         <th scope="col">Quantidade</th>
         <th scope="col">Adicionar quantidade</th>
         <th scope="col">Alterar Preço</th>
@@ -143,19 +143,27 @@ async function buscarEstoque(tipoBusca) {
       VETORDEITENSESTOQUE.push(item);
       codigoHTML += `<tr>
       <td class="table-warning text-dark" title="${item.name}"><strong><span class="fas fa-box"></span> ${corrigirTamanhoString(20, item.name)}</strong></td>
-      <td class="table-warning text-danger"><strong>R$${(parseFloat(item.price)).toFixed(2)}</strong></td>
-      <td class="table-warning text-dark" title="${item.description}">${corrigirTamanhoString(30, item.description)}</td>`
-      if (parseInt(item.stock) > 2000) {
-        codigoHTML += `<td class="table-success text-dark text-center"><strong>${parseInt(item.stock)} ${item.unit == 'g' ? 'g' : 'ml'}</strong></td>`
+      <td class="table-warning text-danger"><strong>R$${(parseFloat(item.price)).toFixed(2)}</strong></td>`
+      if (item.unit == 'g') {
+        codigoHTML += `<td class="table-${parseInt(item.stock) > 2000 ? 'success' : 'danger'} text-dark text-center"><strong>${parseInt(item.stock)} g</strong></td>`
+      } else if (item.unit == 'ml') {
+        codigoHTML += `<td class="table-${parseInt(item.stock) > 2000 ? 'success' : 'danger'} text-dark text-center"><strong>${parseInt(item.stock)} ml</strong></td>`
       } else {
-        codigoHTML += `<td class="table-danger text-dark text-center"><strong>${parseInt(item.stock)} ${item.unit == 'g' ? 'g' : 'ml'}</strong></td>`
+        codigoHTML += `<td class="table-${parseInt(item.stock) > 10 ? 'success' : 'danger'} text-dark text-center"><strong>${parseInt(item.stock)} unid.</strong></td>`
       }
+
       codigoHTML += `<td class="table-warning text-dark">
         <div class="input-group input-group-sm">  
-          <input class="form-control form-control-sm mousetrap" type="Number" id="quantidade${item._id}" value=100 />
-          <div class="input-group-prepend">
-            <span class="input-group-text">${item.unit == 'g' ? '(g)' : '(ml)'}</span>
-          </div>
+          <input class="form-control form-control-sm mousetrap" type="Number" id="quantidade${item._id}" value=${item.unit == 'unidade' ? 10 : 100} />
+          <div class="input-group-prepend">`
+      if (item.unit == 'g') {
+        codigoHTML += `<span class="input-group-text">(g)</span>`
+      } else if (item.unit == 'ml') {
+        codigoHTML += `<span class="input-group-text">(ml)</span>`
+      } else {
+        codigoHTML += `<span class="input-group-text">(unid.)</span>`
+      }
+      codigoHTML += `</div>
         </div>
       </td>
       <td class="table-warning text-dark">
