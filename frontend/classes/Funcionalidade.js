@@ -145,7 +145,7 @@ function aguardeCarregamento(tipo) {
     timerCarregador = setInterval(function () {
       contCarregador++;
 
-      if (contCarregador > 3) {
+      if (contCarregador > 20) {
         codigoHTML = `<div style="background-color: rgba(0, 0, 0, 0.8); position: absolute; height: 99.2vh; width: 100vw; z-index:1055; border-radius:10px;">
             <h5 class="text-center text-light" style="margin-top: 48vh;">
               Ops... Ouve algum problema! Tente novamente.
