@@ -8,7 +8,8 @@ function telaDeBuscarProduto() {
   VETORDEPRODUTOSCLASSEPRODUTO = []
   let codigoHTML = ``;
 
-  codigoHTML += `<h4 class="text-center"><span class="fas fa-hamburger"></span> Buscar Produto</h4>
+  codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+                    <h4 class="text-center"><span class="fas fa-hamburger"></span> Buscar Produto</h4>
                     <div class="card-deck col-4 mx-auto d-block">
                         <div class="input-group mb-3">
                             <input id="nome" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do produto">
@@ -24,7 +25,8 @@ function telaDeBuscarProduto() {
                             </button>
                         </div>
                     </div>
-                    <div id="resposta"></div>`;
+                  </div>
+                  <div id="resposta"></div>`;
 
   animacaoJanela2();
   setTimeout(function () { document.getElementById('janela2').innerHTML = codigoHTML }, 30)
@@ -61,58 +63,68 @@ async function modalTelaCadastrarouAtualizarProduto(tipo) {
                         <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel"><span class="fas fa-hamburger"></span> Dados Produto</h5>
-                            <button onclick="reiniciarClasseProduto();" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button onclick="reiniciarClasseProduto();" type="button" class="close btn-danger" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                             </button>
                             <div id="mensagemDeErroModal" class="justify-content-center"></div>
                         </div>
                         <div class="modal-body">
                             <form>
-                                <div class="form-group">
-                                    <label for="nomeproduto">Nome produto:</label>
-                                    <input type="text" class="form-control" id="nomeproduto" placeholder="Nome">
-                                </div>
-                                <div class="form-group">
-                                    <label for="precovenda">Preço de venda:</label>
-                                    <div class="input-group">
-                                      <div class="input-group-prepend">
-                                        <span class="input-group-text">R$</span>
+                                <div class="shadow-lg p-3 mb-5 bg-white rounded">
+                                  <div class="form-group">
+                                      <label for="nomeproduto">Nome produto:</label>
+                                      <input type="text" class="form-control" id="nomeproduto" placeholder="Nome">
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="precovenda">Preço de venda:</label>
+                                      <div class="input-group">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">R$</span>
+                                        </div>
+                                        <input type="Number" class="form-control" id="precovenda" placeholder="Preço de venda">
                                       </div>
-                                      <input type="Number" class="form-control" id="precovenda" placeholder="Preço de venda">
-                                    </div>
+                                  </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="quantidadeproduto">Ingredientes/quantidade:</label>
-                                    <div class="col-12" style="position: relative; height: 30vh; z-index: 1; overflow: scroll; margin-right: 0px;">
-                                      <table class="table">
-                                        <tbody>`
+                                <div class="shadow-lg p-3 mb-5 bg-white rounded">
+                                  <div class="form-group">
+                                      <label for="quantidadeproduto">Ingredientes/quantidade:</label>
+                                      <div class="col-12" style="position: relative; height: 30vh; z-index: 1; overflow: scroll; margin-right: 0px;">
+                                        <table class="table">
+                                          <tbody>`
   for (let item of json.data) {
     codigoHTML += `<tr class="table-info">
-      <td style="width:5vw">
-        <div class="custom-control custom-switch">
-          <input type="checkbox" onclick="this.checked? adicionarIngredienteaoProduto('${item._id}', 'cadastrar', null) : removerIngredientedoProduto('${item._id}')" class="custom-control-input custom-switch" id="select${item._id}">
-          <label class="custom-control-label" for="select${item._id}">Add</label>
-        </div>                                   
-      </td>
-      <td style="width:15vw" title="${item.name}"><span class="fas fa-box"></span> ${corrigirTamanhoString(15, item.name)}</td>
-      <td style="width:15vw" title="Adicione a quantidade gasta na produção do produto!">
-        <div class="input-group input-group-sm">
-          <input type="Number" class="form-control form-control-sm" id="quanti${item._id}">
-          <div class="input-group-prepend">
-            <span class="input-group-text input-group-text">${item.unit}</span>
+        <td style="width:5vw">
+          <div class="custom-control custom-switch">
+            <input type="checkbox" onclick="this.checked? adicionarIngredienteaoProduto('${item._id}', 'cadastrar', null) : removerIngredientedoProduto('${item._id}')" class="custom-control-input custom-switch" id="select${item._id}">
+            <label class="custom-control-label" for="select${item._id}">Add</label>
+          </div>                                   
+        </td>
+        <td style="width:15vw" title="${item.name}"><span class="fas fa-box"></span> ${corrigirTamanhoString(15, item.name)}</td>
+        <td style="width:15vw" title="Adicione a quantidade gasta na produção do produto!">
+          <div class="input-group input-group-sm">
+            <input type="Number" class="form-control form-control-sm" id="quanti${item._id}">
+            <div class="input-group-prepend">`
+    if (item.unit == 'unidade') {
+      codigoHTML += `<span class="input-group-text input-group-text">unid.</span>`
+    } else {
+      codigoHTML += `<span class="input-group-text input-group-text">${item.unit}</span>`
+    }
+    codigoHTML += `</div>
           </div>
-        </div>
-      </td>
-    </tr>`
+        </td>
+      </tr>`
   }
 
   codigoHTML += `</tbody>
-                                      </table>
-                                    </div>
+                                        </table>
+                                      </div>
+                                  </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="descricao">Descrição</label>
-                                    <textarea class="form-control" id="descricaoproduto" rows="3">Nenhuma.</textarea>
+                                <div class="shadow-lg p-3 mb-5 bg-white rounded">
+                                  <div class="form-group">
+                                      <label for="descricao">Descrição</label>
+                                      <textarea class="form-control" id="descricaoproduto" rows="3">Nenhuma.</textarea>
+                                  </div>
                                 </div>
                             </form>
                         </div>
@@ -152,7 +164,8 @@ async function buscarDadosProduto(tipo) {
       await aguardeCarregamento(false);
     }
 
-    codigoHTML += `<h5 class="text-center" style="margin-top:80px">Listagem de produtos</h5>
+    codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+      <h5 class="text-center" style="margin-top:80px">Listagem de produtos</h5>
       <table class="table table-sm col-8 mx-auto" style="margin-top:10px">
           <thead class="thead-dark">
               <tr>
@@ -172,7 +185,8 @@ async function buscarDadosProduto(tipo) {
     }
 
     codigoHTML += `</tbody>
-      </table>`;
+      </table>
+    </div>`;
 
     if (json.data[0]) {
       document.getElementById('resposta').innerHTML = codigoHTML;
@@ -246,7 +260,6 @@ async function cadastrarProduto() {
     await aguardeCarregamento(false);
     $('#modalClasseProduto').modal('hide');
     await mensagemDeAviso('Produto cadastrado com sucesso!')
-    console.log(result)
     document.getElementById('nome').value = await result.data.name
     await buscarDadosProduto('nome')
   } catch (error) {

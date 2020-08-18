@@ -7,7 +7,8 @@ function telaDeBuscarEstoque() {
   VETORDEITENSESTOQUE = []
   let codigoHTML = '';
 
-  codigoHTML += `<h4 class="text-center"><span class="fas fa-boxes"></span> Buscar Ingrediente</h4>
+  codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+    <h4 class="text-center"><span class="fas fa-boxes"></span> Buscar Ingrediente</h4>
     <div class="card-deck col-4 mx-auto d-block">
       <div class="input-group mb-3">
         <input id="nome" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do produto">
@@ -23,7 +24,8 @@ function telaDeBuscarEstoque() {
         </button>
       </div>
     </div>
-  <div id="resposta"></div>`
+    </div>
+    <div id="resposta"></div>`
 
   animacaoJanela2();
   setTimeout(function () { document.getElementById('janela2').innerHTML = codigoHTML; }, 30)
@@ -38,40 +40,42 @@ function modalTelaCadastrarAtualizarIngrediente(tipo) {
                         <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel"><span class="fas fa-box"></span> Dados Ingrediente</h5>
-                            <button onclick="reiniciarClasseEstoque();" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button onclick="reiniciarClasseEstoque();" type="button" class="close btn-danger" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                             </button>
                             <div id="mensagemDeErroModal" class="justify-content-center"></div>
                         </div>
                         <div class="modal-body">
                             <form>
-                                <div class="form-group">
-                                    <label for="nomeproduto">Nome do ingrediente:</label>
-                                    <input type="text" class="form-control" id="nomeingrediente" placeholder="Nome">
-                                </div>
-                                <div class="form-group">
-                                  <label for="precocustoingrediente">Preço de custo:</label>
-                                  <div class="input-group">
-                                    <div class="input-group-prepend">
-                                      <span class="input-group-text">R$</span>
-                                    </div>
-                                    <input type="Number" class="form-control" id="precocustoingrediente" placeholder="Preço de custo">
+                                <div class="shadow-lg p-3 mb-5 bg-white rounded">
+                                  <div class="form-group">
+                                      <label for="nomeproduto">Nome do ingrediente:</label>
+                                      <input type="text" class="form-control" id="nomeingrediente" placeholder="Nome">
                                   </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="quantidadeingrediente">Quantidade:</label>
+                                  <div class="form-group">
+                                    <label for="precocustoingrediente">Preço de custo:</label>
                                     <div class="input-group">
-                                      <input type="Number" class="form-control" id="quantidadeingrediente" value=0>
-                                      <select class="custom-select" id="tipoMedida">
-                                        <option value="g">G (gramas)</option>
-                                        <option value="ml">ML (mililitro)</option>
-                                        <option value="unidade">Unid. (Unidade)</option>
-                                      </select>
+                                      <div class="input-group-prepend">
+                                        <span class="input-group-text">R$</span>
+                                      </div>
+                                      <input type="Number" class="form-control" id="precocustoingrediente" placeholder="Preço de custo">
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="descricaoingrediente">Descrição</label>
-                                    <textarea class="form-control" id="descricaoingrediente" rows="3">Nenhuma.</textarea>
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="quantidadeingrediente">Quantidade:</label>
+                                      <div class="input-group">
+                                        <input type="Number" class="form-control" id="quantidadeingrediente" value=0>
+                                        <select class="custom-select" id="tipoMedida">
+                                          <option value="g">G (gramas)</option>
+                                          <option value="ml">ML (mililitro)</option>
+                                          <option value="unidade">Unid. (Unidade)</option>
+                                        </select>
+                                      </div>
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="descricaoingrediente">Descrição</label>
+                                      <textarea class="form-control" id="descricaoingrediente" rows="3">Nenhuma.</textarea>
+                                  </div>
                                 </div>
                             </form>
                         </div>
@@ -124,7 +128,10 @@ async function buscarEstoque(tipoBusca) {
 
     VETORDEITENSESTOQUE = [];
 
-    codigoHTML += `<div id="grafico" class="col-10 mx-auto" style="margin-top:30px; height: 50vh"></div>
+    codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+    <div id="grafico" class="col-10 mx-auto" style="margin-top:30px; height: 50vh"></div>
+    </div>
+    <div class="shadow-lg p-3 mb-5 bg-white rounded">
     <h5 class="text-center" style="margin-top:50px">Atualizar estoque</h5>
     <table class="table table-bordered table-sm col-10 mx-auto" style="margin-top:10px">
     <thead class="thead-dark">
@@ -182,7 +189,8 @@ async function buscarEstoque(tipoBusca) {
       </tr>`
     }
     codigoHTML += `</tbody>
-    </table>`
+      </table>
+    </div>`
 
     if (json.data[0]) {
       document.getElementById('resposta').innerHTML = codigoHTML;

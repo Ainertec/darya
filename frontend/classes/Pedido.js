@@ -13,17 +13,21 @@ function modalRetiradaLocalouEnvio() {
                         <div class="modal-content">
                           <div class="modal-header">
                               <h5 class="modal-title" id="staticBackdropLabel"><span class="fas fa-pallet"></span> Forma de retirada</h5>
-                              <button onclick="inicializarVariaveisClassePedido();" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <button onclick="inicializarVariaveisClassePedido();" type="button" class="close btn-danger" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                               </button>
                           </div>
                           <div class="modal-body">
-                            <button onclick="modalCriarouBuscarClientePedido(true);" type="button" class="btn btn-light btn-lg btn-block border-dark" data-dismiss="modal" style="height: 150px;">
-                              <span class="fas fa-truck-loading"></span> Enviar pedido
-                            </button>
-                            <button onclick="modalCriarouBuscarClientePedido(false);" type="button" class="btn btn-light btn-lg btn-block border-dark" data-dismiss="modal" style="height: 150px;">
-                              <span class="fas fa-people-carry"></span> Retirar no local
-                            </button>  
+                            <div class="shadow-lg p-3 mb-5 bg-white rounded">
+                              <button onclick="modalCriarouBuscarClientePedido(true);" type="button" class="btn btn-light btn-lg btn-block border-dark" data-dismiss="modal" style="height: 150px;">
+                                <span class="fas fa-truck-loading"></span> Enviar pedido
+                              </button>
+                            </div>
+                            <div class="shadow-lg p-3 mb-5 bg-white rounded">
+                              <button onclick="modalCriarouBuscarClientePedido(false);" type="button" class="btn btn-light btn-lg btn-block border-dark" data-dismiss="modal" style="height: 150px;">
+                                <span class="fas fa-people-carry"></span> Retirar no local
+                              </button>
+                            </div>
                           </div>
                         </div>
                     </div>
@@ -42,17 +46,21 @@ function modalCriarouBuscarClientePedido(envio) {
                         <div class="modal-content">
                           <div class="modal-header">
                               <h5 class="modal-title" id="staticBackdropLabel"><span class="fas fa-user"></span> Opções Cliente</h5>
-                              <button onclick="inicializarVariaveisClassePedido();" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <button onclick="inicializarVariaveisClassePedido();" type="button" class="close btn-danger" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                               </button>
                           </div>
                           <div class="modal-body">
+                          <div class="shadow-lg p-3 mb-5 bg-white rounded">
                             <button onclick="modalCadastrorapidoClientePedido(${envio});" type="button" class="btn btn-light btn-lg btn-block border-dark" data-dismiss="modal" style="height: 150px;">
                               <span class="fas fa-user-plus"></span> Criar cliente
                             </button>
+                            </div>
+                            <div class="shadow-lg p-3 mb-5 bg-white rounded">
                             <button onclick="telaModalDeCriacaoDePedido('cadastrar', ${envio});" type="button" class="btn btn-light btn-lg btn-block border-dark" data-dismiss="modal" style="height: 150px;">
                               <span class="fas fa-search"></span> Buscar cliente
                             </button>
+                            </div>
                           </div>
                         </div>
                     </div>
@@ -77,12 +85,13 @@ async function modalCadastrorapidoClientePedido(tipo) {
                         <div class="modal-content">
                           <div class="modal-header">
                               <h5 class="modal-title" id="staticBackdropLabel"><span class="fas fa-user"></span> Cadastro rápido</h5>
-                              <button onclick="inicializarVariaveisClassePedido();" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <button onclick="inicializarVariaveisClassePedido();" type="button" class="close btn-danger" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                               </button>
                               <div id="mensagemDeErroModal" class="justify-content-center"></div>
                           </div>
                           <div class="modal-body">
+                          <div class="shadow-lg p-3 mb-5 bg-white rounded">
                             <h5 class="text-center" style="margin-top: 30px;"><span class="fas fa-user"></span> Criar Cliente</h5>
                             <form id="formuDadosClientePedido" style="margin-top:20px;">
                                 <div class="form-group">
@@ -112,10 +121,11 @@ async function modalCadastrorapidoClientePedido(tipo) {
                                 </div>
                                 <div class="form-group">
                                   <label for="complementoclientecriarpedido">Complemento:</label>
-                                  <input type="text" class="form-control" id="complementoclientecriarpedido">
+                                  <input type="text" class="form-control" id="complementoclientecriarpedido" value="Nenhum">
                                 </div>`
   }
-  codigoHTML += `</form>  
+  codigoHTML += `</form>
+                </div>
                           </div>
                           <div class="modal-footer">`
   if (tipo) {
@@ -203,7 +213,7 @@ function telaModalDeCriacaoDePedido(tipo, enviarPedido) {
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel"><span class="fas fa-shopping-basket"></span> Dados do Pedido</h5>
-                    <button onclick="inicializarVariaveisClassePedido();" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button onclick="inicializarVariaveisClassePedido();" type="button" class="close btn-danger" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                     <div id="mensagemDeErroModal" class="justify-content-center"></div>
@@ -214,80 +224,83 @@ function telaModalDeCriacaoDePedido(tipo, enviarPedido) {
                     <div id="pagCliente">
 
                         <div id="buscarDadosClientes">
-                          <h5 class="text-center" style="margin-top: 30px;"><span class="fas fa-user"></span> Buscar Cliente</h5>
-                          <div class="card-deck col-10 mx-auto d-block">
-                              <div class="input-group mb-3">
-                                  <input id="nometelefonecliente" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome ou telefone do cliente">
-                                  <button onclick="if(validaDadosCampo(['#nometelefonecliente'])){criarListagemDeBuscaDeClientes('nome'); $('#formuDadosClientePedido').fadeOut(); $('#respostaClienteParaPedido').fadeIn();}else{mensagemDeErroModal('Preencha o campo nome do cliente!'); mostrarCamposIncorreto(['nometelefonecliente'])}" type="button" class="btn btn-outline-info btn-sm">
-                                      <span class="fas fa-search"></span> Buscar
-                                  </button>
-                                  <br/>
-                                  <button onclick="criarListagemDeBuscaDeClientes('todos'); $('#formuDadosClientePedido').fadeOut(); $('#respostaClienteParaPedido').fadeIn();" type="button" class="btn btn-outline-info btn-block btn-sm" style="margin-top:10px;">
-                                      <span class="fas fa-search-plus"></span> Exibir todos
-                                  </button>
-                              </div>
+                          <div class="shadow-lg p-3 mb-5 bg-white rounded">
+                            <h5 class="text-center" style="margin-top: 30px;"><span class="fas fa-user"></span> Buscar Cliente</h5>
+                            <div class="card-deck col-10 mx-auto d-block">
+                                <div class="input-group mb-3">
+                                    <input id="nometelefonecliente" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome ou telefone do cliente">
+                                    <button onclick="if(validaDadosCampo(['#nometelefonecliente'])){criarListagemDeBuscaDeClientes('nome'); $('#formuDadosClientePedido').fadeOut(); $('#respostaClienteParaPedido').fadeIn();}else{mensagemDeErroModal('Preencha o campo nome do cliente!'); mostrarCamposIncorreto(['nometelefonecliente'])}" type="button" class="btn btn-outline-info btn-sm">
+                                        <span class="fas fa-search"></span> Buscar
+                                    </button>
+                                    <br/>
+                                    <button onclick="criarListagemDeBuscaDeClientes('todos'); $('#formuDadosClientePedido').fadeOut(); $('#respostaClienteParaPedido').fadeIn();" type="button" class="btn btn-outline-info btn-block btn-sm" style="margin-top:10px;">
+                                        <span class="fas fa-search-plus"></span> Exibir todos
+                                    </button>
+                                </div>
+                            </div>
                           </div>
                           <div id="respostaClienteParaPedido"></div>
                         </div>
 
                         <form id="formuDadosClientePedido" style="margin-top:20px;">
-                            <div class="form-group">
-                                <label for="nomecliente">Nome:</label>
-                                <input type="text" class="form-control" id="nomecliente" placeholder="Nome do cliente" disabled>
-                            </div>
-                            <div class="form-group">
-                                <label for="telefonecliente">Telefone:</label>
-                                <select class="form-control form-control-sm" id="telefonecliente">
-                                </select>
-                              </div>`
+                            <div class="shadow-lg p-3 mb-5 bg-white rounded">
+                              <div class="form-group">
+                                  <label for="nomecliente">Nome:</label>
+                                  <input type="text" class="form-control" id="nomecliente" placeholder="Nome do cliente" disabled>
+                              </div>
+                              <div class="form-group">
+                                  <label for="telefonecliente">Telefone:</label>
+                                  <select class="form-control form-control-sm" id="telefonecliente">
+                                  </select>
+                                </div>`
   if (enviarPedido) {
     codigoHTML += `<div class="form-group">
-                                  <label for="enderecocliente">Endereço:</label>
-                                  <select class="form-control form-control-sm" id="enderecocliente">
-                                  </select>
-                              </div>`
+                                    <label for="enderecocliente">Endereço:</label>
+                                    <select class="form-control form-control-sm" id="enderecocliente">
+                                    </select>
+                                </div>`
   }
-  codigoHTML += `</form>
-
+  codigoHTML += `</div>
+    </form>
 
                     </div>
                     
                     <div id="pagProduto">
-                        <h5 class="text-center" style="margin-top: 30px;"><span class="fas fa-hamburger"></span> Buscar Produtos</h5>
-                        <div class="card-deck col-10 mx-auto d-block">
-                            <div class="input-group mb-3">
-                                <input id="nomeproduto" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do produto">
-                                <button onclick="if(validaDadosCampo(['#nomeproduto'])){criarListagemDeBuscaDeProduto('nome');}else{mensagemDeErroModal('Preencha o campo nome do produto!'); mostrarCamposIncorreto(['nomeproduto']);}" type="button" class="btn btn-outline-info btn-sm">
-                                    <span class="fas fa-search"></span> Buscar
-                                </button>
-                                <br/>
-                                <button onclick="criarListagemDeBuscaDeProduto('todos');" type="button" class="btn btn-outline-info btn-block btn-sm" style="margin-top:10px;">
-                                    <span class="fas fa-search-plus"></span> Exibir todos
-                                </button>
-                            </div>
-                        </div>
-                        <div class="card bg-warning">
-                          <div class="card-body">
-                            <div id="respostaProdutoParaPedido"></div>
+                        <div class="shadow-lg p-3 mb-5 bg-white rounded">
+                          <h5 class="text-center" style="margin-top: 30px;"><span class="fas fa-hamburger"></span> Buscar Produtos</h5>
+                          <div class="card-deck col-10 mx-auto d-block">
+                              <div class="input-group mb-3">
+                                  <input id="nomeproduto" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do produto">
+                                  <button onclick="if(validaDadosCampo(['#nomeproduto'])){criarListagemDeBuscaDeProduto('nome');}else{mensagemDeErroModal('Preencha o campo nome do produto!'); mostrarCamposIncorreto(['nomeproduto']);}" type="button" class="btn btn-outline-info btn-sm">
+                                      <span class="fas fa-search"></span> Buscar
+                                  </button>
+                                  <br/>
+                                  <button onclick="criarListagemDeBuscaDeProduto('todos');" type="button" class="btn btn-outline-info btn-block btn-sm" style="margin-top:10px;">
+                                      <span class="fas fa-search-plus"></span> Exibir todos
+                                  </button>
+                              </div>
                           </div>
                         </div>
+                        <div id="respostaProdutoParaPedido"></div>
 
-                        <div class="card bg-info" style="margin-top:20px">
-                          <div class="card-body">
-                            <h5 class="text-center" style="margin-bottom: 20px; margin-top: 15px;"><span class="fas fa-hamburger"></span> Produtos Adicionados</h5>
-                            <table class="table table-sm col-12 mx-auto" style="margin-top:20px">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th scope="col">Nome</th>
-                                        <th scope="col">Preço</th>
-                                        <th scope="col">Quantidade</th>
-                                        <th scope="col">Remover</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="listagemDeProdutoSelecionadoPedido">
-                                    
-                                </tbody>
-                            </table>
+                        <div class="shadow-lg p-3 mb-5 bg-white rounded">
+                          <div class="card bg-info" style="margin-top:20px">
+                            <div class="card-body">
+                              <h5 class="text-center" style="margin-bottom: 20px; margin-top: 15px;"><span class="fas fa-hamburger"></span> Produtos Adicionados</h5>
+                              <table class="table table-sm col-12 mx-auto" style="margin-top:20px">
+                                  <thead class="thead-dark">
+                                      <tr>
+                                          <th scope="col">Nome</th>
+                                          <th scope="col">Preço</th>
+                                          <th scope="col">Quantidade</th>
+                                          <th scope="col">Remover</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody id="listagemDeProdutoSelecionadoPedido">
+                                      
+                                  </tbody>
+                              </table>
+                            </div>
                           </div>
                         </div>
 
@@ -296,30 +309,34 @@ function telaModalDeCriacaoDePedido(tipo, enviarPedido) {
                     <div id="pagMotoboy">`
   if (enviarPedido) {
     codigoHTML += `<div id="buscarDadosMotoboy">
-                          <h5 class="text-center" style="margin-top: 30px;"><span class="fas fa-motorcycle"></span> Buscar Motoboys</h5>
-                          <div class="card-deck col-10 mx-auto d-block">
-                              <div class="input-group mb-3">
-                                  <input id="nomeMotoboyPedido" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do motoboy">
-                                  <button onclick="if(validaDadosCampo(['#nomeMotoboyPedido'])){criarListagemDeBuscaDeMotoboy('nome'); $('#formuDadoMotoboyPedido').fadeOut(); $('#respostaMotoboyParaPedido').fadeIn();}else{mensagemDeErroModal('Preencha o campo nome do motoboy!'); mostrarCamposIncorreto(['nomeMotoboyPedido']);}" type="button" class="btn btn-outline-info btn-sm">
-                                      <span class="fas fa-search"></span> Buscar
-                                  </button>
-                                  <br/>
-                                  <button onclick="criarListagemDeBuscaDeMotoboy('ativos'); $('#formuDadoMotoboyPedido').fadeOut(); $('#respostaMotoboyParaPedido').fadeIn();" type="button" class="btn btn-outline-info btn-block btn-sm" style="margin-top:10px;">
-                                      <span class="fas fa-search-plus"></span> Exibir todos
-                                  </button>
-                              </div>
+                          <div class="shadow-lg p-3 mb-5 bg-white rounded">
+                            <h5 class="text-center" style="margin-top: 30px;"><span class="fas fa-motorcycle"></span> Buscar Motoboys</h5>
+                            <div class="card-deck col-10 mx-auto d-block">
+                                <div class="input-group mb-3">
+                                    <input id="nomeMotoboyPedido" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do motoboy">
+                                    <button onclick="if(validaDadosCampo(['#nomeMotoboyPedido'])){criarListagemDeBuscaDeMotoboy('nome'); $('#formuDadoMotoboyPedido').fadeOut(); $('#respostaMotoboyParaPedido').fadeIn();}else{mensagemDeErroModal('Preencha o campo nome do motoboy!'); mostrarCamposIncorreto(['nomeMotoboyPedido']);}" type="button" class="btn btn-outline-info btn-sm">
+                                        <span class="fas fa-search"></span> Buscar
+                                    </button>
+                                    <br/>
+                                    <button onclick="criarListagemDeBuscaDeMotoboy('ativos'); $('#formuDadoMotoboyPedido').fadeOut(); $('#respostaMotoboyParaPedido').fadeIn();" type="button" class="btn btn-outline-info btn-block btn-sm" style="margin-top:10px;">
+                                        <span class="fas fa-search-plus"></span> Exibir todos
+                                    </button>
+                                </div>
+                            </div>
                           </div>
                           <div id="respostaMotoboyParaPedido"></div>
                         </div>                      
     
                           <form id="formuDadoMotoboyPedido" style="margin-top:20px;">
-                            <div class="form-group">
-                                <label for="nomemotoboy">Nome:</label>
-                                <input type="text" class="form-control" id="nomemotoboy" placeholder="Nome do cliente" disabled>
-                            </div>
-                            <div class="form-group">
-                                <label for="telefonemotoboy">Telefone:</label>
-                                <input type="text" class="form-control" id="telefonemotoboy" placeholder="Exemplo: (00)00000-0000" disabled>
+                            <div class="shadow-lg p-3 mb-5 bg-white rounded">
+                              <div class="form-group">
+                                  <label for="nomemotoboy">Nome:</label>
+                                  <input type="text" class="form-control" id="nomemotoboy" placeholder="Nome do cliente" disabled>
+                              </div>
+                              <div class="form-group">
+                                  <label for="telefonemotoboy">Telefone:</label>
+                                  <input type="text" class="form-control" id="telefonemotoboy" placeholder="Exemplo: (00)00000-0000" disabled>
+                              </div>
                             </div>
                           </form>`
   } else {
@@ -328,33 +345,35 @@ function telaModalDeCriacaoDePedido(tipo, enviarPedido) {
   }
   codigoHTML += `</div>
                     <div id="pagExtra">
-                        <h5 class="text-center" style="margin-bottom: 40px; margin-top: 30px;"><span class="fas fa-info"></span> Informações extras</h5>
-                        <form style="margin-top:20px;">
-                            <div class="form-group">
-                                <label for="formaPagamento">Forma de pagamento:</label>
-                                <select class="form-control form-control-sm" id="formaPagamento">
-                                    <option value="Dinheiro sem troco">Dinheiro sem troco</option>
-                                    <option value="Dinheiro com troco">Dinheiro com troco</option>
-                                    <option value="Cartão crédito">Cartão crédito</option>
-                                    <option value="Cartão débito">Cartão débito</option>
-                                    <option value="Transferência Itaú">Transferência Itaú</option>
-                                    <option value="Transferência Bradesco">Transferência Bradesco</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="formaDeRequisicaoPedido">Forma de requerimento:</label>
-                                <select class="form-control form-control-sm" id="formaDeRequisicaoPedido">
-                                    <option value="Ifood">Ifood</option>
-                                    <option value="Whatsapp">Whatsapp</option>
-                                    <option value="Instagram">Instagram</option>
-                                    <option value="Pronta Entrega">Pronta Entrega</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="observacao">Observação:</label>
-                                <textArea type="text" class="form-control" id="observacao">Nenhuma.</textArea>
-                            </div>
-                        </form>
+                        <div class="shadow-lg p-3 mb-5 bg-white rounded">
+                          <h5 class="text-center" style="margin-bottom: 40px; margin-top: 30px;"><span class="fas fa-info"></span> Informações extras</h5>
+                          <form style="margin-top:20px;">
+                              <div class="form-group">
+                                  <label for="formaPagamento">Forma de pagamento:</label>
+                                  <select class="form-control form-control-sm" id="formaPagamento">
+                                      <option value="Dinheiro sem troco">Dinheiro sem troco</option>
+                                      <option value="Dinheiro com troco">Dinheiro com troco</option>
+                                      <option value="Cartão crédito">Cartão crédito</option>
+                                      <option value="Cartão débito">Cartão débito</option>
+                                      <option value="Transferência Itaú">Transferência Itaú</option>
+                                      <option value="Transferência Bradesco">Transferência Bradesco</option>
+                                  </select>
+                              </div>
+                              <div class="form-group">
+                                  <label for="formaDeRequisicaoPedido">Forma de requerimento:</label>
+                                  <select class="form-control form-control-sm" id="formaDeRequisicaoPedido">
+                                      <option value="Ifood">Ifood</option>
+                                      <option value="Whatsapp">Whatsapp</option>
+                                      <option value="Instagram">Instagram</option>
+                                      <option value="Pronta Entrega">Pronta Entrega</option>
+                                  </select>
+                              </div>
+                              <div class="form-group">
+                                  <label for="observacao">Observação:</label>
+                                  <textArea type="text" class="form-control" id="observacao">Nenhuma.</textArea>
+                              </div>
+                          </form>
+                        </div>
                     </div>
                     
                 </div>
@@ -450,7 +469,8 @@ async function criarListagemDeBuscaDeClientes(tipo) {
       await aguardeCarregamento(false);
     }
 
-    codigoHTML += `<table class="table table-sm col-12 mx-auto" style="margin-top:10px">
+    codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+      <table class="table table-sm col-12 mx-auto" style="margin-top:10px">
           <thead class="thead-dark">
               <tr>
                   <th scope="col">Nome</th>
@@ -482,7 +502,8 @@ async function criarListagemDeBuscaDeClientes(tipo) {
       }
     }
     codigoHTML += `</tbody>
-      </table>`;
+      </table>
+    </div>`;
 
     if (json.data[0]) {
       document.getElementById('respostaClienteParaPedido').innerHTML = codigoHTML;
@@ -510,28 +531,34 @@ async function criarListagemDeBuscaDeProduto(tipo) {
       await aguardeCarregamento(false);
     }
 
-    codigoHTML += `<table class="table table-sm col-12 mx-auto" style="margin-top:10px">
-          <thead class="thead-dark">
-              <tr>
-                  <th scope="col">Nome</th>
-                  <th scope="col">Preço</th>
-                  <th scope="col">Descrição</th>
-                  <th scope="col">Quantidade</th>
-                  <th scope="col">Selecionar</th>
-              </tr>
-          </thead>
-          <tbody>`;
+    codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+      <div class="card bg-warning">
+        <div class="card-body">
+          <table class="table table-sm col-12 mx-auto" style="margin-top:10px">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Preço</th>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Quantidade</th>
+                    <th scope="col">Selecionar</th>
+                </tr>
+            </thead>
+            <tbody>`;
     for (let item of json.data) {
       codigoHTML += `<tr>
-                  <td class="table-light col-2" title="${item.name}"><strong><span class="fas fa-hamburger"></span> ${corrigirTamanhoString(15, item.name)}</strong></td>
-                  <td class="table-light text-danger"><strong>R$${(parseFloat(item.price)).toFixed(2)}</strong></td>
-                  <td class="table-light text-center" title="${item.description}"><strong>${corrigirTamanhoString(20, item.description)}</strong></td>
-                  <td class="table-light"><input id="quantidadeProduto${item._id}" type="Number" class="form-control form-control-sm" value=1></td>
-                  <td class="table-light text-center"><button onclick="if(validaDadosCampo(['#quantidadeProduto${item._id}']) && validaValoresCampo(['#quantidadeProduto${item._id}'])){preencherDadosPedidoIncluirDadosEmPedido('produto','${item._id}', quantidadeProduto${item._id}.value );}else{mensagemDeErroModal('Preencha o campo quantidade com um valor válido!'); mostrarCamposIncorreto(['quantidadeProduto${item._id}']);}" type="button" class="btn btn-primary btn-sm"><span class="fas fa-check"></span> </button></td>
-              </tr>`;
+                    <td class="table-light col-2" title="${item.name}"><strong><span class="fas fa-hamburger"></span> ${corrigirTamanhoString(15, item.name)}</strong></td>
+                    <td class="table-light text-danger"><strong>R$${(parseFloat(item.price)).toFixed(2)}</strong></td>
+                    <td class="table-light text-center" title="${item.description}"><strong>${corrigirTamanhoString(20, item.description)}</strong></td>
+                    <td class="table-light"><input id="quantidadeProduto${item._id}" type="Number" class="form-control form-control-sm" value=1></td>
+                    <td class="table-light text-center"><button onclick="if(validaDadosCampo(['#quantidadeProduto${item._id}']) && validaValoresCampo(['#quantidadeProduto${item._id}'])){preencherDadosPedidoIncluirDadosEmPedido('produto','${item._id}', quantidadeProduto${item._id}.value );}else{mensagemDeErroModal('Preencha o campo quantidade com um valor válido!'); mostrarCamposIncorreto(['quantidadeProduto${item._id}']);}" type="button" class="btn btn-primary btn-sm"><span class="fas fa-check"></span> </button></td>
+                </tr>`;
     }
     codigoHTML += `</tbody>
-      </table>`;
+          </table>
+        </div>
+      </div>
+    </div>`;
 
     if (json.data[0]) {
       document.getElementById('respostaProdutoParaPedido').innerHTML = codigoHTML;
@@ -546,26 +573,24 @@ async function criarListagemDeBuscaDeProduto(tipo) {
 //funcao responsavel por criar a listagem do produtos na classe periodo
 async function criarListagemDeBuscaDeMotoboy(tipo) {
   let codigoHTML = ``,
-    json = null;
+    json = JSON.parse(`{"data":[]}`);
 
   try {
     if (tipo == 'nome') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`deliverymans/${document.getElementById('nomeMotoboyPedido').value}`);
+      let json2 = await requisicaoGET(`deliverymans/${document.getElementById('nomeMotoboyPedido').value}`);
       await aguardeCarregamento(false);
-      for (let item of json.data) {
-        if (item.working_day == false) {
-          delete json.data[indice]
-        }
-        json.data[indice]
-      }
+      json.data = json2.data.filter((item) => {
+        return item.working_day == true;
+      })
     } else if (tipo == 'ativos') {
       await aguardeCarregamento(true);
       json = await requisicaoGET('deliverymans/working_days');
       await aguardeCarregamento(false);
     }
 
-    codigoHTML += `<table class="table table-sm col-12 mx-auto" style="margin-top:10px">
+    codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+      <table class="table table-sm col-12 mx-auto" style="margin-top:10px">
           <thead class="thead-dark">
               <tr>
                   <th scope="col">Nome</th>
@@ -576,7 +601,7 @@ async function criarListagemDeBuscaDeMotoboy(tipo) {
               </tr>
           </thead>
           <tbody>`;
-    for (item of json.data) {
+    for await (item of json.data) {
       codigoHTML += `<tr>
                   <td class="table-light text-dark" title="${item.name}"><strong><span class="fas fa-biking"></span> ${corrigirTamanhoString(15, item.name)}</strong></td>
                   <td class="table-light"><span class="fas fa-phone"></span> ${item.phone}</td>
@@ -603,7 +628,8 @@ async function criarListagemDeBuscaDeMotoboy(tipo) {
       codigoHTML += `</tr>`;
     }
     codigoHTML += `</tbody>
-      </table>`;
+      </table>
+    </div>`;
 
     if (json.data[0]) {
       document.getElementById('respostaMotoboyParaPedido').innerHTML = codigoHTML;
@@ -844,12 +870,12 @@ async function buscarDadosAtualizar(tipo) {
       }
 
       codigoHTML += `</tbody>
-      </table>`;
+        </table>`;
 
 
       document.getElementById('respostaListaDePedidosAbertosPagamento').innerHTML = codigoHTML;
     } else {
-      document.getElementById('respostaListaDePedidosAbertosPagamento').innerHTML = '<h5 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Nenhum pedido em aberto encontrado!</h5>';
+      document.getElementById('respostaListaDePedidosAbertosPagamento').innerHTML = `<h5 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Nenhum pedido em aberto encontrado!</h5>`;
     }
   } catch (error) {
     mensagemDeErro('Não foi possível carregar os pedidos em aberto!')

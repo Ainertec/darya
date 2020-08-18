@@ -11,7 +11,8 @@ function telaDeBuscarCliente() {
 
   let codigoHTML = ``;
 
-  codigoHTML += `<h4 class="text-center"><span class="fas fa-user"></span> Buscar Cliente</h4>
+  codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+                  <h4 class="text-center"><span class="fas fa-user"></span> Buscar Cliente</h4>
                     <div class="card-deck col-4 mx-auto d-block">
                         <div class="input-group mb-3">
                             <input id="nome" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do cliente ou telefone">
@@ -27,7 +28,8 @@ function telaDeBuscarCliente() {
                             </button>
                         </div>
                     </div>
-                    <div id="resposta"></div>`;
+                  </div>
+                  <div id="resposta"></div>`;
 
   animacaoJanela2();
   setTimeout(function () { document.getElementById('janela2').innerHTML = codigoHTML; }, 30)
@@ -77,18 +79,19 @@ async function modalTelaCadastrarouAtualizarCliente(tipo) {
                         <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel"><span class="fas fa-user"></span> Dados Cliente</h5>
-                            <button onclick="reiniciarClasseCliente();" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button onclick="reiniciarClasseCliente();" type="button" class="close btn-danger" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                             </button>
                             <div id="mensagemDeErroModal" class="justify-content-center"></div>
                         </div>
                         <div class="modal-body">
                             <form>
+                              <div class="shadow-lg p-3 mb-5 bg-white rounded">
                                 <div class="form-group">
                                     <label for="nomecliente">Nome:</label>
                                     <input type="text" class="form-control" id="nomecliente" placeholder="Nome do cliente">
                                 </div>
-                                <table class="table table-sm col-12 mx-auto" style="margin-top:80px">
+                                <table class="table table-sm col-12 mx-auto" style="margin-top:40px">
                                   <thead class="thead-dark">
                                       <tr>
                                           <th scope="col">Telefone</th>
@@ -113,13 +116,16 @@ async function modalTelaCadastrarouAtualizarCliente(tipo) {
   codigoHTML += `</div>
                                   </div>
                                 </div>
+                              </div>
+                              <div class="shadow-lg p-3 mb-5 bg-white rounded">
                                 <div id="botaoadicionartelefoneendereco">
                                   <div class="custom-control custom-switch">
                                     <input type="checkbox" onclick="this.checked? $('#areaendereco').fadeIn(10) : $('#areaendereco').fadeOut(10) " class="custom-control-input custom-switch" id="botaoSelectClientephoneaddress">
                                     <label class="custom-control-label" for="botaoSelectClientephoneaddress">Adicionar Endereço</label>
                                   </div>
                                 </div>
-                                <div id="areaendereco"></div>
+                              </div>
+                              <div id="areaendereco"></div>
                             </form>
                         </div>
                         <div class="modal-footer">`;
@@ -152,7 +158,8 @@ async function gerarTelaParteEnderecoCliente(tipo) {
   let codigoHTML = ``, json = await requisicaoGET(`districts`);
   await aguardeCarregamento(false);
 
-  codigoHTML += `<table class="table table-sm col-12 mx-auto" style="margin-top:80px">
+  codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+              <table class="table table-sm col-12 mx-auto" style="margin-top:20px">
                 <thead class="thead-dark">
                     <tr>
                         <th scope="col">Rua</th>
@@ -187,7 +194,7 @@ async function gerarTelaParteEnderecoCliente(tipo) {
               <div class="form-group">
                 <label for="complementocliente">Complemento:</label>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" id="complementocliente">
+                    <input type="text" class="form-control" id="complementocliente" value="Nenhum">
                     <div class="input-group-append">`;
   if (tipo == 'cadastrar') {
     codigoHTML += `<button onclick="if(validaDadosCampo(['#ruacliente','#numerocasacliente','#complementocliente'])){adicionarDadosNaTabelaTelefoneeEndereco('endereco','-1')}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['ruacliente','numerocasacliente','complementocliente']);}" id="botaoadicionarendereco" class="btn btn-success" type="button"><span class="fas fa-plus"></span> Adicionar</button>`;
@@ -196,7 +203,8 @@ async function gerarTelaParteEnderecoCliente(tipo) {
   }
   codigoHTML += `</div>
                 </div>
-              </div>`
+              </div>
+            </div>`
 
   document.getElementById('areaendereco').innerHTML = codigoHTML;
 
@@ -219,9 +227,8 @@ async function buscarDadosCliente(tipo) {
       await aguardeCarregamento(false);
     }
 
-    console.log(json)
-
-    codigoHTML += `<h5 class="text-center" style="margin-top:80px">Listagem de bairros</h5>
+    codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+      <h5 class="text-center" style="margin-top:80px">Listagem de bairros</h5>
       <table class="table table-sm col-8 mx-auto" style="margin-top:10px">
           <thead class="thead-dark">
               <tr>
@@ -240,7 +247,8 @@ async function buscarDadosCliente(tipo) {
     }
 
     codigoHTML += `</tbody>
-      </table>`;
+      </table>
+    </div>`;
 
     if (json.data[0]) {
       document.getElementById('resposta').innerHTML = codigoHTML;
@@ -377,12 +385,6 @@ async function cadastrarCliente() {
             district: addressElement.district._id
           };
         });
-
-        console.log({
-          address: addressSerialiazaded,
-          phone: cliente.phone,
-          name: cliente.name,
-        })
 
         await aguardeCarregamento(true);
         let result = await requisicaoPOST(`clients`, {

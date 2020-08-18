@@ -4,20 +4,31 @@
 async function telaDeRelatorio() {
   let codigoHTML = '';
 
-  codigoHTML += `<h4 class="text-center"><span class="fas fa-chart-pie"></span> Relatórios</h4>
-    <div class="card-deck col-6 mx-auto d-block">
-      <button onclick="confirmarAcao('Imprimir relatório geral!','impressaoRelatorioGeral();','')" type="button" class="btn btn-warning btn-block" style="margin-top:60px; margin-bottom:30px;">
-        <span class="fas fa-print"></span> Imprimir relatório
-      </button>
+  codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+      <h4 class="text-center"><span class="fas fa-chart-pie"></span> Relatórios</h4>
+      <div class="card-deck col-6 mx-auto d-block">
+        <button onclick="confirmarAcao('Imprimir relatório geral!','impressaoRelatorioGeral();','')" type="button" class="btn btn-warning btn-block" style="margin-top:60px; margin-bottom:30px;">
+          <span class="fas fa-print"></span> Imprimir relatório
+        </button>
+      </div>
+      <div class="card-deck col-12 mx-auto d-block" style="margin-top:30px;">
+        <h6 class="text-center">Os gráficos de representação do dia são:"Demonstrativo de Arrecadação Periódico (Bruto e Líquido)", "Relatório de Produtos Mais e Menos Vendidos" e "Lista de Pedidos Fechados".</h6>
+        <h6 class="text-center">O gráfico de respresentação geral é:"Demonstrativo de Lucro e Dispesa sobre Produto".</h6>
+      </div>
     </div>
-    <div class="card-deck col-12 mx-auto d-block" style="margin-top:30px;">
-      <h6 class="text-center">Os gráficos de representação do dia são:"Demonstrativo de Lucro Periódico (Bruto e Líquido)" e "Lista de Pedidos Fechados".</h6>
-      <h6 class="text-center">Os gráficos de respresentação geral são:"Demonstrativo de Lucro e Dispesa sobre Produto" e "Relatório de Produtos Mais e Menos Vendidos".</h6>
-    </div>
+
+    <div class="shadow-lg p-3 mb-5 bg-white rounded">
     <div id="grafico0" style="margin-top:40px;" class="col-12 rounded mx-auto d-block"></div>
+    </div>
+    <div class="shadow-lg p-3 mb-5 bg-white rounded">
     <div id="grafico1" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>
+    </div>
+    <div class="shadow-lg p-3 mb-5 bg-white rounded">
     <div id="grafico2" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>
-    <div id="listaItens" style="margin-top:20px" class="col-12 rounded mx-auto d-block"></div>`
+    </div>
+    <div class="shadow-lg p-3 mb-5 bg-white rounded">
+    <div id="listaItens" style="margin-top:20px" class="col-12 rounded mx-auto d-block"></div>
+    </div>`
 
   animacaoJanela2();
   setTimeout(function () { document.getElementById('janela2').innerHTML = codigoHTML }, 30)
@@ -43,11 +54,11 @@ async function gerarGraficoLucroTotalPeriodico() {
         type: 'column',
       },
       title: {
-        text: 'Demonstrativo de Lucro Periódico (Bruto e Líquido)',
+        text: 'Demonstrativo de Arrecadação Periódico (Bruto e Líquido)',
       },
       subtitle: {
         text:
-          'Gráfico responsável por demonstrar o lucro líquido e bruto arrecadados dentro de um determinado período(Valor líquido = valor total - valor de gasto com produtos - valor da taxa de entrega).',
+          'Gráfico responsável por demonstrar o valor líquido e bruto arrecadados dentro de um determinado período(Valor líquido = valor total - valor de gasto com produtos - valor da taxa de entrega).',
       },
       xAxis: {
         categories: ['Lucro total'],

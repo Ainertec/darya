@@ -8,7 +8,8 @@ function telaDeBuscarMotoboyParaTrabalho() {
     VETORDEMOTOBOYSCLASSEMOTOBOY = []
     let codigoHTML = ``;
 
-    codigoHTML += `<h4 class="text-center"><span class="fas fa-motorcycle"></span> Buscar Motoboy</h4>
+    codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+                    <h4 class="text-center"><span class="fas fa-motorcycle"></span> Buscar Motoboy</h4>
                     <div class="card-deck col-4 mx-auto d-block">
                         <div class="input-group mb-3">
                             <input id="nome" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do motoboy">
@@ -30,7 +31,8 @@ function telaDeBuscarMotoboyParaTrabalho() {
                             </button>
                         </div>
                     </div>
-                    <div id="resposta"></div>`;
+                </div>
+                <div id="resposta"></div>`;
 
     animacaoJanela2();
     setTimeout(function () { document.getElementById('janela2').innerHTML = codigoHTML }, 30)
@@ -45,7 +47,7 @@ function modalTelaCadastrarouAtualizarMotoboy(tipo) {
                         <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel"><span class="fas fa-motorcycle"></span> Dados Motoboy</h5>
-                            <button onclick="reiniciarClasseMotoboy();" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button onclick="reiniciarClasseMotoboy();" type="button" class="close btn-danger" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                             </button>
                             <div id="mensagemDeErroModal" class="justify-content-center"></div>
@@ -53,7 +55,8 @@ function modalTelaCadastrarouAtualizarMotoboy(tipo) {
                         <div class="modal-body">`;
 
     if (tipo == 'atualizar') {
-        codigoHTML += `<h5 class="text-center">Buscar Motoboy</h5>
+        codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+                            <h5 class="text-center">Buscar Motoboy</h5>
                             <div class="card-deck col-12 mx-auto d-block">
                                 <div class="input-group mb-3">
                                     <input id="nomeemmodal" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do motoboy">
@@ -66,17 +69,20 @@ function modalTelaCadastrarouAtualizarMotoboy(tipo) {
                                     </button>
                                 </div>
                             </div>
-                            <div id="resposta2"></div>`;
+                        </div>
+                        <div id="resposta2"></div>`;
     }
 
     codigoHTML += `<form>
-                                <div class="form-group">
-                                    <label for="nomemotoboy">Nome motoboy:</label>
-                                    <input type="text" class="form-control" id="nomemotoboy" placeholder="Nome">
-                                </div>
-                                <div class="form-group">
-                                    <label for="telefonemotoboy">Telefone:</label>
-                                    <input type="tel" class="form-control" id="telefonemotoboy" placeholder="Exemplo: (00)00000-0000">
+                                <div class="shadow-lg p-3 mb-5 bg-white rounded">
+                                    <div class="form-group">
+                                        <label for="nomemotoboy">Nome motoboy:</label>
+                                        <input type="text" class="form-control" id="nomemotoboy" placeholder="Nome">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="telefonemotoboy">Telefone:</label>
+                                        <input type="tel" class="form-control" id="telefonemotoboy" placeholder="Exemplo: (00)00000-0000">
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -153,7 +159,8 @@ async function buscarDadosMotoboyTrabalhando(tipo) {
         }
         await aguardeCarregamento(false);
 
-        codigoHTML += `<h5 class="text-center" style="margin-top:80px">Listagem de motoboys para trabalho</h5>
+        codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+        <h5 class="text-center" style="margin-top:80px">Listagem de motoboys para trabalho</h5>
         <div class="text-center">
            <button onclick="alterarEstadoDeTrabalhoMotoboy('desativarTodos','')" type="button" class="btn btn-success" style="margin-top:10px;"><span class="fas fa-sync"></span> Reiniciar lista de trabalho</button>
         </div>
@@ -174,7 +181,8 @@ async function buscarDadosMotoboyTrabalhando(tipo) {
         }
 
         codigoHTML += `</tbody>
-            </table>`;
+            </table>
+        </div>`;
 
         if (json.data[0]) {
             document.getElementById('resposta').innerHTML = codigoHTML;
@@ -208,7 +216,8 @@ async function buscarDadosMotoboy(tipo) {
             await aguardeCarregamento(false);
         }
 
-        codigoHTML += `<h5 class="text-center" style="margin-top:40px;">Listagem de motoboys para trabalho</h5>
+        codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+        <h5 class="text-center" style="margin-top:40px;">Listagem de motoboys para trabalho</h5>
         <table class="table table-sm col-12 mx-auto" style="margin-top:10px; margin-bottom:60px;">
             <thead class="thead-dark">
                 <tr>
@@ -225,7 +234,8 @@ async function buscarDadosMotoboy(tipo) {
         }
 
         codigoHTML += `</tbody>
-            </table>`;
+            </table>
+        </div>`;
 
         if (json.data[0]) {
             document.getElementById('resposta2').innerHTML = codigoHTML;
