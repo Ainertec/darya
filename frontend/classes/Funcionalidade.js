@@ -40,7 +40,7 @@ function mensagemDeAviso(mensagem) {
 function limparTelaDeMensagem() {
   setTimeout(function () {
     $('#mensagemDeErro').animate({ width: 'hide' });
-  }, 3000);
+  }, 5000);
 }
 
 //funcao para limpar a tela de mensagens do modal
@@ -53,9 +53,9 @@ function limparTelaMensagemModal() {
 // funcao resopnsavel por validar os dados preenchidos nos campos
 function validaDadosCampo(campo) {
   let validacao = true;
-  campo.forEach(function (item) {
+  for (let item of campo) {
     if ($(item).val() == '' || $(item).val() == null) validacao = false;
-  });
+  }
 
   return validacao;
 }
@@ -63,9 +63,9 @@ function validaDadosCampo(campo) {
 // funcao responsavel por validar valores invalidos nos campos(valores negativos e zerados)
 function validaValoresCampo(campo) {
   let validacao = true;
-  campo.forEach(function (item) {
-    if (parseFloat($(item).val()) < 0.0 || parseFloat($(item).val()) == 0.0) validacao = false;
-  });
+  for (let item of campo) {
+    if (parseFloat($(item).val()) < 0.0) validacao = false;
+  }
 
   return validacao;
 }
@@ -119,12 +119,51 @@ function corrigirTamanhoString(tamMax, texto) {
 
 //funcao responsavel por exbir cor diferente no campor incorreto
 function mostrarCamposIncorreto(campo) {
-  campo.forEach(function (item) {
+  for (let item of campo) {
     document.getElementById(item).classList.add('border');
     document.getElementById(item).classList.add('border-danger');
     setTimeout(function () {
       document.getElementById(item).classList.remove('border');
       document.getElementById(item).classList.remove('border-danger');
     }, 2000);
-  });
+  }
+}
+
+//funcao responsavel por gerar a tela de aguarde o carregamento
+let timerCarregador;
+function aguardeCarregamento(tipo) {
+  let contCarregador = 0, codigoHTML = `<div style="background-color: rgba(0, 0, 0, 0.8); position: absolute; height: 99.2vh; width: 100vw; z-index:1055; border-radius:10px;">
+      <h5 class="text-center text-light">
+        <img src="./img/loading.gif" class="rounded mx-auto d-block" style="height: 40px; width: 40px; margin-top: 48vh;">
+        Aguarde...
+      </h5>
+    <div>`
+
+  if (tipo) {
+    document.getElementById('carregamento').innerHTML = codigoHTML;
+    clearInterval(timerCarregador);
+    timerCarregador = setInterval(function () {
+      contCarregador++;
+
+      if (contCarregador > 20) {
+        codigoHTML = `<div style="background-color: rgba(0, 0, 0, 0.8); position: absolute; height: 99.2vh; width: 100vw; z-index:1055; border-radius:10px;">
+            <h5 class="text-center text-light" style="margin-top: 48vh;">
+              Ops... Ouve algum problema! Tente novamente.
+            </h5>
+            <h6 class="text-center text-light">
+              Aguarde 10 segundos para tentar novemante.
+            </h6>
+          <div>`
+
+        document.getElementById('carregamento').innerHTML = codigoHTML;
+        clearInterval(timerCarregador);
+
+        setTimeout(function () { document.getElementById('carregamento').innerHTML = '' }, 10000)
+      }
+
+    }, 1000)
+  } else {
+    clearInterval(timerCarregador);
+    setTimeout(function () { document.getElementById('carregamento').innerHTML = ''; }, 300)
+  }
 }

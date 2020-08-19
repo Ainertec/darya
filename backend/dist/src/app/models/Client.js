@@ -5,11 +5,11 @@ var AddressSchema = new mongoose_1.Schema({
     district: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: 'District',
-        required: true,
+        default: null,
     },
     street: {
         type: String,
-        required: true,
+        default: null,
     },
     number: {
         type: Number,
@@ -23,7 +23,7 @@ var AddressSchema = new mongoose_1.Schema({
 var ClientSchema = new mongoose_1.Schema({
     name: {
         type: String,
-        required: true,
+        default: null,
     },
     address: [AddressSchema],
     phone: [

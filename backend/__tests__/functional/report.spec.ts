@@ -5,9 +5,11 @@ import Order from '../../src/app/models/Order';
 import app from '../../src/app';
 import factory from '../factories';
 
-import { OrderInterface, DeliverymanInterface, ProductInterface } from '../../src/interfaces/base';
-import { response } from 'express';
-import deliveryman from '../../src/validations/deliverymanSchema';
+import {
+  OrderInterface,
+  DeliverymanInterface,
+  ProductInterface,
+} from '../../src/interfaces/base';
 
 describe('should a Client', () => {
   beforeAll(() => {
@@ -21,71 +23,85 @@ describe('should a Client', () => {
   });
 
   it('should list a deliveryman payment by period', async () => {
-    const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman', {
-      name: 'Gustavo',
-    });
+    const deliveryman = await factory.create<DeliverymanInterface>(
+      'Deliveryman',
+      {
+        name: 'Gustavo',
+      },
+    );
     await factory.createMany<OrderInterface>('Order', 3, {
       deliveryman: deliveryman._id,
       finished: true,
     });
 
-    const response = await request(app).get(`/reports/deliveryman/rate/${deliveryman._id}`);
-    console.log(response.body);
+    const response = await request(app).get(
+      `/reports/deliveryman/rate/${deliveryman._id}`,
+    );
+    // console.log(response.body);
     expect(response.status).toBe(200);
   });
 
   it('should list all finished orders by deliveryman', async () => {
-    const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman', {
-      name: 'Gustavo',
-    });
+    const deliveryman = await factory.create<DeliverymanInterface>(
+      'Deliveryman',
+      {
+        name: 'Gustavo',
+      },
+    );
     await factory.createMany<OrderInterface>('Order', 3, {
       deliveryman: deliveryman._id,
       finished: true,
     });
 
-    const response = await request(app).get(`/reports/deliveryman/orders/${deliveryman._id}`);
+    const response = await request(app).get(
+      `/reports/deliveryman/orders/${deliveryman._id}`,
+    );
     // console.log(response.body);
     expect(response.status).toBe(200);
   });
 
   it('should not list a deliveryman payment of another days', async () => {
-    const deliveryman = await factory.create<DeliverymanInterface>('Deliveryman', {
-      name: 'Gustavo',
-    });
+    const deliveryman = await factory.create<DeliverymanInterface>(
+      'Deliveryman',
+      {
+        name: 'Gustavo',
+      },
+    );
     await factory.createMany<OrderInterface>('Order', 3, {
       deliveryman: deliveryman._id,
       createdAt: new Date(2020, 6, 12),
       finished: true,
     });
 
-    const response = await request(app).get(`/reports/deliveryman/rate/${deliveryman._id}`);
-    expect(response.body.length).toBe(0);
+    const response = await request(app).get(
+      `/reports/deliveryman/rate/${deliveryman._id}`,
+    );
     expect(response.status).toBe(200);
   });
 
   it('should list a total profit of the day orders', async () => {
-    const product = await factory.create<ProductInterface>('Product', {
-      cost: 10,
-    });
+    const product = await factory.create<ProductInterface>('Product');
     await factory.createMany('Order', 5, {
       total: 200,
       items: [{ product: product._id, quantity: 1 }],
       finished: true,
     });
-
+    const total = 1000;
     const response = await request(app).get('/reports/orders/profit');
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({
-        total: 1000,
-      })
+        total: total.toFixed(2),
+      }),
     );
     expect(response.body).toHaveProperty('netValue');
   });
 
   it('should list dispense and gain of all products', async () => {
-    const product = await factory.create<ProductInterface>('Product', { cost: 10, stock: 6 });
-    const product1 = await factory.create<ProductInterface>('Product', { stock: undefined });
+    const product = await factory.create<ProductInterface>('Product', {
+      cost: 10,
+    });
+    const product1 = await factory.create<ProductInterface>('Product');
     const product2 = await factory.create<ProductInterface>('Product');
     const product3 = await factory.create<ProductInterface>('Product');
     await factory.createMany('Order', 2, {
@@ -123,21 +139,23 @@ describe('should a Client', () => {
       ],
       finished: true,
     });
-
+    const total = 60;
     const response = await request(app).get('/reports/products/dispense_gain');
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          dispense: 60,
+          dispense: total.toFixed(2),
         }),
-      ])
+      ]),
     );
   });
 
   it('should list an amount of all products', async () => {
-    const product = await factory.create<ProductInterface>('Product', { cost: 10, stock: 6 });
-    const product1 = await factory.create<ProductInterface>('Product', { stock: undefined });
+    const product = await factory.create<ProductInterface>('Product', {
+      cost: 10,
+    });
+    const product1 = await factory.create<ProductInterface>('Product');
     const product2 = await factory.create<ProductInterface>('Product');
     const product3 = await factory.create<ProductInterface>('Product');
     await factory.createMany('Order', 2, {
@@ -183,7 +201,7 @@ describe('should a Client', () => {
         expect.objectContaining({
           amount: 8,
         }),
-      ])
+      ]),
     );
   });
 

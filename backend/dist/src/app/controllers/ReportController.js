@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -50,134 +39,71 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = require("mongoose");
 var date_fns_1 = require("date-fns");
 var Order_1 = __importDefault(require("../models/Order"));
+var ordersProfitUseCase_1 = require("../useCases/Report/ordersProfitUseCase");
+var deliverymanPaymentUseCase_1 = require("../useCases/Report/deliverymanPaymentUseCase");
+var productDispenseAndGainUseCase_1 = require("../useCases/Report/productDispenseAndGainUseCase");
+var productsAmountUseCase_1 = require("../useCases/Report/productsAmountUseCase");
+var finishedOrdersUseCase_1 = require("../useCases/Report/finishedOrdersUseCase");
 var ReportController = /** @class */ (function () {
     function ReportController() {
     }
     ReportController.prototype.deliverymanPayment = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var deliveryman_id, initial, final, ObjectId, deliveryRate;
+            var deliverymanPaymentUseCase, payment;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        deliveryman_id = String(request.params.deliveryman_id);
-                        initial = date_fns_1.startOfDay(new Date());
-                        final = date_fns_1.endOfDay(new Date());
-                        ObjectId = mongoose_1.Types.ObjectId;
-                        console.log(deliveryman_id);
-                        console.log(initial, final);
-                        return [4 /*yield*/, Order_1.default.aggregate()
-                                .match({
-                                deliveryman: ObjectId(deliveryman_id),
-                                createdAt: { $gte: initial, $lte: final },
-                                finished: true,
-                            })
-                                .group({
-                                _id: '$deliveryman',
-                                rate: { $sum: '$address.district_rate' },
-                            })];
+                        deliverymanPaymentUseCase = new deliverymanPaymentUseCase_1.DeliverymanPaymentUseCase(Order_1.default);
+                        return [4 /*yield*/, deliverymanPaymentUseCase.execute(request.params.deliveryman_id)];
                     case 1:
-                        deliveryRate = _a.sent();
-                        return [2 /*return*/, response.json(deliveryRate)];
+                        payment = _a.sent();
+                        return [2 /*return*/, response.json(payment)];
                 }
             });
         });
     };
     ReportController.prototype.allFinishedOrdersByDeliveryman = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var deliveryman_id, initial, final, ObjectId, orders;
+            var finishedOrdersInstance, finishedOrders;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        deliveryman_id = request.params.deliveryman_id;
-                        initial = date_fns_1.startOfDay(new Date());
-                        final = date_fns_1.endOfDay(new Date());
-                        ObjectId = mongoose_1.Types.ObjectId;
-                        return [4 /*yield*/, Order_1.default.find({
-                                deliveryman: ObjectId(deliveryman_id),
-                                createdAt: { $gte: initial, $lte: final },
-                                finished: true,
-                            })
-                                .populate('deliveryman')
-                                .populate('items.product')];
+                        finishedOrdersInstance = new finishedOrdersUseCase_1.FinishedOrdersUseCase(Order_1.default);
+                        return [4 /*yield*/, finishedOrdersInstance.execute(request.params.deliveryman_id)];
                     case 1:
-                        orders = _a.sent();
-                        return [2 /*return*/, response.json(orders)];
+                        finishedOrders = _a.sent();
+                        return [2 /*return*/, response.json(finishedOrders)];
                 }
             });
         });
     };
     ReportController.prototype.ordersProfit = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var initial, final, ordersProfit, totalOrders, totalRate, totalProducts, filteredTotal;
+            var orderProfitUseCase, ordersProfitReturn;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        initial = date_fns_1.startOfDay(new Date());
-                        final = date_fns_1.endOfDay(new Date());
-                        return [4 /*yield*/, Order_1.default.find({
-                                createdAt: { $gte: initial, $lte: final },
-                                finished: true,
-                            })
-                                .populate('items.product')
-                                .populate('deliveryman')];
+                        orderProfitUseCase = new ordersProfitUseCase_1.OrdersProfitUseCase(Order_1.default);
+                        return [4 /*yield*/, orderProfitUseCase.execute()];
                     case 1:
-                        ordersProfit = _a.sent();
-                        totalOrders = ordersProfit.reduce(function (sum, order) {
-                            return sum + order.total;
-                        }, 0);
-                        totalRate = ordersProfit.reduce(function (sum, order) {
-                            return sum + order.address.district_rate;
-                        }, 0);
-                        totalProducts = ordersProfit.reduce(function (sum, order) {
-                            return (sum +
-                                order.items.reduce(function (sum, item) {
-                                    var _a;
-                                    return sum + ((_a = item.product) === null || _a === void 0 ? void 0 : _a.cost) * item.quantity;
-                                }, 0));
-                        }, 0);
-                        filteredTotal = totalOrders - (totalProducts + totalRate);
-                        return [2 /*return*/, response.json({ orders: ordersProfit, total: totalOrders, netValue: filteredTotal })];
+                        ordersProfitReturn = _a.sent();
+                        return [2 /*return*/, response.json(ordersProfitReturn)];
                 }
             });
         });
     };
     ReportController.prototype.productsDispenseAndGain = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var orders, productDispenseAndGain;
+            var dispenseAndGain, productDispenseAndGain;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, Order_1.default.aggregate()
-                            .match({
-                            finished: true,
-                        })
-                            .unwind('items')
-                            .lookup({
-                            from: 'products',
-                            localField: 'items.product',
-                            foreignField: '_id',
-                            as: 'products',
-                        })
-                            .unwind('products')
-                            .group({
-                            _id: {
-                                id: '$products._id',
-                                name: '$products.name',
-                                description: '$products.description',
-                                price: '$products.price',
-                                cost: '$products.cost',
-                                stock: '$products.stock',
-                            },
-                            gain: { $sum: { $multiply: ['$products.price', '$items.quantity'] } },
-                        })];
+                    case 0:
+                        dispenseAndGain = new productDispenseAndGainUseCase_1.ProductDispenseAndGainUseCase(Order_1.default);
+                        return [4 /*yield*/, dispenseAndGain.execute()];
                     case 1:
-                        orders = _a.sent();
-                        productDispenseAndGain = orders.map(function (order) {
-                            var _a;
-                            return __assign(__assign({}, order), { dispense: ((_a = order._id) === null || _a === void 0 ? void 0 : _a.cost) * (order._id.stock ? order._id.stock : 0) });
-                        });
+                        productDispenseAndGain = _a.sent();
                         return [2 /*return*/, response.json(productDispenseAndGain)];
                 }
             });
@@ -185,35 +111,15 @@ var ReportController = /** @class */ (function () {
     };
     ReportController.prototype.productsAmount = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var productsAmount;
+            var productAmountInstance, amount;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, Order_1.default.aggregate()
-                            .match({
-                            finished: true,
-                        })
-                            .unwind('items')
-                            .lookup({
-                            from: 'products',
-                            localField: 'items.product',
-                            foreignField: '_id',
-                            as: 'products',
-                        })
-                            .unwind('products')
-                            .group({
-                            _id: {
-                                id: '$products._id',
-                                name: '$products.name',
-                                description: '$products.description',
-                                price: '$products.price',
-                                cost: '$products.cost',
-                                stock: '$products.stock',
-                            },
-                            amount: { $sum: '$items.quantity' },
-                        })];
+                    case 0:
+                        productAmountInstance = new productsAmountUseCase_1.ProductAmountUseCase(Order_1.default);
+                        return [4 /*yield*/, productAmountInstance.execute()];
                     case 1:
-                        productsAmount = _a.sent();
-                        return [2 /*return*/, response.json(productsAmount)];
+                        amount = _a.sent();
+                        return [2 /*return*/, response.json(amount)];
                 }
             });
         });

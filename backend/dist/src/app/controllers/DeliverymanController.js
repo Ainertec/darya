@@ -61,7 +61,10 @@ var DeliverymanController = /** @class */ (function () {
             var deliveryman;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, Deliveryman_1.default.find({ working_day: true, available: true })];
+                    case 0: return [4 /*yield*/, Deliveryman_1.default.find({
+                            working_day: true,
+                            available: true,
+                        })];
                     case 1:
                         deliveryman = _a.sent();
                         return [2 /*return*/, response.json(deliveryman)];
@@ -183,14 +186,14 @@ var DeliverymanController = /** @class */ (function () {
     };
     DeliverymanController.prototype.delete = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, deliveryman;
+            var id;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         id = request.params.id;
                         return [4 /*yield*/, Deliveryman_1.default.deleteOne({ _id: id })];
                     case 1:
-                        deliveryman = _a.sent();
+                        _a.sent();
                         return [2 /*return*/, response.status(200).send()];
                 }
             });

@@ -1,4 +1,4 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { DeliverymanInterface } from '../../interfaces/base';
 
 const DeliverymanSchema = new Schema(
@@ -29,7 +29,7 @@ const DeliverymanSchema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export default model<DeliverymanInterface>('Deliveryman', DeliverymanSchema);

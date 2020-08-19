@@ -8,7 +8,8 @@ function telaDeBuscarBairro() {
   VETORDEBAIRROSCLASSEBAIRRO = []
   let codigoHTML = ``;
 
-  codigoHTML += `<h4 class="text-center"><span class="fas fa-map-marked-alt"></span> Buscar Bairro</h4>
+  codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+                    <h4 class="text-center"><span class="fas fa-map-marked-alt"></span> Buscar Bairro</h4>
                     <div class="card-deck col-4 mx-auto d-block">
                         <div class="input-group mb-3">
                             <input id="nome" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do bairro">
@@ -24,7 +25,8 @@ function telaDeBuscarBairro() {
                             </button>
                         </div>
                     </div>
-                    <div id="resposta"></div>`;
+                  </div>
+                  <div id="resposta"></div>`;
 
   animacaoJanela2();
   setTimeout(function () { document.getElementById('janela2').innerHTML = codigoHTML; }, 30)
@@ -60,29 +62,31 @@ function modalTelaCadastrarouAtualizarBairro(tipo) {
                         <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel"><span class="fas fa-map-marked-alt"></span> Dados Bairro</h5>
-                            <button onclick="reiniciarClasseBairro();" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button onclick="reiniciarClasseBairro();" type="button" class="close btn-danger" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                             </button>
                             <div id="mensagemDeErroModal" class="justify-content-center"></div>
                         </div>
                         <div class="modal-body">
                             <form>
-                                <div class="form-group">
-                                    <label for="nomebairro">Nome do bairro:</label>
-                                    <input type="text" class="form-control" id="nomebairro" placeholder="Nome do bairro">
-                                </div>
-                                <div class="form-group">
-                                    <label for="nomecidade">Nome da cidade:</label>
-                                    <input type="text" class="form-control" id="nomecidade" placeholder="Nome da cidade">
-                                </div>
-                                <div class="form-group">
-                                    <label for="precotaxa">Preço da taxa:</label>
-                                    <div class="input-group mb-3">
-                                      <div class="input-group-prepend">
-                                        <span class="input-group-text">R$</span>
+                                <div class="shadow-lg p-3 mb-5 bg-white rounded">
+                                  <div class="form-group">
+                                      <label for="nomebairro">Nome do bairro:</label>
+                                      <input type="text" class="form-control" id="nomebairro" placeholder="Nome do bairro">
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="nomecidade">Nome da cidade:</label>
+                                      <input type="text" class="form-control" id="nomecidade" placeholder="Nome da cidade">
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="precotaxa">Preço da taxa:</label>
+                                      <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">R$</span>
+                                        </div>
+                                        <input type="Number" class="form-control" id="precotaxa" placeholder="Preço da taxa">
                                       </div>
-                                      <input type="Number" class="form-control" id="precotaxa" placeholder="Preço da taxa">
-                                    </div>
+                                  </div>
                                 </div>
                             </form>
                         </div>
@@ -111,12 +115,17 @@ async function buscarDadosBairro(tipo) {
 
   try {
     if (tipo == 'nome') {
+      await aguardeCarregamento(true);
       json = await requisicaoGET(`districts/${document.getElementById('nome').value}`);
+      await aguardeCarregamento(false);
     } else if (tipo == 'todos') {
+      await aguardeCarregamento(true);
       json = await requisicaoGET(`districts`);
+      await aguardeCarregamento(false);
     }
 
-    codigoHTML += `<h5 class="text-center" style="margin-top:80px">Listagem de bairros</h5>
+    codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+      <h5 class="text-center" style="margin-top:80px">Listagem de bairros</h5>
       <table class="table table-sm col-8 mx-auto" style="margin-top:10px">
           <thead class="thead-dark">
               <tr>
@@ -129,13 +138,14 @@ async function buscarDadosBairro(tipo) {
           </thead>
           <tbody>`;
 
-    json.data.forEach(function (item) {
+    for (let item of json.data) {
       VETORDEBAIRROSCLASSEBAIRRO.push(item);
       codigoHTML += gerarListaDeBairros(item);
-    });
+    }
 
     codigoHTML += `</tbody>
-      </table>`;
+      </table>
+    </div>`;
 
     if (json.data[0]) {
       document.getElementById('resposta').innerHTML = codigoHTML;
@@ -148,8 +158,8 @@ async function buscarDadosBairro(tipo) {
 }
 
 //funcao responsavel por carregar os dados do bairro nos campos
-function carregarDadosBairro(id) {
-  modalTelaCadastrarouAtualizarBairro('atualizar');
+async function carregarDadosBairro(id) {
+  await modalTelaCadastrarouAtualizarBairro('atualizar');
 
   try {
     const dado = VETORDEBAIRROSCLASSEBAIRRO.find((element) => element._id == id);
@@ -171,8 +181,12 @@ async function cadastrarBairro() {
     "city":"${$('#nomecidade').val()}",
     "rate":${$('#precotaxa').val()}}`;
 
-    await requisicaoPOST('districts', JSON.parse(json));
-    mensagemDeAviso('Bairro cadastrado com sucesso!')
+    await aguardeCarregamento(true);
+    let result = await requisicaoPOST('districts', JSON.parse(json));
+    await aguardeCarregamento(false);
+    await mensagemDeAviso('Bairro cadastrado com sucesso!')
+    document.getElementById('nome').value = await result.data.name
+    await buscarDadosBairro('nome')
   } catch (error) {
     mensagemDeErro('Não foi possível cadastrar o bairro!')
   }
@@ -193,17 +207,19 @@ async function atualizarBairro(id) {
     delete dado[0].createdAt;
     delete dado[0].__v;
 
+    await aguardeCarregamento(true);
     await requisicaoPUT(`districts/${id}`, dado[0]);
+    await aguardeCarregamento(false);
     document.getElementById('modal').innerHTML = '';
-    mensagemDeAviso('Bairro atualizado com sucesso!')
+    await mensagemDeAviso('Bairro atualizado com sucesso!')
   } catch (error) {
     mensagemDeErro('Não foi possível atualizar o bairro!')
   }
 
   if (validaDadosCampo(['#nome'])) {
-    buscarDadosBairro('nome');
+    await buscarDadosBairro('nome');
   } else {
-    buscarDadosBairro('todos');
+    await buscarDadosBairro('todos');
   }
 
 }
@@ -211,16 +227,18 @@ async function atualizarBairro(id) {
 //funcao responsavel por excluir um bairro
 async function excluirBairro(id) {
   try {
+    await aguardeCarregamento(true);
     await requisicaoDELETE(`districts/${id}`, '');
-    mensagemDeAviso('Bairro excluído com sucesso!')
+    await aguardeCarregamento(false);
+    await mensagemDeAviso('Bairro excluído com sucesso!')
   } catch (error) {
     mensagemDeErro('Não foi possível excluir o bairro!')
   }
 
   if (validaDadosCampo(['#nome'])) {
-    buscarDadosBairro('nome');
+    await buscarDadosBairro('nome');
   } else {
-    buscarDadosBairro('todos');
+    await buscarDadosBairro('todos');
   }
 }
 

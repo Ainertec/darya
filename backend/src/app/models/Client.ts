@@ -1,15 +1,15 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { ClientInterface } from '../../interfaces/base';
 
 const AddressSchema = new Schema({
   district: {
     type: Schema.Types.ObjectId,
     ref: 'District',
-    required: true,
+    default: null,
   },
   street: {
     type: String,
-    required: true,
+    default: null,
   },
   number: {
     type: Number,
@@ -25,7 +25,7 @@ const ClientSchema = new Schema(
   {
     name: {
       type: String,
-      required: true,
+      default: null,
     },
     address: [AddressSchema],
     phone: [
@@ -37,7 +37,7 @@ const ClientSchema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export default model<ClientInterface>('Client', ClientSchema);

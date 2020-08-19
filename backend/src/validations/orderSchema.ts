@@ -8,8 +8,8 @@ const items = Joi.object().keys({
 
 export const order = Joi.object().keys({
   client_id: Joi.custom(validObjectId, 'valid id').required(),
-  deliveryman: Joi.custom(validObjectId, 'valid id').required(),
-  client_address_id: Joi.custom(validObjectId, 'valid id').required(),
+  deliveryman: Joi.custom(validObjectId, 'valid id'),
+  client_address_id: Joi.custom(validObjectId, 'valid id'),
   items: Joi.array().items(items).required(),
   source: Joi.string().required(),
   note: Joi.string(),

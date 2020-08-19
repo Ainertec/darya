@@ -40,15 +40,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var Product_1 = __importDefault(require("../models/Product"));
+var getProductCost_1 = __importDefault(require("../utils/getProductCost"));
 var ProductController = /** @class */ (function () {
     function ProductController() {
+        this.store = this.store.bind(this);
+        this.update = this.update.bind(this);
     }
     ProductController.prototype.index = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
             var products;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, Product_1.default.find({})];
+                    case 0: return [4 /*yield*/, Product_1.default.find({}).populate('ingredients.material')];
                     case 1:
                         products = _a.sent();
                         return [2 /*return*/, response.json(products)];
@@ -63,7 +66,9 @@ var ProductController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         name = request.params.name;
-                        return [4 /*yield*/, Product_1.default.find({ name: { $regex: new RegExp(name), $options: 'i' } })];
+                        return [4 /*yield*/, Product_1.default.find({
+                                name: { $regex: new RegExp(name), $options: 'i' },
+                            }).populate('ingredients.material')];
                     case 1:
                         products = _a.sent();
                         return [2 /*return*/, response.json(products)];
@@ -73,20 +78,26 @@ var ProductController = /** @class */ (function () {
     };
     ProductController.prototype.store = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, name, price, cost, description, stock, product;
+            var _a, name, price, description, ingredients, cost, product;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _a = request.body, name = _a.name, price = _a.price, cost = _a.cost, description = _a.description, stock = _a.stock;
+                        _a = request.body, name = _a.name, price = _a.price, description = _a.description, ingredients = _a.ingredients;
+                        return [4 /*yield*/, getProductCost_1.default(ingredients)];
+                    case 1:
+                        cost = _b.sent();
                         return [4 /*yield*/, Product_1.default.create({
                                 name: name,
                                 price: price,
                                 cost: cost,
                                 description: description,
-                                stock: stock,
+                                ingredients: ingredients,
                             })];
-                    case 1:
+                    case 2:
                         product = _b.sent();
+                        return [4 /*yield*/, product.populate('ingredients.material').execPopulate()];
+                    case 3:
+                        _b.sent();
                         return [2 /*return*/, response.json(product)];
                 }
             });
@@ -94,26 +105,31 @@ var ProductController = /** @class */ (function () {
     };
     ProductController.prototype.update = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, name, price, cost, description, stock, id, product;
+            var _a, name, price, ingredients, description, id, cost, product;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _a = request.body, name = _a.name, price = _a.price, cost = _a.cost, description = _a.description, stock = _a.stock;
+                        _a = request.body, name = _a.name, price = _a.price, ingredients = _a.ingredients, description = _a.description;
                         id = request.params.id;
+                        return [4 /*yield*/, getProductCost_1.default(ingredients)];
+                    case 1:
+                        cost = _b.sent();
                         return [4 /*yield*/, Product_1.default.findOneAndUpdate({ _id: id }, {
                                 name: name,
                                 price: price,
                                 description: description,
+                                ingredients: ingredients,
                                 cost: cost,
                             }, { new: true })];
-                    case 1:
+                    case 2:
                         product = _b.sent();
                         if (!product)
                             return [2 /*return*/, response.status(400).json('product not found')];
-                        if (stock)
-                            product.stock = stock;
                         return [4 /*yield*/, product.save()];
-                    case 2:
+                    case 3:
+                        _b.sent();
+                        return [4 /*yield*/, product.populate('ingredients.material').execPopulate()];
+                    case 4:
                         _b.sent();
                         return [2 /*return*/, response.json(product)];
                 }

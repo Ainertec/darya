@@ -1,5 +1,9 @@
-import { Schema, model, Model } from 'mongoose';
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
+import { Schema, model } from 'mongoose';
 import { OrderInterface } from '../../interfaces/base';
+import Product from './Product';
+import { subIngredientStock } from '../utils/subIngredientStock';
 
 const ItemsSchema = new Schema({
   product: {
@@ -32,28 +36,35 @@ const ClientSchema = new Schema({
 const AddressSchema = new Schema({
   client_address_id: {
     type: Schema.Types.ObjectId,
+    default: null,
   },
   district_id: {
     type: Schema.Types.ObjectId,
+    default: null,
   },
   district_name: {
     type: String,
-    required: true,
+    default: null,
+    // required: true,
   },
   district_rate: {
     type: Number,
-    required: true,
+    default: null,
+    // required: true,
   },
   street: {
     type: String,
-    required: true,
+    default: null,
+    // required: true,
   },
   number: {
     type: Number,
+    default: null,
     // required: true,
   },
   reference: {
     type: String,
+    default: null,
     // required: true,
   },
 });
@@ -63,8 +74,17 @@ const Source = Object.freeze({
   whatsapp: 'Whatsapp',
   instagram: 'Instagram',
   delivery: 'Pronta Entrega',
+  itau: 'Transferência Itaú',
+  bradesco: 'Transferência Bradesco',
   getSource() {
-    const source = [this.ifood, this.whatsapp, this.instagram, this.delivery];
+    const source = [
+      this.ifood,
+      this.whatsapp,
+      this.instagram,
+      this.delivery,
+      this.itau,
+      this.bradesco,
+    ];
     return source;
   },
 });
@@ -76,7 +96,7 @@ const OrderSchema = new Schema(
     deliveryman: {
       type: Schema.Types.ObjectId,
       ref: 'Deliveryman',
-      required: true,
+      default: null,
     },
     items: [ItemsSchema],
     total: {
@@ -107,13 +127,23 @@ const OrderSchema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 Object.assign(OrderSchema.statics, {
   Source,
 });
 
-export { Source };
+OrderSchema.post<OrderInterface>('save', async document => {
+  if (document && document.finished) {
+    for (const item of document.items) {
+      const product = await Product.findOne({ _id: item.product });
 
+      if (product) {
+        await subIngredientStock(product.ingredients, item.quantity);
+      }
+    }
+  }
+});
+export { Source };
 export default model<OrderInterface>('Order', OrderSchema);

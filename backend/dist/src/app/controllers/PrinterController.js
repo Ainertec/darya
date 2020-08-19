@@ -39,27 +39,33 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var Order_1 = __importDefault(require("../models/Order"));
 var path_1 = __importDefault(require("path"));
 var fs_1 = __importDefault(require("fs"));
 var jsrtf_1 = __importDefault(require("jsrtf"));
-// import '../../@types/jsrtg.d.ts'
 var date_fns_1 = require("date-fns");
 var shelljs_1 = require("shelljs");
+var Order_1 = __importDefault(require("../models/Order"));
+var productsAmountUseCase_1 = require("../useCases/Report/productsAmountUseCase");
+var soldReportUseCase_1 = require("../useCases/Printer/SoldPrinter/soldReportUseCase");
+var deliverymanPaymentUseCase_1 = require("../useCases/Report/deliverymanPaymentUseCase");
+var deliverymanPrinterUseCase_1 = require("../useCases/Printer/DeliverymanPrinter/deliverymanPrinterUseCase");
+var soldPrinterUseCase_1 = require("../useCases/Printer/SoldPrinter/soldPrinterUseCase");
 var PrinterController = /** @class */ (function () {
     function PrinterController() {
         this.store = this.store.bind(this);
     }
-    PrinterController.prototype.printProducts = function (items) {
-        var products = '';
-        items.map(function (item) {
-            products += "* " + item.product.name + " --- R$" + item.product.price.toFixed(2) + "\nQtd.: " + item.quantity + "\n";
-        });
-        return products;
-    };
+    // private printProducts(items: ItemsInterface[]) {
+    //   let products = '';
+    //   items.map(item => {
+    //     products += `* ${item.product.name} --- R$${item.product.price.toFixed(
+    //       2,
+    //     )}\nQtd.: ${item.quantity}\n`;
+    //   });
+    //   return products;
+    // }
     PrinterController.prototype.store = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var id, order, date, myDoc, contentStyle, contentBorder, header, items, content, buffer, dir, vbs;
+            var id, order, date, myDoc, contentStyle, contentBorder, header, content, buffer, dir, vbs;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -102,7 +108,7 @@ var PrinterController = /** @class */ (function () {
                             align: 'center',
                             borderTop: { size: 2, spacing: 100, color: jsrtf_1.default.Colors.GREEN },
                         });
-                        items = this.printProducts(order.items);
+                        // const items = this.printProducts(order.items);
                         myDoc.writeText('', contentBorder);
                         myDoc.writeText('>>>>>>>>> Pedido <<<<<<<<<<', header);
                         myDoc.writeText("C\u00F3digo: " + order.identification, header);
@@ -110,19 +116,30 @@ var PrinterController = /** @class */ (function () {
                         myDoc.writeText('=========== Cliente ============', contentBorder);
                         myDoc.writeText("Nome: " + order.client.name, contentStyle);
                         myDoc.writeText("Telefone: " + order.client.phone, contentStyle);
-                        myDoc.writeText('========== Endereço ===========', contentBorder);
-                        myDoc.writeText("Rua: " + order.address.street, contentStyle);
-                        myDoc.writeText("N\u00FAmero: " + order.address.number, contentStyle);
-                        myDoc.writeText("Bairro: " + order.address.district_name, contentStyle);
-                        myDoc.writeText("Refer\u00EAncia: " + order.address.reference, contentStyle);
+                        order.address &&
+                            myDoc.writeText('========== Endereço ===========', contentBorder);
+                        order.address &&
+                            myDoc.writeText("Rua: " + order.address.street, contentStyle);
+                        order.address &&
+                            myDoc.writeText("N\u00FAmero: " + order.address.number, contentStyle);
+                        order.address &&
+                            myDoc.writeText("Bairro: " + order.address.district_name, contentStyle);
+                        order.address &&
+                            myDoc.writeText("Refer\u00EAncia: " + order.address.reference, contentStyle);
                         myDoc.writeText('=========== Itens ============', contentBorder);
-                        myDoc.writeText("" + items, contentStyle);
+                        order.items.map(function (item) {
+                            myDoc.writeText("* " + item.product.name + " --- R$ " + item.product.price.toFixed(2), contentStyle);
+                            myDoc.writeText("\nQtd.: " + item.quantity + "\n", contentStyle);
+                        });
                         myDoc.writeText('========== Motoboy ===========', contentBorder);
-                        myDoc.writeText("Nome: " + order.deliveryman.name, contentStyle);
-                        myDoc.writeText("Telefone: " + order.deliveryman.phone, contentStyle);
-                        myDoc.writeText("Taxa: R$" + order.address.district_rate.toFixed(2), contentStyle);
+                        order.deliveryman &&
+                            myDoc.writeText("Nome: " + order.deliveryman.name, contentStyle);
+                        order.deliveryman &&
+                            myDoc.writeText("Telefone: " + order.deliveryman.phone, contentStyle);
+                        order.address &&
+                            myDoc.writeText("Taxa: R$" + order.address.district_rate.toFixed(2), contentStyle);
                         myDoc.writeText('========== Observação =========', contentBorder);
-                        myDoc.writeText("- " + order.note, contentStyle);
+                        order.note && myDoc.writeText("- " + order.note, contentStyle);
                         myDoc.writeText('========= Valor total =========', contentBorder);
                         myDoc.writeText("Valor total: R$" + order.total.toFixed(2), contentStyle);
                         content = myDoc.createDocument();
@@ -130,7 +147,6 @@ var PrinterController = /** @class */ (function () {
                         dir = process.env.NODE_ENV === 'test'
                             ? path_1.default.resolve(__dirname, '..', '..', '..', '__tests__', 'recipes')
                             : process.env.DIR_PRODUCTION;
-                        console.log('dir production', process.env.DIR_PRODUCTION, dir);
                         return [4 /*yield*/, fs_1.default.writeFile(dir + "/" + id + ".rtf", buffer, { encoding: 'utf-8', flag: 'w' }, function (err) {
                                 if (err)
                                     return response.status(400).json("" + err);
@@ -147,6 +163,53 @@ var PrinterController = /** @class */ (function () {
                             return [2 /*return*/, response.status(200).json('success')];
                         }
                         return [2 /*return*/];
+                }
+            });
+        });
+    };
+    PrinterController.prototype.deliverymanPrint = function (request, response) {
+        return __awaiter(this, void 0, void 0, function () {
+            var deliveryman_id, deliverymanPayment, deliverymanPrinter, error_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        deliveryman_id = request.params.deliveryman_id;
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        deliverymanPayment = new deliverymanPaymentUseCase_1.DeliverymanPaymentUseCase(Order_1.default);
+                        deliverymanPrinter = new deliverymanPrinterUseCase_1.DeliverymanPrinterUseCase(deliverymanPayment);
+                        return [4 /*yield*/, deliverymanPrinter.printer(deliveryman_id)];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/, response.status(200).send()];
+                    case 3:
+                        error_1 = _a.sent();
+                        response.status(400).json('Erro on try print deliveryman payment');
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    PrinterController.prototype.soldPrint = function (request, response) {
+        return __awaiter(this, void 0, void 0, function () {
+            var productsAmount, soldReportUseCase, soldPrintUseCase, error_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        productsAmount = new productsAmountUseCase_1.ProductAmountUseCase(Order_1.default);
+                        soldReportUseCase = new soldReportUseCase_1.SoldReportUseCase(Order_1.default, productsAmount);
+                        soldPrintUseCase = new soldPrinterUseCase_1.SoldPrinterUseCase(soldReportUseCase);
+                        return [4 /*yield*/, soldPrintUseCase.printer()];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/, response.status(200).send()];
+                    case 2:
+                        error_2 = _a.sent();
+                        return [2 /*return*/, response.status(400).json('Failed on print general report')];
+                    case 3: return [2 /*return*/];
                 }
             });
         });

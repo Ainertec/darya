@@ -104,5 +104,26 @@ sold.find({createAt}).populate(motoboy). populate({
   custo,
   preco,
   descrição,
+  ingredients:[
+    {
+      material:_id,
+      quantity: integer
+    }
+  ]
+}
+
+valor bruto: dispesa,
+
+Product.update({ in:[ingredints] }, set:{cost: priceUnit*quantity })
+
+# Ingredient
+{
+  _id,
+  name,
+  price,
+  priceUnit,
+  stock,
+  unit, enum[g,ml,etc]
+  description?
 
 }

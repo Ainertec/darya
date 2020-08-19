@@ -91,6 +91,54 @@ describe('should a Client', function () {
             }
         });
     }); });
+    it('should create a client without phone', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var distric, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, factories_1.default.create('District')];
+                case 1:
+                    distric = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .post('/clients')
+                            .send({
+                            name: 'Cleiton',
+                            address: [
+                                {
+                                    district: distric._id,
+                                    street: 'Encontro dos Rios',
+                                    reference: 'Pousada encontro dos rios',
+                                },
+                            ],
+                        })];
+                case 2:
+                    response = _a.sent();
+                    // console.log(response.body);
+                    expect(response.status).toBe(200);
+                    expect(response.body).toEqual(expect.objectContaining({
+                        name: 'Cleiton',
+                    }));
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('should create a client without address', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, supertest_1.default(app_1.default).post('/clients').send({
+                        name: 'Cleiton',
+                    })];
+                case 1:
+                    response = _a.sent();
+                    // console.log(response.body);
+                    expect(response.status).toBe(200);
+                    expect(response.body).toEqual(expect.objectContaining({
+                        name: 'Cleiton',
+                    }));
+                    return [2 /*return*/];
+            }
+        });
+    }); });
     it('should not create a client with the same name and phone number', function () { return __awaiter(void 0, void 0, void 0, function () {
         var district, client, response;
         return __generator(this, function (_a) {
@@ -126,26 +174,86 @@ describe('should a Client', function () {
         });
     }); });
     it('should update a client', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var client, response;
+        var client, distric, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, factories_1.default.create('Client')];
                 case 1:
                     client = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('District')];
+                case 2:
+                    distric = _a.sent();
                     return [4 /*yield*/, supertest_1.default(app_1.default)
                             .put("/clients/" + client._id)
                             .send({
                             name: 'Cleiton',
                             address: [
                                 {
-                                    district: client.address[0].district,
-                                    street: client.address[0].street,
-                                    number: client.address[0].number,
+                                    district: distric._id,
+                                    street: 'Estrada Serra Mar Encontro dos Rios',
+                                    number: 0,
                                 },
                             ],
                             phone: ['22 992726852', '22 992865120'],
                         })];
+                case 3:
+                    response = _a.sent();
+                    // console.log(response.body);
+                    expect(response.status).toBe(200);
+                    expect(response.body).toEqual(expect.objectContaining({
+                        name: 'Cleiton',
+                    }));
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('should update a client without phone number', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var client, distric, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, factories_1.default.create('Client')];
+                case 1:
+                    client = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('District')];
                 case 2:
+                    distric = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .put("/clients/" + client._id)
+                            .send({
+                            name: 'Cleiton',
+                            address: [
+                                {
+                                    district: distric._id,
+                                    street: 'Estrada Serra Mar Encontro dos Rios',
+                                    number: 0,
+                                },
+                            ],
+                        })];
+                case 3:
+                    response = _a.sent();
+                    // console.log(response.body);
+                    expect(response.status).toBe(200);
+                    expect(response.body).toEqual(expect.objectContaining({
+                        name: 'Cleiton',
+                    }));
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('should update a client without address', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var client, distric, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, factories_1.default.create('Client')];
+                case 1:
+                    client = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('District')];
+                case 2:
+                    distric = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default).put("/clients/" + client._id).send({
+                            name: 'Cleiton',
+                        })];
+                case 3:
                     response = _a.sent();
                     // console.log(response.body);
                     expect(response.status).toBe(200);
@@ -233,8 +341,44 @@ describe('should a Client', function () {
                         })];
                 case 2:
                     _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/clients/cle")];
+                    return [4 /*yield*/, factories_1.default.create('Client', {
+                            name: 'jaõ',
+                        })];
                 case 3:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/clients/cle")];
+                case 4:
+                    response = _a.sent();
+                    expect(response.status).toBe(200);
+                    expect(response.body).toEqual(expect.arrayContaining([
+                        expect.objectContaining({
+                            name: 'Cleiton',
+                        }),
+                    ]));
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('should list all clients by phone', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, factories_1.default.createMany('Client', 4)];
+                case 1:
+                    _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Client', {
+                            name: 'Cleiton',
+                            phone: ['992865120', '992726852'],
+                        })];
+                case 2:
+                    _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Client', {
+                            name: 'Jão Kleber',
+                        })];
+                case 3:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/clients/99272")];
+                case 4:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     expect(response.body).toEqual(expect.arrayContaining([

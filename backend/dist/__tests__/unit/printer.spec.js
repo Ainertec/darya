@@ -63,6 +63,103 @@ describe('Teste a printer', function () {
             }
         });
     }); });
+    it('Should print a recipe without address', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var order, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, factories_1.default.create('Order', {
+                        address: undefined,
+                    })];
+                case 1:
+                    order = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default).post('/printers').send({
+                            id: order.id,
+                        })];
+                case 2:
+                    response = _a.sent();
+                    expect(response.status).toBe(200);
+                    setTimeout(function () { return __awaiter(void 0, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, fs_1.default.unlinkSync(path_1.default.resolve(__dirname, '..', 'recipes', order._id + ".rtf"))];
+                                case 1:
+                                    _a.sent();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); }, 1000);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('Should print a recipe without a cleint phone', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var cleint, order, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, factories_1.default.create('Client')];
+                case 1:
+                    cleint = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Order', {
+                            address: undefined,
+                            deliveryman: undefined,
+                            client: {
+                                name: 'cleiton',
+                                client_id: cleint._id,
+                                phone: undefined,
+                            },
+                        })];
+                case 2:
+                    order = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default).post('/printers').send({
+                            id: order.id,
+                        })];
+                case 3:
+                    response = _a.sent();
+                    expect(response.status).toBe(200);
+                    setTimeout(function () { return __awaiter(void 0, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, fs_1.default.unlinkSync(path_1.default.resolve(__dirname, '..', 'recipes', order._id + ".rtf"))];
+                                case 1:
+                                    _a.sent();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); }, 1000);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('Should print a recipe without deliveryman', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var order, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, factories_1.default.create('Order', {
+                        address: undefined,
+                        deliveryman: undefined,
+                    })];
+                case 1:
+                    order = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default).post('/printers').send({
+                            id: order.id,
+                        })];
+                case 2:
+                    response = _a.sent();
+                    expect(response.status).toBe(200);
+                    setTimeout(function () { return __awaiter(void 0, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, fs_1.default.unlinkSync(path_1.default.resolve(__dirname, '..', 'recipes', order._id + ".rtf"))];
+                                case 1:
+                                    _a.sent();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); }, 1000);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
     it('Should print a recipe', function () { return __awaiter(void 0, void 0, void 0, function () {
         var order, response;
         return __generator(this, function (_a) {

@@ -1,15 +1,33 @@
+/* eslint-disable camelcase */
 import { Document, Types } from 'mongoose';
 
 export interface ProductInterface extends Document {
   name: string;
   price: number;
   description?: string;
+  ingredients: Ingredients[];
   cost: number;
-  stock?: number;
+}
+export interface Ingredients {
+  material: IngredientInterface;
+  quantity: number;
+}
+export interface Items {
+  product: ProductInterface;
+  quantity: number;
+}
+export interface IngredientInterface extends Document {
+  name: string;
+  price: number;
+  priceUnit: number;
+  description?: string;
+  unit: string;
+  stock: number;
 }
 
 export interface DeliverymanInterface extends Document {
   name: string;
+  // eslint-disable-next-line camelcase
   working_day?: boolean;
   available?: boolean;
   hasDelivery?: boolean;
@@ -28,8 +46,8 @@ export interface AddressInterface extends Document {
 }
 export interface ClientInterface extends Document {
   name: string;
-  address: AddressInterface[];
-  phone: string[];
+  address?: AddressInterface[];
+  phone?: string[];
 }
 export interface ItemsInterface extends Document {
   product: ProductInterface;
@@ -39,9 +57,9 @@ export interface ItemsInterface extends Document {
 export interface OrderInterface extends Document {
   identification: string;
   client: ClientOrderInterface;
-  address: AddressOrderInterface;
-  deliveryman: Types.ObjectId;
-  items: ItemsInterface[];
+  address?: AddressOrderInterface;
+  deliveryman?: Types.ObjectId;
+  items: Items[];
   total: number;
   finished?: boolean;
   source: string;
@@ -51,10 +69,10 @@ export interface OrderInterface extends Document {
 }
 
 export interface OrderInterfaceDeliveryman extends Document {
-  deliveryman: DeliverymanInterface;
+  deliveryman?: DeliverymanInterface;
   identification: string;
   client: ClientOrderInterface;
-  address: AddressOrderInterface;
+  address?: AddressOrderInterface;
   items: ItemsInterface[];
   total: number;
   finished?: boolean;
@@ -67,7 +85,7 @@ export interface OrderInterfaceDeliveryman extends Document {
 export interface ClientOrderInterface {
   client_id: Types.ObjectId;
   name: string;
-  phone: string[];
+  phone?: string[];
 }
 export interface AddressOrderInterface {
   street: string;

@@ -44,7 +44,7 @@ var connection_1 = require("../utils/connection");
 var Product_1 = __importDefault(require("../../src/app/models/Product"));
 var app_1 = __importDefault(require("../../src/app"));
 var factories_1 = __importDefault(require("../factories"));
-describe('should test', function () {
+describe('should test a product', function () {
     beforeAll(function () {
         connection_1.openConnection();
     });
@@ -62,40 +62,73 @@ describe('should test', function () {
         });
     }); });
     it('should create a product', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var response;
+        var ingredient, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, supertest_1.default(app_1.default).post('/products').send({
-                        name: 'roquinha',
-                        price: 4.5,
-                        cost: 3.0,
-                        description: 'como que é o nome daquele negocio?',
+                case 0: return [4 /*yield*/, factories_1.default.create('Ingredient', {
+                        price: 5,
+                        stock: 2000,
+                        priceUnit: 5 / 2000,
                     })];
                 case 1:
-                    response = _a.sent();
-                    expect(response.status).toBe(200);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('should update a product', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var product, response;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Product')];
-                case 1:
-                    product = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).put("/products/" + product._id).send({
+                    ingredient = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .post('/products')
+                            .send({
                             name: 'roquinha',
-                            price: product.price,
-                            cost: product.cost,
-                            description: product.description,
+                            price: 4.5,
+                            ingredients: [
+                                {
+                                    material: ingredient._id,
+                                    quantity: 500,
+                                },
+                            ],
+                            description: 'como que é o nome daquele negocio?',
                         })];
                 case 2:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     expect(response.body).toEqual(expect.objectContaining({
+                        cost: 1.25,
+                    }));
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('should update a product', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var product, ingredient, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, factories_1.default.create('Product')];
+                case 1:
+                    product = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Ingredient', {
+                            price: 5,
+                            stock: 2000,
+                            priceUnit: 5 / 2000,
+                        })];
+                case 2:
+                    ingredient = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .put("/products/" + product._id)
+                            .send({
+                            name: 'roquinha',
+                            price: product.price,
+                            ingredients: [
+                                {
+                                    material: ingredient._id,
+                                    quantity: 500,
+                                },
+                            ],
+                            description: product.description,
+                        })];
+                case 3:
+                    response = _a.sent();
+                    // console.log(response.body);
+                    expect(response.status).toBe(200);
+                    expect(response.body).toEqual(expect.objectContaining({
                         name: 'roquinha',
+                        cost: 1.25,
                     }));
                     return [2 /*return*/];
             }
@@ -121,27 +154,49 @@ describe('should test', function () {
         });
     }); });
     it('should list products by name', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var response;
+        var ingredient, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Product', {
-                        name: 'pizza',
-                    })];
+                case 0: return [4 /*yield*/, factories_1.default.create('Ingredient')];
                 case 1:
-                    _a.sent();
+                    ingredient = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product', {
-                            name: 'pão',
+                            name: 'pizza',
+                            ingredients: [
+                                {
+                                    material: ingredient._id,
+                                    quantity: 200,
+                                },
+                            ],
                         })];
                 case 2:
                     _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product', {
-                            name: 'queijo',
+                            name: 'pão',
+                            ingredients: [
+                                {
+                                    material: ingredient._id,
+                                    quantity: 200,
+                                },
+                            ],
                         })];
                 case 3:
                     _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/products/p")];
+                    return [4 /*yield*/, factories_1.default.create('Product', {
+                            name: 'queijo',
+                            ingredients: [
+                                {
+                                    material: ingredient._id,
+                                    quantity: 200,
+                                },
+                            ],
+                        })];
                 case 4:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/products/p")];
+                case 5:
                     response = _a.sent();
+                    // console.log(response.body);
                     expect(response.status).toBe(200);
                     expect(response.body).toEqual(expect.arrayContaining([
                         expect.objectContaining({
@@ -156,27 +211,49 @@ describe('should test', function () {
         });
     }); });
     it('should list all products ', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var response;
+        var ingredient, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Product', {
-                        name: 'pizza',
-                    })];
+                case 0: return [4 /*yield*/, factories_1.default.create('Ingredient')];
                 case 1:
-                    _a.sent();
+                    ingredient = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product', {
-                            name: 'pão',
+                            name: 'pizza',
+                            ingredients: [
+                                {
+                                    material: ingredient._id,
+                                    quantity: 200,
+                                },
+                            ],
                         })];
                 case 2:
                     _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product', {
-                            name: 'queijo',
+                            name: 'pão',
+                            ingredients: [
+                                {
+                                    material: ingredient._id,
+                                    quantity: 200,
+                                },
+                            ],
                         })];
                 case 3:
                     _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/products")];
+                    return [4 /*yield*/, factories_1.default.create('Product', {
+                            name: 'queijo',
+                            ingredients: [
+                                {
+                                    material: ingredient._id,
+                                    quantity: 200,
+                                },
+                            ],
+                        })];
                 case 4:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/products")];
+                case 5:
                     response = _a.sent();
+                    // console.log(response.body);
                     expect(response.status).toBe(200);
                     expect(response.body).toEqual(expect.arrayContaining([
                         expect.objectContaining({

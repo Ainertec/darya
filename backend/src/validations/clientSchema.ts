@@ -10,13 +10,13 @@ const address = Joi.object().keys({
 
 export const client = Joi.object().keys({
   name: Joi.string().required(),
-  address: Joi.array().items(address).required(),
-  phone: Joi.array().items(Joi.string()).required(),
+  address: Joi.array().items(address),
+  phone: Joi.array().items(Joi.string()),
 });
 export const clientUpdate = Joi.object().keys({
   name: Joi.string(),
-  address: Joi.array().items(address).required(),
-  phone: Joi.array().items(Joi.string()).required(),
+  address: Joi.array().items(address),
+  phone: Joi.array().items(Joi.string()),
 });
 
 export default client;

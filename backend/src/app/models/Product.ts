@@ -1,5 +1,17 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { ProductInterface } from '../../interfaces/base';
+
+const IngredientSchema = new Schema({
+  material: {
+    type: Schema.Types.ObjectId,
+    ref: 'Ingredient',
+    required: true,
+  },
+  quantity: {
+    type: Number,
+    required: true,
+  },
+});
 
 const ProductSchema = new Schema(
   {
@@ -19,14 +31,12 @@ const ProductSchema = new Schema(
       type: Number,
       required: true,
     },
-    stock: {
-      type: Number,
-      default: null,
-    },
+
+    ingredients: [IngredientSchema],
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export default model<ProductInterface>('Product', ProductSchema);

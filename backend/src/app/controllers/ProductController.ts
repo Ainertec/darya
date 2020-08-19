@@ -1,33 +1,47 @@
-import { Request, Response, response } from 'express';
+/* eslint-disable class-methods-use-this */
+import { Request, Response } from 'express';
 import Product from '../models/Product';
+import getCost from '../utils/getProductCost';
 
 class ProductController {
+  public constructor() {
+    this.store = this.store.bind(this);
+    this.update = this.update.bind(this);
+  }
+
   async index(request: Request, response: Response) {
-    const products = await Product.find({});
+    const products = await Product.find({}).populate('ingredients.material');
 
     return response.json(products);
   }
+
   async show(request: Request, response: Response) {
     const { name } = request.params;
-    const products = await Product.find({ name: { $regex: new RegExp(name), $options: 'i' } });
+    const products = await Product.find({
+      name: { $regex: new RegExp(name), $options: 'i' },
+    }).populate('ingredients.material');
 
     return response.json(products);
   }
+
   async store(request: Request, response: Response) {
-    const { name, price, cost, description, stock } = request.body;
+    const { name, price, description, ingredients } = request.body;
+    const cost = await getCost(ingredients);
     const product = await Product.create({
       name,
       price,
       cost,
       description,
-      stock,
+      ingredients,
     });
-
+    await product.populate('ingredients.material').execPopulate();
     return response.json(product);
   }
+
   async update(request: Request, response: Response) {
-    const { name, price, cost, description, stock } = request.body;
+    const { name, price, ingredients, description } = request.body;
     const { id } = request.params;
+    const cost = await getCost(ingredients);
 
     const product = await Product.findOneAndUpdate(
       { _id: id },
@@ -35,17 +49,20 @@ class ProductController {
         name,
         price,
         description,
+        ingredients,
         cost,
       },
-      { new: true }
+      { new: true },
     );
     if (!product) return response.status(400).json('product not found');
-    if (stock) product.stock = stock;
 
     await product.save();
 
+    await product.populate('ingredients.material').execPopulate();
+
     return response.json(product);
   }
+
   async delete(request: Request, response: Response) {
     const { id } = request.params;
 

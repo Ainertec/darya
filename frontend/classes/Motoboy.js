@@ -8,7 +8,8 @@ function telaDeBuscarMotoboyParaTrabalho() {
     VETORDEMOTOBOYSCLASSEMOTOBOY = []
     let codigoHTML = ``;
 
-    codigoHTML += `<h4 class="text-center"><span class="fas fa-motorcycle"></span> Buscar Motoboy</h4>
+    codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+                    <h4 class="text-center"><span class="fas fa-motorcycle"></span> Buscar Motoboy</h4>
                     <div class="card-deck col-4 mx-auto d-block">
                         <div class="input-group mb-3">
                             <input id="nome" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do motoboy">
@@ -30,7 +31,8 @@ function telaDeBuscarMotoboyParaTrabalho() {
                             </button>
                         </div>
                     </div>
-                    <div id="resposta"></div>`;
+                </div>
+                <div id="resposta"></div>`;
 
     animacaoJanela2();
     setTimeout(function () { document.getElementById('janela2').innerHTML = codigoHTML }, 30)
@@ -45,7 +47,7 @@ function modalTelaCadastrarouAtualizarMotoboy(tipo) {
                         <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel"><span class="fas fa-motorcycle"></span> Dados Motoboy</h5>
-                            <button onclick="reiniciarClasseMotoboy();" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button onclick="reiniciarClasseMotoboy();" type="button" class="close btn-danger" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                             </button>
                             <div id="mensagemDeErroModal" class="justify-content-center"></div>
@@ -53,7 +55,8 @@ function modalTelaCadastrarouAtualizarMotoboy(tipo) {
                         <div class="modal-body">`;
 
     if (tipo == 'atualizar') {
-        codigoHTML += `<h5 class="text-center">Buscar Motoboy</h5>
+        codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+                            <h5 class="text-center">Buscar Motoboy</h5>
                             <div class="card-deck col-12 mx-auto d-block">
                                 <div class="input-group mb-3">
                                     <input id="nomeemmodal" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do motoboy">
@@ -66,17 +69,20 @@ function modalTelaCadastrarouAtualizarMotoboy(tipo) {
                                     </button>
                                 </div>
                             </div>
-                            <div id="resposta2"></div>`;
+                        </div>
+                        <div id="resposta2"></div>`;
     }
 
     codigoHTML += `<form>
-                                <div class="form-group">
-                                    <label for="nomemotoboy">Nome motoboy:</label>
-                                    <input type="text" class="form-control" id="nomemotoboy" placeholder="Nome">
-                                </div>
-                                <div class="form-group">
-                                    <label for="telefonemotoboy">Telefone:</label>
-                                    <input type="tel" class="form-control" id="telefonemotoboy" placeholder="Exemplo: (00)00000-0000">
+                                <div class="shadow-lg p-3 mb-5 bg-white rounded">
+                                    <div class="form-group">
+                                        <label for="nomemotoboy">Nome motoboy:</label>
+                                        <input type="text" class="form-control" id="nomemotoboy" placeholder="Nome">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="telefonemotoboy">Telefone:</label>
+                                        <input type="tel" class="form-control" id="telefonemotoboy" placeholder="Exemplo: (00)00000-0000">
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -114,7 +120,10 @@ function gerarListaDeMotoboyParaTrabalho(json) {
     codigoHTML += `<label class="custom-control-label" for="${json._id}">Trabalhando</label>
             </div>
         </td>
-        <td class="table-warning text-dark"><button onclick="gerarGraficoMotoboy('${json._id}');" type="button" class="btn btn-outline-primary btn-sm"><span class="fas fa-chart-bar"></span> Exibir</button></td>
+        <td class="table-warning text-dark">
+            <button onclick="gerarGraficoMotoboy('${json._id}');" type="button" class="btn btn-outline-primary btn-sm"><span class="fas fa-chart-bar"></span> Exibir</button>
+            <button onclick="confirmarAcao('Imprimir relatório motoboy!','impressaoRelatorioMotoboy(this.value);','${json._id}')" type="button" class="btn btn-outline-primary btn-sm"><span class="fas fa-print"></span> Imprimir</button>
+        </td>
     </tr>`
 
     return codigoHTML;
@@ -140,6 +149,7 @@ async function buscarDadosMotoboyTrabalhando(tipo) {
     VETORDEMOTOBOYSCLASSEMOTOBOY = [];
 
     try {
+        await aguardeCarregamento(true);
         if (tipo == 'nome') {
             json = await requisicaoGET(`deliverymans/${document.getElementById('nome').value}`)
         } else if (tipo == 'todos') {
@@ -147,8 +157,10 @@ async function buscarDadosMotoboyTrabalhando(tipo) {
         } else if (tipo == 'ativos') {
             json = await requisicaoGET(`deliverymans/working_days`)
         }
+        await aguardeCarregamento(false);
 
-        codigoHTML += `<h5 class="text-center" style="margin-top:80px">Listagem de motoboys para trabalho</h5>
+        codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+        <h5 class="text-center" style="margin-top:80px">Listagem de motoboys para trabalho</h5>
         <div class="text-center">
            <button onclick="alterarEstadoDeTrabalhoMotoboy('desativarTodos','')" type="button" class="btn btn-success" style="margin-top:10px;"><span class="fas fa-sync"></span> Reiniciar lista de trabalho</button>
         </div>
@@ -163,13 +175,14 @@ async function buscarDadosMotoboyTrabalhando(tipo) {
             </thead>
             <tbody>`;
 
-        json.data.forEach(function (item) {
+        for (let item of json.data) {
             VETORDEMOTOBOYSCLASSEMOTOBOY.push(item);
             codigoHTML += gerarListaDeMotoboyParaTrabalho(item);
-        });
+        }
 
         codigoHTML += `</tbody>
-            </table>`;
+            </table>
+        </div>`;
 
         if (json.data[0]) {
             document.getElementById('resposta').innerHTML = codigoHTML;
@@ -190,14 +203,21 @@ async function buscarDadosMotoboy(tipo) {
 
     try {
         if (tipo == 'nome') {
+            await aguardeCarregamento(true);
             json = await requisicaoGET(`deliverymans/${document.getElementById('nomeemmodal').value}`)
+            await aguardeCarregamento(false);
         } else if (tipo == 'todos') {
+            await aguardeCarregamento(true);
             json = await requisicaoGET('deliverymans')
+            await aguardeCarregamento(false);
         } else if (tipo == 'ativos') {
+            await aguardeCarregamento(true);
             json = await requisicaoGET('deliverymans/working_days')
+            await aguardeCarregamento(false);
         }
 
-        codigoHTML += `<h5 class="text-center" style="margin-top:40px;">Listagem de motoboys para trabalho</h5>
+        codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+        <h5 class="text-center" style="margin-top:40px;">Listagem de motoboys para trabalho</h5>
         <table class="table table-sm col-12 mx-auto" style="margin-top:10px; margin-bottom:60px;">
             <thead class="thead-dark">
                 <tr>
@@ -208,13 +228,14 @@ async function buscarDadosMotoboy(tipo) {
             </thead>
             <tbody>`;
 
-        json.data.forEach(function (item) {
+        for (let item of json.data) {
             VETORDEMOTOBOYSCLASSEMOTOBOY.push(item);
             codigoHTML += gerarListaDeMotoboyParaAtualizar(item);
-        });
+        }
 
         codigoHTML += `</tbody>
-            </table>`;
+            </table>
+        </div>`;
 
         if (json.data[0]) {
             document.getElementById('resposta2').innerHTML = codigoHTML;
@@ -244,8 +265,10 @@ function carregarDadosMotoboy(id) {
 async function alterarEstadoDeTrabalhoMotoboy(tipo, id) {
     if (tipo == 'desativarTodos') {
         try {
+            await aguardeCarregamento(true);
             await requisicaoPUT(`deliverymans`);
-            mensagemDeAviso('Todos os motoboys foram desabilitados!')
+            await aguardeCarregamento(false);
+            await mensagemDeAviso('Todos os motoboys foram desabilitados!')
         } catch (error) {
             mensagemDeErro('Não foi possível desabilitar os motoboys!')
         }
@@ -255,12 +278,14 @@ async function alterarEstadoDeTrabalhoMotoboy(tipo, id) {
                 return element._id == id;
             });
 
+            await aguardeCarregamento(true);
             await requisicaoPUT(`deliverymans/${id}`, {
                 working_day: true,
                 name: dado[0].name,
                 phone: dado[0].phone,
             });
-            mensagemDeAviso('O motoboy foi habilitado!')
+            await aguardeCarregamento(false);
+            await mensagemDeAviso('O motoboy foi habilitado!')
         } catch (error) {
             mensagemDeErro('Não foi possível habilitar o motoboy!')
         }
@@ -270,21 +295,23 @@ async function alterarEstadoDeTrabalhoMotoboy(tipo, id) {
                 return element._id == id;
             });
 
+            await aguardeCarregamento(true);
             await requisicaoPUT(`deliverymans/${id}`, {
                 working_day: false,
                 name: dado[0].name,
                 phone: dado[0].phone,
             });
-            mensagemDeAviso('O motoboy foi desabilitado!')
+            await aguardeCarregamento(false);
+            await mensagemDeAviso('O motoboy foi desabilitado!')
         } catch (error) {
             mensagemDeErro('Não foi possível desabilitar o motoboy!')
         }
     }
 
     if (validaDadosCampo(['#nome'])) {
-        buscarDadosMotoboyTrabalhando('nome');
+        await buscarDadosMotoboyTrabalhando('nome');
     } else {
-        buscarDadosMotoboyTrabalhando('todos');
+        await buscarDadosMotoboyTrabalhando('todos');
     }
 }
 
@@ -295,10 +322,12 @@ async function cadastrarMotoboy() {
             "name":"${document.getElementById('nomemotoboy').value}",
             "phone":"${document.getElementById('telefonemotoboy').value}"}`;
 
-        await requisicaoPOST('deliverymans', JSON.parse(json));
+        await aguardeCarregamento(true);
+        let result = await requisicaoPOST('deliverymans', JSON.parse(json));
+        await aguardeCarregamento(false);
         $('#modalClasseMotoboy').modal('hide');
-        mensagemDeAviso('Motoboy cadastrado com sucesso!')
-        reiniciarClasseMotoboy();
+        await mensagemDeAviso('Motoboy cadastrado com sucesso!')
+        await reiniciarClasseMotoboy();
     } catch (error) {
         mensagemDeErro('Não foi possível cadastrar o motoboy!')
     }
@@ -317,39 +346,45 @@ async function atualizarMotoboy(id) {
         delete dado[0].updatedAt;
         delete dado[0].__v;
 
+        await aguardeCarregamento(true);
         await requisicaoPUT(`deliverymans/${id}`, dado[0]);
-        mensagemDeAviso('Motoboy atualizado com sucesso!')
+        await aguardeCarregamento(false);
+        await mensagemDeAviso('Motoboy atualizado com sucesso!')
     } catch (error) {
         mensagemDeErro('Não foi possível atualizar o motoboy!')
     }
 
     if (validaDadosCampo(['nome'])) {
-        buscarDadosMotoboyTrabalhando('nome')
+        await buscarDadosMotoboyTrabalhando('nome')
     } else {
-        buscarDadosMotoboyTrabalhando('todos')
+        await buscarDadosMotoboyTrabalhando('todos')
     }
 }
 
 //funcao responsavel por excluir um motoboy
 async function exluirMotoboy(id) {
     try {
+        await aguardeCarregamento(true);
         await requisicaoDELETE(`deliverymans/${id}`, '');
-        mensagemDeAviso('Motoboy excluído com sucesso!')
+        await aguardeCarregamento(false);
+        await mensagemDeAviso('Motoboy excluído com sucesso!')
     } catch (error) {
         mensagemDeErro('Não foi possível excluir o motoboy!')
     }
 
     if (validaDadosCampo(['nome'])) {
-        buscarDadosMotoboyTrabalhando('nome')
+        await buscarDadosMotoboyTrabalhando('nome')
     } else {
-        buscarDadosMotoboyTrabalhando('todos')
+        await buscarDadosMotoboyTrabalhando('todos')
     }
 }
 
 //funcao responsavel por gerar o grafico de dados sobre o motoboy
 async function gerarGraficoMotoboy(id) {
     try {
+        await aguardeCarregamento(true);
         let codigoHTML = ``, json = await requisicaoGET(`reports/deliveryman/rate/${id}`), json2 = await requisicaoGET(`reports/deliveryman/orders/${id}`)
+        await aguardeCarregamento(false);
 
         if (json2.data[0]) {
 
@@ -363,7 +398,7 @@ async function gerarGraficoMotoboy(id) {
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <h3 class="text-center" style="margin-top:40px; margin-bottom:40px;"> Valor total das taxas: <span class="badge badge-success">R$${(parseFloat(json.data[0].rate)).toFixed(2)}</span></h3>
+                                    <h3 class="text-center" style="margin-top:40px; margin-bottom:40px;"> Valor total das taxas: <span class="badge badge-success">R$${(parseFloat(json.data.deliverymanRate)).toFixed(2)}</span></h3>
                                     <table class="table table-sm table-bordered">
                                         <thead class="thead-dark">
                                         <tr>
@@ -378,23 +413,23 @@ async function gerarGraficoMotoboy(id) {
                                         </tr>
                                         </thead>
                                         <tbody class="table-warning">`
-            json2.data.forEach(function (item) {
+            for (let item of json2.data) {
                 const date = format(parseISO(item.createdAt), 'dd/MM/yyyy HH:mm:ss')
                 codigoHTML += `<tr>
                                         <td>${item.identification}</td>
                                         <td title="${item.client.name}">${corrigirTamanhoString(15, item.client.name)}</td>
                                         <td title="${item.deliveryman.name}"><strong>${corrigirTamanhoString(15, item.deliveryman.name)}</strong></td>
                                         <td>`
-                item.items.forEach(function (item2) {
+                for (let item2 of item.items) {
                     codigoHTML += `(${corrigirTamanhoString(15, item2.product.name)}/${item2.quantity}),`
-                });
+                }
                 codigoHTML += `</td>
                                         <td>${item.payment}</td>
                                         <td class="text-danger"><strong>R$${(parseFloat(item.total)).toFixed(2)}</strong></td>
                                         <td><strong>R$${(parseFloat(item.address.district_rate)).toFixed(2)}</strong></td>
                                         <td>${date}</td>
                                         </tr>`
-            });
+            }
             codigoHTML += `</tbody>
                                     </table>
                                 </div>
@@ -419,4 +454,22 @@ function reiniciarClasseMotoboy() {
     document.getElementById('modal').innerHTML = ''
     document.getElementById('modal2').innerHTML = ''
     document.getElementById('alert2').innerHTML = ''
+}
+
+//funcao responsavel por imprimir o relatorio do motoboy
+async function impressaoRelatorioMotoboy(id) {
+    try {
+        await aguardeCarregamento(true);
+        let json2 = await requisicaoGET(`reports/deliveryman/orders/${id}`)
+        if (json2.data[0]) {
+            await requisicaoGET(`printers/deliveryman_report/${id}`)
+            await mensagemDeAviso('Imprimindo relatório ...')
+        } else {
+            mensagemDeErro('Nenhum pedido entregue pelo motoboy!')
+        }
+        await aguardeCarregamento(false);
+
+    } catch (error) {
+        mensagemDeErro('Não foi possível imprimir o relatório!')
+    }
 }

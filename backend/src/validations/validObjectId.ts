@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CustomHelpers } from '@hapi/joi';
 
 import mongoose from 'mongoose';

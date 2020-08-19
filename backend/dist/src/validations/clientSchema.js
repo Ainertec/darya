@@ -14,12 +14,12 @@ var address = celebrate_1.Joi.object().keys({
 });
 exports.client = celebrate_1.Joi.object().keys({
     name: celebrate_1.Joi.string().required(),
-    address: celebrate_1.Joi.array().items(address).required(),
-    phone: celebrate_1.Joi.array().items(celebrate_1.Joi.string()).required(),
+    address: celebrate_1.Joi.array().items(address),
+    phone: celebrate_1.Joi.array().items(celebrate_1.Joi.string()),
 });
 exports.clientUpdate = celebrate_1.Joi.object().keys({
     name: celebrate_1.Joi.string(),
-    address: celebrate_1.Joi.array().items(address).required(),
-    phone: celebrate_1.Joi.array().items(celebrate_1.Joi.string()).required(),
+    address: celebrate_1.Joi.array().items(address),
+    phone: celebrate_1.Joi.array().items(celebrate_1.Joi.string()),
 });
 exports.default = exports.client;
