@@ -1,5 +1,5 @@
 import { Router } from 'express';
-// import { celebrate } from 'celebrate';
+import Authentication from '../middlewares/Authentication';
 import { clientController } from '../UseCases/ClientUseCase';
 
 // import { IValidationsClient } from './routesDTO';
@@ -19,15 +19,10 @@ export class ClientsRoutes {
     this.routes.post('/clients', (request, response) => {
       return clientController.store(request, response);
     });
+    this.routes.put('/clients', Authentication, (request, response) => {
+      return clientController.update(request, response);
+    });
 
-    // this.routes.put(
-    //   '/clients/:id',
-    //   celebrate({
-    //     body: validations.clientUpdate,
-    //     params: validations.paramId,
-    //   }),
-    //   ClientController.update,
-    // );
     // this.routes.delete(
     //   '/clients/:id',
     //   celebrate({ params: validations.paramId }),

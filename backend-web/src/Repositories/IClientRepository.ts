@@ -1,4 +1,4 @@
-import { MongooseFilterQuery } from 'mongoose';
+import { MongooseFilterQuery, Types } from 'mongoose';
 import { IClient, IClientDocument } from '../Entity/Client';
 
 export interface IClientRepository {
@@ -8,5 +8,5 @@ export interface IClientRepository {
   save(arg: IClient): Promise<IClientDocument>;
   checkPassword(password: string, username: string): Promise<boolean>;
   generateToken(username: string): Promise<string>;
-  // update(arg: T): Promise<IClientDocument>;
+  update<T>(arg: IClient, id: string): Promise<IClientDocument>;
 }

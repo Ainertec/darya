@@ -1,4 +1,4 @@
-import { MongooseFilterQuery } from 'mongoose';
+import { MongooseFilterQuery, Types } from 'mongoose';
 import { Client, IClient, IClientDocument } from '../../Entity/Client';
 import { IClientRepository } from '../IClientRepository';
 
@@ -49,7 +49,25 @@ export class MongoRepository implements IClientRepository {
     return client;
   }
 
-  // update<T>(arg: T): Promise<T> {
-  //   throw new Error('Method not implemented.');
-  // }
+  async update(arg: IClient, id: string): Promise<IClientDocument> {
+    const client = await this.model.findOne({ _id: id });
+    if (arg.name) {
+      client.name = arg.name;
+    }
+    if (arg.username) {
+      client.username = arg.username;
+    }
+    if (arg.password) {
+      client.password = arg.password;
+    }
+    if (arg.phone) {
+      client.phone = arg.phone;
+    }
+    if (arg.address) {
+      client.address = arg.address;
+    }
+    await client.save();
+    await client.populate('address.district').execPopulate();
+    return client;
+  }
 }
