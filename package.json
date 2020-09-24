@@ -1,0 +1,8 @@
+{
+  "name": "darya",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/cleitonbalonekr/darya.git",
+  "author": "cleitonbalonekr <cleitonbaloneker@gmail.com>",
+  "license": "MIT"
+}
