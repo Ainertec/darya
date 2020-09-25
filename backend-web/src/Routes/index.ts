@@ -3,6 +3,9 @@ import { Router } from 'express';
 // import { celebrate } from 'celebrate';
 // import { ProductRoutes } from './Products.routes';
 import { ClientsRoutes } from './Clients.routes';
+import { DistrictsRoutes } from './Districts.routes';
+import { ForgotPasswordRoutes } from './ForgotPassword.routes';
+import { ProductRoutes } from './Product.routes';
 import { SessionRoutes } from './Session.routes';
 // import { IngredientsRoutes } from './Ingredients.routes';
 // import { DeliverymansRoutes } from './Deliverymans.routes';
@@ -38,8 +41,21 @@ const routes = Router();
 // clients
 const clientRoutes = new ClientsRoutes(routes);
 clientRoutes.getRoutes();
+
+// districts
+const districtRoutes = new DistrictsRoutes(routes);
+districtRoutes.getRoutes();
+
+// ForgotPassword
+const forgotPasswordRoutes = new ForgotPasswordRoutes(routes);
+forgotPasswordRoutes.getRoutes();
+
 // session
 const sessionRoutes = new SessionRoutes(routes);
 sessionRoutes.getRoutes();
+
+// session
+const productRoutes = new ProductRoutes(routes);
+productRoutes.getRoutes();
 
 export default routes;

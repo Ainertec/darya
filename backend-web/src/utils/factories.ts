@@ -1,34 +1,35 @@
-import { response } from 'express';
 /* eslint-disable import/no-extraneous-dependencies */
 import factory from 'factory-girl';
-import faker, { fake } from 'faker';
+import faker from 'faker';
 
 // import Product from '../src/app/models/Product';
 // import Deliveryman from '../src/app/models/Deliveryman';
 // import District from '../src/app/models/District';
 import { Client } from '../Entity/Client';
 import { District } from '../Entity/District';
+import { Ingredient } from '../Entity/Ingredients';
+import { Product } from '../Entity/Product';
 
-// factory.define('Product', Product, {
-//   name: faker.commerce.productName(),
-//   price: faker.commerce.price(),
-//   cost: faker.commerce.price(),
-//   description: faker.commerce.productAdjective(),
-//   ingredients: [
-//     {
-//       material: factory.assoc('Ingredient', '_id'),
-//       quantity: faker.random.number(10),
-//     },
-//   ],
-// });
-// factory.define('Ingredient', Ingredient, {
-//   name: faker.commerce.productName(),
-//   price: faker.commerce.price(),
-//   priceUnit: faker.commerce.price(),
-//   unit: 'g',
-//   stock: faker.random.number(100),
-//   description: faker.commerce.productAdjective(),
-// });
+factory.define('Product', Product, {
+  name: faker.commerce.productName(),
+  price: faker.commerce.price(),
+  cost: faker.commerce.price(),
+  description: faker.commerce.productAdjective(),
+  ingredients: [
+    {
+      material: factory.assoc('Ingredient', '_id'),
+      quantity: faker.random.number(10),
+    },
+  ],
+});
+factory.define('Ingredient', Ingredient, {
+  name: faker.commerce.productName(),
+  price: faker.commerce.price(),
+  priceUnit: faker.commerce.price(),
+  unit: 'g',
+  stock: faker.random.number(100),
+  description: faker.commerce.productAdjective(),
+});
 
 // factory.define('Deliveryman', Deliveryman, {
 //   name: faker.name.findName(),
