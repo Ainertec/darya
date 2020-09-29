@@ -4,15 +4,29 @@ import { Schema, model, Types, Document } from 'mongoose';
 import { IAddress, IClientDocument } from './Client';
 import { IProductDocument } from './Product';
 
-export interface IItem extends Document {
-  product: IProductDocument;
+export interface IItem {
+  product: string;
   quantity: number;
+}
+interface ClientOrderInterface {
+  client_id: Types.ObjectId;
+  name: string;
+  phone?: string[];
+}
+interface AddressOrderInterface {
+  street: string;
+  reference?: string;
+  number?: number;
+  district_rate: number;
+  district_name: string;
+  district_id: Types.ObjectId;
+  client_address_id: Types.ObjectId;
 }
 
 export interface IOrderDocument extends Document {
   identification: string;
-  client: IClientDocument;
-  address?: IAddress;
+  client: ClientOrderInterface;
+  address?: AddressOrderInterface;
   deliveryman?: Types.ObjectId;
   items: IItem[];
   total: number;
@@ -22,19 +36,19 @@ export interface IOrderDocument extends Document {
   payment?: string;
   createdAt?: Date;
 }
-export interface IOrder {
-  identification: string;
-  client: IClientDocument;
-  address?: IAddress;
-  deliveryman?: Types.ObjectId;
-  items: IItem[];
-  total: number;
-  finished?: boolean;
-  source: string;
-  note?: string;
-  payment?: string;
-  createdAt?: Date;
-}
+// export interface IOrder {
+//   identification: string;
+//   client: IClientDocument;
+//   address?: IAddress;
+//   deliveryman?: Types.ObjectId;
+//   items: IItem[];
+//   total: number;
+//   finished?: boolean;
+//   source: string;
+//   note?: string;
+//   payment?: string;
+//   createdAt?: Date;
+// }
 
 const ItemsSchema = new Schema({
   product: {
@@ -102,6 +116,7 @@ const AddressSchema = new Schema({
 
 const Source = Object.freeze({
   ifood: 'Ifood',
+  site: 'site',
   whatsapp: 'Whatsapp',
   instagram: 'Instagram',
   delivery: 'Pronta Entrega',
@@ -113,8 +128,9 @@ const Source = Object.freeze({
       this.whatsapp,
       this.instagram,
       this.delivery,
-      this.itau,
-      this.bradesco,
+      // this.itau,
+      // this.bradesco,
+      this.site,
     ];
     return source;
   },
@@ -177,4 +193,4 @@ Object.assign(OrderSchema.statics, {
 //   }
 // });
 export { Source };
-export default model<IOrderDocument>('Order', OrderSchema);
+export const Order = model<IOrderDocument>('Order', OrderSchema);

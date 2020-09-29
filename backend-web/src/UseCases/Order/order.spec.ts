@@ -1,15 +1,11 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import request from 'supertest';
 import { closeConnection, openConnection } from '../../utils/connection';
-import { Client, IClient, IClientDocument } from '../../Entity/Client';
+import { IClientDocument } from '../../Entity/Client';
 import app from '../../app';
 import factory from '../../utils/factories';
-import Order from '../../Entity/Order';
-import {
-  IProduct,
-  IProductDocument,
-  IProductDocument,
-} from '../../Entity/Product';
+import { Order } from '../../Entity/Order';
+import { IProductDocument } from '../../Entity/Product';
 
 describe('Order tests', () => {
   beforeAll(() => {
@@ -37,8 +33,9 @@ describe('Order tests', () => {
         ],
         note: 'com muzarela',
         client_address_id: client?.address[0]._id,
-      });
-    console.log(response.body);
+      })
+      .set('Authorization', `Bearer ${client.generateToken()}`);
+    // console.log(response.body);
     expect(response.status).toBe(201);
   });
 });

@@ -29,3 +29,5 @@ Sem Entidade pre pedido
 sendo assim o dono poderia imprimir a nota fiscal quando desejar
 
 método menos custoso e mais ágil
+
+o cliente pode atualizar o pedido caso ele não tenha saído para entrega

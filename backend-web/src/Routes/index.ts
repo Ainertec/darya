@@ -1,10 +1,12 @@
 import { Router } from 'express';
+import Authentication from '../middlewares/Authentication';
 
 // import { celebrate } from 'celebrate';
 // import { ProductRoutes } from './Products.routes';
 import { ClientsRoutes } from './Clients.routes';
 import { DistrictsRoutes } from './Districts.routes';
 import { ForgotPasswordRoutes } from './ForgotPassword.routes';
+import { OrderRoutes } from './Order.routes';
 import { ProductRoutes } from './Product.routes';
 import { SessionRoutes } from './Session.routes';
 // import { IngredientsRoutes } from './Ingredients.routes';
@@ -57,5 +59,9 @@ sessionRoutes.getRoutes();
 // session
 const productRoutes = new ProductRoutes(routes);
 productRoutes.getRoutes();
+// order
+routes.use(Authentication);
+const orderRoutes = new OrderRoutes(routes);
+orderRoutes.getRoutes();
 
 export default routes;
