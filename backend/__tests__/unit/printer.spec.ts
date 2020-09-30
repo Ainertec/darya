@@ -27,6 +27,7 @@ describe('Teste a printer', () => {
     const response = await request(app).post('/printers').send({
       id: order.id,
     });
+
     expect(response.status).toBe(200);
     setTimeout(async () => {
       await fs.unlinkSync(

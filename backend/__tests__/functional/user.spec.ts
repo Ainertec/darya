@@ -101,7 +101,7 @@ describe('User tests', () => {
     );
   });
 
-  it('should not create a client with the same name and phone number', async () => {
+  it('should not create a user with the same name and phone number', async () => {
     const district = await factory.create<DistrictInterface>('District');
     await factory.create<UserInterface>('User', {
       name: 'Cleiton',
@@ -375,76 +375,88 @@ describe('User tests', () => {
     expect(response.status).toBe(200);
   });
 
-  // it('should delete a client', async () => {
-  //   const client = await factory.create<UserInterface>('Client');
+  it('should delete a user', async () => {
+    const user = await factory.create<IUserDocument>('User', { admin: true });
+    const user1 = await factory.create<IUserDocument>('User');
 
-  //   const response = await request(app).delete(`/users/${client._id}`);
-  //   const countDocuments = await Client.find({}).countDocuments();
-  //   expect(response.status).toBe(200);
-  //   expect(countDocuments).toBe(0);
-  // });
+    const response = await request(app)
+      .delete(`/users/${user1._id}`)
+      .set('Authorization', `Bearer ${user.generateToken()}`);
+    const countDocuments = await User.find();
+    expect(response.status).toBe(200);
+    expect(countDocuments.length).toBe(1);
+  });
 
-  // it('should list all clients', async () => {
-  //   await factory.createMany<UserInterface>('Client', 4);
-  //   await factory.create<UserInterface>('Client', {
-  //     name: 'Cleiton',
-  //   });
+  it('should list all users', async () => {
+    const user = await factory.create<IUserDocument>('User', { admin: true });
+    await factory.createMany<UserInterface>('User', 4);
+    await factory.create<UserInterface>('User', {
+      name: 'Cleiton',
+    });
 
-  //   const response = await request(app).get(`/users`);
+    const response = await request(app)
+      .get(`/users`)
+      .set('Authorization', `Bearer ${user.generateToken()}`);
 
-  //   expect(response.status).toBe(200);
+    expect(response.status).toBe(200);
 
-  //   expect(response.body).toEqual(
-  //     expect.arrayContaining([
-  //       expect.objectContaining({
-  //         name: 'Cleiton',
-  //       }),
-  //     ]),
-  //   );
-  // });
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: 'Cleiton',
+        }),
+      ]),
+    );
+  });
 
-  // it('should list all clients by name', async () => {
-  //   await factory.createMany<UserInterface>('Client', 4);
-  //   await factory.create<UserInterface>('Client', {
-  //     name: 'Cleiton',
-  //   });
-  //   await factory.create<UserInterface>('Client', {
-  //     name: 'jaõ',
-  //   });
+  it('should list all users by name', async () => {
+    const user = await factory.create<IUserDocument>('User', { admin: true });
+    await factory.createMany<UserInterface>('User', 4);
+    await factory.create<UserInterface>('User', {
+      name: 'Cleiton',
+    });
+    await factory.create<UserInterface>('User', {
+      name: 'jaõ',
+    });
 
-  //   const response = await request(app).get(`/users/cle`);
+    const response = await request(app)
+      .get(`/users/cle`)
+      .set('Authorization', `Bearer ${user.generateToken()}`);
 
-  //   expect(response.status).toBe(200);
+    expect(response.status).toBe(200);
 
-  //   expect(response.body).toEqual(
-  //     expect.arrayContaining([
-  //       expect.objectContaining({
-  //         name: 'Cleiton',
-  //       }),
-  //     ]),
-  //   );
-  // });
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: 'Cleiton',
+        }),
+      ]),
+    );
+  });
 
-  // it('should list all clients by phone', async () => {
-  //   await factory.createMany<UserInterface>('Client', 4);
-  //   await factory.create<UserInterface>('Client', {
-  //     name: 'Cleiton',
-  //     phone: ['992865120', '992726852'],
-  //   });
-  //   await factory.create<UserInterface>('Client', {
-  //     name: 'Jão Kleber',
-  //   });
+  it('should list all users by phone', async () => {
+    const user = await factory.create<IUserDocument>('User', { admin: true });
+    await factory.createMany<UserInterface>('User', 4);
+    await factory.create<UserInterface>('User', {
+      name: 'Cleiton',
+      phone: ['992865120', '992726852'],
+    });
+    await factory.create<UserInterface>('User', {
+      name: 'Jão Kleber',
+    });
 
-  //   const response = await request(app).get(`/users/99272`);
+    const response = await request(app)
+      .get(`/users/99272`)
+      .set('Authorization', `Bearer ${user.generateToken()}`);
 
-  //   expect(response.status).toBe(200);
+    expect(response.status).toBe(200);
 
-  //   expect(response.body).toEqual(
-  //     expect.arrayContaining([
-  //       expect.objectContaining({
-  //         name: 'Cleiton',
-  //       }),
-  //     ]),
-  //   );
-  // });
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: 'Cleiton',
+        }),
+      ]),
+    );
+  });
 });
