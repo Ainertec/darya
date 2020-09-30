@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { Types } from 'mongoose';
 import crypto from 'crypto';
 import Order, { Source } from '../models/Order';
-import Client from '../models/Client';
+import User from '../models/User';
 import District from '../models/District';
 import Deliveryman from '../models/Deliveryman';
 import { Items } from '../../interfaces/base';
@@ -30,15 +30,15 @@ class OrderController {
   }
 
   private async getAddress(
-    client_id: Types.ObjectId,
-    client_address_id: Types.ObjectId,
+    user_id: Types.ObjectId,
+    user_address_id: Types.ObjectId,
   ) {
-    const client = await Client.findOne({ _id: client_id });
+    const user = await User.findOne({ _id: user_id });
 
-    if (!client) throw Error('That client does not exist');
+    if (!user) throw Error('That user does not exist');
 
-    const address = client.address?.find(
-      add => String(add._id) === String(client_address_id),
+    const address = user.address?.find(
+      add => String(add._id) === String(user_address_id),
     );
 
     if (!address) throw Error('That address does not exist');
@@ -48,7 +48,7 @@ class OrderController {
     if (!district) throw Error('That district does not exist');
 
     return {
-      client_address_id: address._id,
+      user_address_id: address._id,
       district_id: district._id,
       district_name: district.name,
       district_rate: district.rate,
@@ -58,14 +58,14 @@ class OrderController {
     };
   }
 
-  private async getClient(client_id: Types.ObjectId) {
-    const client = await Client.findOne({ _id: client_id });
+  private async getUser(user_id: Types.ObjectId) {
+    const user = await User.findOne({ _id: user_id });
 
-    if (!client) throw Error('That client does not exist');
+    if (!user) throw Error('That user does not exist');
     return {
-      client_id,
-      name: client.name,
-      phone: client.phone,
+      user_id,
+      name: user.name,
+      phone: user.phone,
     };
   }
 
@@ -105,9 +105,9 @@ class OrderController {
 
   async store(request: Request, response: Response) {
     const {
-      client_id,
+      user_id,
       deliveryman,
-      client_address_id,
+      user_address_id,
       items,
       source,
       note,
@@ -120,18 +120,18 @@ class OrderController {
       return response.status(400).json({ message: 'invalid source' });
     }
 
-    const client = await Client.findOne({ _id: client_id });
-    if (!client) return response.status(400).json('That client does not exist');
+    const user = await User.findOne({ _id: user_id });
+    if (!user) return response.status(400).json('That user does not exist');
 
     const identification =
-      client.phone && client.phone?.length > 0
+      user.phone && user.phone?.length > 0
         ? crypto.randomBytes(4).toString('hex') +
-          client.phone[0].slice(client.phone[0].length - 2)
+          user.phone[0].slice(user.phone[0].length - 2)
         : crypto.randomBytes(4).toString('hex');
 
     try {
-      const address = client_address_id
-        ? await this.getAddress(client_id, client_address_id)
+      const address = user_address_id
+        ? await this.getAddress(user_id, user_address_id)
         : undefined;
 
       const total = address
@@ -140,10 +140,10 @@ class OrderController {
 
       const order = await Order.create({
         identification,
-        client: {
-          client_id,
-          name: client.name,
-          phone: client.phone,
+        user: {
+          user_id,
+          name: user.name,
+          phone: user.phone,
         },
         address,
         items,
@@ -179,10 +179,10 @@ class OrderController {
 
   async update(request: Request, response: Response) {
     const {
-      client_id,
+      user_id,
       deliveryman,
       identification,
-      client_address_id,
+      user_address_id,
       items,
       source,
       note,
@@ -221,22 +221,22 @@ class OrderController {
       }
       order.finished = true;
     }
-    if (client_id && String(order.client.client_id) !== String(client_id)) {
+    if (user_id && String(order.user.user_id) !== String(user_id)) {
       try {
-        const client = await this.getClient(client_id);
-        order.client = client;
+        const user = await this.getUser(user_id);
+        order.user = user;
       } catch (error) {
         return response.status(400).json(error);
       }
     }
     if (
-      client_address_id &&
-      String(order.address?.client_address_id) !== String(client_address_id)
+      user_address_id &&
+      String(order.address?.user_address_id) !== String(user_address_id)
     ) {
       try {
         const address = await this.getAddress(
-          order.client.client_id,
-          client_address_id,
+          order.user.user_id,
+          user_address_id,
         );
         order.address = address;
         order.total = await this.getTotal(

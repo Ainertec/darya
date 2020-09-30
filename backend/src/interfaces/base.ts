@@ -44,7 +44,7 @@ export interface AddressInterface extends Document {
   reference: string;
   number: number;
 }
-export interface ClientInterface extends Document {
+export interface UserInterface extends Document {
   name: string;
   address?: AddressInterface[];
   phone?: string[];
@@ -56,7 +56,7 @@ export interface ItemsInterface extends Document {
 
 export interface OrderInterface extends Document {
   identification: string;
-  client: ClientOrderInterface;
+  user: UserOrderInterface;
   address?: AddressOrderInterface;
   deliveryman?: Types.ObjectId;
   items: Items[];
@@ -71,7 +71,7 @@ export interface OrderInterface extends Document {
 export interface OrderInterfaceDeliveryman extends Document {
   deliveryman?: DeliverymanInterface;
   identification: string;
-  client: ClientOrderInterface;
+  user: UserOrderInterface;
   address?: AddressOrderInterface;
   items: ItemsInterface[];
   total: number;
@@ -82,8 +82,8 @@ export interface OrderInterfaceDeliveryman extends Document {
   createdAt?: Date;
 }
 
-export interface ClientOrderInterface {
-  client_id: Types.ObjectId;
+export interface UserOrderInterface {
+  user_id: Types.ObjectId;
   name: string;
   phone?: string[];
 }
@@ -94,5 +94,5 @@ export interface AddressOrderInterface {
   district_rate: number;
   district_name: string;
   district_id: Types.ObjectId;
-  client_address_id: Types.ObjectId;
+  user_address_id: Types.ObjectId;
 }

@@ -5,7 +5,7 @@ import crypto from 'crypto';
 import Product from '../src/app/models/Product';
 import Deliveryman from '../src/app/models/Deliveryman';
 import District from '../src/app/models/District';
-import Client from '../src/app/models/Client';
+import User from '../src/app/models/User';
 import Ingredient from '../src/app/models/Ingredient';
 import Order from '../src/app/models/Order';
 
@@ -43,8 +43,13 @@ factory.define('District', District, {
   rate: faker.random.number(100),
 });
 
-factory.define('Client', Client, {
+factory.define('User', User, {
   name: faker.name.findName(),
+  username: faker.internet.userName(),
+  password: faker.internet.password(),
+  question: 'Qual o nome da sua mãe?',
+  response: 'não sei',
+  admin: faker.random.boolean(),
   address: [
     {
       district: factory.assoc('District', '_id'),
@@ -57,14 +62,14 @@ factory.define('Client', Client, {
 });
 
 factory.define('Order', Order, {
-  client: {
-    client_id: factory.assoc('Client', '_id'),
+  user: {
+    user_id: factory.assoc('User', '_id'),
     name: faker.name.findName(),
     phone: faker.phone.phoneNumber(),
   },
   deliveryman: factory.assoc('Deliveryman', '_id'),
   address: {
-    client_address_id: factory.assoc('Client', 'address._id'),
+    user_address_id: factory.assoc('User', 'address._id'),
     district_id: factory.assoc('District', '_id'),
     district_name: faker.address.streetName(),
     district_rate: faker.random.number(100),

@@ -2,24 +2,26 @@ import { Router } from 'express';
 import { celebrate } from 'celebrate';
 import ClientController from '../app/controllers/ClientController';
 import { IValidationsClient } from './routesDTO';
+import UserAuth from '../middlewares/UserAuth';
 
 export class ClientsRoutes {
   constructor(private routes: Router) {}
 
   getRoutes(validations: IValidationsClient) {
-    this.routes.get('/clients', ClientController.index);
+    this.routes.get('/users', ClientController.index);
     this.routes.get(
-      '/clients/:name',
+      '/users/:name',
       celebrate({ params: validations.paramName }),
       ClientController.show,
     );
     this.routes.post(
-      '/clients',
+      '/users',
+      UserAuth,
       celebrate({ body: validations.client }),
       ClientController.store,
     );
     this.routes.put(
-      '/clients/:id',
+      '/users/:id',
       celebrate({
         body: validations.clientUpdate,
         params: validations.paramId,
@@ -27,7 +29,7 @@ export class ClientsRoutes {
       ClientController.update,
     );
     this.routes.delete(
-      '/clients/:id',
+      '/users/:id',
       celebrate({ params: validations.paramId }),
       ClientController.delete,
     );

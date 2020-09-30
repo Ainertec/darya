@@ -17,8 +17,8 @@ const ItemsSchema = new Schema({
   },
 });
 
-const ClientSchema = new Schema({
-  client_id: {
+const UserSchema = new Schema({
+  user_id: {
     type: Schema.Types.ObjectId,
   },
   name: {
@@ -34,7 +34,7 @@ const ClientSchema = new Schema({
 });
 
 const AddressSchema = new Schema({
-  client_address_id: {
+  user_address_id: {
     type: Schema.Types.ObjectId,
     default: null,
   },
@@ -91,7 +91,7 @@ const Source = Object.freeze({
 
 const OrderSchema = new Schema(
   {
-    client: ClientSchema,
+    user: UserSchema,
     address: AddressSchema,
     deliveryman: {
       type: Schema.Types.ObjectId,

@@ -6,7 +6,7 @@ import Order from '../../src/app/models/Order';
 import app from '../../src/app';
 import factory from '../factories';
 
-import { OrderInterface, ClientInterface } from '../../src/interfaces/base';
+import { OrderInterface, UserInterface } from '../../src/interfaces/base';
 
 describe('Teste a printer', () => {
   beforeAll(() => {
@@ -29,18 +29,20 @@ describe('Teste a printer', () => {
     });
     expect(response.status).toBe(200);
     setTimeout(async () => {
-      await fs.unlinkSync(path.resolve(__dirname, '..', 'recipes', `${order._id}.rtf`));
+      await fs.unlinkSync(
+        path.resolve(__dirname, '..', 'recipes', `${order._id}.rtf`),
+      );
     }, 1000);
   });
 
-  it('Should print a recipe without a cleint phone', async () => {
-    const cleint = await factory.create<ClientInterface>('Client');
+  it('Should print a recipe without a user phone', async () => {
+    const user = await factory.create<UserInterface>('User');
     const order = await factory.create<OrderInterface>('Order', {
       address: undefined,
       deliveryman: undefined,
-      client: {
+      user: {
         name: 'cleiton',
-        client_id: cleint._id,
+        user_id: user._id,
         phone: undefined,
       },
     });
@@ -50,7 +52,9 @@ describe('Teste a printer', () => {
     });
     expect(response.status).toBe(200);
     setTimeout(async () => {
-      await fs.unlinkSync(path.resolve(__dirname, '..', 'recipes', `${order._id}.rtf`));
+      await fs.unlinkSync(
+        path.resolve(__dirname, '..', 'recipes', `${order._id}.rtf`),
+      );
     }, 1000);
   });
 
@@ -65,7 +69,9 @@ describe('Teste a printer', () => {
     });
     expect(response.status).toBe(200);
     setTimeout(async () => {
-      await fs.unlinkSync(path.resolve(__dirname, '..', 'recipes', `${order._id}.rtf`));
+      await fs.unlinkSync(
+        path.resolve(__dirname, '..', 'recipes', `${order._id}.rtf`),
+      );
     }, 1000);
   });
 
@@ -77,7 +83,9 @@ describe('Teste a printer', () => {
     });
     expect(response.status).toBe(200);
     setTimeout(async () => {
-      await fs.unlinkSync(path.resolve(__dirname, '..', 'recipes', `${order._id}.rtf`));
+      await fs.unlinkSync(
+        path.resolve(__dirname, '..', 'recipes', `${order._id}.rtf`),
+      );
     }, 1000);
   });
 

@@ -1,38 +1,38 @@
 /* eslint-disable consistent-return */
 import { Request, Response } from 'express';
-import Client from '../models/Client';
+import User from '../models/User';
 
-class ClientController {
+class UserController {
   public constructor() {
     this.store = this.store.bind(this);
     this.update = this.update.bind(this);
   }
 
-  private async clientNameValidation(name: string, phone: string[]) {
-    const clientWithSameName = await Client.findOne({ name });
+  private async userNameValidation(name: string, phone: string[]) {
+    const userWithSameName = await User.findOne({ name });
 
-    if (!clientWithSameName || !clientWithSameName.phone) return;
+    if (!userWithSameName || !userWithSameName.phone) return;
 
     let hasSamePhone = false;
     phone.forEach((element: string) => {
-      if (clientWithSameName.phone?.includes(element)) {
+      if (userWithSameName.phone?.includes(element)) {
         hasSamePhone = true;
       }
     });
 
-    if (hasSamePhone) return 'Client has the same name and phone number';
+    if (hasSamePhone) return 'User has the same name and phone number';
   }
 
   async index(request: Request, response: Response) {
-    const clients = await Client.find().populate('address.district');
+    const users = await User.find().populate('address.district');
 
-    return response.json(clients);
+    return response.json(users);
   }
 
   async show(request: Request, response: Response) {
     const { name } = request.params;
 
-    const clients = await Client.find({
+    const users = await User.find({
       $or: [
         {
           phone: { $regex: new RegExp(name), $options: 'i' },
@@ -42,75 +42,130 @@ class ClientController {
         },
       ],
     }).populate('address.district');
-    return response.json(clients);
+    return response.json(users);
   }
 
-  async store(request: Request, response: Response) {
-    const { name, address, phone } = request.body;
+  async store(request: Request, responseHttp: Response) {
+    const {
+      name,
+      address,
+      phone,
+      password,
+      question,
+      response,
+      username,
+      admin,
+    } = request.body;
+    const userId = request.userId;
+    const userAdm = await User.findOne({ _id: userId });
+
+    const sameUsername = await User.findOne({ username });
+
+    if (sameUsername) {
+      return responseHttp.status(400).json('That username already exist');
+    }
 
     if (phone) {
-      const isInvalidName = await this.clientNameValidation(name, phone);
+      const isInvalidName = await this.userNameValidation(name, phone);
       if (isInvalidName) {
-        return response.status(400).json(isInvalidName);
+        return responseHttp.status(400).json(isInvalidName);
       }
     }
 
-    const client = await Client.create({
+    const user = await User.create({
       name,
       address: address || undefined,
       phone: phone || undefined,
+      password,
+      question,
+      response,
+      username,
+      admin: !userId || !userAdm.admin ? false : admin,
     });
 
-    await client.populate('address.district').execPopulate();
+    await user.populate('address.district').execPopulate();
 
-    return response.json(client);
+    return responseHttp.json(user);
   }
 
-  async update(request: Request, response: Response) {
-    const { name, address, phone } = request.body;
+  async update(request: Request, responseHttp: Response) {
+    const {
+      name,
+      address,
+      phone,
+      password,
+      username,
+      admin,
+      question,
+      response,
+    } = request.body;
     const { id } = request.params;
+    const userId = request.userId;
 
-    const client = await Client.findOne({ _id: id });
+    const authUser = await User.findOne({ _id: userId });
 
-    if (!client) return response.status(400).json('Client does not exist');
+    const userToUpdate = await User.findOne({ _id: id });
 
-    if (name && !phone && client.phone) {
-      const isInvalidName = await this.clientNameValidation(name, client.phone);
+    const user = authUser.admin ? userToUpdate : authUser;
+
+    if (!user) return response.status(400).json('user does not exist');
+
+    if (name && !phone && user.phone) {
+      const isInvalidName = await this.userNameValidation(name, user.phone);
 
       if (isInvalidName) {
         return response.status(400).json(isInvalidName);
       }
-      client.name = name;
+      user.name = name;
     }
     if (name && phone) {
-      const isInvalidName = await this.clientNameValidation(name, phone);
+      const isInvalidName = await this.userNameValidation(name, phone);
 
       if (isInvalidName) {
         return response.status(400).json(isInvalidName);
       }
-      client.name = name;
+      user.name = name;
     }
 
     if (phone) {
-      client.phone = phone;
+      user.phone = phone;
     }
     if (address) {
-      client.address = address;
+      user.address = address;
+    }
+    if (password) {
+      user.password = password;
+    }
+    if (question) {
+      user.question = question;
+    }
+    if (response) {
+      user.response = response;
+    }
+    if (admin && user.admin) {
+      user.admin = admin;
+    }
+    if (username) {
+      const alreadyExists = await User.findOne(username);
+      if (alreadyExists) {
+        return response.status(400).json('This username already exist');
+      }
+      user.username = username;
     }
 
-    await client.save();
-    await client.populate('address.district').execPopulate();
+    await user.save();
+    await user.populate('address.district').execPopulate();
 
-    return response.json(client);
+    return responseHttp.json(user);
   }
 
   async delete(request: Request, response: Response) {
     const { id } = request.params;
 
-    await Client.deleteOne({ _id: id });
+    await User.deleteOne({ _id: id });
 
     return response.status(200).send();
   }
 }
 
-export default new ClientController();
+export default new UserController();

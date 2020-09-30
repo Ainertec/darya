@@ -11,7 +11,7 @@ import {
   ProductInterface,
 } from '../../src/interfaces/base';
 
-describe('should a Client', () => {
+describe('Reports test', () => {
   beforeAll(() => {
     openConnection();
   });
