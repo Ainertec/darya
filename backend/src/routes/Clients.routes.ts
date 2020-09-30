@@ -3,6 +3,7 @@ import { celebrate } from 'celebrate';
 import ClientController from '../app/controllers/ClientController';
 import { IValidationsClient } from './routesDTO';
 import UserAuth from '../middlewares/UserAuth';
+import Authentication from '../middlewares/Authentication';
 
 export class ClientsRoutes {
   constructor(private routes: Router) {}
@@ -22,6 +23,7 @@ export class ClientsRoutes {
     );
     this.routes.put(
       '/users/:id',
+      Authentication,
       celebrate({
         body: validations.clientUpdate,
         params: validations.paramId,

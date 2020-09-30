@@ -257,98 +257,123 @@ describe('User tests', () => {
     expect(response.status).toBe(400);
   });
 
-  // it('should update a client', async () => {
-  //   const client = await factory.create<UserInterface>('Client');
-  //   const distric = await factory.create<DistrictInterface>('District');
-  //   const response = await request(app)
-  //     .put(`/users/${client._id}`)
-  //     .send({
-  //       name: 'Cleiton',
-  //       username: 'cleitonbalonekr',
-  //       password: '1231234',
-  //       question: 'Qual o nome da sua mãe?',
-  //       response: 'não sei',
-  //       address: [
-  //         {
-  //           district: distric._id,
-  //           street: 'Estrada Serra Mar Encontro dos Rios',
-  //           number: 0,
-  //         },
-  //       ],
-  //       phone: ['22 992726852', '22 992865120'],
-  //     });
-  //   // console.log(response.body);
-  //   expect(response.status).toBe(200);
-  //   expect(response.body).toEqual(
-  //     expect.objectContaining({
-  //       name: 'Cleiton',
-  //     }),
-  //   );
-  // });
+  it('should update a user', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: true,
+    });
+    const distric = await factory.create<DistrictInterface>('District');
+    const response = await request(app)
+      .put(`/users/${user._id}`)
+      .send({
+        name: 'Cleiton',
+        username: 'cleitonbalonekr',
+        password: '1231234',
+        question: 'Qual o nome da sua mãe?',
+        response: 'não sei',
+        address: [
+          {
+            district: distric._id,
+            street: 'Estrada Serra Mar Encontro dos Rios',
+            number: 0,
+          },
+        ],
+        phone: ['22 992726852', '22 992865120'],
+      })
+      .set('Authorization', `Bearer ${user.generateToken()}`);
+    // console.log(response.body);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        name: 'Cleiton',
+      }),
+    );
+  });
 
-  // it('should update a client without phone number', async () => {
-  //   const client = await factory.create<UserInterface>('Client');
-  //   const distric = await factory.create<DistrictInterface>('District');
-  //   // console.log('client no teste', client);
-  //   const response = await request(app)
-  //     .put(`/users/${client._id}`)
-  //     .send({
-  //       name: 'Cleiton',
-  //       address: [
-  //         {
-  //           district: distric._id,
-  //           street: 'Estrada Serra Mar Encontro dos Rios',
-  //           number: 0,
-  //         },
-  //       ],
-  //       // phone: ['22 992726852', '22 992865120'],
-  //     });
-  //   // console.log(response.body);
-  //   expect(response.status).toBe(200);
-  //   expect(response.body).toEqual(
-  //     expect.objectContaining({
-  //       name: 'Cleiton',
-  //     }),
-  //   );
-  // });
+  it('should update a user without phone number', async () => {
+    const user = await factory.create<IUserDocument>('User', { admin: true });
+    const user2 = await factory.create<IUserDocument>('User');
+    const distric = await factory.create<DistrictInterface>('District');
+    // console.log('client no teste', client);
+    const response = await request(app)
+      .put(`/users/${user2._id}`)
+      .send({
+        name: 'Cleiton',
+        address: [
+          {
+            district: distric._id,
+            street: 'Estrada Serra Mar Encontro dos Rios',
+            number: 0,
+          },
+        ],
+        // phone: ['22 992726852', '22 992865120'],
+      })
+      .set('Authorization', `Bearer ${user.generateToken()}`);
+    // console.log(response.body);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        name: 'Cleiton',
+      }),
+    );
+  });
 
-  // it('should update a client without address', async () => {
-  //   const client = await factory.create<UserInterface>('Client');
-  //   const distric = await factory.create<DistrictInterface>('District');
-  //   // console.log('client no teste', client);
-  //   const response = await request(app).put(`/users/${client._id}`).send({
-  //     name: 'Cleiton',
-  //     // address: [
-  //     //   {
-  //     //     district: distric._id,
-  //     //     street: 'Estrada Serra Mar Encontro dos Rios',
-  //     //     number: 0,
-  //     //   },
-  //     // ],
-  //     // phone: ['22 992726852', '22 992865120'],
-  //   });
-  //   // console.log(response.body);
-  //   expect(response.status).toBe(200);
-  //   expect(response.body).toEqual(
-  //     expect.objectContaining({
-  //       name: 'Cleiton',
-  //     }),
-  //   );
-  // });
+  it('should update a user without address', async () => {
+    const user = await factory.create<IUserDocument>('User');
+    const distric = await factory.create<DistrictInterface>('District');
+    // console.log('user no teste', user);
+    const response = await request(app)
+      .put(`/users/${user._id}`)
+      .send({
+        name: 'Cleiton',
+        // address: [
+        //   {
+        //     district: distric._id,
+        //     street: 'Estrada Serra Mar Encontro dos Rios',
+        //     number: 0,
+        //   },
+        // ],
+        // phone: ['22 992726852', '22 992865120'],
+      })
+      .set('Authorization', `Bearer ${user.generateToken()}`);
+    // console.log(response.body);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        name: 'Cleiton',
+      }),
+    );
+  });
 
-  // it('should not update an inexistent client', async () => {
-  //   const client = await factory.create<UserInterface>('Client');
+  it('should not update an inexistent client', async () => {
+    const user = await factory.create<IUserDocument>('User');
 
-  //   const response = await request(app)
-  //     .put(`/users/5f06fefdd0607c2cde1b9cc2`)
-  //     .send({
-  //       name: 'Cleiton',
-  //       address: client.address,
-  //       phone: ['22 992726852', '22 992865120 '],
-  //     });
+    const response = await request(app)
+      .put(`/users/5f06fefdd0607c2cde1b9cc2`)
+      .send({
+        name: 'Cleiton',
+        address: user.address,
+        phone: ['22 992726852', '22 992865120 '],
+      })
+      .set('Authorization', `Bearer ${user.generateToken()}`);
 
-  //   expect(response.status).toBe(400);
-  // });
+    expect(response.status).toBe(400);
+  });
+
+  it('should update a auth user', async () => {
+    const user = await factory.create<IUserDocument>('User', { admin: false });
+    const user2 = await factory.create<IUserDocument>('User', {
+      admin: false,
+      name: 'joaçda',
+      username: 'cleber',
+    });
+
+    const response = await request(app)
+      .put(`/users/${user2.id}`)
+      .send({ username: 'cleitonbalonekr' })
+      .set('Authorization', `Bearer ${user.generateToken()}`);
+
+    expect(response.status).toBe(200);
+  });
 
   // it('should delete a client', async () => {
   //   const client = await factory.create<UserInterface>('Client');

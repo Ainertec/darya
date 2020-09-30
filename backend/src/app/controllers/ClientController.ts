@@ -146,7 +146,7 @@ class UserController {
       user.admin = admin;
     }
     if (username) {
-      const alreadyExists = await User.findOne(username);
+      const alreadyExists = await User.findOne({ username });
       if (alreadyExists) {
         return response.status(400).json('This username already exist');
       }
