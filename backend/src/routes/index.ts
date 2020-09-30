@@ -2,7 +2,7 @@ import { Router } from 'express';
 
 import { celebrate } from 'celebrate';
 import { ProductRoutes } from './Products.routes';
-import { ClientsRoutes } from './Clients.routes';
+import { UserRoutes } from './Users.routes';
 import { IngredientsRoutes } from './Ingredients.routes';
 import { DeliverymansRoutes } from './Deliverymans.routes';
 import { DistrictsRoutes } from './Districts.routes';
@@ -27,16 +27,25 @@ import { paramName, paramId } from '../validations/commonSchema';
 import { ReportsRoutes } from './Reports.routes';
 import { PrintersRoutes } from './Printers.routes';
 import SerialController from '../app/controllers/SerialController';
+import { SessionRoutes } from './Session.routes';
+import { ForgotPasswordRoutes } from './ForgotPassword.routes';
 
 const routes = Router();
+
+// session
+const sessionRoutes = new SessionRoutes(routes);
+sessionRoutes.getRoutes();
+// forgot
+const forgotPassworndRoutes = new ForgotPasswordRoutes(routes);
+forgotPassworndRoutes.getRoutes();
 
 // products
 const productRouters = new ProductRoutes(routes);
 productRouters.getRoutes({ product, paramName, paramId });
 
 // clients
-const clientRoutes = new ClientsRoutes(routes);
-clientRoutes.getRoutes({ paramName, paramId, client, clientUpdate });
+const userRoutes = new UserRoutes(routes);
+userRoutes.getRoutes({ paramName, paramId, client, clientUpdate });
 
 // ingredients
 const ingredientRoutes = new IngredientsRoutes(routes);
