@@ -9,6 +9,7 @@ import {
   IngredientInterface,
   ProductInterface,
 } from '../../src/interfaces/base';
+import { IUserDocument } from '../../src/app/models/User';
 
 describe('should test a update cascade when update a ingredient price', () => {
   beforeAll(() => {
@@ -23,6 +24,9 @@ describe('should test a update cascade when update a ingredient price', () => {
   });
 
   it('should update a product cost when update a ingredint price', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: true,
+    });
     const ingredient = await factory.create<IngredientInterface>('Ingredient');
     const product = await factory.create<ProductInterface>('Product', {
       ingredients: [
@@ -40,7 +44,8 @@ describe('should test a update cascade when update a ingredient price', () => {
         stock: 20,
         description: ingredient.description,
         unit: 'g',
-      });
+      })
+      .set('Authorization', `Bearer ${user.generateToken()}`);
     const productUpdated = await Product.findOne({ _id: product._id });
     // console.log(response.body);
     // console.log(productUpdated);
@@ -49,6 +54,9 @@ describe('should test a update cascade when update a ingredient price', () => {
   });
 
   it('should update all products cost when update a ingredint price', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: true,
+    });
     const ingredient = await factory.create<IngredientInterface>('Ingredient');
     const product = await factory.create<ProductInterface>('Product', {
       ingredients: [
@@ -74,7 +82,8 @@ describe('should test a update cascade when update a ingredient price', () => {
         stock: 20,
         description: ingredient.description,
         unit: 'g',
-      });
+      })
+      .set('Authorization', `Bearer ${user.generateToken()}`);
     const productUpdated = await Product.findOne({ _id: product._id });
     const productUpdated2 = await Product.findOne({ _id: product2._id });
     // console.log(response.body);

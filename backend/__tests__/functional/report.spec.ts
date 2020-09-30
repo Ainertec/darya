@@ -10,6 +10,7 @@ import {
   DeliverymanInterface,
   ProductInterface,
 } from '../../src/interfaces/base';
+import { IUserDocument } from '../../src/app/models/User';
 
 describe('Reports test', () => {
   beforeAll(() => {
@@ -23,6 +24,9 @@ describe('Reports test', () => {
   });
 
   it('should list a deliveryman payment by period', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: true,
+    });
     const deliveryman = await factory.create<DeliverymanInterface>(
       'Deliveryman',
       {
@@ -34,14 +38,17 @@ describe('Reports test', () => {
       finished: true,
     });
 
-    const response = await request(app).get(
-      `/reports/deliveryman/rate/${deliveryman._id}`,
-    );
+    const response = await request(app)
+      .get(`/reports/deliveryman/rate/${deliveryman._id}`)
+      .set('Authorization', `Bearer ${user.generateToken()}`);
     // console.log(response.body);
     expect(response.status).toBe(200);
   });
 
   it('should list all finished orders by deliveryman', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: true,
+    });
     const deliveryman = await factory.create<DeliverymanInterface>(
       'Deliveryman',
       {
@@ -53,14 +60,17 @@ describe('Reports test', () => {
       finished: true,
     });
 
-    const response = await request(app).get(
-      `/reports/deliveryman/orders/${deliveryman._id}`,
-    );
+    const response = await request(app)
+      .get(`/reports/deliveryman/orders/${deliveryman._id}`)
+      .set('Authorization', `Bearer ${user.generateToken()}`);
     // console.log(response.body);
     expect(response.status).toBe(200);
   });
 
   it('should not list a deliveryman payment of another days', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: true,
+    });
     const deliveryman = await factory.create<DeliverymanInterface>(
       'Deliveryman',
       {
@@ -73,13 +83,16 @@ describe('Reports test', () => {
       finished: true,
     });
 
-    const response = await request(app).get(
-      `/reports/deliveryman/rate/${deliveryman._id}`,
-    );
+    const response = await request(app)
+      .get(`/reports/deliveryman/rate/${deliveryman._id}`)
+      .set('Authorization', `Bearer ${user.generateToken()}`);
     expect(response.status).toBe(200);
   });
 
   it('should list a total profit of the day orders', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: true,
+    });
     const product = await factory.create<ProductInterface>('Product');
     await factory.createMany('Order', 5, {
       total: 200,
@@ -87,7 +100,9 @@ describe('Reports test', () => {
       finished: true,
     });
     const total = 1000;
-    const response = await request(app).get('/reports/orders/profit');
+    const response = await request(app)
+      .get('/reports/orders/profit')
+      .set('Authorization', `Bearer ${user.generateToken()}`);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({
@@ -98,6 +113,9 @@ describe('Reports test', () => {
   });
 
   it('should list dispense and gain of all products', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: true,
+    });
     const product = await factory.create<ProductInterface>('Product', {
       cost: 10,
     });
@@ -140,7 +158,9 @@ describe('Reports test', () => {
       finished: true,
     });
     const total = 60;
-    const response = await request(app).get('/reports/products/dispense_gain');
+    const response = await request(app)
+      .get('/reports/products/dispense_gain')
+      .set('Authorization', `Bearer ${user.generateToken()}`);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.arrayContaining([
@@ -152,6 +172,9 @@ describe('Reports test', () => {
   });
 
   it('should list an amount of all products', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: true,
+    });
     const product = await factory.create<ProductInterface>('Product', {
       cost: 10,
     });
@@ -194,7 +217,9 @@ describe('Reports test', () => {
       finished: true,
     });
 
-    const response = await request(app).get('/reports/products/amount');
+    const response = await request(app)
+      .get('/reports/products/amount')
+      .set('Authorization', `Bearer ${user.generateToken()}`);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.arrayContaining([
@@ -206,13 +231,18 @@ describe('Reports test', () => {
   });
 
   it('should delete finished order with more than 2 years', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: true,
+    });
     await factory.createMany('Order', 3, {
       createdAt: sub(new Date(), { years: 2 }),
       finished: true,
     });
     await factory.create('Order');
 
-    const response = await request(app).delete('/reports');
+    const response = await request(app)
+      .delete('/reports')
+      .set('Authorization', `Bearer ${user.generateToken()}`);
 
     const sales = await Order.find().countDocuments();
     expect(response.status).toBe(200);

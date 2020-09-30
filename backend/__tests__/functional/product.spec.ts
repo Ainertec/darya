@@ -8,6 +8,7 @@ import {
   ProductInterface,
   IngredientInterface,
 } from '../../src/interfaces/base';
+import { IUserDocument } from '../../src/app/models/User';
 
 describe('should test a product', () => {
   beforeAll(() => {
@@ -21,6 +22,9 @@ describe('should test a product', () => {
   });
 
   it('should create a product', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: true,
+    });
     const ingredient = await factory.create<IngredientInterface>('Ingredient', {
       price: 5,
       stock: 2000,
@@ -28,6 +32,7 @@ describe('should test a product', () => {
     });
     const response = await request(app)
       .post('/products')
+      .set('Authorization', `Bearer ${user.generateToken()}`)
       .send({
         name: 'roquinha',
         price: 4.5,
@@ -48,6 +53,9 @@ describe('should test a product', () => {
   });
 
   it('should update a product', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: true,
+    });
     const product = await factory.create<ProductInterface>('Product');
     const ingredient = await factory.create<IngredientInterface>('Ingredient', {
       price: 5,
@@ -57,6 +65,7 @@ describe('should test a product', () => {
 
     const response = await request(app)
       .put(`/products/${product._id}`)
+      .set('Authorization', `Bearer ${user.generateToken()}`)
       .send({
         name: 'roquinha',
         price: product.price,
@@ -79,9 +88,14 @@ describe('should test a product', () => {
   });
 
   it('should delete a product', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: true,
+    });
     const product = await factory.create<ProductInterface>('Product');
 
-    const response = await request(app).delete(`/products/${product._id}`);
+    const response = await request(app)
+      .delete(`/products/${product._id}`)
+      .set('Authorization', `Bearer ${user.generateToken()}`);
 
     const countDocuments = await Product.find({}).countDocuments();
 
@@ -90,6 +104,9 @@ describe('should test a product', () => {
   });
 
   it('should list products by name', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: true,
+    });
     const ingredient = await factory.create<IngredientInterface>('Ingredient');
     await factory.create<ProductInterface>('Product', {
       name: 'pizza',
@@ -119,7 +136,9 @@ describe('should test a product', () => {
       ],
     });
 
-    const response = await request(app).get(`/products/p`);
+    const response = await request(app)
+      .get(`/products/p`)
+      .set('Authorization', `Bearer ${user.generateToken()}`);
     // console.log(response.body);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
@@ -135,6 +154,9 @@ describe('should test a product', () => {
   });
 
   it('should list all products ', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: true,
+    });
     const ingredient = await factory.create<IngredientInterface>('Ingredient');
     await factory.create<ProductInterface>('Product', {
       name: 'pizza',
@@ -163,7 +185,9 @@ describe('should test a product', () => {
         },
       ],
     });
-    const response = await request(app).get(`/products`);
+    const response = await request(app)
+      .get(`/products`)
+      .set('Authorization', `Bearer ${user.generateToken()}`);
     // console.log(response.body);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(

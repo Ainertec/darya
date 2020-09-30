@@ -29,6 +29,8 @@ import { PrintersRoutes } from './Printers.routes';
 import SerialController from '../app/controllers/SerialController';
 import { SessionRoutes } from './Session.routes';
 import { ForgotPasswordRoutes } from './ForgotPassword.routes';
+import Authentication from '../middlewares/Authentication';
+import Authorization from '../middlewares/Authorization';
 
 const routes = Router();
 
@@ -39,25 +41,9 @@ sessionRoutes.getRoutes();
 const forgotPassworndRoutes = new ForgotPasswordRoutes(routes);
 forgotPassworndRoutes.getRoutes();
 
-// products
-const productRouters = new ProductRoutes(routes);
-productRouters.getRoutes({ product, paramName, paramId });
-
-// clients
+// users
 const userRoutes = new UserRoutes(routes);
 userRoutes.getRoutes({ paramName, paramId, client, clientUpdate });
-
-// ingredients
-const ingredientRoutes = new IngredientsRoutes(routes);
-ingredientRoutes.getRoutes({ paramName, paramId, ingredient });
-
-// deliverymans
-const deliverymanRoutes = new DeliverymansRoutes(routes);
-deliverymanRoutes.getRoutes({ paramName, paramId, deliveryman });
-
-// districtsRoutes
-const districtRoutes = new DistrictsRoutes(routes);
-districtRoutes.getRoutes({ paramName, paramId, district });
 
 // orders
 const orderRoutes = new OrdersRoutes(routes);
@@ -68,6 +54,25 @@ orderRoutes.getRoutes({
   paramIdentification,
   paramId,
 });
+
+routes.use(Authentication);
+routes.use(Authorization);
+
+// deliverymans
+const deliverymanRoutes = new DeliverymansRoutes(routes);
+deliverymanRoutes.getRoutes({ paramName, paramId, deliveryman });
+
+// districtsRoutes
+const districtRoutes = new DistrictsRoutes(routes);
+districtRoutes.getRoutes({ paramName, paramId, district });
+
+// ingredients
+const ingredientRoutes = new IngredientsRoutes(routes);
+ingredientRoutes.getRoutes({ paramName, paramId, ingredient });
+
+// products
+const productRouters = new ProductRoutes(routes);
+productRouters.getRoutes({ product, paramName, paramId });
 
 // reports
 const reportRoutes = new ReportsRoutes(routes);

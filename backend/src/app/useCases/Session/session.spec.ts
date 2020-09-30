@@ -81,6 +81,7 @@ describe('Session Tests', () => {
     const user = await factory.create<IUserDocument>('User', {
       name: 'Cleiton',
       password: '123456',
+      admin: true,
     });
     const response = await request(app)
       .get('/users')

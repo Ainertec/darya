@@ -6,6 +6,7 @@ import factory from '../factories';
 
 import { DistrictInterface } from '../../src/interfaces/base';
 import { name } from 'faker';
+import { IUserDocument } from '../../src/app/models/User';
 
 describe('should test', () => {
   beforeAll(() => {
@@ -19,23 +20,35 @@ describe('should test', () => {
   });
 
   it('should create a district', async () => {
-    const response = await request(app).post('/districts').send({
-      name: 'Lumiar',
-      city: 'Nova Friburgo',
-      rate: 10,
+    const user = await factory.create<IUserDocument>('User', {
+      admin: true,
     });
+    const response = await request(app)
+      .post('/districts')
+      .set('Authorization', `Bearer ${user.generateToken()}`)
+      .send({
+        name: 'Lumiar',
+        city: 'Nova Friburgo',
+        rate: 10,
+      });
 
     expect(response.status).toBe(200);
   });
 
   it('should update a district', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: true,
+    });
     const district = await factory.create<DistrictInterface>('District');
 
-    const response = await request(app).put(`/districts/${district._id}`).send({
-      name: 'Lumiar',
-      city: district.city,
-      rate: 10,
-    });
+    const response = await request(app)
+      .put(`/districts/${district._id}`)
+      .set('Authorization', `Bearer ${user.generateToken()}`)
+      .send({
+        name: 'Lumiar',
+        city: district.city,
+        rate: 10,
+      });
 
     // console.log(response.body);
     expect(response.status).toBe(200);
@@ -43,14 +56,19 @@ describe('should test', () => {
       expect.objectContaining({
         name: 'Lumiar',
         rate: 10,
-      })
+      }),
     );
   });
 
   it('should delete a district', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: true,
+    });
     const district = await factory.create<DistrictInterface>('District');
 
-    const response = await request(app).delete(`/districts/${district._id}`);
+    const response = await request(app)
+      .delete(`/districts/${district._id}`)
+      .set('Authorization', `Bearer ${user.generateToken()}`);
 
     const countDocuments = await District.find({}).countDocuments();
 
@@ -59,6 +77,9 @@ describe('should test', () => {
   });
 
   it('should list all districts', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: true,
+    });
     const district = await factory.create<DistrictInterface>('District', {
       name: 'Lumiar',
     });
@@ -66,7 +87,9 @@ describe('should test', () => {
       name: 'São Pedro',
     });
 
-    const response = await request(app).get('/districts');
+    const response = await request(app)
+      .get('/districts')
+      .set('Authorization', `Bearer ${user.generateToken()}`);
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
@@ -77,11 +100,14 @@ describe('should test', () => {
         expect.objectContaining({
           name: 'São Pedro',
         }),
-      ])
+      ]),
     );
   });
 
   it('should list all districts by name', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: true,
+    });
     const district = await factory.create<DistrictInterface>('District', {
       name: 'São Thiagua',
     });
@@ -89,7 +115,9 @@ describe('should test', () => {
       name: 'São Pedro',
     });
 
-    const response = await request(app).get(`/districts/s`);
+    const response = await request(app)
+      .get(`/districts/s`)
+      .set('Authorization', `Bearer ${user.generateToken()}`);
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
@@ -100,7 +128,7 @@ describe('should test', () => {
         expect.objectContaining({
           name: 'São Pedro',
         }),
-      ])
+      ]),
     );
   });
 });

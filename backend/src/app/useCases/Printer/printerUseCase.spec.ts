@@ -13,6 +13,7 @@ import { ProductAmountUseCase } from '../Report/productsAmountUseCase';
 
 import app from '../../../app';
 import Deliveryman from '../../models/Deliveryman';
+import { IUserDocument } from '../../models/User';
 
 describe('Teste a printer', () => {
   beforeAll(() => {
@@ -59,6 +60,9 @@ describe('Teste a printer', () => {
   });
 
   it('should print a general report ', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: true,
+    });
     await factory.create<OrderInterface>('Order', {
       payment: 'Dinheiro',
       finished: true,
@@ -83,12 +87,17 @@ describe('Teste a printer', () => {
       payment: 'Cartão',
       finished: true,
     });
-    const response = await request(app).get('/printers/sold_report');
+    const response = await request(app)
+      .get('/printers/sold_report')
+      .set('Authorization', `Bearer ${user.generateToken()}`);
 
     expect(response.status).toBe(200);
   });
 
   it('should print a deliveryman report ', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: true,
+    });
     const deliveryman = await factory.create<DeliverymanInterface>(
       'Deliveryman',
       {
@@ -126,9 +135,9 @@ describe('Teste a printer', () => {
       deliveryman: deliveryman._id,
     });
 
-    const response = await request(app).get(
-      `/printers/deliveryman_report/${deliveryman._id}`,
-    );
+    const response = await request(app)
+      .get(`/printers/deliveryman_report/${deliveryman._id}`)
+      .set('Authorization', `Bearer ${user.generateToken()}`);
     expect(response.status).toBe(200);
   });
 });

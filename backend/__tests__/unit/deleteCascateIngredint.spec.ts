@@ -9,8 +9,9 @@ import {
   IngredientInterface,
   ProductInterface,
 } from '../../src/interfaces/base';
+import { IUserDocument } from '../../src/app/models/User';
 
-describe('should test a delete cascate when delete a ingredient', () => {
+describe('should test a delete cascade when delete a ingredient', () => {
   beforeAll(() => {
     openConnection();
   });
@@ -23,6 +24,10 @@ describe('should test a delete cascate when delete a ingredient', () => {
   });
 
   it('should delete a product ingredient when a ingredient is deleted', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: true,
+    });
+
     const ingredient = await factory.create<IngredientInterface>('Ingredient');
     const ingredient2 = await factory.create<IngredientInterface>('Ingredient');
     const product = await factory.create<ProductInterface>('Product', {
@@ -38,9 +43,9 @@ describe('should test a delete cascate when delete a ingredient', () => {
       ],
     });
 
-    const response = await request(app).delete(
-      `/ingredients/${ingredient._id}`,
-    );
+    const response = await request(app)
+      .delete(`/ingredients/${ingredient._id}`)
+      .set('Authorization', `Bearer ${user.generateToken()}`);
     const productUpdated = await Product.findOne({ _id: product._id });
 
     expect(productUpdated?.ingredients.length).toBe(1);
@@ -48,6 +53,10 @@ describe('should test a delete cascate when delete a ingredient', () => {
   });
 
   it('should delete a unic product ingredient when a ingredient is deleted', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: true,
+    });
+
     const ingredient = await factory.create<IngredientInterface>('Ingredient');
 
     const product = await factory.create<ProductInterface>('Product', {
@@ -59,9 +68,9 @@ describe('should test a delete cascate when delete a ingredient', () => {
       ],
     });
 
-    const response = await request(app).delete(
-      `/ingredients/${ingredient._id}`,
-    );
+    const response = await request(app)
+      .delete(`/ingredients/${ingredient._id}`)
+      .set('Authorization', `Bearer ${user.generateToken()}`);
     const productUpdated = await Product.findOne({ _id: product._id });
 
     expect(productUpdated?.ingredients.length).toBe(0);
@@ -69,6 +78,10 @@ describe('should test a delete cascate when delete a ingredient', () => {
   });
 
   it('should not delete a product ingredient when a ingredient is deleted, if it does not use it', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: true,
+    });
+
     const ingredient = await factory.create<IngredientInterface>('Ingredient');
     const ingredient2 = await factory.create<IngredientInterface>('Ingredient');
     const ingredient3 = await factory.create<IngredientInterface>('Ingredient');
@@ -85,9 +98,9 @@ describe('should test a delete cascate when delete a ingredient', () => {
       ],
     });
 
-    const response = await request(app).delete(
-      `/ingredients/${ingredient3._id}`,
-    );
+    const response = await request(app)
+      .delete(`/ingredients/${ingredient3._id}`)
+      .set('Authorization', `Bearer ${user.generateToken()}`);
     const productUpdated = await Product.findOne({ _id: product._id });
     expect(productUpdated?.ingredients.length).toBe(2);
     expect(response.status).toBe(200);
