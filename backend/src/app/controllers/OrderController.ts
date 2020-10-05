@@ -182,7 +182,6 @@ class OrderController {
         .execPopulate();
       return response.json(order);
     } catch (error) {
-      console.log(error.message);
       return response.status(400).json(error.message);
     }
   }

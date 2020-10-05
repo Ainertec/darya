@@ -4,6 +4,7 @@ import { Document, Types } from 'mongoose';
 export interface ProductInterface extends Document {
   name: string;
   price: number;
+  available?: boolean;
   description?: string;
   ingredients: Ingredients[];
   cost: number;

@@ -1,6 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import { Request, Response } from 'express';
 import Product from '../models/Product';
+import User from '../models/User';
 import getCost from '../utils/getProductCost';
 
 class ProductController {
@@ -10,22 +11,41 @@ class ProductController {
   }
 
   async index(request: Request, response: Response) {
-    const products = await Product.find({}).populate('ingredients.material');
+    const { userId } = request;
+    const authUser = await User.findOne({ _id: userId });
+    if (authUser?.admin) {
+      const products = await Product.find({}).populate('ingredients.material');
 
-    return response.json(products);
+      return response.json(products);
+    } else {
+      const products = await Product.find({ available: true }).populate(
+        'ingredients.material',
+      );
+
+      return response.json(products);
+    }
   }
 
   async show(request: Request, response: Response) {
     const { name } = request.params;
-    const products = await Product.find({
-      name: { $regex: new RegExp(name), $options: 'i' },
-    }).populate('ingredients.material');
+    const { userId } = request;
+
+    const authUser = await User.findOne({ _id: userId });
+
+    const products = authUser?.admin
+      ? await Product.find({
+          name: { $regex: new RegExp(name), $options: 'i' },
+        }).populate('ingredients.material')
+      : await Product.find({
+          name: { $regex: new RegExp(name), $options: 'i' },
+          available: true,
+        }).populate('ingredients.material');
 
     return response.json(products);
   }
 
   async store(request: Request, response: Response) {
-    const { name, price, description, ingredients } = request.body;
+    const { name, price, description, ingredients, available } = request.body;
     const cost = await getCost(ingredients);
     const product = await Product.create({
       name,
@@ -33,13 +53,14 @@ class ProductController {
       cost,
       description,
       ingredients,
+      available,
     });
     await product.populate('ingredients.material').execPopulate();
     return response.json(product);
   }
 
   async update(request: Request, response: Response) {
-    const { name, price, ingredients, description } = request.body;
+    const { name, price, ingredients, description, available } = request.body;
     const { id } = request.params;
     const cost = await getCost(ingredients);
 
@@ -56,6 +77,9 @@ class ProductController {
     );
     if (!product) return response.status(400).json('product not found');
 
+    if (available) {
+      product.available = available;
+    }
     await product.save();
 
     await product.populate('ingredients.material').execPopulate();

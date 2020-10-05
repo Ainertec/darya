@@ -57,6 +57,10 @@ orderRoutes.getRoutes({
   paramId,
 });
 
+// products
+const productRouters = new ProductRoutes(routes);
+productRouters.getRoutes({ product, paramName, paramId });
+
 routes.use(Authorization);
 
 // deliverymans
@@ -70,10 +74,6 @@ districtRoutes.getRoutes({ paramName, paramId, district });
 // ingredients
 const ingredientRoutes = new IngredientsRoutes(routes);
 ingredientRoutes.getRoutes({ paramName, paramId, ingredient });
-
-// products
-const productRouters = new ProductRoutes(routes);
-productRouters.getRoutes({ product, paramName, paramId });
 
 // reports
 const reportRoutes = new ReportsRoutes(routes);

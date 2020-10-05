@@ -42,6 +42,7 @@ describe('should test a product', () => {
             quantity: 500,
           },
         ],
+        available: true,
         description: 'como que é o nome daquele negocio?',
       });
     expect(response.status).toBe(200);
@@ -103,7 +104,7 @@ describe('should test a product', () => {
     expect(countDocuments).toBe(0);
   });
 
-  it('should list products by name', async () => {
+  it('should list products by name includes unavailable', async () => {
     const user = await factory.create<IUserDocument>('User', {
       admin: true,
     });
@@ -119,6 +120,7 @@ describe('should test a product', () => {
     });
     await factory.create<ProductInterface>('Product', {
       name: 'pão',
+      available: false,
       ingredients: [
         {
           material: ingredient._id,
@@ -141,6 +143,7 @@ describe('should test a product', () => {
       .set('Authorization', `Bearer ${user.generateToken()}`);
     // console.log(response.body);
     expect(response.status).toBe(200);
+    expect(response.body.length).toBe(2);
     expect(response.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -153,13 +156,63 @@ describe('should test a product', () => {
     );
   });
 
-  it('should list all products ', async () => {
+  it('should list products by name available', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: false,
+    });
+    const ingredient = await factory.create<IngredientInterface>('Ingredient');
+    await factory.create<ProductInterface>('Product', {
+      name: 'pizza',
+      ingredients: [
+        {
+          material: ingredient._id,
+          quantity: 200,
+        },
+      ],
+    });
+    await factory.create<ProductInterface>('Product', {
+      name: 'pão',
+      available: false,
+      ingredients: [
+        {
+          material: ingredient._id,
+          quantity: 200,
+        },
+      ],
+    });
+    await factory.create<ProductInterface>('Product', {
+      name: 'queijo',
+      ingredients: [
+        {
+          material: ingredient._id,
+          quantity: 200,
+        },
+      ],
+    });
+
+    const response = await request(app)
+      .get(`/products/p`)
+      .set('Authorization', `Bearer ${user.generateToken()}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.length).toBe(1);
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: 'pizza',
+        }),
+      ]),
+    );
+  });
+
+  it('should list all products includes unavailable ', async () => {
     const user = await factory.create<IUserDocument>('User', {
       admin: true,
     });
     const ingredient = await factory.create<IngredientInterface>('Ingredient');
     await factory.create<ProductInterface>('Product', {
       name: 'pizza',
+      available: false,
       ingredients: [
         {
           material: ingredient._id,
@@ -178,6 +231,7 @@ describe('should test a product', () => {
     });
     await factory.create<ProductInterface>('Product', {
       name: 'queijo',
+      available: false,
       ingredients: [
         {
           material: ingredient._id,
@@ -200,6 +254,55 @@ describe('should test a product', () => {
         }),
         expect.objectContaining({
           name: 'queijo',
+        }),
+      ]),
+    );
+  });
+
+  it('should list all products available', async () => {
+    const user = await factory.create<IUserDocument>('User', {
+      admin: false,
+    });
+    const ingredient = await factory.create<IngredientInterface>('Ingredient');
+    await factory.create<ProductInterface>('Product', {
+      name: 'pizza',
+      available: false,
+      ingredients: [
+        {
+          material: ingredient._id,
+          quantity: 200,
+        },
+      ],
+    });
+    await factory.create<ProductInterface>('Product', {
+      name: 'pão',
+      ingredients: [
+        {
+          material: ingredient._id,
+          quantity: 200,
+        },
+      ],
+    });
+    await factory.create<ProductInterface>('Product', {
+      name: 'queijo',
+      available: false,
+      ingredients: [
+        {
+          material: ingredient._id,
+          quantity: 200,
+        },
+      ],
+    });
+    const response = await request(app)
+      .get(`/products`)
+      .set('Authorization', `Bearer ${user.generateToken()}`);
+
+    expect(response.body.length).toBe(1);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: 'pão',
         }),
       ]),
     );

@@ -11,6 +11,7 @@ const product = Joi.object().keys({
   ingredients: Joi.array().items(ingredients).required(),
   price: Joi.number().required(),
   cost: Joi.number(),
+  available: Joi.boolean(),
 });
 
 export default product;
