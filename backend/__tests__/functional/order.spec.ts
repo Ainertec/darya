@@ -95,7 +95,7 @@ describe('should a User', () => {
   });
 
   it('should update a deliveryman hasDelivery when create a order', async () => {
-    const user = await factory.create<IUserDocument>('User');
+    const user = await factory.create<IUserDocument>('User', { admin: true });
     const deliveryman = await factory.create<DeliverymanInterface>(
       'Deliveryman',
     );
@@ -127,7 +127,7 @@ describe('should a User', () => {
   });
 
   it('should not create an order with invalid source', async () => {
-    const user = await factory.create<IUserDocument>('User');
+    const user = await factory.create<IUserDocument>('User', { admin: true });
     const deliveryman = await factory.create<DeliverymanInterface>(
       'Deliveryman',
     );
@@ -154,7 +154,7 @@ describe('should a User', () => {
   });
 
   it('should not create an order with invalid user_address_id', async () => {
-    const user = await factory.create<IUserDocument>('User');
+    const user = await factory.create<IUserDocument>('User', { admin: true });
     const deliveryman = await factory.create<DeliverymanInterface>(
       'Deliveryman',
     );
@@ -180,7 +180,7 @@ describe('should a User', () => {
   });
 
   it('should not create an order with invalid user', async () => {
-    const user = await factory.create<IUserDocument>('User');
+    const user = await factory.create<IUserDocument>('User', { admin: true });
     const deliveryman = await factory.create<DeliverymanInterface>(
       'Deliveryman',
     );
@@ -206,7 +206,7 @@ describe('should a User', () => {
   });
 
   it('should not create an order with invalid deliveryman', async () => {
-    const user = await factory.create<IUserDocument>('User');
+    const user = await factory.create<IUserDocument>('User', { admin: true });
     const deliveryman = await factory.create<DeliverymanInterface>(
       'Deliveryman',
     );
@@ -233,7 +233,7 @@ describe('should a User', () => {
 
   it('should update a order', async () => {
     const order = await factory.create<OrderInterface>('Order');
-    const user = await factory.create<IUserDocument>('User');
+    const user = await factory.create<IUserDocument>('User', { admin: true });
     const product = await factory.create<ProductInterface>('Product', {
       name: 'Chocolate',
       price: 10,
@@ -270,7 +270,7 @@ describe('should a User', () => {
 
   it('should update a order total with address change', async () => {
     const district = await factory.create<DistrictInterface>('District');
-    const user = await factory.create<IUserDocument>('User');
+    const user = await factory.create<IUserDocument>('User', { admin: true });
     const order = await factory.create<OrderInterface>('Order', {
       user: {
         user_id: user._id,
@@ -292,7 +292,7 @@ describe('should a User', () => {
   });
 
   it('should finish a order', async () => {
-    const user = await factory.create<IUserDocument>('User');
+    const user = await factory.create<IUserDocument>('User', { admin: true });
     const deliveryman = await factory.create<DeliverymanInterface>(
       'Deliveryman',
     );
@@ -314,7 +314,7 @@ describe('should a User', () => {
   });
 
   it('should update a order and update a deliveryman available', async () => {
-    const user = await factory.create<IUserDocument>('User');
+    const user = await factory.create<IUserDocument>('User', { admin: true });
     const delivaryman = await factory.create<DeliverymanInterface>(
       'Deliveryman',
       {
@@ -357,6 +357,7 @@ describe('should a User', () => {
   it('should update a order user and address', async () => {
     const user = await factory.create<IUserDocument>('User', {
       name: 'Cleiton',
+      admin: true,
     });
 
     const order = await factory.create<OrderInterface>('Order');
@@ -392,6 +393,7 @@ describe('should a User', () => {
   it('should not update a order user invalid', async () => {
     const user = await factory.create<IUserDocument>('User', {
       name: 'Cleiton',
+      admin: true,
     });
 
     const order = await factory.create<OrderInterface>('Order');
@@ -417,6 +419,7 @@ describe('should a User', () => {
   it('should not update a order address invalid', async () => {
     const user = await factory.create<IUserDocument>('User', {
       name: 'Cleiton',
+      admin: true,
     });
 
     const order = await factory.create<OrderInterface>('Order');
@@ -441,7 +444,7 @@ describe('should a User', () => {
 
   it('should not update a inexistent order', async () => {
     const order = await factory.create<OrderInterface>('Order');
-    const user = await factory.create<IUserDocument>('User');
+    const user = await factory.create<IUserDocument>('User', { admin: true });
     const product = await factory.create<ProductInterface>('Product', {
       name: 'Chocolate',
     });
@@ -471,7 +474,7 @@ describe('should a User', () => {
 
   it('should delete an order', async () => {
     const order = await factory.create<OrderInterface>('Order');
-    const user = await factory.create<IUserDocument>('User');
+    const user = await factory.create<IUserDocument>('User', { admin: true });
 
     const response = await request(app)
       .delete(`/orders/${order._id}`)
@@ -484,7 +487,7 @@ describe('should a User', () => {
     const order = await factory.createMany<OrderInterface>('Order', 3, {
       finished: false,
     });
-    const user = await factory.create<IUserDocument>('User');
+    const user = await factory.create<IUserDocument>('User', { admin: true });
 
     const response = await request(app)
       .get(`/orders`)
@@ -501,7 +504,7 @@ describe('should a User', () => {
       identification: '1234543',
       finished: false,
     });
-    const user = await factory.create<IUserDocument>('User');
+    const user = await factory.create<IUserDocument>('User', { admin: true });
 
     const response = await request(app)
       .get(`/orders/${order.identification}`)
@@ -525,7 +528,7 @@ describe('should a User', () => {
       identification: '123123',
       finished: false,
     });
-    const user = await factory.create<IUserDocument>('User');
+    const user = await factory.create<IUserDocument>('User', { admin: true });
 
     const response = await request(app)
       .get(`/orders/deliveryman/${deliveryman._id}`)

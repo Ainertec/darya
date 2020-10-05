@@ -28,7 +28,7 @@ describe('should sub ingredient stock when a order is finished', () => {
   });
 
   it('should sub a ingredient stock when a order is finished', async () => {
-    const user = await factory.create<IUserDocument>('User', {});
+    const user = await factory.create<IUserDocument>('User', { admin: true });
     const ingredient = await factory.create<IngredientInterface>('Ingredient', {
       stock: 2000,
     });
@@ -63,7 +63,7 @@ describe('should sub ingredient stock when a order is finished', () => {
   });
 
   it('should sub all product  ingredients stock when a order is finished', async () => {
-    const user = await factory.create<IUserDocument>('User');
+    const user = await factory.create<IUserDocument>('User', { admin: true });
     const ingredient = await factory.create<IngredientInterface>('Ingredient', {
       stock: 2000,
     });
@@ -163,7 +163,7 @@ describe('should sub ingredient stock when a order is finished', () => {
   });
 
   it('should sub all product ingredients stock when a order is finished(same ingredients)', async () => {
-    const user = await factory.create<IUserDocument>('User');
+    const user = await factory.create<IUserDocument>('User', { admin: true });
     const ingredient = await factory.create<IngredientInterface>('Ingredient', {
       stock: 2000,
       name: 'farinha',
