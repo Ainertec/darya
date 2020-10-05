@@ -113,6 +113,7 @@ class OrderController {
       note,
       payment,
     } = request.body;
+    const authUserId = request.userId;
 
     const isValidSource = Source.getSource().includes(source);
 
@@ -120,7 +121,15 @@ class OrderController {
       return response.status(400).json({ message: 'invalid source' });
     }
 
-    const user = await User.findOne({ _id: user_id });
+    const authUser = await User.findOne({ _id: authUserId });
+
+    const user = authUser?.admin
+      ? await User.findOne({ _id: user_id })
+      : authUser;
+    const address_id = authUser?.admin
+      ? user_address_id
+      : authUser.address[0]._id;
+
     if (!user) return response.status(400).json('That user does not exist');
 
     const identification =
@@ -130,8 +139,8 @@ class OrderController {
         : crypto.randomBytes(4).toString('hex');
 
     try {
-      const address = user_address_id
-        ? await this.getAddress(user_id, user_address_id)
+      const address = address_id
+        ? await this.getAddress(user._id, address_id)
         : undefined;
 
       const total = address
@@ -141,7 +150,7 @@ class OrderController {
       const order = await Order.create({
         identification,
         user: {
-          user_id,
+          user_id: user._id,
           name: user.name,
           phone: user.phone,
         },
@@ -173,7 +182,8 @@ class OrderController {
         .execPopulate();
       return response.json(order);
     } catch (error) {
-      return response.status(400).json(error);
+      console.log(error.message);
+      return response.status(400).json(error.message);
     }
   }
 
@@ -221,6 +231,7 @@ class OrderController {
       }
       order.finished = true;
     }
+
     if (user_id && String(order.user.user_id) !== String(user_id)) {
       try {
         const user = await this.getUser(user_id);

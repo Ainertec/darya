@@ -7,18 +7,18 @@ const items = Joi.object().keys({
 });
 
 export const order = Joi.object().keys({
-  client_id: Joi.custom(validObjectId, 'valid id').required(),
+  user_id: Joi.custom(validObjectId, 'valid id').required(),
   deliveryman: Joi.custom(validObjectId, 'valid id'),
-  client_address_id: Joi.custom(validObjectId, 'valid id'),
+  user_address_id: Joi.custom(validObjectId, 'valid id'),
   items: Joi.array().items(items).required(),
   source: Joi.string().required(),
   note: Joi.string(),
   payment: Joi.string(),
 });
 export const orderUpdate = Joi.object().keys({
-  client_id: Joi.custom(validObjectId, 'valid id'),
+  user_id: Joi.custom(validObjectId, 'valid id'),
   deliveryman: Joi.custom(validObjectId, 'valid id'),
-  client_address_id: Joi.custom(validObjectId, 'valid id'),
+  user_address_id: Joi.custom(validObjectId, 'valid id'),
   items: Joi.array().items(items),
   source: Joi.string(),
   note: Joi.string(),

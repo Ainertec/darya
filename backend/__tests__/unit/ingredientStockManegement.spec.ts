@@ -13,6 +13,7 @@ import {
   ProductInterface,
   OrderInterface,
 } from '../../src/interfaces/base';
+import { IUserDocument } from '../../src/app/models/User';
 
 describe('should sub ingredient stock when a order is finished', () => {
   beforeAll(() => {
@@ -27,6 +28,7 @@ describe('should sub ingredient stock when a order is finished', () => {
   });
 
   it('should sub a ingredient stock when a order is finished', async () => {
+    const user = await factory.create<IUserDocument>('User', {});
     const ingredient = await factory.create<IngredientInterface>('Ingredient', {
       stock: 2000,
     });
@@ -48,9 +50,12 @@ describe('should sub ingredient stock when a order is finished', () => {
       finished: false,
     });
 
-    const response = await request(app).put(`/orders/${order._id}`).send({
-      finished: true,
-    });
+    const response = await request(app)
+      .put(`/orders/${order._id}`)
+      .send({
+        finished: true,
+      })
+      .set('Authorization', `Bearer ${user.generateToken()}`);
     const ingredientUpdated = await Ingredient.findOne({ _id: ingredient._id });
     // console.log(ingredientUpdated);
     expect(response.status).toBe(200);
@@ -58,6 +63,7 @@ describe('should sub ingredient stock when a order is finished', () => {
   });
 
   it('should sub all product  ingredients stock when a order is finished', async () => {
+    const user = await factory.create<IUserDocument>('User');
     const ingredient = await factory.create<IngredientInterface>('Ingredient', {
       stock: 2000,
     });
@@ -89,9 +95,12 @@ describe('should sub ingredient stock when a order is finished', () => {
       finished: false,
     });
 
-    const response = await request(app).put(`/orders/${order._id}`).send({
-      finished: true,
-    });
+    const response = await request(app)
+      .put(`/orders/${order._id}`)
+      .send({
+        finished: true,
+      })
+      .set('Authorization', `Bearer ${user.generateToken()}`);
     const ingredientUpdated = await Ingredient.findOne({ _id: ingredient._id });
     const ingredientUpdated2 = await Ingredient.findOne({
       _id: ingredient2._id,
@@ -154,6 +163,7 @@ describe('should sub ingredient stock when a order is finished', () => {
   });
 
   it('should sub all product ingredients stock when a order is finished(same ingredients)', async () => {
+    const user = await factory.create<IUserDocument>('User');
     const ingredient = await factory.create<IngredientInterface>('Ingredient', {
       stock: 2000,
       name: 'farinha',
@@ -203,9 +213,12 @@ describe('should sub ingredient stock when a order is finished', () => {
       finished: false,
     });
 
-    const response = await request(app).put(`/orders/${order._id}`).send({
-      finished: true,
-    });
+    const response = await request(app)
+      .put(`/orders/${order._id}`)
+      .send({
+        finished: true,
+      })
+      .set('Authorization', `Bearer ${user.generateToken()}`);
     const ingredientUpdated = await Ingredient.findOne({ _id: ingredient._id });
     const ingredientUpdated2 = await Ingredient.findOne({
       _id: ingredient2._id,

@@ -45,6 +45,8 @@ forgotPassworndRoutes.getRoutes();
 const userRoutes = new UserRoutes(routes);
 userRoutes.getRoutes({ paramName, paramId, client, clientUpdate });
 
+routes.use(Authentication);
+
 // orders
 const orderRoutes = new OrdersRoutes(routes);
 orderRoutes.getRoutes({
@@ -55,7 +57,6 @@ orderRoutes.getRoutes({
   paramId,
 });
 
-routes.use(Authentication);
 routes.use(Authorization);
 
 // deliverymans
