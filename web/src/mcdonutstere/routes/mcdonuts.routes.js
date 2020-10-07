@@ -33,14 +33,15 @@ function rotas() {
   return (
     <Switch>
       <Route path="/mcdonuts" exact component={HomeMcDonuts} />
-      <Route path="/mcdonuts/login" exact component={LoginMcDonuts} />
-      <Route path="/mcdonuts/cadastrar" exact component={CadastroMcDonuts} />
-      <PrivateRoute path="/mcdonuts/carrinho" exact>
+
+      <PrivateRoute path="/mcdonuts/carrinho">
         <Carrinho />
       </PrivateRoute>
-      <PrivateRoute path="/mcdonuts/pedido" exact>
+      <PrivateRoute path="/mcdonuts/pedido">
         <Pedido />
       </PrivateRoute>
+      <Route path="/mcdonuts/login" component={LoginMcDonuts} />
+      <Route path="/mcdonuts/cadastrar" component={CadastroMcDonuts} />
     </Switch>
   );
 }
