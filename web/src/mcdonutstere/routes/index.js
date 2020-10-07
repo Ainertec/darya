@@ -1,19 +1,16 @@
-import React from 'react'
-import LoginRoutes from './mcdonuts.login.routes'
-import AppRoutes from './mcdonuts.routes'
+import React from "react";
+import AppRoutes from "./mcdonuts.routes";
 
-import { useAuth } from '../contexts/auth'
-
+import { useAuth } from "../contexts/auth";
 
 const Routes = () => {
+  const { loading, signed } = useAuth();
 
-    const { loading, signed } = useAuth();
+  // if (loading) {
+  //   return <AppLoading />;
+  // }
 
-    // if (loading) {
-    //   return <AppLoading />;
-    // }
-
-    return signed ? <AppRoutes /> : <LoginRoutes />;
+  return <AppRoutes />;
 };
 
 export default Routes;

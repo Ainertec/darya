@@ -1,18 +1,48 @@
-import React from 'react';
-import { Switch, Route } from 'react-router-dom';
-
+import React from "react";
+import { Switch, Route, Redirect } from "react-router-dom";
+import { useAuth } from "../contexts/auth";
 import Carrinho from "../pages/carrinho/index";
 import Pedido from "../pages/pedido/index";
 import HomeMcDonuts from "../pages/home/index";
+import LoginMcDonuts from "../pages/login/index";
+import CadastroMcDonuts from "../pages/cliente/index";
+
+function PrivateRoute({ children, ...rest }) {
+  const { signed } = useAuth();
+
+  return (
+    <Route
+      {...rest}
+      render={({ location }) =>
+        signed ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/mcdonuts/login",
+              state: { from: location },
+            }}
+          />
+        )
+      }
+    />
+  );
+}
 
 function rotas() {
-    return (
-        <Switch>
-            <Route path="/mcdonuts" exact component={HomeMcDonuts} />
-            <Route path="/mcdonuts/carrinho" exact component={Carrinho} />
-            <Route path="/mcdonuts/pedido" exact component={Pedido} />
-        </Switch>
-    )
+  return (
+    <Switch>
+      <Route path="/mcdonuts" exact component={HomeMcDonuts} />
+      <Route path="/mcdonuts/login" exact component={LoginMcDonuts} />
+      <Route path="/mcdonuts/cadastrar" exact component={CadastroMcDonuts} />
+      <PrivateRoute path="/mcdonuts/carrinho" exact>
+        <Carrinho />
+      </PrivateRoute>
+      <PrivateRoute path="/mcdonuts/pedido" exact>
+        <Pedido />
+      </PrivateRoute>
+    </Switch>
+  );
 }
 
 export default rotas;
