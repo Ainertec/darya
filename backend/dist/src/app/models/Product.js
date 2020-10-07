@@ -29,6 +29,10 @@ var ProductSchema = new mongoose_1.Schema({
         type: Number,
         required: true,
     },
+    available: {
+        type: Boolean,
+        default: true,
+    },
     ingredients: [IngredientSchema],
 }, {
     timestamps: true,

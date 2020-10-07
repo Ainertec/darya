@@ -62,18 +62,24 @@ describe('should test a product', function () {
         });
     }); });
     it('should create a product', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var ingredient, response;
+        var user, ingredient, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Ingredient', {
-                        price: 5,
-                        stock: 2000,
-                        priceUnit: 5 / 2000,
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
                     })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Ingredient', {
+                            price: 5,
+                            stock: 2000,
+                            priceUnit: 5 / 2000,
+                        })];
+                case 2:
                     ingredient = _a.sent();
                     return [4 /*yield*/, supertest_1.default(app_1.default)
                             .post('/products')
+                            .set('Authorization', "Bearer " + user.generateToken())
                             .send({
                             name: 'roquinha',
                             price: 4.5,
@@ -83,9 +89,10 @@ describe('should test a product', function () {
                                     quantity: 500,
                                 },
                             ],
+                            available: true,
                             description: 'como que é o nome daquele negocio?',
                         })];
-                case 2:
+                case 3:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     expect(response.body).toEqual(expect.objectContaining({
@@ -96,21 +103,27 @@ describe('should test a product', function () {
         });
     }); });
     it('should update a product', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var product, ingredient, response;
+        var user, product, ingredient, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Product')];
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
+                    })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Product')];
+                case 2:
                     product = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Ingredient', {
                             price: 5,
                             stock: 2000,
                             priceUnit: 5 / 2000,
                         })];
-                case 2:
+                case 3:
                     ingredient = _a.sent();
                     return [4 /*yield*/, supertest_1.default(app_1.default)
                             .put("/products/" + product._id)
+                            .set('Authorization', "Bearer " + user.generateToken())
                             .send({
                             name: 'roquinha',
                             price: product.price,
@@ -122,7 +135,7 @@ describe('should test a product', function () {
                             ],
                             description: product.description,
                         })];
-                case 3:
+                case 4:
                     response = _a.sent();
                     // console.log(response.body);
                     expect(response.status).toBe(200);
@@ -135,17 +148,24 @@ describe('should test a product', function () {
         });
     }); });
     it('should delete a product', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var product, response, countDocuments;
+        var user, product, response, countDocuments;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Product')];
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
+                    })];
                 case 1:
-                    product = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).delete("/products/" + product._id)];
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Product')];
                 case 2:
+                    product = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .delete("/products/" + product._id)
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 3:
                     response = _a.sent();
                     return [4 /*yield*/, Product_1.default.find({}).countDocuments()];
-                case 3:
+                case 4:
                     countDocuments = _a.sent();
                     expect(response.status).toBe(200);
                     expect(countDocuments).toBe(0);
@@ -153,12 +173,17 @@ describe('should test a product', function () {
             }
         });
     }); });
-    it('should list products by name', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var ingredient, response;
+    it('should list products by name includes unavailable', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var user, ingredient, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Ingredient')];
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
+                    })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Ingredient')];
+                case 2:
                     ingredient = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product', {
                             name: 'pizza',
@@ -169,10 +194,11 @@ describe('should test a product', function () {
                                 },
                             ],
                         })];
-                case 2:
+                case 3:
                     _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product', {
                             name: 'pão',
+                            available: false,
                             ingredients: [
                                 {
                                     material: ingredient._id,
@@ -180,7 +206,7 @@ describe('should test a product', function () {
                                 },
                             ],
                         })];
-                case 3:
+                case 4:
                     _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product', {
                             name: 'queijo',
@@ -191,13 +217,16 @@ describe('should test a product', function () {
                                 },
                             ],
                         })];
-                case 4:
-                    _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/products/p")];
                 case 5:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .get("/products/p")
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 6:
                     response = _a.sent();
                     // console.log(response.body);
                     expect(response.status).toBe(200);
+                    expect(response.body.length).toBe(2);
                     expect(response.body).toEqual(expect.arrayContaining([
                         expect.objectContaining({
                             name: 'pizza',
@@ -210,12 +239,17 @@ describe('should test a product', function () {
             }
         });
     }); });
-    it('should list all products ', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var ingredient, response;
+    it('should list products by name available', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var user, ingredient, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Ingredient')];
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: false,
+                    })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Ingredient')];
+                case 2:
                     ingredient = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product', {
                             name: 'pizza',
@@ -226,10 +260,11 @@ describe('should test a product', function () {
                                 },
                             ],
                         })];
-                case 2:
+                case 3:
                     _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product', {
                             name: 'pão',
+                            available: false,
                             ingredients: [
                                 {
                                     material: ingredient._id,
@@ -237,7 +272,7 @@ describe('should test a product', function () {
                                 },
                             ],
                         })];
-                case 3:
+                case 4:
                     _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product', {
                             name: 'queijo',
@@ -248,10 +283,75 @@ describe('should test a product', function () {
                                 },
                             ],
                         })];
+                case 5:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .get("/products/p")
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 6:
+                    response = _a.sent();
+                    expect(response.status).toBe(200);
+                    expect(response.body.length).toBe(1);
+                    expect(response.body).toEqual(expect.arrayContaining([
+                        expect.objectContaining({
+                            name: 'pizza',
+                        }),
+                    ]));
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('should list all products includes unavailable ', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var user, ingredient, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
+                    })];
+                case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Ingredient')];
+                case 2:
+                    ingredient = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Product', {
+                            name: 'pizza',
+                            available: false,
+                            ingredients: [
+                                {
+                                    material: ingredient._id,
+                                    quantity: 200,
+                                },
+                            ],
+                        })];
+                case 3:
+                    _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Product', {
+                            name: 'pão',
+                            ingredients: [
+                                {
+                                    material: ingredient._id,
+                                    quantity: 200,
+                                },
+                            ],
+                        })];
                 case 4:
                     _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/products")];
+                    return [4 /*yield*/, factories_1.default.create('Product', {
+                            name: 'queijo',
+                            available: false,
+                            ingredients: [
+                                {
+                                    material: ingredient._id,
+                                    quantity: 200,
+                                },
+                            ],
+                        })];
                 case 5:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .get("/products")
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 6:
                     response = _a.sent();
                     // console.log(response.body);
                     expect(response.status).toBe(200);
@@ -264,6 +364,69 @@ describe('should test a product', function () {
                         }),
                         expect.objectContaining({
                             name: 'queijo',
+                        }),
+                    ]));
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('should list all products available', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var user, ingredient, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: false,
+                    })];
+                case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Ingredient')];
+                case 2:
+                    ingredient = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Product', {
+                            name: 'pizza',
+                            available: false,
+                            ingredients: [
+                                {
+                                    material: ingredient._id,
+                                    quantity: 200,
+                                },
+                            ],
+                        })];
+                case 3:
+                    _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Product', {
+                            name: 'pão',
+                            ingredients: [
+                                {
+                                    material: ingredient._id,
+                                    quantity: 200,
+                                },
+                            ],
+                        })];
+                case 4:
+                    _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Product', {
+                            name: 'queijo',
+                            available: false,
+                            ingredients: [
+                                {
+                                    material: ingredient._id,
+                                    quantity: 200,
+                                },
+                            ],
+                        })];
+                case 5:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .get("/products")
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 6:
+                    response = _a.sent();
+                    expect(response.body.length).toBe(1);
+                    expect(response.status).toBe(200);
+                    expect(response.body).toEqual(expect.arrayContaining([
+                        expect.objectContaining({
+                            name: 'pão',
                         }),
                     ]));
                     return [2 /*return*/];

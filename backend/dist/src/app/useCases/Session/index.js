@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.sessionUseCase = exports.sessionController = void 0;
+// import { Client } from '../../Entity/Client';
+// import { MongoRepository } from '../../Repositories/implementation/MongoRepository';
+var SessionController_1 = require("./SessionController");
+var SessionUseCase_1 = require("./SessionUseCase");
+// const repository = new MongoRepository(Client);
+var sessionUseCase = new SessionUseCase_1.SessionUseCase();
+exports.sessionUseCase = sessionUseCase;
+var sessionController = new SessionController_1.SessionController(sessionUseCase);
+exports.sessionController = sessionController;

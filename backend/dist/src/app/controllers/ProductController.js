@@ -40,6 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var Product_1 = __importDefault(require("../models/Product"));
+var User_1 = __importDefault(require("../models/User"));
 var getProductCost_1 = __importDefault(require("../utils/getProductCost"));
 var ProductController = /** @class */ (function () {
     function ProductController() {
@@ -48,11 +49,21 @@ var ProductController = /** @class */ (function () {
     }
     ProductController.prototype.index = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var products;
+            var userId, authUser, products, products;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, Product_1.default.find({}).populate('ingredients.material')];
+                    case 0:
+                        userId = request.userId;
+                        return [4 /*yield*/, User_1.default.findOne({ _id: userId })];
                     case 1:
+                        authUser = _a.sent();
+                        if (!(authUser === null || authUser === void 0 ? void 0 : authUser.admin)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, Product_1.default.find({}).populate('ingredients.material')];
+                    case 2:
+                        products = _a.sent();
+                        return [2 /*return*/, response.json(products)];
+                    case 3: return [4 /*yield*/, Product_1.default.find({ available: true }).populate('ingredients.material')];
+                    case 4:
                         products = _a.sent();
                         return [2 /*return*/, response.json(products)];
                 }
@@ -61,16 +72,31 @@ var ProductController = /** @class */ (function () {
     };
     ProductController.prototype.show = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var name, products;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var name, userId, authUser, products, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         name = request.params.name;
+                        userId = request.userId;
+                        return [4 /*yield*/, User_1.default.findOne({ _id: userId })];
+                    case 1:
+                        authUser = _b.sent();
+                        if (!(authUser === null || authUser === void 0 ? void 0 : authUser.admin)) return [3 /*break*/, 3];
                         return [4 /*yield*/, Product_1.default.find({
                                 name: { $regex: new RegExp(name), $options: 'i' },
                             }).populate('ingredients.material')];
-                    case 1:
-                        products = _a.sent();
+                    case 2:
+                        _a = _b.sent();
+                        return [3 /*break*/, 5];
+                    case 3: return [4 /*yield*/, Product_1.default.find({
+                            name: { $regex: new RegExp(name), $options: 'i' },
+                            available: true,
+                        }).populate('ingredients.material')];
+                    case 4:
+                        _a = _b.sent();
+                        _b.label = 5;
+                    case 5:
+                        products = _a;
                         return [2 /*return*/, response.json(products)];
                 }
             });
@@ -78,11 +104,11 @@ var ProductController = /** @class */ (function () {
     };
     ProductController.prototype.store = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, name, price, description, ingredients, cost, product;
+            var _a, name, price, description, ingredients, available, cost, product;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _a = request.body, name = _a.name, price = _a.price, description = _a.description, ingredients = _a.ingredients;
+                        _a = request.body, name = _a.name, price = _a.price, description = _a.description, ingredients = _a.ingredients, available = _a.available;
                         return [4 /*yield*/, getProductCost_1.default(ingredients)];
                     case 1:
                         cost = _b.sent();
@@ -92,6 +118,7 @@ var ProductController = /** @class */ (function () {
                                 cost: cost,
                                 description: description,
                                 ingredients: ingredients,
+                                available: available,
                             })];
                     case 2:
                         product = _b.sent();
@@ -105,11 +132,11 @@ var ProductController = /** @class */ (function () {
     };
     ProductController.prototype.update = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, name, price, ingredients, description, id, cost, product;
+            var _a, name, price, ingredients, description, available, id, cost, product;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _a = request.body, name = _a.name, price = _a.price, ingredients = _a.ingredients, description = _a.description;
+                        _a = request.body, name = _a.name, price = _a.price, ingredients = _a.ingredients, description = _a.description, available = _a.available;
                         id = request.params.id;
                         return [4 /*yield*/, getProductCost_1.default(ingredients)];
                     case 1:
@@ -125,6 +152,9 @@ var ProductController = /** @class */ (function () {
                         product = _b.sent();
                         if (!product)
                             return [2 /*return*/, response.status(400).json('product not found')];
+                        if (available) {
+                            product.available = available;
+                        }
                         return [4 /*yield*/, product.save()];
                     case 3:
                         _b.sent();

@@ -61,7 +61,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = require("mongoose");
 var crypto_1 = __importDefault(require("crypto"));
 var Order_1 = __importStar(require("../models/Order"));
-var Client_1 = __importDefault(require("../models/Client"));
+var User_1 = __importDefault(require("../models/User"));
 var District_1 = __importDefault(require("../models/District"));
 var Deliveryman_1 = __importDefault(require("../models/Deliveryman"));
 var Product_1 = __importDefault(require("../models/Product"));
@@ -99,18 +99,18 @@ var OrderController = /** @class */ (function () {
             });
         });
     };
-    OrderController.prototype.getAddress = function (client_id, client_address_id) {
+    OrderController.prototype.getAddress = function (user_id, user_address_id) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var client, address, district;
+            var user, address, district;
             return __generator(this, function (_b) {
                 switch (_b.label) {
-                    case 0: return [4 /*yield*/, Client_1.default.findOne({ _id: client_id })];
+                    case 0: return [4 /*yield*/, User_1.default.findOne({ _id: user_id })];
                     case 1:
-                        client = _b.sent();
-                        if (!client)
-                            throw Error('That client does not exist');
-                        address = (_a = client.address) === null || _a === void 0 ? void 0 : _a.find(function (add) { return String(add._id) === String(client_address_id); });
+                        user = _b.sent();
+                        if (!user)
+                            throw Error('That user does not exist');
+                        address = (_a = user.address) === null || _a === void 0 ? void 0 : _a.find(function (add) { return String(add._id) === String(user_address_id); });
                         if (!address)
                             throw Error('That address does not exist');
                         return [4 /*yield*/, District_1.default.findOne({ _id: address.district })];
@@ -119,7 +119,7 @@ var OrderController = /** @class */ (function () {
                         if (!district)
                             throw Error('That district does not exist');
                         return [2 /*return*/, {
-                                client_address_id: address._id,
+                                user_address_id: address._id,
                                 district_id: district._id,
                                 district_name: district.name,
                                 district_rate: district.rate,
@@ -131,20 +131,20 @@ var OrderController = /** @class */ (function () {
             });
         });
     };
-    OrderController.prototype.getClient = function (client_id) {
+    OrderController.prototype.getUser = function (user_id) {
         return __awaiter(this, void 0, void 0, function () {
-            var client;
+            var user;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, Client_1.default.findOne({ _id: client_id })];
+                    case 0: return [4 /*yield*/, User_1.default.findOne({ _id: user_id })];
                     case 1:
-                        client = _a.sent();
-                        if (!client)
-                            throw Error('That client does not exist');
+                        user = _a.sent();
+                        if (!user)
+                            throw Error('That user does not exist');
                         return [2 /*return*/, {
-                                client_id: client_id,
-                                name: client.name,
-                                phone: client.phone,
+                                user_id: user_id,
+                                name: user.name,
+                                phone: user.phone,
                             }];
                 }
             });
@@ -209,54 +209,67 @@ var OrderController = /** @class */ (function () {
     OrderController.prototype.store = function (request, response) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var _b, client_id, deliveryman, client_address_id, items, source, note, payment, isValidSource, client, identification, address, _c, total, _d, order, deliverymanPersisted, error_1;
-            return __generator(this, function (_e) {
-                switch (_e.label) {
+            var _b, user_id, deliveryman, user_address_id, items, source, note, payment, authUserId, isValidSource, authUser, user, _c, address_id, identification, address, _d, total, _e, order, deliverymanPersisted, error_1;
+            return __generator(this, function (_f) {
+                switch (_f.label) {
                     case 0:
-                        _b = request.body, client_id = _b.client_id, deliveryman = _b.deliveryman, client_address_id = _b.client_address_id, items = _b.items, source = _b.source, note = _b.note, payment = _b.payment;
+                        _b = request.body, user_id = _b.user_id, deliveryman = _b.deliveryman, user_address_id = _b.user_address_id, items = _b.items, source = _b.source, note = _b.note, payment = _b.payment;
+                        authUserId = request.userId;
                         isValidSource = Order_1.Source.getSource().includes(source);
                         if (!isValidSource) {
                             return [2 /*return*/, response.status(400).json({ message: 'invalid source' })];
                         }
-                        return [4 /*yield*/, Client_1.default.findOne({ _id: client_id })];
+                        return [4 /*yield*/, User_1.default.findOne({ _id: authUserId })];
                     case 1:
-                        client = _e.sent();
-                        if (!client)
-                            return [2 /*return*/, response.status(400).json('That client does not exist')];
-                        identification = client.phone && ((_a = client.phone) === null || _a === void 0 ? void 0 : _a.length) > 0
-                            ? crypto_1.default.randomBytes(4).toString('hex') +
-                                client.phone[0].slice(client.phone[0].length - 2)
-                            : crypto_1.default.randomBytes(4).toString('hex');
-                        _e.label = 2;
+                        authUser = _f.sent();
+                        if (!(authUser === null || authUser === void 0 ? void 0 : authUser.admin)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, User_1.default.findOne({ _id: user_id })];
                     case 2:
-                        _e.trys.push([2, 16, , 17]);
-                        if (!client_address_id) return [3 /*break*/, 4];
-                        return [4 /*yield*/, this.getAddress(client_id, client_address_id)];
+                        _c = _f.sent();
+                        return [3 /*break*/, 4];
                     case 3:
-                        _c = _e.sent();
-                        return [3 /*break*/, 5];
+                        _c = authUser;
+                        _f.label = 4;
                     case 4:
-                        _c = undefined;
-                        _e.label = 5;
+                        user = _c;
+                        address_id = (authUser === null || authUser === void 0 ? void 0 : authUser.admin) ? user_address_id
+                            : authUser.address[0]._id;
+                        if (!user)
+                            return [2 /*return*/, response.status(400).json('That user does not exist')];
+                        identification = user.phone && ((_a = user.phone) === null || _a === void 0 ? void 0 : _a.length) > 0
+                            ? crypto_1.default.randomBytes(4).toString('hex') +
+                                user.phone[0].slice(user.phone[0].length - 2)
+                            : crypto_1.default.randomBytes(4).toString('hex');
+                        _f.label = 5;
                     case 5:
-                        address = _c;
-                        if (!address) return [3 /*break*/, 7];
-                        return [4 /*yield*/, this.getTotal(items, address.district_rate)];
+                        _f.trys.push([5, 19, , 20]);
+                        if (!address_id) return [3 /*break*/, 7];
+                        return [4 /*yield*/, this.getAddress(user._id, address_id)];
                     case 6:
-                        _d = _e.sent();
-                        return [3 /*break*/, 9];
-                    case 7: return [4 /*yield*/, this.getTotal(items, 0)];
+                        _d = _f.sent();
+                        return [3 /*break*/, 8];
+                    case 7:
+                        _d = undefined;
+                        _f.label = 8;
                     case 8:
-                        _d = _e.sent();
-                        _e.label = 9;
+                        address = _d;
+                        if (!address) return [3 /*break*/, 10];
+                        return [4 /*yield*/, this.getTotal(items, address.district_rate)];
                     case 9:
-                        total = _d;
+                        _e = _f.sent();
+                        return [3 /*break*/, 12];
+                    case 10: return [4 /*yield*/, this.getTotal(items, 0)];
+                    case 11:
+                        _e = _f.sent();
+                        _f.label = 12;
+                    case 12:
+                        total = _e;
                         return [4 /*yield*/, Order_1.default.create({
                                 identification: identification,
-                                client: {
-                                    client_id: client_id,
-                                    name: client.name,
-                                    phone: client.phone,
+                                user: {
+                                    user_id: user._id,
+                                    name: user.name,
+                                    phone: user.phone,
                                 },
                                 address: address,
                                 items: items,
@@ -265,37 +278,37 @@ var OrderController = /** @class */ (function () {
                                 payment: payment,
                                 total: total,
                             })];
-                    case 10:
-                        order = _e.sent();
-                        if (!deliveryman) return [3 /*break*/, 14];
+                    case 13:
+                        order = _f.sent();
+                        if (!deliveryman) return [3 /*break*/, 17];
                         return [4 /*yield*/, Deliveryman_1.default.findOne({
                                 _id: deliveryman,
                             })];
-                    case 11:
-                        deliverymanPersisted = _e.sent();
+                    case 14:
+                        deliverymanPersisted = _f.sent();
                         if (!deliverymanPersisted) {
                             return [2 /*return*/, response.status(400).json('Invalid deliveryman')];
                         }
                         deliverymanPersisted.hasDelivery = true;
                         return [4 /*yield*/, deliverymanPersisted.save()];
-                    case 12:
-                        _e.sent();
+                    case 15:
+                        _f.sent();
                         order.deliveryman = deliveryman;
                         return [4 /*yield*/, order.save()];
-                    case 13:
-                        _e.sent();
-                        _e.label = 14;
-                    case 14: return [4 /*yield*/, order
+                    case 16:
+                        _f.sent();
+                        _f.label = 17;
+                    case 17: return [4 /*yield*/, order
                             .populate('deliveryman')
                             .populate('items.product')
                             .execPopulate()];
-                    case 15:
-                        _e.sent();
+                    case 18:
+                        _f.sent();
                         return [2 /*return*/, response.json(order)];
-                    case 16:
-                        error_1 = _e.sent();
-                        return [2 /*return*/, response.status(400).json(error_1)];
-                    case 17: return [2 /*return*/];
+                    case 19:
+                        error_1 = _f.sent();
+                        return [2 /*return*/, response.status(400).json(error_1.message)];
+                    case 20: return [2 /*return*/];
                 }
             });
         });
@@ -303,11 +316,11 @@ var OrderController = /** @class */ (function () {
     OrderController.prototype.update = function (request, response) {
         var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function () {
-            var _d, client_id, deliveryman, identification, client_address_id, items, source, note, payment, finished, id, order, _e, deliverymanPersisted, client, error_2, address, _f, error_3;
+            var _d, user_id, deliveryman, identification, user_address_id, items, source, note, payment, finished, id, order, _e, deliverymanPersisted, user, error_2, address, _f, error_3;
             return __generator(this, function (_g) {
                 switch (_g.label) {
                     case 0:
-                        _d = request.body, client_id = _d.client_id, deliveryman = _d.deliveryman, identification = _d.identification, client_address_id = _d.client_address_id, items = _d.items, source = _d.source, note = _d.note, payment = _d.payment, finished = _d.finished;
+                        _d = request.body, user_id = _d.user_id, deliveryman = _d.deliveryman, identification = _d.identification, user_address_id = _d.user_address_id, items = _d.items, source = _d.source, note = _d.note, payment = _d.payment, finished = _d.finished;
                         id = request.params.id;
                         return [4 /*yield*/, Order_1.default.findOne({ _id: id })];
                     case 1:
@@ -349,25 +362,25 @@ var OrderController = /** @class */ (function () {
                         order.finished = true;
                         _g.label = 7;
                     case 7:
-                        if (!(client_id && String(order.client.client_id) !== String(client_id))) return [3 /*break*/, 11];
+                        if (!(user_id && String(order.user.user_id) !== String(user_id))) return [3 /*break*/, 11];
                         _g.label = 8;
                     case 8:
                         _g.trys.push([8, 10, , 11]);
-                        return [4 /*yield*/, this.getClient(client_id)];
+                        return [4 /*yield*/, this.getUser(user_id)];
                     case 9:
-                        client = _g.sent();
-                        order.client = client;
+                        user = _g.sent();
+                        order.user = user;
                         return [3 /*break*/, 11];
                     case 10:
                         error_2 = _g.sent();
                         return [2 /*return*/, response.status(400).json(error_2)];
                     case 11:
-                        if (!(client_address_id &&
-                            String((_b = order.address) === null || _b === void 0 ? void 0 : _b.client_address_id) !== String(client_address_id))) return [3 /*break*/, 16];
+                        if (!(user_address_id &&
+                            String((_b = order.address) === null || _b === void 0 ? void 0 : _b.user_address_id) !== String(user_address_id))) return [3 /*break*/, 16];
                         _g.label = 12;
                     case 12:
                         _g.trys.push([12, 15, , 16]);
-                        return [4 /*yield*/, this.getAddress(order.client.client_id, client_address_id)];
+                        return [4 /*yield*/, this.getAddress(order.user.user_id, user_address_id)];
                     case 13:
                         address = _g.sent();
                         order.address = address;

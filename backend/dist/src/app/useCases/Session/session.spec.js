@@ -39,12 +39,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/* eslint-disable import/no-extraneous-dependencies */
 var supertest_1 = __importDefault(require("supertest"));
-var connection_1 = require("../utils/connection");
-var District_1 = __importDefault(require("../../src/app/models/District"));
-var app_1 = __importDefault(require("../../src/app"));
-var factories_1 = __importDefault(require("../factories"));
-describe('should test', function () {
+var connection_1 = require("../../../../__tests__/utils/connection");
+var User_1 = __importDefault(require("../../models/User"));
+var app_1 = __importDefault(require("../../../app"));
+var factories_1 = __importDefault(require("../../../../__tests__/factories"));
+describe('Session Tests', function () {
     beforeAll(function () {
         connection_1.openConnection();
     });
@@ -54,164 +55,153 @@ describe('should test', function () {
     beforeEach(function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, District_1.default.deleteMany({})];
+                case 0: return [4 /*yield*/, User_1.default.deleteMany({})];
                 case 1:
                     _a.sent();
                     return [2 /*return*/];
             }
         });
     }); });
-    it('should create a district', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('it should authenticate a user', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        username: 'Cleiton',
+                        password: '123456',
+                    })];
+                case 1:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default).post('/sessions').send({
+                            username: 'Cleiton',
+                            password: '123456',
+                        })];
+                case 2:
+                    response = _a.sent();
+                    expect(response.status).toBe(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('it should not authenticate a user with invalid password', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        name: 'Cleiton',
+                        password: '123456',
+                    })];
+                case 1:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default).post('/sessions').send({
+                            name: 'Cleiton',
+                            password: '214123',
+                        })];
+                case 2:
+                    response = _a.sent();
+                    expect(response.status).toBe(401);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('it should not authenticate a user with invalid name', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        name: 'Cleiton',
+                        password: '123456',
+                    })];
+                case 1:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default).post('/sessions').send({
+                            name: 'Marcos',
+                            password: '123456',
+                        })];
+                case 2:
+                    response = _a.sent();
+                    expect(response.status).toBe(401);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('it should return a Jwt token when authenticate', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        username: 'Cleiton',
+                        password: '123456',
+                    })];
+                case 1:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default).post('/sessions').send({
+                            username: 'Cleiton',
+                            password: '123456',
+                        })];
+                case 2:
+                    response = _a.sent();
+                    expect(response.body).toHaveProperty('token');
+                    expect(response.status).toBe(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('it should be able to access private routes', function () { return __awaiter(void 0, void 0, void 0, function () {
         var user, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        name: 'Cleiton',
+                        password: '123456',
                         admin: true,
                     })];
                 case 1:
                     user = _a.sent();
                     return [4 /*yield*/, supertest_1.default(app_1.default)
-                            .post('/districts')
-                            .set('Authorization', "Bearer " + user.generateToken())
-                            .send({
-                            name: 'Lumiar',
-                            city: 'Nova Friburgo',
-                            rate: 10,
-                        })];
-                case 2:
-                    response = _a.sent();
-                    expect(response.status).toBe(200);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('should update a district', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var user, district, response;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('User', {
-                        admin: true,
-                    })];
-                case 1:
-                    user = _a.sent();
-                    return [4 /*yield*/, factories_1.default.create('District')];
-                case 2:
-                    district = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default)
-                            .put("/districts/" + district._id)
-                            .set('Authorization', "Bearer " + user.generateToken())
-                            .send({
-                            name: 'Lumiar',
-                            city: district.city,
-                            rate: 10,
-                        })];
-                case 3:
-                    response = _a.sent();
-                    // console.log(response.body);
-                    expect(response.status).toBe(200);
-                    expect(response.body).toEqual(expect.objectContaining({
-                        name: 'Lumiar',
-                        rate: 10,
-                    }));
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('should delete a district', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var user, district, response, countDocuments;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('User', {
-                        admin: true,
-                    })];
-                case 1:
-                    user = _a.sent();
-                    return [4 /*yield*/, factories_1.default.create('District')];
-                case 2:
-                    district = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default)
-                            .delete("/districts/" + district._id)
+                            .get('/users')
                             .set('Authorization', "Bearer " + user.generateToken())];
-                case 3:
+                case 2:
                     response = _a.sent();
-                    return [4 /*yield*/, District_1.default.find({}).countDocuments()];
-                case 4:
-                    countDocuments = _a.sent();
                     expect(response.status).toBe(200);
                     return [2 /*return*/];
             }
         });
     }); });
-    it('should list all districts', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var user, district, district2, response;
+    it('it should not be able to access private routes without a jwt token', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, factories_1.default.create('User', {
-                        admin: true,
+                        name: 'Cleiton',
+                        password: '123456',
                     })];
                 case 1:
-                    user = _a.sent();
-                    return [4 /*yield*/, factories_1.default.create('District', {
-                            name: 'Lumiar',
-                        })];
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default).get('/users')];
                 case 2:
-                    district = _a.sent();
-                    return [4 /*yield*/, factories_1.default.create('District', {
-                            name: 'São Pedro',
-                        })];
-                case 3:
-                    district2 = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default)
-                            .get('/districts')
-                            .set('Authorization', "Bearer " + user.generateToken())];
-                case 4:
                     response = _a.sent();
-                    expect(response.status).toBe(200);
-                    expect(response.body).toEqual(expect.arrayContaining([
-                        expect.objectContaining({
-                            name: 'Lumiar',
-                        }),
-                        expect.objectContaining({
-                            name: 'São Pedro',
-                        }),
-                    ]));
+                    expect(response.status).toBe(401);
                     return [2 /*return*/];
             }
         });
     }); });
-    it('should list all districts by name', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var user, district, district2, response;
+    it('it should not be able to access private routes with invalid jwt token', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, factories_1.default.create('User', {
-                        admin: true,
+                        name: 'Cleiton',
+                        password: '123456',
                     })];
                 case 1:
-                    user = _a.sent();
-                    return [4 /*yield*/, factories_1.default.create('District', {
-                            name: 'São Thiagua',
-                        })];
-                case 2:
-                    district = _a.sent();
-                    return [4 /*yield*/, factories_1.default.create('District', {
-                            name: 'São Pedro',
-                        })];
-                case 3:
-                    district2 = _a.sent();
+                    _a.sent();
                     return [4 /*yield*/, supertest_1.default(app_1.default)
-                            .get("/districts/s")
-                            .set('Authorization', "Bearer " + user.generateToken())];
-                case 4:
+                            .get('/users')
+                            .set('Authorization', "askfhi34ax}")];
+                case 2:
                     response = _a.sent();
-                    expect(response.status).toBe(200);
-                    expect(response.body).toEqual(expect.arrayContaining([
-                        expect.objectContaining({
-                            name: 'São Thiagua',
-                        }),
-                        expect.objectContaining({
-                            name: 'São Pedro',
-                        }),
-                    ]));
+                    expect(response.status).toBe(401);
                     return [2 /*return*/];
             }
         });

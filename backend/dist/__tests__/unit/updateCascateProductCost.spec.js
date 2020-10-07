@@ -66,11 +66,16 @@ describe('should test a update cascade when update a ingredient price', function
         });
     }); });
     it('should update a product cost when update a ingredint price', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var ingredient, product, response, productUpdated;
+        var user, ingredient, product, response, productUpdated;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Ingredient')];
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
+                    })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Ingredient')];
+                case 2:
                     ingredient = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product', {
                             ingredients: [
@@ -80,7 +85,7 @@ describe('should test a update cascade when update a ingredient price', function
                                 },
                             ],
                         })];
-                case 2:
+                case 3:
                     product = _a.sent();
                     return [4 /*yield*/, supertest_1.default(app_1.default)
                             .put("/ingredients/" + ingredient._id)
@@ -90,11 +95,12 @@ describe('should test a update cascade when update a ingredient price', function
                             stock: 20,
                             description: ingredient.description,
                             unit: 'g',
-                        })];
-                case 3:
+                        })
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 4:
                     response = _a.sent();
                     return [4 /*yield*/, Product_1.default.findOne({ _id: product._id })];
-                case 4:
+                case 5:
                     productUpdated = _a.sent();
                     // console.log(response.body);
                     // console.log(productUpdated);
@@ -105,11 +111,16 @@ describe('should test a update cascade when update a ingredient price', function
         });
     }); });
     it('should update all products cost when update a ingredint price', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var ingredient, product, product2, response, productUpdated, productUpdated2;
+        var user, ingredient, product, product2, response, productUpdated, productUpdated2;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Ingredient')];
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
+                    })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Ingredient')];
+                case 2:
                     ingredient = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product', {
                             ingredients: [
@@ -119,7 +130,7 @@ describe('should test a update cascade when update a ingredient price', function
                                 },
                             ],
                         })];
-                case 2:
+                case 3:
                     product = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product', {
                             ingredients: [
@@ -129,7 +140,7 @@ describe('should test a update cascade when update a ingredient price', function
                                 },
                             ],
                         })];
-                case 3:
+                case 4:
                     product2 = _a.sent();
                     return [4 /*yield*/, supertest_1.default(app_1.default)
                             .put("/ingredients/" + ingredient._id)
@@ -139,14 +150,15 @@ describe('should test a update cascade when update a ingredient price', function
                             stock: 20,
                             description: ingredient.description,
                             unit: 'g',
-                        })];
-                case 4:
+                        })
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 5:
                     response = _a.sent();
                     return [4 /*yield*/, Product_1.default.findOne({ _id: product._id })];
-                case 5:
+                case 6:
                     productUpdated = _a.sent();
                     return [4 /*yield*/, Product_1.default.findOne({ _id: product2._id })];
-                case 6:
+                case 7:
                     productUpdated2 = _a.sent();
                     // console.log(response.body);
                     expect(response.status).toBe(200);

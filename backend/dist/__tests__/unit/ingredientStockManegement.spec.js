@@ -69,13 +69,16 @@ describe('should sub ingredient stock when a order is finished', function () {
         });
     }); });
     it('should sub a ingredient stock when a order is finished', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var ingredient, product, order, response, ingredientUpdated;
+        var user, ingredient, product, order, response, ingredientUpdated;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Ingredient', {
-                        stock: 2000,
-                    })];
+                case 0: return [4 /*yield*/, factories_1.default.create('User', { admin: true })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Ingredient', {
+                            stock: 2000,
+                        })];
+                case 2:
                     ingredient = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product', {
                             ingredients: [
@@ -85,7 +88,7 @@ describe('should sub ingredient stock when a order is finished', function () {
                                 },
                             ],
                         })];
-                case 2:
+                case 3:
                     product = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Order', {
                             items: [
@@ -96,15 +99,18 @@ describe('should sub ingredient stock when a order is finished', function () {
                             ],
                             finished: false,
                         })];
-                case 3:
-                    order = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).put("/orders/" + order._id).send({
-                            finished: true,
-                        })];
                 case 4:
+                    order = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .put("/orders/" + order._id)
+                            .send({
+                            finished: true,
+                        })
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 5:
                     response = _a.sent();
                     return [4 /*yield*/, Ingredient_1.default.findOne({ _id: ingredient._id })];
-                case 5:
+                case 6:
                     ingredientUpdated = _a.sent();
                     // console.log(ingredientUpdated);
                     expect(response.status).toBe(200);
@@ -114,18 +120,21 @@ describe('should sub ingredient stock when a order is finished', function () {
         });
     }); });
     it('should sub all product  ingredients stock when a order is finished', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var ingredient, ingredient2, product, order, response, ingredientUpdated, ingredientUpdated2;
+        var user, ingredient, ingredient2, product, order, response, ingredientUpdated, ingredientUpdated2;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Ingredient', {
-                        stock: 2000,
-                    })];
+                case 0: return [4 /*yield*/, factories_1.default.create('User', { admin: true })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Ingredient', {
+                            stock: 2000,
+                        })];
+                case 2:
                     ingredient = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Ingredient', {
                             stock: 2200,
                         })];
-                case 2:
+                case 3:
                     ingredient2 = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product', {
                             ingredients: [
@@ -139,7 +148,7 @@ describe('should sub ingredient stock when a order is finished', function () {
                                 },
                             ],
                         })];
-                case 3:
+                case 4:
                     product = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Order', {
                             items: [
@@ -150,20 +159,23 @@ describe('should sub ingredient stock when a order is finished', function () {
                             ],
                             finished: false,
                         })];
-                case 4:
-                    order = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).put("/orders/" + order._id).send({
-                            finished: true,
-                        })];
                 case 5:
+                    order = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .put("/orders/" + order._id)
+                            .send({
+                            finished: true,
+                        })
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 6:
                     response = _a.sent();
                     return [4 /*yield*/, Ingredient_1.default.findOne({ _id: ingredient._id })];
-                case 6:
+                case 7:
                     ingredientUpdated = _a.sent();
                     return [4 /*yield*/, Ingredient_1.default.findOne({
                             _id: ingredient2._id,
                         })];
-                case 7:
+                case 8:
                     ingredientUpdated2 = _a.sent();
                     // console.log(ingredientUpdated);
                     expect(response.status).toBe(200);
@@ -245,20 +257,23 @@ describe('should sub ingredient stock when a order is finished', function () {
         });
     }); });
     it('should sub all product ingredients stock when a order is finished(same ingredients)', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var ingredient, ingredient2, product, product2, order, response, ingredientUpdated, ingredientUpdated2;
+        var user, ingredient, ingredient2, product, product2, order, response, ingredientUpdated, ingredientUpdated2;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Ingredient', {
-                        stock: 2000,
-                        name: 'farinha',
-                    })];
+                case 0: return [4 /*yield*/, factories_1.default.create('User', { admin: true })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Ingredient', {
+                            stock: 2000,
+                            name: 'farinha',
+                        })];
+                case 2:
                     ingredient = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Ingredient', {
                             stock: 2000,
                             name: 'Chocolate',
                         })];
-                case 2:
+                case 3:
                     ingredient2 = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product', {
                             ingredients: [
@@ -272,7 +287,7 @@ describe('should sub ingredient stock when a order is finished', function () {
                                 },
                             ],
                         })];
-                case 3:
+                case 4:
                     product = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product', {
                             ingredients: [
@@ -286,7 +301,7 @@ describe('should sub ingredient stock when a order is finished', function () {
                                 },
                             ],
                         })];
-                case 4:
+                case 5:
                     product2 = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Order', {
                             items: [
@@ -301,20 +316,23 @@ describe('should sub ingredient stock when a order is finished', function () {
                             ],
                             finished: false,
                         })];
-                case 5:
-                    order = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).put("/orders/" + order._id).send({
-                            finished: true,
-                        })];
                 case 6:
+                    order = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .put("/orders/" + order._id)
+                            .send({
+                            finished: true,
+                        })
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 7:
                     response = _a.sent();
                     return [4 /*yield*/, Ingredient_1.default.findOne({ _id: ingredient._id })];
-                case 7:
+                case 8:
                     ingredientUpdated = _a.sent();
                     return [4 /*yield*/, Ingredient_1.default.findOne({
                             _id: ingredient2._id,
                         })];
-                case 8:
+                case 9:
                     ingredientUpdated2 = _a.sent();
                     // console.log(ingredientUpdated);
                     expect(response.status).toBe(200);

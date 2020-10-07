@@ -114,8 +114,8 @@ var PrinterController = /** @class */ (function () {
                         myDoc.writeText("C\u00F3digo: " + order.identification, header);
                         myDoc.writeText("Data: " + date, contentStyle);
                         myDoc.writeText('=========== Cliente ============', contentBorder);
-                        myDoc.writeText("Nome: " + order.client.name, contentStyle);
-                        myDoc.writeText("Telefone: " + order.client.phone, contentStyle);
+                        myDoc.writeText("Nome: " + order.user.name, contentStyle);
+                        myDoc.writeText("Telefone: " + order.user.phone, contentStyle);
                         order.address &&
                             myDoc.writeText('========== Endereço ===========', contentBorder);
                         order.address &&

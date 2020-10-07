@@ -45,7 +45,7 @@ var connection_1 = require("../utils/connection");
 var Order_1 = __importDefault(require("../../src/app/models/Order"));
 var app_1 = __importDefault(require("../../src/app"));
 var factories_1 = __importDefault(require("../factories"));
-describe('should a Client', function () {
+describe('Reports test', function () {
     beforeAll(function () {
         connection_1.openConnection();
     });
@@ -63,22 +63,29 @@ describe('should a Client', function () {
         });
     }); });
     it('should list a deliveryman payment by period', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var deliveryman, response;
+        var user, deliveryman, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Deliveryman', {
-                        name: 'Gustavo',
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
                     })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Deliveryman', {
+                            name: 'Gustavo',
+                        })];
+                case 2:
                     deliveryman = _a.sent();
                     return [4 /*yield*/, factories_1.default.createMany('Order', 3, {
                             deliveryman: deliveryman._id,
                             finished: true,
                         })];
-                case 2:
-                    _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/reports/deliveryman/rate/" + deliveryman._id)];
                 case 3:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .get("/reports/deliveryman/rate/" + deliveryman._id)
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 4:
                     response = _a.sent();
                     // console.log(response.body);
                     expect(response.status).toBe(200);
@@ -87,22 +94,29 @@ describe('should a Client', function () {
         });
     }); });
     it('should list all finished orders by deliveryman', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var deliveryman, response;
+        var user, deliveryman, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Deliveryman', {
-                        name: 'Gustavo',
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
                     })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Deliveryman', {
+                            name: 'Gustavo',
+                        })];
+                case 2:
                     deliveryman = _a.sent();
                     return [4 /*yield*/, factories_1.default.createMany('Order', 3, {
                             deliveryman: deliveryman._id,
                             finished: true,
                         })];
-                case 2:
-                    _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/reports/deliveryman/orders/" + deliveryman._id)];
                 case 3:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .get("/reports/deliveryman/orders/" + deliveryman._id)
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 4:
                     response = _a.sent();
                     // console.log(response.body);
                     expect(response.status).toBe(200);
@@ -111,23 +125,30 @@ describe('should a Client', function () {
         });
     }); });
     it('should not list a deliveryman payment of another days', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var deliveryman, response;
+        var user, deliveryman, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Deliveryman', {
-                        name: 'Gustavo',
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
                     })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Deliveryman', {
+                            name: 'Gustavo',
+                        })];
+                case 2:
                     deliveryman = _a.sent();
                     return [4 /*yield*/, factories_1.default.createMany('Order', 3, {
                             deliveryman: deliveryman._id,
                             createdAt: new Date(2020, 6, 12),
                             finished: true,
                         })];
-                case 2:
-                    _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/reports/deliveryman/rate/" + deliveryman._id)];
                 case 3:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .get("/reports/deliveryman/rate/" + deliveryman._id)
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 4:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     return [2 /*return*/];
@@ -135,22 +156,29 @@ describe('should a Client', function () {
         });
     }); });
     it('should list a total profit of the day orders', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var product, total, response;
+        var user, product, total, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Product')];
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
+                    })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Product')];
+                case 2:
                     product = _a.sent();
                     return [4 /*yield*/, factories_1.default.createMany('Order', 5, {
                             total: 200,
                             items: [{ product: product._id, quantity: 1 }],
                             finished: true,
                         })];
-                case 2:
+                case 3:
                     _a.sent();
                     total = 1000;
-                    return [4 /*yield*/, supertest_1.default(app_1.default).get('/reports/orders/profit')];
-                case 3:
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .get('/reports/orders/profit')
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 4:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     expect(response.body).toEqual(expect.objectContaining({
@@ -162,22 +190,27 @@ describe('should a Client', function () {
         });
     }); });
     it('should list dispense and gain of all products', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var product, product1, product2, product3, total, response;
+        var user, product, product1, product2, product3, total, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Product', {
-                        cost: 10,
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
                     })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Product', {
+                            cost: 10,
+                        })];
+                case 2:
                     product = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product')];
-                case 2:
+                case 3:
                     product1 = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product')];
-                case 3:
+                case 4:
                     product2 = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product')];
-                case 4:
+                case 5:
                     product3 = _a.sent();
                     return [4 /*yield*/, factories_1.default.createMany('Order', 2, {
                             items: [
@@ -192,7 +225,7 @@ describe('should a Client', function () {
                             ],
                             finished: true,
                         })];
-                case 5:
+                case 6:
                     _a.sent();
                     return [4 /*yield*/, factories_1.default.createMany('Order', 2, {
                             items: [
@@ -203,7 +236,7 @@ describe('should a Client', function () {
                             ],
                             finished: true,
                         })];
-                case 6:
+                case 7:
                     _a.sent();
                     return [4 /*yield*/, factories_1.default.createMany('Order', 2, {
                             items: [
@@ -218,11 +251,13 @@ describe('should a Client', function () {
                             ],
                             finished: true,
                         })];
-                case 7:
+                case 8:
                     _a.sent();
                     total = 60;
-                    return [4 /*yield*/, supertest_1.default(app_1.default).get('/reports/products/dispense_gain')];
-                case 8:
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .get('/reports/products/dispense_gain')
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 9:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     expect(response.body).toEqual(expect.arrayContaining([
@@ -235,22 +270,27 @@ describe('should a Client', function () {
         });
     }); });
     it('should list an amount of all products', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var product, product1, product2, product3, response;
+        var user, product, product1, product2, product3, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Product', {
-                        cost: 10,
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
                     })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Product', {
+                            cost: 10,
+                        })];
+                case 2:
                     product = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product')];
-                case 2:
+                case 3:
                     product1 = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product')];
-                case 3:
+                case 4:
                     product2 = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product')];
-                case 4:
+                case 5:
                     product3 = _a.sent();
                     return [4 /*yield*/, factories_1.default.createMany('Order', 2, {
                             items: [
@@ -265,7 +305,7 @@ describe('should a Client', function () {
                             ],
                             finished: true,
                         })];
-                case 5:
+                case 6:
                     _a.sent();
                     return [4 /*yield*/, factories_1.default.createMany('Order', 2, {
                             items: [
@@ -276,7 +316,7 @@ describe('should a Client', function () {
                             ],
                             finished: true,
                         })];
-                case 6:
+                case 7:
                     _a.sent();
                     return [4 /*yield*/, factories_1.default.createMany('Order', 2, {
                             items: [
@@ -291,10 +331,12 @@ describe('should a Client', function () {
                             ],
                             finished: true,
                         })];
-                case 7:
-                    _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).get('/reports/products/amount')];
                 case 8:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .get('/reports/products/amount')
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 9:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     expect(response.body).toEqual(expect.arrayContaining([
@@ -307,23 +349,30 @@ describe('should a Client', function () {
         });
     }); });
     it('should delete finished order with more than 2 years', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var response, sales;
+        var user, response, sales;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.createMany('Order', 3, {
-                        createdAt: date_fns_1.sub(new Date(), { years: 2 }),
-                        finished: true,
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
                     })];
                 case 1:
-                    _a.sent();
-                    return [4 /*yield*/, factories_1.default.create('Order')];
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.createMany('Order', 3, {
+                            createdAt: date_fns_1.sub(new Date(), { years: 2 }),
+                            finished: true,
+                        })];
                 case 2:
                     _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).delete('/reports')];
+                    return [4 /*yield*/, factories_1.default.create('Order')];
                 case 3:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .delete('/reports')
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 4:
                     response = _a.sent();
                     return [4 /*yield*/, Order_1.default.find().countDocuments()];
-                case 4:
+                case 5:
                     sales = _a.sent();
                     expect(response.status).toBe(200);
                     expect(sales).toBe(1);

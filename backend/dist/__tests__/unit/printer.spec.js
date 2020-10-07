@@ -64,53 +64,23 @@ describe('Teste a printer', function () {
         });
     }); });
     it('Should print a recipe without address', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var order, response;
+        var user, order, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Order', {
-                        address: undefined,
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
                     })];
                 case 1:
-                    order = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).post('/printers').send({
-                            id: order.id,
-                        })];
-                case 2:
-                    response = _a.sent();
-                    expect(response.status).toBe(200);
-                    setTimeout(function () { return __awaiter(void 0, void 0, void 0, function () {
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, fs_1.default.unlinkSync(path_1.default.resolve(__dirname, '..', 'recipes', order._id + ".rtf"))];
-                                case 1:
-                                    _a.sent();
-                                    return [2 /*return*/];
-                            }
-                        });
-                    }); }, 1000);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('Should print a recipe without a cleint phone', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var cleint, order, response;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Client')];
-                case 1:
-                    cleint = _a.sent();
+                    user = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Order', {
                             address: undefined,
-                            deliveryman: undefined,
-                            client: {
-                                name: 'cleiton',
-                                client_id: cleint._id,
-                                phone: undefined,
-                            },
                         })];
                 case 2:
                     order = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).post('/printers').send({
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .post('/printers')
+                            .set('Authorization', "Bearer " + user.generateToken())
+                            .send({
                             id: order.id,
                         })];
                 case 3:
@@ -130,20 +100,74 @@ describe('Teste a printer', function () {
             }
         });
     }); });
-    it('Should print a recipe without deliveryman', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var order, response;
+    it('Should print a recipe without a user phone', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var user2, user, order, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Order', {
-                        address: undefined,
-                        deliveryman: undefined,
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
                     })];
                 case 1:
+                    user2 = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('User')];
+                case 2:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Order', {
+                            address: undefined,
+                            deliveryman: undefined,
+                            user: {
+                                name: 'cleiton',
+                                user_id: user._id,
+                                phone: undefined,
+                            },
+                        })];
+                case 3:
                     order = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).post('/printers').send({
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .post('/printers')
+                            .set('Authorization', "Bearer " + user2.generateToken())
+                            .send({
                             id: order.id,
                         })];
+                case 4:
+                    response = _a.sent();
+                    expect(response.status).toBe(200);
+                    setTimeout(function () { return __awaiter(void 0, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, fs_1.default.unlinkSync(path_1.default.resolve(__dirname, '..', 'recipes', order._id + ".rtf"))];
+                                case 1:
+                                    _a.sent();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); }, 1000);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('Should print a recipe without deliveryman', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var user, order, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
+                    })];
+                case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Order', {
+                            address: undefined,
+                            deliveryman: undefined,
+                        })];
                 case 2:
+                    order = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .post('/printers')
+                            .set('Authorization', "Bearer " + user.generateToken())
+                            .send({
+                            id: order.id,
+                        })];
+                case 3:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     setTimeout(function () { return __awaiter(void 0, void 0, void 0, function () {
@@ -161,16 +185,24 @@ describe('Teste a printer', function () {
         });
     }); });
     it('Should print a recipe', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var order, response;
+        var user, order, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Order')];
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
+                    })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Order')];
+                case 2:
                     order = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).post('/printers').send({
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .post('/printers')
+                            .set('Authorization', "Bearer " + user.generateToken())
+                            .send({
                             id: order.id,
                         })];
-                case 2:
+                case 3:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     setTimeout(function () { return __awaiter(void 0, void 0, void 0, function () {
@@ -188,16 +220,24 @@ describe('Teste a printer', function () {
         });
     }); });
     it('Should not print a recipe with invalid order', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var order, response;
+        var user, order, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Order')];
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
+                    })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Order')];
+                case 2:
                     order = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).post('/printers').send({
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .post('/printers')
+                            .set('Authorization', "Bearer " + user.generateToken())
+                            .send({
                             id: '5f05febbd43fb02cb0b83d64',
                         })];
-                case 2:
+                case 3:
                     response = _a.sent();
                     expect(response.status).toBe(400);
                     return [2 /*return*/];

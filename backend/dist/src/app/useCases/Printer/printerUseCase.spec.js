@@ -119,23 +119,22 @@ describe('Teste a printer', function () {
         });
     }); });
     it('should print a general report ', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var response;
+        var user, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Order', {
-                        payment: 'Dinheiro',
-                        finished: true,
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
                     })];
                 case 1:
-                    _a.sent();
+                    user = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Order', {
-                            payment: 'Cartão',
+                            payment: 'Dinheiro',
                             finished: true,
                         })];
                 case 2:
                     _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Order', {
-                            payment: 'Dinheiro',
+                            payment: 'Cartão',
                             finished: true,
                         })];
                 case 3:
@@ -147,19 +146,27 @@ describe('Teste a printer', function () {
                 case 4:
                     _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Order', {
-                            payment: 'Depósito itau',
+                            payment: 'Dinheiro',
                             finished: true,
                         })];
                 case 5:
                     _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Order', {
-                            payment: 'Cartão',
+                            payment: 'Depósito itau',
                             finished: true,
                         })];
                 case 6:
                     _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).get('/printers/sold_report')];
+                    return [4 /*yield*/, factories_1.default.create('Order', {
+                            payment: 'Cartão',
+                            finished: true,
+                        })];
                 case 7:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .get('/printers/sold_report')
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 8:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     return [2 /*return*/];
@@ -167,30 +174,28 @@ describe('Teste a printer', function () {
         });
     }); });
     it('should print a deliveryman report ', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var deliveryman, response;
+        var user, deliveryman, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Deliveryman', {
-                        name: 'Celestino',
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
                     })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Deliveryman', {
+                            name: 'Celestino',
+                        })];
+                case 2:
                     deliveryman = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Order', {
                             payment: 'Dinheiro',
                             finished: true,
                             deliveryman: deliveryman._id,
                         })];
-                case 2:
-                    _a.sent();
-                    return [4 /*yield*/, factories_1.default.create('Order', {
-                            payment: 'Cartão',
-                            finished: true,
-                            deliveryman: deliveryman._id,
-                        })];
                 case 3:
                     _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Order', {
-                            payment: 'Dinheiro',
+                            payment: 'Cartão',
                             finished: true,
                             deliveryman: deliveryman._id,
                         })];
@@ -204,21 +209,30 @@ describe('Teste a printer', function () {
                 case 5:
                     _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Order', {
-                            payment: 'Depósito itau',
+                            payment: 'Dinheiro',
                             finished: true,
                             deliveryman: deliveryman._id,
                         })];
                 case 6:
                     _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Order', {
-                            payment: 'Cartão',
+                            payment: 'Depósito itau',
                             finished: true,
                             deliveryman: deliveryman._id,
                         })];
                 case 7:
                     _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/printers/deliveryman_report/" + deliveryman._id)];
+                    return [4 /*yield*/, factories_1.default.create('Order', {
+                            payment: 'Cartão',
+                            finished: true,
+                            deliveryman: deliveryman._id,
+                        })];
                 case 8:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .get("/printers/deliveryman_report/" + deliveryman._id)
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 9:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     return [2 /*return*/];

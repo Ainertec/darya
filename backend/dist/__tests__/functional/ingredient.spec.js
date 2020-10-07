@@ -62,51 +62,17 @@ describe('should test a ingredient', function () {
         });
     }); });
     it('should create a ingredient', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var response;
+        var user, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, supertest_1.default(app_1.default).post('/ingredients').send({
-                        name: 'chocolate',
-                        price: 2.0,
-                        stock: 20,
-                        unit: 'g',
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
                     })];
                 case 1:
-                    response = _a.sent();
-                    expect(response.status).toBe(200);
-                    expect(response.body).toEqual(expect.objectContaining({
-                        priceUnit: 0.1,
-                    }));
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('should not create a ingredient with a invalid unit', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var response;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, supertest_1.default(app_1.default).post('/ingredients').send({
-                        name: 'chocolate',
-                        price: 2.0,
-                        stock: 20,
-                        unit: 'lkl',
-                    })];
-                case 1:
-                    response = _a.sent();
-                    expect(response.status).toBe(400);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('should update  a ingredient', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var ingredient, response;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Ingredient')];
-                case 1:
-                    ingredient = _a.sent();
+                    user = _a.sent();
                     return [4 /*yield*/, supertest_1.default(app_1.default)
-                            .put("/ingredients/" + ingredient._id)
+                            .post('/ingredients')
+                            .set('Authorization', "Bearer " + user.generateToken())
                             .send({
                             name: 'chocolate',
                             price: 2.0,
@@ -123,20 +89,23 @@ describe('should test a ingredient', function () {
             }
         });
     }); });
-    it('should not update a ingredient with invalid unit', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var ingredient, response;
+    it('should not create a ingredient with a invalid unit', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var user, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Ingredient')];
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
+                    })];
                 case 1:
-                    ingredient = _a.sent();
+                    user = _a.sent();
                     return [4 /*yield*/, supertest_1.default(app_1.default)
-                            .put("/ingredients/" + ingredient._id)
+                            .post('/ingredients')
+                            .set('Authorization', "Bearer " + user.generateToken())
                             .send({
                             name: 'chocolate',
                             price: 2.0,
                             stock: 20,
-                            unit: 'as',
+                            unit: 'lkl',
                         })];
                 case 2:
                     response = _a.sent();
@@ -145,15 +114,81 @@ describe('should test a ingredient', function () {
             }
         });
     }); });
-    it('should delete a ingredient', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var ingredient, response;
+    it('should update  a ingredient', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var user, ingredient, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Ingredient')];
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
+                    })];
                 case 1:
-                    ingredient = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).delete("/ingredients/" + ingredient._id)];
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Ingredient')];
                 case 2:
+                    ingredient = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .put("/ingredients/" + ingredient._id)
+                            .set('Authorization', "Bearer " + user.generateToken())
+                            .send({
+                            name: 'chocolate',
+                            price: 2.0,
+                            stock: 20,
+                            unit: 'g',
+                        })];
+                case 3:
+                    response = _a.sent();
+                    expect(response.status).toBe(200);
+                    expect(response.body).toEqual(expect.objectContaining({
+                        priceUnit: 0.1,
+                    }));
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('should not update a ingredient with invalid unit', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var user, ingredient, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
+                    })];
+                case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Ingredient')];
+                case 2:
+                    ingredient = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .put("/ingredients/" + ingredient._id)
+                            .set('Authorization', "Bearer " + user.generateToken())
+                            .send({
+                            name: 'chocolate',
+                            price: 2.0,
+                            stock: 20,
+                            unit: 'as',
+                        })];
+                case 3:
+                    response = _a.sent();
+                    expect(response.status).toBe(400);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('should delete a ingredient', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var user, ingredient, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
+                    })];
+                case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Ingredient')];
+                case 2:
+                    ingredient = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .delete("/ingredients/" + ingredient._id)
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 3:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     return [2 /*return*/];
@@ -161,14 +196,21 @@ describe('should test a ingredient', function () {
         });
     }); });
     it('should list all ingredients', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var response;
+        var user, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.createMany('Ingredient', 4)];
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
+                    })];
                 case 1:
-                    _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).get('/ingredients')];
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.createMany('Ingredient', 4)];
                 case 2:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .get('/ingredients')
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 3:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     expect(response.body.length).toBe(4);
@@ -177,21 +219,28 @@ describe('should test a ingredient', function () {
         });
     }); });
     it('should list all ingredients by name', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var response;
+        var user, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Ingredient', {
-                        name: 'Farinha',
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
                     })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Ingredient', {
+                            name: 'Farinha',
+                        })];
+                case 2:
                     _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Ingredient', {
                             name: 'Chocolate',
                         })];
-                case 2:
-                    _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/ingredients/far")];
                 case 3:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .get("/ingredients/far")
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 4:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     expect(response.body).toEqual(expect.arrayContaining([

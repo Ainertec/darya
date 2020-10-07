@@ -9,7 +9,7 @@ var crypto_1 = __importDefault(require("crypto"));
 var Product_1 = __importDefault(require("../src/app/models/Product"));
 var Deliveryman_1 = __importDefault(require("../src/app/models/Deliveryman"));
 var District_1 = __importDefault(require("../src/app/models/District"));
-var Client_1 = __importDefault(require("../src/app/models/Client"));
+var User_1 = __importDefault(require("../src/app/models/User"));
 var Ingredient_1 = __importDefault(require("../src/app/models/Ingredient"));
 var Order_1 = __importDefault(require("../src/app/models/Order"));
 factory_girl_1.default.define('Product', Product_1.default, {
@@ -43,8 +43,13 @@ factory_girl_1.default.define('District', District_1.default, {
     city: faker_1.default.address.city(),
     rate: faker_1.default.random.number(100),
 });
-factory_girl_1.default.define('Client', Client_1.default, {
+factory_girl_1.default.define('User', User_1.default, {
     name: faker_1.default.name.findName(),
+    username: faker_1.default.internet.userName(),
+    password: faker_1.default.internet.password(),
+    question: 'Qual o nome da sua mãe?',
+    response: 'não sei',
+    admin: faker_1.default.random.boolean(),
     address: [
         {
             district: factory_girl_1.default.assoc('District', '_id'),
@@ -56,14 +61,14 @@ factory_girl_1.default.define('Client', Client_1.default, {
     phone: [faker_1.default.phone.phoneNumber()],
 });
 factory_girl_1.default.define('Order', Order_1.default, {
-    client: {
-        client_id: factory_girl_1.default.assoc('Client', '_id'),
+    user: {
+        user_id: factory_girl_1.default.assoc('User', '_id'),
         name: faker_1.default.name.findName(),
         phone: faker_1.default.phone.phoneNumber(),
     },
     deliveryman: factory_girl_1.default.assoc('Deliveryman', '_id'),
     address: {
-        client_address_id: factory_girl_1.default.assoc('Client', 'address._id'),
+        user_address_id: factory_girl_1.default.assoc('User', 'address._id'),
         district_id: factory_girl_1.default.assoc('District', '_id'),
         district_name: faker_1.default.address.streetName(),
         district_rate: faker_1.default.random.number(100),

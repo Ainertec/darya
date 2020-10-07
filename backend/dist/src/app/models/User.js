@@ -39,53 +39,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Source = void 0;
-/* eslint-disable no-await-in-loop */
-/* eslint-disable no-restricted-syntax */
+exports.Questions = void 0;
+/* eslint-disable camelcase */
+/* eslint-disable func-names */
 var mongoose_1 = require("mongoose");
-var Product_1 = __importDefault(require("./Product"));
-var subIngredientStock_1 = require("../utils/subIngredientStock");
-var ItemsSchema = new mongoose_1.Schema({
-    product: {
-        type: mongoose_1.Schema.Types.ObjectId,
-        ref: 'Product',
-        required: true,
+var bcrypt_1 = __importDefault(require("bcrypt"));
+var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+exports.Questions = Object.freeze({
+    first: 'Qual o modelo do seu primeiro carro?',
+    second: 'Qual o nome do seu melhor amigo de infância?',
+    third: 'Qual o nome do seu primeiro animal de estimação?',
+    fourth: 'Qual o nome da sua mãe?',
+    fifth: 'Qual sua cor preferida?',
+    getQuestions: function () {
+        var ques = [this.first, this.second, this.third, this.fourth, this.fifth];
+        return ques;
     },
-    quantity: {
-        type: Number,
-        required: true,
-    },
-});
-var UserSchema = new mongoose_1.Schema({
-    user_id: {
-        type: mongoose_1.Schema.Types.ObjectId,
-    },
-    name: {
-        type: String,
-        required: true,
-    },
-    phone: [
-        {
-            type: String,
-            default: null,
-        },
-    ],
 });
 var AddressSchema = new mongoose_1.Schema({
-    user_address_id: {
+    district: {
         type: mongoose_1.Schema.Types.ObjectId,
-        default: null,
-    },
-    district_id: {
-        type: mongoose_1.Schema.Types.ObjectId,
-        default: null,
-    },
-    district_name: {
-        type: String,
-        default: null,
-    },
-    district_rate: {
-        type: Number,
+        ref: 'District',
         default: null,
     },
     street: {
@@ -101,90 +75,68 @@ var AddressSchema = new mongoose_1.Schema({
         default: null,
     },
 });
-var Source = Object.freeze({
-    ifood: 'Ifood',
-    whatsapp: 'Whatsapp',
-    instagram: 'Instagram',
-    delivery: 'Pronta Entrega',
-    itau: 'Transferência Itaú',
-    bradesco: 'Transferência Bradesco',
-    getSource: function () {
-        var source = [
-            this.ifood,
-            this.whatsapp,
-            this.instagram,
-            this.delivery,
-            this.itau,
-            this.bradesco,
-        ];
-        return source;
-    },
-});
-exports.Source = Source;
-var OrderSchema = new mongoose_1.Schema({
-    user: UserSchema,
-    address: AddressSchema,
-    deliveryman: {
-        type: mongoose_1.Schema.Types.ObjectId,
-        ref: 'Deliveryman',
+var UserSchema = new mongoose_1.Schema({
+    name: {
+        type: String,
         default: null,
     },
-    items: [ItemsSchema],
-    total: {
-        type: Number,
-        default: null,
+    username: {
+        type: String,
+        required: true,
     },
-    finished: {
+    password_hash: {
+        type: String,
+    },
+    question: {
+        type: String,
+        enum: Object.values(exports.Questions),
+        required: true,
+    },
+    response: {
+        type: String,
+        required: true,
+    },
+    address: [AddressSchema],
+    admin: {
         type: Boolean,
-        default: false,
-    },
-    source: {
-        type: String,
-        required: true,
-        enum: Object.values(Source),
-    },
-    note: {
-        type: String,
         default: null,
     },
-    payment: {
-        type: String,
-        default: null,
-    },
-    identification: {
-        type: String,
-        required: true,
-    },
+    phone: [
+        {
+            type: String,
+            required: true,
+        },
+    ],
 }, {
     timestamps: true,
 });
-Object.assign(OrderSchema.statics, {
-    Source: Source,
+Object.assign(UserSchema.statics, {
+    Questions: exports.Questions,
 });
-OrderSchema.post('save', function (document) { return __awaiter(void 0, void 0, void 0, function () {
-    var _i, _a, item, product;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
-            case 0:
-                if (!(document && document.finished)) return [3 /*break*/, 5];
-                _i = 0, _a = document.items;
-                _b.label = 1;
-            case 1:
-                if (!(_i < _a.length)) return [3 /*break*/, 5];
-                item = _a[_i];
-                return [4 /*yield*/, Product_1.default.findOne({ _id: item.product })];
-            case 2:
-                product = _b.sent();
-                if (!product) return [3 /*break*/, 4];
-                return [4 /*yield*/, subIngredientStock_1.subIngredientStock(product.ingredients, item.quantity)];
-            case 3:
-                _b.sent();
-                _b.label = 4;
-            case 4:
-                _i++;
-                return [3 /*break*/, 1];
-            case 5: return [2 /*return*/];
-        }
+UserSchema.virtual('password', { type: String, require: true });
+UserSchema.pre('save', function (next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var hash;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (!this.password) return [3 /*break*/, 2];
+                    return [4 /*yield*/, bcrypt_1.default.hash(this.password, 8)];
+                case 1:
+                    hash = _a.sent();
+                    this.password_hash = hash;
+                    _a.label = 2;
+                case 2:
+                    next();
+                    return [2 /*return*/];
+            }
+        });
     });
-}); });
-exports.default = mongoose_1.model('Order', OrderSchema);
+});
+UserSchema.methods.checkPassword = function (password) {
+    return bcrypt_1.default.compare(password, this.password_hash);
+};
+UserSchema.methods.generateToken = function () {
+    return jsonwebtoken_1.default.sign({ id: this._id }, String(process.env.APP_SECRET));
+};
+exports.default = mongoose_1.model('User', UserSchema);

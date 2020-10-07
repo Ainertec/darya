@@ -16,10 +16,20 @@ exports.client = celebrate_1.Joi.object().keys({
     name: celebrate_1.Joi.string().required(),
     address: celebrate_1.Joi.array().items(address),
     phone: celebrate_1.Joi.array().items(celebrate_1.Joi.string()),
+    username: celebrate_1.Joi.string().required(),
+    password: celebrate_1.Joi.string().required(),
+    question: celebrate_1.Joi.string().required(),
+    response: celebrate_1.Joi.string().required(),
+    admin: celebrate_1.Joi.boolean(),
 });
 exports.clientUpdate = celebrate_1.Joi.object().keys({
     name: celebrate_1.Joi.string(),
     address: celebrate_1.Joi.array().items(address),
     phone: celebrate_1.Joi.array().items(celebrate_1.Joi.string()),
+    username: celebrate_1.Joi.string(),
+    password: celebrate_1.Joi.string(),
+    question: celebrate_1.Joi.string(),
+    response: celebrate_1.Joi.string(),
+    admin: celebrate_1.Joi.boolean(),
 });
 exports.default = exports.client;

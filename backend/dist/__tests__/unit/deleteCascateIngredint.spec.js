@@ -45,7 +45,7 @@ var Ingredient_1 = __importDefault(require("../../src/app/models/Ingredient"));
 var Product_1 = __importDefault(require("../../src/app/models/Product"));
 var app_1 = __importDefault(require("../../src/app"));
 var factories_1 = __importDefault(require("../factories"));
-describe('should test a delete cascate when delete a ingredient', function () {
+describe('should test a delete cascade when delete a ingredient', function () {
     beforeAll(function () {
         connection_1.openConnection();
     });
@@ -66,14 +66,19 @@ describe('should test a delete cascate when delete a ingredient', function () {
         });
     }); });
     it('should delete a product ingredient when a ingredient is deleted', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var ingredient, ingredient2, product, response, productUpdated;
+        var user, ingredient, ingredient2, product, response, productUpdated;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Ingredient')];
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
+                    })];
                 case 1:
-                    ingredient = _a.sent();
+                    user = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Ingredient')];
                 case 2:
+                    ingredient = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Ingredient')];
+                case 3:
                     ingredient2 = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product', {
                             ingredients: [
@@ -87,13 +92,15 @@ describe('should test a delete cascate when delete a ingredient', function () {
                                 },
                             ],
                         })];
-                case 3:
-                    product = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).delete("/ingredients/" + ingredient._id)];
                 case 4:
+                    product = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .delete("/ingredients/" + ingredient._id)
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 5:
                     response = _a.sent();
                     return [4 /*yield*/, Product_1.default.findOne({ _id: product._id })];
-                case 5:
+                case 6:
                     productUpdated = _a.sent();
                     expect(productUpdated === null || productUpdated === void 0 ? void 0 : productUpdated.ingredients.length).toBe(1);
                     expect(response.status).toBe(200);
@@ -102,11 +109,16 @@ describe('should test a delete cascate when delete a ingredient', function () {
         });
     }); });
     it('should delete a unic product ingredient when a ingredient is deleted', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var ingredient, product, response, productUpdated;
+        var user, ingredient, product, response, productUpdated;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Ingredient')];
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
+                    })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Ingredient')];
+                case 2:
                     ingredient = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product', {
                             ingredients: [
@@ -116,13 +128,15 @@ describe('should test a delete cascate when delete a ingredient', function () {
                                 },
                             ],
                         })];
-                case 2:
-                    product = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).delete("/ingredients/" + ingredient._id)];
                 case 3:
+                    product = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .delete("/ingredients/" + ingredient._id)
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 4:
                     response = _a.sent();
                     return [4 /*yield*/, Product_1.default.findOne({ _id: product._id })];
-                case 4:
+                case 5:
                     productUpdated = _a.sent();
                     expect(productUpdated === null || productUpdated === void 0 ? void 0 : productUpdated.ingredients.length).toBe(0);
                     expect(response.status).toBe(200);
@@ -131,17 +145,22 @@ describe('should test a delete cascate when delete a ingredient', function () {
         });
     }); });
     it('should not delete a product ingredient when a ingredient is deleted, if it does not use it', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var ingredient, ingredient2, ingredient3, product, response, productUpdated;
+        var user, ingredient, ingredient2, ingredient3, product, response, productUpdated;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Ingredient')];
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
+                    })];
                 case 1:
-                    ingredient = _a.sent();
+                    user = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Ingredient')];
                 case 2:
-                    ingredient2 = _a.sent();
+                    ingredient = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Ingredient')];
                 case 3:
+                    ingredient2 = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Ingredient')];
+                case 4:
                     ingredient3 = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product', {
                             ingredients: [
@@ -155,13 +174,15 @@ describe('should test a delete cascate when delete a ingredient', function () {
                                 },
                             ],
                         })];
-                case 4:
-                    product = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).delete("/ingredients/" + ingredient3._id)];
                 case 5:
+                    product = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .delete("/ingredients/" + ingredient3._id)
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 6:
                     response = _a.sent();
                     return [4 /*yield*/, Product_1.default.findOne({ _id: product._id })];
-                case 6:
+                case 7:
                     productUpdated = _a.sent();
                     expect(productUpdated === null || productUpdated === void 0 ? void 0 : productUpdated.ingredients.length).toBe(2);
                     expect(response.status).toBe(200);

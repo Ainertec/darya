@@ -11,18 +11,18 @@ var items = celebrate_1.Joi.object().keys({
     quantity: celebrate_1.Joi.number().required(),
 });
 exports.order = celebrate_1.Joi.object().keys({
-    client_id: celebrate_1.Joi.custom(validObjectId_1.default, 'valid id').required(),
+    user_id: celebrate_1.Joi.custom(validObjectId_1.default, 'valid id').required(),
     deliveryman: celebrate_1.Joi.custom(validObjectId_1.default, 'valid id'),
-    client_address_id: celebrate_1.Joi.custom(validObjectId_1.default, 'valid id'),
+    user_address_id: celebrate_1.Joi.custom(validObjectId_1.default, 'valid id'),
     items: celebrate_1.Joi.array().items(items).required(),
     source: celebrate_1.Joi.string().required(),
     note: celebrate_1.Joi.string(),
     payment: celebrate_1.Joi.string(),
 });
 exports.orderUpdate = celebrate_1.Joi.object().keys({
-    client_id: celebrate_1.Joi.custom(validObjectId_1.default, 'valid id'),
+    user_id: celebrate_1.Joi.custom(validObjectId_1.default, 'valid id'),
     deliveryman: celebrate_1.Joi.custom(validObjectId_1.default, 'valid id'),
-    client_address_id: celebrate_1.Joi.custom(validObjectId_1.default, 'valid id'),
+    user_address_id: celebrate_1.Joi.custom(validObjectId_1.default, 'valid id'),
     items: celebrate_1.Joi.array().items(items),
     source: celebrate_1.Joi.string(),
     note: celebrate_1.Joi.string(),

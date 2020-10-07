@@ -44,6 +44,7 @@ var connection_1 = require("../utils/connection");
 var Deliveryman_1 = __importDefault(require("../../src/app/models/Deliveryman"));
 var app_1 = __importDefault(require("../../src/app"));
 var factories_1 = __importDefault(require("../factories"));
+var User_1 = __importDefault(require("../../src/app/models/User"));
 describe('should test', function () {
     beforeAll(function () {
         connection_1.openConnection();
@@ -57,20 +58,31 @@ describe('should test', function () {
                 case 0: return [4 /*yield*/, Deliveryman_1.default.deleteMany({})];
                 case 1:
                     _a.sent();
+                    return [4 /*yield*/, User_1.default.deleteMany({})];
+                case 2:
+                    _a.sent();
                     return [2 /*return*/];
             }
         });
     }); });
     it('should create a deliveryman', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var response;
+        var user, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, supertest_1.default(app_1.default).post('/deliverymans').send({
-                        name: 'Jão',
-                        working_day: false,
-                        phone: '99726852',
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
                     })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .post('/deliverymans')
+                            .set('Authorization', "Bearer " + user.generateToken())
+                            .send({
+                            name: 'Jão',
+                            working_day: false,
+                            phone: '99726852',
+                        })];
+                case 2:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     return [2 /*return*/];
@@ -78,22 +90,30 @@ describe('should test', function () {
         });
     }); });
     it('should update a deliveryman', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var deliveryman, response;
+        var user, deliveryman, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Deliveryman', {
-                        working_day: true,
-                        available: true,
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
                     })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Deliveryman', {
+                            working_day: true,
+                            available: true,
+                        })];
+                case 2:
                     deliveryman = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).put("/deliverymans/" + deliveryman._id).send({
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .put("/deliverymans/" + deliveryman._id)
+                            .set('Authorization', "Bearer " + user.generateToken())
+                            .send({
                             name: 'Paulo',
                             phone: deliveryman.phone,
                             working_day: true,
                             available: false,
                         })];
-                case 2:
+                case 3:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     expect(response.body).toEqual(expect.objectContaining({
@@ -104,21 +124,29 @@ describe('should test', function () {
         });
     }); });
     it('should update an available field of a deliveryman', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var deliveryman, response;
+        var user, deliveryman, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Deliveryman', {
-                        working_day: false,
-                        available: false,
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
                     })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Deliveryman', {
+                            working_day: false,
+                            available: false,
+                        })];
+                case 2:
                     deliveryman = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).put("/deliverymans/" + deliveryman._id).send({
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .put("/deliverymans/" + deliveryman._id)
+                            .set('Authorization', "Bearer " + user.generateToken())
+                            .send({
                             available: true,
                             phone: deliveryman.phone,
                             name: 'Paulo',
                         })];
-                case 2:
+                case 3:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     expect(response.body).toEqual(expect.objectContaining({
@@ -131,21 +159,29 @@ describe('should test', function () {
         });
     }); });
     it('should update a working_day field of a deliveryman', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var deliveryman, response;
+        var user, deliveryman, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Deliveryman', {
-                        working_day: false,
-                        available: false,
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
                     })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Deliveryman', {
+                            working_day: false,
+                            available: false,
+                        })];
+                case 2:
                     deliveryman = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).put("/deliverymans/" + deliveryman._id).send({
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .put("/deliverymans/" + deliveryman._id)
+                            .set('Authorization', "Bearer " + user.generateToken())
+                            .send({
                             working_day: true,
                             phone: deliveryman.phone,
                             name: 'Paulo',
                         })];
-                case 2:
+                case 3:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     expect(response.body).toEqual(expect.objectContaining({
@@ -158,14 +194,22 @@ describe('should test', function () {
         });
     }); });
     it('should not update a field of an inexistent deliveryman', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var response;
+        var user, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, supertest_1.default(app_1.default).put("/deliverymans/5f05febbd43fb02cb0b83d64").send({
-                        working_day: true,
-                        name: 'Paulo',
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
                     })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .put("/deliverymans/5f05febbd43fb02cb0b83d64")
+                            .set('Authorization', "Bearer " + user.generateToken())
+                            .send({
+                            working_day: true,
+                            name: 'Paulo',
+                        })];
+                case 2:
                     response = _a.sent();
                     expect(response.status).toBe(400);
                     return [2 /*return*/];
@@ -173,21 +217,28 @@ describe('should test', function () {
         });
     }); });
     it('should reset an available field and working day of all deliverymans', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var deliveryman, response, delivery;
+        var user, deliveryman, response, delivery;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Deliveryman', {
-                        name: 'Jão',
-                        working_day: true,
-                        available: true,
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
                     })];
                 case 1:
-                    deliveryman = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).put("/deliverymans")];
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Deliveryman', {
+                            name: 'Jão',
+                            working_day: true,
+                            available: true,
+                        })];
                 case 2:
+                    deliveryman = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .put("/deliverymans")
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 3:
                     response = _a.sent();
                     return [4 /*yield*/, Deliveryman_1.default.findOne({})];
-                case 3:
+                case 4:
                     delivery = _a.sent();
                     expect(response.status).toBe(200);
                     expect(delivery).toEqual(expect.objectContaining({
@@ -200,20 +251,27 @@ describe('should test', function () {
         });
     }); });
     it('should delete a deliveryman', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var deliveryman, response, countDocuments;
+        var user, deliveryman, response, countDocuments;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Deliveryman', {
-                        working_day: true,
-                        available: true,
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
                     })];
                 case 1:
-                    deliveryman = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).delete("/deliverymans/" + deliveryman._id)];
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Deliveryman', {
+                            working_day: true,
+                            available: true,
+                        })];
                 case 2:
+                    deliveryman = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .delete("/deliverymans/" + deliveryman._id)
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 3:
                     response = _a.sent();
                     return [4 /*yield*/, Deliveryman_1.default.find({}).countDocuments()];
-                case 3:
+                case 4:
                     countDocuments = _a.sent();
                     expect(response.status).toBe(200);
                     expect(countDocuments).toBe(0);
@@ -222,24 +280,31 @@ describe('should test', function () {
         });
     }); });
     it('should list a deliveryman by working day', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var deliveryman, deliveryman2, response;
+        var user, deliveryman, deliveryman2, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Deliveryman', {
-                        working_day: true,
-                        available: false,
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
                     })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Deliveryman', {
+                            working_day: true,
+                            available: false,
+                        })];
+                case 2:
                     deliveryman = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Deliveryman', {
                             name: 'carlos',
                             working_day: true,
                             available: true,
                         })];
-                case 2:
-                    deliveryman2 = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/deliverymans/working_days")];
                 case 3:
+                    deliveryman2 = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .get("/deliverymans/working_days")
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 4:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     expect(response.body).toEqual(expect.arrayContaining([
@@ -252,25 +317,32 @@ describe('should test', function () {
         });
     }); });
     it('should list all deliveryman by name', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var deliveryman, deliveryman2, response;
+        var user, deliveryman, deliveryman2, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Deliveryman', {
-                        name: 'jãozin',
-                        working_day: true,
-                        available: true,
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
                     })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Deliveryman', {
+                            name: 'jãozin',
+                            working_day: true,
+                            available: true,
+                        })];
+                case 2:
                     deliveryman = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Deliveryman', {
                             name: 'carlos',
                             working_day: true,
                             available: true,
                         })];
-                case 2:
-                    deliveryman2 = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/deliverymans/j")];
                 case 3:
+                    deliveryman2 = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .get("/deliverymans/j")
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 4:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     expect(response.body).toEqual(expect.arrayContaining([
@@ -283,14 +355,19 @@ describe('should test', function () {
         });
     }); });
     it('should list a deliveryman by hasDelivery', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var deliveryman, deliveryman2, response;
+        var user, deliveryman, deliveryman2, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Deliveryman', {
-                        working_day: true,
-                        available: false,
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
                     })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Deliveryman', {
+                            working_day: true,
+                            available: false,
+                        })];
+                case 2:
                     deliveryman = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Deliveryman', {
                             name: 'carlos',
@@ -298,10 +375,12 @@ describe('should test', function () {
                             available: true,
                             hasDelivery: true,
                         })];
-                case 2:
-                    deliveryman2 = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/deliverymans/hasDelivery")];
                 case 3:
+                    deliveryman2 = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .get("/deliverymans/hasDelivery")
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 4:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     expect(response.body).toEqual(expect.arrayContaining([
@@ -314,24 +393,31 @@ describe('should test', function () {
         });
     }); });
     it('should list a deliveryman by available', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var deliveryman, deliveryman2, response;
+        var user, deliveryman, deliveryman2, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Deliveryman', {
-                        working_day: true,
-                        available: false,
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
                     })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Deliveryman', {
+                            working_day: true,
+                            available: false,
+                        })];
+                case 2:
                     deliveryman = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Deliveryman', {
                             name: 'carlos',
                             working_day: true,
                             available: true,
                         })];
-                case 2:
-                    deliveryman2 = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/deliverymans/availables")];
                 case 3:
+                    deliveryman2 = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .get("/deliverymans/availables")
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 4:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     expect(response.body).toEqual(expect.arrayContaining([
@@ -344,25 +430,32 @@ describe('should test', function () {
         });
     }); });
     it('should list all deliveryman ', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var deliveryman, deliveryman2, response;
+        var user, deliveryman, deliveryman2, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, factories_1.default.create('Deliveryman', {
-                        name: 'jãozin',
-                        working_day: true,
-                        available: true,
+                case 0: return [4 /*yield*/, factories_1.default.create('User', {
+                        admin: true,
                     })];
                 case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Deliveryman', {
+                            name: 'jãozin',
+                            working_day: true,
+                            available: true,
+                        })];
+                case 2:
                     deliveryman = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Deliveryman', {
                             name: 'carlos',
                             working_day: true,
                             available: true,
                         })];
-                case 2:
-                    deliveryman2 = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app_1.default).get("/deliverymans")];
                 case 3:
+                    deliveryman2 = _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .get("/deliverymans")
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 4:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     expect(response.body).toEqual(expect.arrayContaining([
