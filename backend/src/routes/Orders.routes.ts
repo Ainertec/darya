@@ -9,6 +9,7 @@ export class OrdersRoutes {
 
   getRoutes(validations: IValidationsOrder) {
     this.routes.get('/orders', Authorization, OrderController.index);
+    this.routes.get('/orders/user', OrderController.showByUser);
     this.routes.get(
       '/orders/deliveryman/:deliveryman',
       Authorization,

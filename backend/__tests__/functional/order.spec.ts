@@ -1,6 +1,7 @@
+/* eslint-disable no-unneeded-ternary */
 import request from 'supertest';
 import { closeConnection, openConnection } from '../utils/connection';
-import User from '../../src/app/models/User';
+import User, { IUserDocument } from '../../src/app/models/User';
 import Order from '../../src/app/models/Order';
 import Deliveryman from '../../src/app/models/Deliveryman';
 import app from '../../src/app';
@@ -12,7 +13,6 @@ import {
   DeliverymanInterface,
   ProductInterface,
 } from '../../src/interfaces/base';
-import { IUser, IUserDocument } from '../../src/app/models/User';
 
 describe('should a User', () => {
   beforeAll(() => {
@@ -131,7 +131,7 @@ describe('should a User', () => {
     const deliveryman = await factory.create<DeliverymanInterface>(
       'Deliveryman',
     );
-    const district = await factory.create<DistrictInterface>('District');
+    await factory.create<DistrictInterface>('District');
     const products = await factory.create<ProductInterface>('Product');
 
     const response = await request(app)
@@ -207,9 +207,7 @@ describe('should a User', () => {
 
   it('should not create an order with invalid deliveryman', async () => {
     const user = await factory.create<IUserDocument>('User', { admin: true });
-    const deliveryman = await factory.create<DeliverymanInterface>(
-      'Deliveryman',
-    );
+    await factory.create<DeliverymanInterface>('Deliveryman');
     const products = await factory.create<ProductInterface>('Product');
 
     const response = await request(app)
@@ -269,12 +267,12 @@ describe('should a User', () => {
   });
 
   it('should update a order total with address change', async () => {
-    const district = await factory.create<DistrictInterface>('District');
+    await factory.create<DistrictInterface>('District');
     const user = await factory.create<IUserDocument>('User', { admin: true });
     const order = await factory.create<OrderInterface>('Order', {
       user: {
         user_id: user._id,
-        name: 'asdf',
+        name: 'Marcos',
         phone: ['1324'],
       },
     });
@@ -361,7 +359,7 @@ describe('should a User', () => {
     });
 
     const order = await factory.create<OrderInterface>('Order');
-    const product = await factory.create<ProductInterface>('Product', {
+    await factory.create<ProductInterface>('Product', {
       name: 'Chocolate',
     });
 
@@ -397,7 +395,7 @@ describe('should a User', () => {
     });
 
     const order = await factory.create<OrderInterface>('Order');
-    const product = await factory.create<ProductInterface>('Product', {
+    await factory.create<ProductInterface>('Product', {
       name: 'Chocolate',
     });
 
@@ -423,7 +421,7 @@ describe('should a User', () => {
     });
 
     const order = await factory.create<OrderInterface>('Order');
-    const product = await factory.create<ProductInterface>('Product', {
+    await factory.create<ProductInterface>('Product', {
       name: 'Chocolate',
     });
 
@@ -484,7 +482,7 @@ describe('should a User', () => {
   });
 
   it('should list all orders', async () => {
-    const order = await factory.createMany<OrderInterface>('Order', 3, {
+    await factory.createMany<OrderInterface>('Order', 3, {
       finished: false,
     });
     const user = await factory.create<IUserDocument>('User', { admin: true });
@@ -537,6 +535,33 @@ describe('should a User', () => {
     expect(response.status).toBe(200);
     // console.log(response.body);
 
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          identification: '123123',
+        }),
+      ]),
+    );
+  });
+
+  it('should list a order by user id', async () => {
+    const user = await factory.create<IUserDocument>('User');
+    await factory.createMany<OrderInterface>('Order', 3, { finished: false });
+    const deliveryman = await factory.create<DeliverymanInterface>(
+      'Deliveryman',
+    );
+    await factory.create<OrderInterface>('Order', {
+      deliveryman: deliveryman._id,
+      user: { user_id: user._id, name: user.name },
+      identification: '123123',
+      finished: false,
+    });
+
+    const response = await request(app)
+      .get(`/orders/user/`)
+      .set('Authorization', `Bearer ${user.generateToken()}`);
+
+    expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({

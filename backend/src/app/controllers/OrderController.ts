@@ -77,6 +77,18 @@ class OrderController {
     return response.json(orders);
   }
 
+  async showByUser(request: Request, response: Response) {
+    const { userId } = request;
+    const orders = await Order.find({
+      finished: false,
+      'user.user_id': userId,
+    })
+      .populate('deliveryman')
+      .populate('items.product');
+
+    return response.json(orders);
+  }
+
   async show(request: Request, response: Response) {
     const { identification } = request.params;
     const order = await Order.findOne({

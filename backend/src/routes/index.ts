@@ -61,15 +61,15 @@ orderRoutes.getRoutes({
 const productRouters = new ProductRoutes(routes);
 productRouters.getRoutes({ product, paramName, paramId });
 
+// districtsRoutes
+const districtRoutes = new DistrictsRoutes(routes);
+districtRoutes.getRoutes({ paramName, paramId, district });
+
 routes.use(Authorization);
 
 // deliverymans
 const deliverymanRoutes = new DeliverymansRoutes(routes);
 deliverymanRoutes.getRoutes({ paramName, paramId, deliveryman });
-
-// districtsRoutes
-const districtRoutes = new DistrictsRoutes(routes);
-districtRoutes.getRoutes({ paramName, paramId, district });
 
 // ingredients
 const ingredientRoutes = new IngredientsRoutes(routes);
