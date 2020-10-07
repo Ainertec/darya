@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     makeStyles,
     Paper,
@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core/';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
+import { useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles({
     root: {
@@ -26,13 +27,21 @@ const useStyles = makeStyles({
     }
 });
 
-function NavInferior(disabledCarrinho) {
+function NavInferior(posicao) {
     const classes = useStyles();
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = useState(posicao);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    const history = useHistory();
+    function handleNavigateToPedido() {
+        history.push("/mcdonuts/pedido");
+    }
+    function handleNavigateToCarrinho() {
+        history.push("/mcdonuts/carrinho");
+    }
 
     return (
         <Box justifyContent="center" flexWrap="wrap" display="flex" className={classes.root2}>
@@ -44,18 +53,8 @@ function NavInferior(disabledCarrinho) {
                     indicatorColor="secondary"
                     textColor="secondary"
                 >
-                    {
-                        disabledCarrinho ? (<>
-                            <Tab icon={<ShoppingCartIcon />} disabled />
-                            <Tab icon={<ShoppingBasketIcon />} />
-                        </>
-                        ) : (
-                                <>
-                                    <Tab icon={<ShoppingCartIcon />} />
-                                    <Tab icon={<ShoppingBasketIcon />} disabled />
-                                </>
-                            )
-                    }
+                    <Tab icon={<ShoppingCartIcon />} onClick={() => handleNavigateToCarrinho()} />
+                    <Tab icon={<ShoppingBasketIcon />} onClick={() => handleNavigateToPedido()} />
                 </Tabs>
             </Paper>
         </Box>

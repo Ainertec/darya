@@ -166,7 +166,7 @@ export default function TelaCarrinho() {
                             </div>
                         </div>
                     </div>
-                    <NavInferior disabledCarrinho />
+                    <NavInferior posicao={0} />
                 </Box>
             </Container>
         </div>

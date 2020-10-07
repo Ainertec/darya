@@ -49,7 +49,7 @@ export default function TelaPedido() {
                     <Pedido />
                     <Pedido />
                     <Pedido />
-                    <NavInferior />
+                    <NavInferior posicao={1} />
                 </Box>
             </Container>
         </div>
