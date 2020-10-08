@@ -155,7 +155,7 @@ async function modalTelaCadastrarouAtualizarCliente(tipo) {
 //funcao responsavel por gerar a parte de telefone e endereco do cliente
 async function gerarTelaParteEnderecoCliente(tipo) {
   await aguardeCarregamento(true);
-  let codigoHTML = ``, json = await requisicaoGET(`districts`);
+  let codigoHTML = ``, json = await requisicaoGET(`districts`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
   await aguardeCarregamento(false);
 
   codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
@@ -219,11 +219,11 @@ async function buscarDadosCliente(tipo) {
   try {
     if (tipo == 'nome') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`clients/${document.getElementById('nome').value}`);
+      json = await requisicaoGET(`clients/${document.getElementById('nome').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
     } else if (tipo == 'todos') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`clients`);
+      json = await requisicaoGET(`clients`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
     }
 
@@ -313,13 +313,10 @@ async function adicionarDadosNaTabelaTelefoneeEndereco(tipo, id) {
     cliente.phone.push(`${document.getElementById('telefonecliente').value}`);
     let tamanhoListaTel = cliente.phone.length;
     $('#tabelatelefone').append(`<tr id="linhatel${tamanhoListaTel - 1}">
-            <td class="table-warning"><span class="fas fa-phone"></span> ${
-      document.getElementById('telefonecliente').value
+            <td class="table-warning"><span class="fas fa-phone"></span> ${document.getElementById('telefonecliente').value
       }</td>
-            <td class="table-warning"><button onclick="removerDadosNaTabelaTelefoneeEndereco('telefone','${
-      document.getElementById('telefonecliente').value
-      }', '${id}', ${
-      tamanhoListaTel - 1
+            <td class="table-warning"><button onclick="removerDadosNaTabelaTelefoneeEndereco('telefone','${document.getElementById('telefonecliente').value
+      }', '${id}', ${tamanhoListaTel - 1
       });" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span> Excluir</button></td>
         </tr>`);
   } else if (tipo == 'endereco') {
@@ -331,14 +328,13 @@ async function adicionarDadosNaTabelaTelefoneeEndereco(tipo, id) {
       "reference":"${document.getElementById('complementocliente').value}"}`)
     );
     await aguardeCarregamento(true);
-    let BAIRROCLIENTE = await requisicaoGET(`districts`);
+    let BAIRROCLIENTE = await requisicaoGET(`districts`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     await aguardeCarregamento(false);
     let bairro = BAIRROCLIENTE.data.find(
       (element) => element._id == document.getElementById('bairrocidadecliente').value
     );
     $('#tabelaendereco').append(`<tr id="linhaend${CONTADORDEENDERECO}">
-            <td class="table-warning"><span class="fas fa-map-marker-alt"></span> ${
-      document.getElementById('ruacliente').value
+            <td class="table-warning"><span class="fas fa-map-marker-alt"></span> ${document.getElementById('ruacliente').value
       }</td>
             <td class="table-warning">${document.getElementById('numerocasacliente').value}</td>
             <td class="table-warning" title="${bairro.name} - ${bairro.city}">${corrigirTamanhoString(15, bairro.name)} - ${corrigirTamanhoString(15, bairro.city)}</td>
@@ -391,7 +387,7 @@ async function cadastrarCliente() {
           address: addressSerialiazaded,
           phone: cliente.phone,
           name: cliente.name,
-        });
+        }, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         await aguardeCarregamento(false);
 
         $('#modalClasseCliente').modal('hide');
@@ -411,7 +407,7 @@ async function cadastrarCliente() {
         let result = await requisicaoPOST(`clients`, {
           name: cliente.name,
           phone: cliente.phone
-        });
+        }, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         await aguardeCarregamento(false);
 
         $('#modalClasseCliente').modal('hide');
@@ -456,7 +452,7 @@ async function atualizarCliente(id) {
           address: serializadedAddress,
           phone: cliente.phone,
           name: (name === cliente.name) ? undefined : name,
-        });
+        }, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         await aguardeCarregamento(false);
 
         await mensagemDeAviso('Cliente atualizado com sucesso!')
@@ -467,7 +463,7 @@ async function atualizarCliente(id) {
         await requisicaoPUT(`clients/${id}`, {
           name: (name === cliente.name) ? undefined : name,
           phone: cliente.phone
-        });
+        }, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         await aguardeCarregamento(false);
 
         await mensagemDeAviso('Cliente atualizado com sucesso!')
@@ -490,7 +486,7 @@ async function atualizarCliente(id) {
 async function excluirCliente(id) {
   try {
     await aguardeCarregamento(true);
-    await requisicaoDELETE(`clients/${id}`, '')
+    await requisicaoDELETE(`clients/${id}`, '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
     await aguardeCarregamento(false);
     await mensagemDeAviso('Cliente excluído com sucesso!')
   } catch (error) {

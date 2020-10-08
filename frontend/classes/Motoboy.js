@@ -151,11 +151,11 @@ async function buscarDadosMotoboyTrabalhando(tipo) {
     try {
         await aguardeCarregamento(true);
         if (tipo == 'nome') {
-            json = await requisicaoGET(`deliverymans/${document.getElementById('nome').value}`)
+            json = await requisicaoGET(`deliverymans/${document.getElementById('nome').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
         } else if (tipo == 'todos') {
-            json = await requisicaoGET(`deliverymans`)
+            json = await requisicaoGET(`deliverymans`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
         } else if (tipo == 'ativos') {
-            json = await requisicaoGET(`deliverymans/working_days`)
+            json = await requisicaoGET(`deliverymans/working_days`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
         }
         await aguardeCarregamento(false);
 
@@ -204,15 +204,15 @@ async function buscarDadosMotoboy(tipo) {
     try {
         if (tipo == 'nome') {
             await aguardeCarregamento(true);
-            json = await requisicaoGET(`deliverymans/${document.getElementById('nomeemmodal').value}`)
+            json = await requisicaoGET(`deliverymans/${document.getElementById('nomeemmodal').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
             await aguardeCarregamento(false);
         } else if (tipo == 'todos') {
             await aguardeCarregamento(true);
-            json = await requisicaoGET('deliverymans')
+            json = await requisicaoGET('deliverymans', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
             await aguardeCarregamento(false);
         } else if (tipo == 'ativos') {
             await aguardeCarregamento(true);
-            json = await requisicaoGET('deliverymans/working_days')
+            json = await requisicaoGET('deliverymans/working_days', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
             await aguardeCarregamento(false);
         }
 
@@ -266,7 +266,7 @@ async function alterarEstadoDeTrabalhoMotoboy(tipo, id) {
     if (tipo == 'desativarTodos') {
         try {
             await aguardeCarregamento(true);
-            await requisicaoPUT(`deliverymans`);
+            await requisicaoPUT(`deliverymans`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
             await aguardeCarregamento(false);
             await mensagemDeAviso('Todos os motoboys foram desabilitados!')
         } catch (error) {
@@ -283,7 +283,7 @@ async function alterarEstadoDeTrabalhoMotoboy(tipo, id) {
                 working_day: true,
                 name: dado[0].name,
                 phone: dado[0].phone,
-            });
+            }, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
             await aguardeCarregamento(false);
             await mensagemDeAviso('O motoboy foi habilitado!')
         } catch (error) {
@@ -300,7 +300,7 @@ async function alterarEstadoDeTrabalhoMotoboy(tipo, id) {
                 working_day: false,
                 name: dado[0].name,
                 phone: dado[0].phone,
-            });
+            }, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
             await aguardeCarregamento(false);
             await mensagemDeAviso('O motoboy foi desabilitado!')
         } catch (error) {
@@ -323,7 +323,7 @@ async function cadastrarMotoboy() {
             "phone":"${document.getElementById('telefonemotoboy').value}"}`;
 
         await aguardeCarregamento(true);
-        let result = await requisicaoPOST('deliverymans', JSON.parse(json));
+        let result = await requisicaoPOST('deliverymans', JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         await aguardeCarregamento(false);
         $('#modalClasseMotoboy').modal('hide');
         await mensagemDeAviso('Motoboy cadastrado com sucesso!')
@@ -347,7 +347,7 @@ async function atualizarMotoboy(id) {
         delete dado[0].__v;
 
         await aguardeCarregamento(true);
-        await requisicaoPUT(`deliverymans/${id}`, dado[0]);
+        await requisicaoPUT(`deliverymans/${id}`, dado[0], { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         await aguardeCarregamento(false);
         await mensagemDeAviso('Motoboy atualizado com sucesso!')
     } catch (error) {
@@ -365,7 +365,7 @@ async function atualizarMotoboy(id) {
 async function exluirMotoboy(id) {
     try {
         await aguardeCarregamento(true);
-        await requisicaoDELETE(`deliverymans/${id}`, '');
+        await requisicaoDELETE(`deliverymans/${id}`, '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         await aguardeCarregamento(false);
         await mensagemDeAviso('Motoboy excluído com sucesso!')
     } catch (error) {
@@ -383,7 +383,7 @@ async function exluirMotoboy(id) {
 async function gerarGraficoMotoboy(id) {
     try {
         await aguardeCarregamento(true);
-        let codigoHTML = ``, json = await requisicaoGET(`reports/deliveryman/rate/${id}`), json2 = await requisicaoGET(`reports/deliveryman/orders/${id}`)
+        let codigoHTML = ``, json = await requisicaoGET(`reports/deliveryman/rate/${id}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } }), json2 = await requisicaoGET(`reports/deliveryman/orders/${id}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
         await aguardeCarregamento(false);
 
         if (json2.data[0]) {
@@ -460,9 +460,9 @@ function reiniciarClasseMotoboy() {
 async function impressaoRelatorioMotoboy(id) {
     try {
         await aguardeCarregamento(true);
-        let json2 = await requisicaoGET(`reports/deliveryman/orders/${id}`)
+        let json2 = await requisicaoGET(`reports/deliveryman/orders/${id}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
         if (json2.data[0]) {
-            await requisicaoGET(`printers/deliveryman_report/${id}`)
+            await requisicaoGET(`printers/deliveryman_report/${id}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
             await mensagemDeAviso('Imprimindo relatório ...')
         } else {
             mensagemDeErro('Nenhum pedido entregue pelo motoboy!')

@@ -37,15 +37,13 @@ function gerarListaDeBairros(json) {
   let codigoHTML = ``;
 
   codigoHTML += `<tr>
-        <td class="table-warning" title="${json.name}"><strong><span class="fas fa-map-marker-alt"></span> ${
-    corrigirTamanhoString(15, json.name)
+        <td class="table-warning" title="${json.name}"><strong><span class="fas fa-map-marker-alt"></span> ${corrigirTamanhoString(15, json.name)
     }</strong></td>
         <td class="table-warning" title="${json.city}"><strong>${corrigirTamanhoString(15, json.city)}</strong></td>
         <td class="table-warning text-danger"><strong>R$${parseFloat(json.rate).toFixed(
       2
     )}</strong></td>
-        <td class="table-warning"><button onclick="carregarDadosBairro('${
-    json._id
+        <td class="table-warning"><button onclick="carregarDadosBairro('${json._id
     }')" type="button" class="btn btn-primary btn-sm"><span class="fas fa-edit"></span> Editar</button></td>
         <td class="table-warning"><button onclick="confirmarAcao('Excluir este bairro!', 'excluirBairro(this.value)', '${json._id}')" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span> Excluir</button></td>
     </tr>`;
@@ -116,11 +114,11 @@ async function buscarDadosBairro(tipo) {
   try {
     if (tipo == 'nome') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`districts/${document.getElementById('nome').value}`);
+      json = await requisicaoGET(`districts/${document.getElementById('nome').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
     } else if (tipo == 'todos') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`districts`);
+      json = await requisicaoGET(`districts`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
     }
 
@@ -182,7 +180,7 @@ async function cadastrarBairro() {
     "rate":${$('#precotaxa').val()}}`;
 
     await aguardeCarregamento(true);
-    let result = await requisicaoPOST('districts', JSON.parse(json));
+    let result = await requisicaoPOST('districts', JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     await aguardeCarregamento(false);
     await mensagemDeAviso('Bairro cadastrado com sucesso!')
     document.getElementById('nome').value = await result.data.name
@@ -208,7 +206,7 @@ async function atualizarBairro(id) {
     delete dado[0].__v;
 
     await aguardeCarregamento(true);
-    await requisicaoPUT(`districts/${id}`, dado[0]);
+    await requisicaoPUT(`districts/${id}`, dado[0], { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     await aguardeCarregamento(false);
     document.getElementById('modal').innerHTML = '';
     await mensagemDeAviso('Bairro atualizado com sucesso!')
@@ -228,7 +226,7 @@ async function atualizarBairro(id) {
 async function excluirBairro(id) {
   try {
     await aguardeCarregamento(true);
-    await requisicaoDELETE(`districts/${id}`, '');
+    await requisicaoDELETE(`districts/${id}`, '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     await aguardeCarregamento(false);
     await mensagemDeAviso('Bairro excluído com sucesso!')
   } catch (error) {

@@ -37,8 +37,7 @@ function gerarListaDeProdutos(json) {
   let codigoHTML = ``;
 
   codigoHTML += `<tr>
-        <td class="table-warning text-dark" title="${json.name}"><strong><span class="fas fa-hamburger"></span> ${
-    corrigirTamanhoString(15, json.name)
+        <td class="table-warning text-dark" title="${json.name}"><strong><span class="fas fa-hamburger"></span> ${corrigirTamanhoString(15, json.name)
     }</strong></td>
         <td class="table-warning" title="${json.description}">${corrigirTamanhoString(40, json.description)}</td>
         <td class="table-warning"><strong>R$ ${parseFloat(json.cost).toFixed(2)}</strong></td>
@@ -55,7 +54,7 @@ function gerarListaDeProdutos(json) {
 //funcao responsavel por gerar o modal de cadastrar/atualizar/remover produto
 async function modalTelaCadastrarouAtualizarProduto(tipo) {
   await aguardeCarregamento(true);
-  let codigoHTML = ``, json = await requisicaoGET(`ingredients`);
+  let codigoHTML = ``, json = await requisicaoGET(`ingredients`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
   await aguardeCarregamento(false);
 
   codigoHTML += `<div class="modal fade" id="modalClasseProduto" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -156,11 +155,11 @@ async function buscarDadosProduto(tipo) {
   try {
     if (tipo == 'nome') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`products/${document.getElementById('nome').value}`);
+      json = await requisicaoGET(`products/${document.getElementById('nome').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
     } else if (tipo == 'todos') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`products`);
+      json = await requisicaoGET(`products`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
     }
 
@@ -256,7 +255,7 @@ async function cadastrarProduto() {
 
 
     await aguardeCarregamento(true);
-    let result = await requisicaoPOST('products', json);
+    let result = await requisicaoPOST('products', json, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     await aguardeCarregamento(false);
     $('#modalClasseProduto').modal('hide');
     await mensagemDeAviso('Produto cadastrado com sucesso!')
@@ -286,7 +285,7 @@ async function atualizarProduto(id) {
     delete dado[0].__v;
 
     await aguardeCarregamento(true);
-    await requisicaoPUT(`products/${id}`, dado[0]);
+    await requisicaoPUT(`products/${id}`, dado[0], { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     await aguardeCarregamento(false);
     await mensagemDeAviso('Produto atualizado com sucesso!')
   } catch (error) {
@@ -304,7 +303,7 @@ async function atualizarProduto(id) {
 async function excluirProduto(id) {
   try {
     await aguardeCarregamento(true);
-    await requisicaoDELETE(`products/${id}`, '');
+    await requisicaoDELETE(`products/${id}`, '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     await aguardeCarregamento(false);
     await mensagemDeAviso('Produto excluído com sucesso!')
   } catch (error) {

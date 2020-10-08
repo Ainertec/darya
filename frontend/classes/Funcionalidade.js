@@ -129,6 +129,11 @@ function mostrarCamposIncorreto(campo) {
   }
 }
 
+// funcao responsavel por buscar a sessao do usuario
+function buscarSessionUser() {
+  return JSON.parse(sessionStorage.getItem('loginDarya'))
+}
+
 //funcao responsavel por gerar a tela de aguarde o carregamento
 let timerCarregador;
 function aguardeCarregamento(tipo) {

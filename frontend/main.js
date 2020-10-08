@@ -20,6 +20,7 @@ home.on('ready', function () {
   janelaPrincipal.loadURL(`file://${__dirname}/index.html`);
   janelaPrincipal.once('ready-to-show', () => {
     janelaPrincipal.show();
+    janelaPrincipal.maximize();
   });
 
   //shell.openItem("C://gresppro-x64//executaveis_modulos//startMongo.vbs")

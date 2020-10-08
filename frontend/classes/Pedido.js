@@ -76,7 +76,7 @@ async function modalCadastrorapidoClientePedido(tipo) {
 
   if (tipo) {
     await aguardeCarregamento(true);
-    json = await requisicaoGET(`districts`)
+    json = await requisicaoGET(`districts`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
     await aguardeCarregamento(false);
   }
 
@@ -161,7 +161,7 @@ async function cadastrarClienteRapidoPedido(envio) {
       }`
 
       await aguardeCarregamento(true);
-      let result = await requisicaoPOST(`clients`, JSON.parse(json));
+      let result = await requisicaoPOST(`clients`, JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
 
       $('#modalcadastrorapidocliente').modal('hide');
@@ -183,7 +183,7 @@ async function cadastrarClienteRapidoPedido(envio) {
       }`
 
       await aguardeCarregamento(true);
-      let result = await requisicaoPOST(`clients`, JSON.parse(json));
+      let result = await requisicaoPOST(`clients`, JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
 
       $('#modalcadastrorapidocliente').modal('hide');
@@ -461,11 +461,11 @@ async function criarListagemDeBuscaDeClientes(tipo) {
   try {
     if (tipo == 'nome') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`clients/${document.getElementById('nometelefonecliente').value}`);
+      json = await requisicaoGET(`clients/${document.getElementById('nometelefonecliente').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
     } else if (tipo == 'todos') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`clients`);
+      json = await requisicaoGET(`clients`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
     }
 
@@ -523,11 +523,11 @@ async function criarListagemDeBuscaDeProduto(tipo) {
   try {
     if (tipo == 'nome') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`products/${document.getElementById('nomeproduto').value}`);
+      json = await requisicaoGET(`products/${document.getElementById('nomeproduto').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
     } else if (tipo == 'todos') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`products`);
+      json = await requisicaoGET(`products`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
     }
 
@@ -578,14 +578,14 @@ async function criarListagemDeBuscaDeMotoboy(tipo) {
   try {
     if (tipo == 'nome') {
       await aguardeCarregamento(true);
-      let json2 = await requisicaoGET(`deliverymans/${document.getElementById('nomeMotoboyPedido').value}`);
+      let json2 = await requisicaoGET(`deliverymans/${document.getElementById('nomeMotoboyPedido').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
       json.data = json2.data.filter((item) => {
         return item.working_day == true;
       })
     } else if (tipo == 'ativos') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET('deliverymans/working_days');
+      json = await requisicaoGET('deliverymans/working_days', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
     }
 
@@ -645,7 +645,7 @@ async function criarListagemDeBuscaDeMotoboy(tipo) {
 async function mostrarLocaisDeEntregaMotoboy(id) {
   try {
     await aguardeCarregamento(true);
-    let codigoHTML = ``, json = await requisicaoGET(`orders/deliveryman/${id}`);
+    let codigoHTML = ``, json = await requisicaoGET(`orders/deliveryman/${id}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     await aguardeCarregamento(false);
 
     for (let item of json.data) {
@@ -665,7 +665,7 @@ async function preencherDadosPedidoIncluirDadosEmPedido(tipo, id, quantidade) {
 
     try {
       await aguardeCarregamento(true);
-      let json = await requisicaoGET(`clients`);
+      let json = await requisicaoGET(`clients`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
       let dado = json.data.find((element) => element._id == id);
 
@@ -701,7 +701,7 @@ async function preencherDadosPedidoIncluirDadosEmPedido(tipo, id, quantidade) {
       if (VETORDEPRODUTOSCLASSEPEDIDO.findIndex((element) => element._id == id) == -1) {
 
         await aguardeCarregamento(true);
-        let json = await requisicaoGET(`products`);
+        let json = await requisicaoGET(`products`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         await aguardeCarregamento(false);
         let dado = json.data.find((element) => element._id == id);
 
@@ -727,7 +727,7 @@ async function preencherDadosPedidoIncluirDadosEmPedido(tipo, id, quantidade) {
 
     try {
       await aguardeCarregamento(true);
-      let json = await requisicaoGET('deliverymans/working_days');
+      let json = await requisicaoGET('deliverymans/working_days', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
       let dado = json.data.find((element) => element._id == id);
 
@@ -839,12 +839,12 @@ async function buscarDadosAtualizar(tipo) {
   try {
     if (tipo == 'codigo') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`orders/${document.getElementById('nomePedidoPagamento').value}`);
+      json = await requisicaoGET(`orders/${document.getElementById('nomePedidoPagamento').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
       json.data = [json.data]
     } else if (tipo == 'todos') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET('orders');
+      json = await requisicaoGET('orders', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
     }
 
@@ -915,7 +915,7 @@ async function cadastrarPedido() {
       }`;
 
     await aguardeCarregamento(true);
-    let result = await requisicaoPOST('orders', JSON.parse(json));
+    let result = await requisicaoPOST('orders', JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     await aguardeCarregamento(false);
 
     await reImprimirPedido(result.data._id);
@@ -964,7 +964,7 @@ async function atualizarPedido(id) {
       }`;
 
     await aguardeCarregamento(true);
-    let result = await requisicaoPUT(`orders/${id}`, JSON.parse(json))
+    let result = await requisicaoPUT(`orders/${id}`, JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
     await aguardeCarregamento(false);
 
     await reImprimirPedido(result.data._id);
@@ -986,13 +986,13 @@ async function atualizarPedido(id) {
 async function excluirPedido(id) {
   try {
     await aguardeCarregamento(true);
-    let result = await requisicaoGET(`orders`)
+    let result = await requisicaoGET(`orders`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
     let order = result.data.find(element => element._id == id)
-    await requisicaoDELETE(`orders/${id}`, '');
+    await requisicaoDELETE(`orders/${id}`, '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     if (order.deliveryman) {
-      let result2 = await requisicaoGET(`orders/deliveryman/${order.deliveryman._id}`)
+      let result2 = await requisicaoGET(`orders/deliveryman/${order.deliveryman._id}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
       if (result2.data.length == 0) {
-        await requisicaoPUT(`deliverymans/${order.deliveryman._id}`, { "available": false, "hasDelivery": false, "name": order.deliveryman.name, "phone": order.deliveryman.phone })
+        await requisicaoPUT(`deliverymans/${order.deliveryman._id}`, { "available": false, "hasDelivery": false, "name": order.deliveryman.name, "phone": order.deliveryman.phone }, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
       }
     }
     await aguardeCarregamento(false);
@@ -1013,7 +1013,7 @@ async function excluirPedido(id) {
 async function finalizarPedido(id) {
   try {
     await aguardeCarregamento(true);
-    await requisicaoPUT(`orders/${id}`, { "finished": true })
+    await requisicaoPUT(`orders/${id}`, { "finished": true }, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
     await aguardeCarregamento(false);
     await mensagemDeAviso('Pedido finalizado com sucesso!')
   } catch (error) {
@@ -1101,7 +1101,7 @@ async function criarListaEnviarMotoboyEntrega(tipo) {
   try {
     if (tipo == 'nome') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`deliverymans/${document.getElementById('nomeMotoboyAguardo').value}`);
+      json = await requisicaoGET(`deliverymans/${document.getElementById('nomeMotoboyAguardo').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
       for (let item of json.data) {
         if (item.working_day == false && item.hasDelivery == false) {
@@ -1111,7 +1111,7 @@ async function criarListaEnviarMotoboyEntrega(tipo) {
       }
     } else if (tipo == 'ativos') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET('deliverymans/working_days');
+      json = await requisicaoGET('deliverymans/working_days', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
       for (let item of json.data) {
         if (item.hasDelivery == false) {
@@ -1162,9 +1162,9 @@ async function criarListaEnviarMotoboyEntrega(tipo) {
 async function enviarMotoboyParaEntrega(id) {
   try {
     await aguardeCarregamento(true);
-    let json = await requisicaoGET(`deliverymans`)
+    let json = await requisicaoGET(`deliverymans`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
     let motoboy = json.data.find(element => element._id == id)
-    await requisicaoPUT(`deliverymans/${id}`, { "available": true, "name": motoboy.name, "phone": motoboy.phone })
+    await requisicaoPUT(`deliverymans/${id}`, { "available": true, "name": motoboy.name, "phone": motoboy.phone }, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
     await aguardeCarregamento(false);
     await mensagemDeAviso('Motoboy enviado para entrega com sucesso!')
   } catch (error) {
@@ -1178,7 +1178,7 @@ async function reImprimirPedido(id) {
     await aguardeCarregamento(true);
     await requisicaoPOST(`printers`, {
       id: id
-    })
+    }, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
     await aguardeCarregamento(false);
     await mensagemDeAviso('Imprimindo pedido ...')
   } catch (error) {

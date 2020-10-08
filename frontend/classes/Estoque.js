@@ -118,11 +118,11 @@ async function buscarEstoque(tipoBusca) {
   try {
     if (tipoBusca == 'nome') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`ingredients/${$('#nome').val()}`);
+      json = await requisicaoGET(`ingredients/${$('#nome').val()}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
     } else if (tipoBusca == 'todos') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET('ingredients');
+      json = await requisicaoGET(`ingredients`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
     }
 
@@ -221,7 +221,7 @@ async function atualizarEstoque(id) {
     produto.price = parseInt($('#preco' + id).val());
 
     await aguardeCarregamento(true);
-    await requisicaoPUT(`ingredients/${id}`, produto);
+    await requisicaoPUT(`ingredients/${id}`, produto, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     await aguardeCarregamento(false);
     await mensagemDeAviso('Atualizado com sucesso!');
   } catch (error) {
@@ -284,7 +284,7 @@ async function cadastarIngrediente() {
     }`
 
     await aguardeCarregamento(true);
-    let result = await requisicaoPOST(`ingredients`, JSON.parse(json))
+    let result = await requisicaoPOST(`ingredients`, JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
     await aguardeCarregamento(false);
     $('#modalClasseEstoque').modal('hide');
     await reiniciarClasseEstoque();
@@ -311,7 +311,7 @@ async function atualizarIngrediente(id) {
     delete dado.__v
 
     await aguardeCarregamento(true);
-    await requisicaoPUT(`ingredients/${id}`, dado)
+    await requisicaoPUT(`ingredients/${id}`, dado, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
     await aguardeCarregamento(false);
     await mensagemDeAviso('Ingrediente atualizado com sucesso!')
   } catch (error) {
@@ -329,7 +329,7 @@ async function atualizarIngrediente(id) {
 async function excluirIngrediente(id) {
   try {
     await aguardeCarregamento(true);
-    await requisicaoDELETE(`ingredients/${id}`, '')
+    await requisicaoDELETE(`ingredients/${id}`, '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
     await aguardeCarregamento(false);
     await mensagemDeAviso('Ingrediente excluído com sucesso!')
   } catch (error) {

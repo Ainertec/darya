@@ -33,7 +33,7 @@ async function telaDeRelatorio() {
   animacaoJanela2();
   setTimeout(function () { document.getElementById('janela2').innerHTML = codigoHTML }, 30)
   await aguardeCarregamento(true);
-  await requisicaoDELETE(`reports`, '')
+  await requisicaoDELETE(`reports`, '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
   await aguardeCarregamento(false);
   setTimeout(async function () {
     await gerarGraficoLucroTotalPeriodico();
@@ -46,7 +46,7 @@ async function telaDeRelatorio() {
 async function gerarGraficoLucroTotalPeriodico() {
   try {
     await aguardeCarregamento(true);
-    let json = await requisicaoGET('reports/orders/profit')
+    let json = await requisicaoGET('reports/orders/profit', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
     await aguardeCarregamento(false);
 
     Highcharts.chart('grafico0', {
@@ -129,7 +129,7 @@ async function gerarGraficoLucroTotalPeriodico() {
 async function gerarGraficoGastoseGanhosSobreproduto() {
   try {
     await aguardeCarregamento(true);
-    let categoria = [], vetorLucro = [], vetorDispesa = [], json = await requisicaoGET('reports/products/dispense_gain')
+    let categoria = [], vetorLucro = [], vetorDispesa = [], json = await requisicaoGET('reports/products/dispense_gain', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
     await aguardeCarregamento(false);
 
     for (let item of json.data) {
@@ -232,7 +232,7 @@ async function gerarGraficoGastoseGanhosSobreproduto() {
 async function gerarGraficoProdutosMaiseMenosVendidos() {
   try {
     await aguardeCarregamento(true);
-    let categoria = [], vetorDeProduto = [], json = await requisicaoGET('reports/products/amount')
+    let categoria = [], vetorDeProduto = [], json = await requisicaoGET('reports/products/amount', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
     await aguardeCarregamento(false);
 
     for (let item of json.data) {
@@ -341,7 +341,7 @@ function gerarListaDePedidosFechados(json) {
 async function impressaoRelatorioGeral() {
   try {
     await aguardeCarregamento(true);
-    await requisicaoGET(`printers/sold_report`)
+    await requisicaoGET(`printers/sold_report`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
     await aguardeCarregamento(false);
     await mensagemDeAviso('Imprimindo relatório geral...')
   } catch (error) {
