@@ -65,13 +65,7 @@ function getStepContent(step, cartItems) {
       return (
         <>
           {cartItems.map((item) => (
-            <ItemCarrinho
-              key={item.product._id}
-              name={item.product.name}
-              description={item.product.description}
-              price={item.product.price}
-              id={item.product._id}
-            />
+            <ItemCarrinho key={item.product._id} data={item} />
           ))}
         </>
       );

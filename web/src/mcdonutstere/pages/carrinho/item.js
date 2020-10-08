@@ -24,28 +24,32 @@ const useStyles = makeStyles({
   },
 });
 
-export default function ItemCarrinho(props) {
+export default function ItemCarrinho({ data }) {
   const classes = useStyles();
-  const { removeItem } = useCart();
+  const { removeItem, cartItems, updateQuantity } = useCart();
   const [quantidade, setQuantidade] = useState(1);
 
   useEffect(() => {
-    console.log(quantidade, props.id);
-  }, [props.id, quantidade]);
+    updateQuantity(data.product, quantidade);
+  }, [cartItems, data.product, data.product._id, quantidade, updateQuantity]);
+
+  useEffect(() => {
+    setQuantidade(data.quantity);
+  }, [data.quantity]);
 
   return (
     <Card className={classes.root}>
       <CardContent>
         <Typography variant="h6" component="h3">
           <strong>
-            <FastfoodIcon /> {props.name}
+            <FastfoodIcon /> {data.product.name}
           </strong>
         </Typography>
         <Typography variant="subtitle2" component="p">
-          {props.description}
+          {data.product.description}
         </Typography>
         <Typography variant="h5" component="h2" className={classes.precostyle}>
-          <strong>R${props.price.toFixed(2)}</strong>
+          <strong>R${data.product.price.toFixed(2)}</strong>
         </Typography>
       </CardContent>
       <CardActions>
@@ -64,7 +68,7 @@ export default function ItemCarrinho(props) {
           variant="outlined"
           color="secondary"
           size="small"
-          onClick={() => removeItem(props.id)}
+          onClick={() => removeItem(data.product._id)}
         >
           <DeleteForeverIcon />
         </Button>
