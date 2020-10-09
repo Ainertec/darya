@@ -31,3 +31,19 @@ sendo assim o dono poderia imprimir a nota fiscal quando desejar
 método menos custoso e mais ágil
 
 o cliente pode atualizar o pedido caso ele não tenha saído para entrega
+
+Como fazer com que a aplicação tenha um horario de funcionamento?
+Isso poderia ser feito pelo backend?
+O back poderia ter uma especie de token que faça com que a aplicação funcione.
+Ou isso poderia ser feito com react, poderiamos criar um calendario de funcionamento e o react verificava nesse calendario o dia e hora de funcionamento, o problema é que isso teria que ser feito toda hora que alguem acessasse o sistema, por exemplo um useEffect.
+Por exemplo, na home page mostrar um aviso falando sobre o horario de funcionamento, e na pagina de fazer o pedido, fazer outra verificação não permitindo a criação caso esteja fora do horario de funcionamento. Contras:
+toda hora teria de ser feita um verificação de horário, haverá muitas requisições para o backend,
+Mas é uma solução não dificil de se implementar e a mais viável
+
+Documento calendário:
+
+dias da semana: number
+inicio: number
+fim: number
+
+horario é armazenado no banco em minutos

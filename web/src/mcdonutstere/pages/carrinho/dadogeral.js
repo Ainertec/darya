@@ -53,6 +53,7 @@ export default function DadosGerais() {
     }, 0);
     return (total + Number(getAddressRate())).toFixed(2);
   }
+ 
 
   return (
     <Container>
@@ -67,7 +68,7 @@ export default function DadosGerais() {
         </Typography>
         <Divider variant="middle" className={classes.divisorStyle} />
         <Typography color="textSecondary" variant="body2">
-          Tel.: asdas
+          Tel.: {user.phone.join(' ')}
         </Typography>
         <Divider variant="middle" className={classes.divisorStyle} />
         <Typography
@@ -85,7 +86,7 @@ export default function DadosGerais() {
           <Table size="small">
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
+                <TableCell>Nome</TableCell>
                 <TableCell align="right">Qtd.:</TableCell>
                 <TableCell align="right">Preço unid.</TableCell>
               </TableRow>
