@@ -8,10 +8,14 @@ import {
   Menu,
   MenuItem,
 } from "@material-ui/core/";
-import { useHistory } from "react-router-dom";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+
+import { useHistory } from "react-router-dom";
 import { useAuth } from "../../contexts/auth";
+
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -28,6 +32,12 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "0 2px 5px 5px rgba(0, 0, 0, .3)",
     borderRadius: 30,
   },
+  subMenuStyle: {
+    padding: 40,
+  },
+  IconMenuStyle: {
+    marginRight: 20,
+  }
 }));
 
 function Navbar({ hideIcons }) {
@@ -110,9 +120,14 @@ function Navbar({ hideIcons }) {
                 }}
                 open={open}
                 onClose={handleClose}
+                className={classes.subMenuStyle}
               >
-                <MenuItem onClick={handleMenuSignOut}>Logout</MenuItem>
-                <MenuItem onClick={handleToProfile}>Perfil</MenuItem>
+                <MenuItem onClick={handleMenuSignOut}>
+                  <ExitToAppIcon className={classes.IconMenuStyle} /> Sair
+                </MenuItem>
+                <MenuItem onClick={handleToProfile}>
+                  <AccountCircle className={classes.IconMenuStyle} /> Perfil
+                </MenuItem>
               </Menu>
             </div>
           )}

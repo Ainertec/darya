@@ -29,13 +29,13 @@ const currencies = [
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        marginTop: 30,
+        marginTop: 15,
         width: '100%',
     },
 }));
 
 
-function Select(props) {
+function Select({ dado }) {
     const classes = useStyles();
     const [currency, setCurrency] = React.useState('Nova Friburgo');
 
@@ -47,7 +47,7 @@ function Select(props) {
         <TextField
             id="standard-select-currency"
             select
-            label={props.name}
+            label={dado.name}
             value={currency}
             onChange={handleChange}
             className={classes.root}

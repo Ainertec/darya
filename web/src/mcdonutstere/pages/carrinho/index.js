@@ -92,7 +92,7 @@ function getStepContent(step, cartItems) {
           >
             Alteração ou cancelamento após a confirmação do pedido
             <br />
-            só poderá ser feito pelo Whatsapp número (22)98153-3173.
+            só poderá ser feito pelo Whatsapp número (22) 22222-22222.
             <br />
             Obrigado pela compreensão!
           </Typography>
@@ -169,23 +169,23 @@ export default function TelaCarrinho() {
                             <DoneOutlineIcon /> Fazer Pedido
                           </>
                         ) : (
-                          <>
-                            Continuar <SkipNextIcon />
-                          </>
-                        )}
+                            <>
+                              Continuar <SkipNextIcon />
+                            </>
+                          )}
                       </Button>
                     </>
                   ) : (
-                    <Button
-                      disabled={posicaoNavegacao === 0}
-                      onClick={voltar}
-                      color="secondary"
-                      variant="contained"
-                    >
-                      <DoneAllIcon />
+                      <Button
+                        disabled={posicaoNavegacao === 0}
+                        onClick={voltar}
+                        color="secondary"
+                        variant="contained"
+                      >
+                        <DoneAllIcon />
                       Confirmar Pedido
-                    </Button>
-                  )}
+                      </Button>
+                    )}
                 </Box>
               </div>
             </div>
