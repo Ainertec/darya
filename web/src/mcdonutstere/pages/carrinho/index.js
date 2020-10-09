@@ -21,6 +21,7 @@ import ItemCarrinho from "./item";
 import Endereco from "./endereco";
 import DadosGerais from "./dadogeral";
 import { useCart } from "../../contexts/cart";
+import { useAuth } from "../../contexts/auth";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,58 +53,10 @@ function getTitulos() {
   return ["Items do pedido", "Dados para entrega", "Confirmar pedido"];
 }
 
-const JSONfake = JSON.parse(`[
-    {"id":"1","name":"teste","price":2.50,"description":"O melhor da casa!"},
-    {"id":"2","name":"teste2","price":2.60,"description":"O melhor da casa2!"},
-    {"id":"3","name":"teste3","price":2.70,"description":"O melhor da casa3!"},
-    {"id":"4","name":"teste4","price":2.80,"description":"O melhor da casa4!"}
-]`);
-
-function getStepContent(step, cartItems) {
-  switch (step) {
-    case 0:
-      return (
-        <>
-          {cartItems.map((item) => (
-            <ItemCarrinho key={item.product._id} data={item} />
-          ))}
-        </>
-      );
-
-    case 1:
-      return (
-        <>
-          <Endereco />
-        </>
-      );
-    case 2:
-      return (
-        <>
-          <DadosGerais />
-        </>
-      );
-    default:
-      return (
-        <>
-          <Typography
-            variant="body1"
-            // component="h3"
-            style={{ color: "red", textAlign: "center" }}
-          >
-            Alteração ou cancelamento após a confirmação do pedido
-            <br />
-            só poderá ser feito pelo Whatsapp número (22)98153-3173.
-            <br />
-            Obrigado pela compreensão!
-          </Typography>
-        </>
-      );
-  }
-}
-
 export default function TelaCarrinho() {
   const classes = useStyles();
-  const { cartItems } = useCart();
+  const { cartItems, payment, addressId } = useCart();
+  const { user } = useAuth();
   const [posicaoNavegacao, setProximoAnterior] = useState(0);
   const cabecario = getTitulos();
 
@@ -114,6 +67,22 @@ export default function TelaCarrinho() {
   const voltar = () => {
     setProximoAnterior((opcaoDeNavegacao) => opcaoDeNavegacao - 1);
   };
+
+  function sendOrder() {
+    const items = cartItems.map((item) => {
+      return { product: item.product._id, quantity: item.quantity };
+    });
+
+    const order = {
+      client_id: user._id,
+      cliente_address_id: addressId,
+      items,
+      payment,
+      source: "web",
+    };
+    console.log(order);
+    voltar();
+  }
 
   return (
     <div className={classes.colorPag}>
@@ -145,7 +114,30 @@ export default function TelaCarrinho() {
                   display="flex"
                   className={classes.root}
                 >
-                  {getStepContent(posicaoNavegacao, cartItems)}
+                  {posicaoNavegacao === 0 && (
+                    <>
+                      {cartItems.map((item) => (
+                        <ItemCarrinho key={item.product._id} data={item} />
+                      ))}
+                    </>
+                  )}
+                  {posicaoNavegacao === 1 && <Endereco />}
+
+                  {posicaoNavegacao === 2 && <DadosGerais />}
+
+                  {posicaoNavegacao === 3 && (
+                    <Typography
+                      variant="body1"
+                      // component="h3"
+                      style={{ color: "red", textAlign: "center" }}
+                    >
+                      Alteração ou cancelamento após a confirmação do pedido
+                      <br />
+                      só poderá ser feito pelo Whatsapp número (22)98153-3173.
+                      <br />
+                      Obrigado pela compreensão!
+                    </Typography>
+                  )}
                 </Box>
                 <Box justifyContent="center" flexWrap="wrap" display="flex">
                   {posicaoNavegacao < cabecario.length ? (
@@ -178,7 +170,7 @@ export default function TelaCarrinho() {
                   ) : (
                     <Button
                       disabled={posicaoNavegacao === 0}
-                      onClick={voltar}
+                      onClick={sendOrder}
                       color="secondary"
                       variant="contained"
                     >

@@ -12,6 +12,8 @@ import {
   TableBody,
   Container,
 } from "@material-ui/core/";
+import { useAuth } from "../../contexts/auth";
+import { useCart } from "../../contexts/cart";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,33 +28,46 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function createData(name, quantidade, preco) {
-  return { name, quantidade, preco };
-}
-
-const rows = [
-  createData("Frozen yoghurt", 5, 6.0),
-  createData("Ice cream sandwich", 2, 9.0),
-  createData("Eclair", 2, 1.0),
-];
-
 export default function DadosGerais() {
   const classes = useStyles();
+  const { addressId, cartItems } = useCart();
+  const { user } = useAuth();
+
+  function getDeliveryAddress() {
+    if (addressId == "0") {
+      return "Retirada no local";
+    } else {
+      const addressFound = user.address.find((add) => add._id == addressId);
+
+      return `${addressFound.district.name} - ${addressFound.street} `;
+    }
+  }
+  function getAddressRate() {
+    const addressFound = user.address.find((add) => add._id == addressId);
+    if (addressFound) return addressFound.district.rate.toFixed(2);
+    else return 0.0;
+  }
+  function getTotal() {
+    const total = cartItems.reduce((sum, item) => {
+      return sum + item.product.price * item.quantity;
+    }, 0);
+    return (total + Number(getAddressRate())).toFixed(2);
+  }
 
   return (
     <Container>
       <div className={classes.root}>
         <Grid container alignItems="center">
           <Typography gutterBottom variant="h5">
-            Aldair Camargo
+            {user.name}
           </Typography>
         </Grid>
         <Typography color="textSecondary" variant="body2">
-          Endereço de entrega: Rua Nova - Lumiar - Nova Friburgo
+          Endereço de entrega: {getDeliveryAddress()}
         </Typography>
         <Divider variant="middle" className={classes.divisorStyle} />
         <Typography color="textSecondary" variant="body2">
-          Tel.: (22)2542-9670, (22)981533173
+          Tel.: asdas
         </Typography>
         <Divider variant="middle" className={classes.divisorStyle} />
         <Typography
@@ -60,7 +75,7 @@ export default function DadosGerais() {
           variant="body2"
           className={classes.precoStyle}
         >
-          Taxa de entrega: R$12.00
+          Taxa de entrega: {getAddressRate()}
         </Typography>
         <Divider variant="middle" className={classes.divisorStyle} />
         <Typography variant="body2" component="h3">
@@ -76,14 +91,14 @@ export default function DadosGerais() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
-                <TableRow key={row.name}>
+              {cartItems.map((item) => (
+                <TableRow key={item.product._id}>
                   <TableCell component="th" scope="row">
-                    {row.name}
+                    {item.product.name}
                   </TableCell>
-                  <TableCell align="right">{row.quantidade}</TableCell>
+                  <TableCell align="right">{item.quantity}</TableCell>
                   <TableCell align="right" className={classes.precoStyle}>
-                    R$ {row.preco.toFixed(2)}
+                    R$ {item.product.price.toFixed(2)}
                   </TableCell>
                 </TableRow>
               ))}
@@ -91,7 +106,7 @@ export default function DadosGerais() {
           </Table>
         </TableContainer>
         <Typography variant="h6" component="h4" className={classes.precoStyle}>
-          Valor total: R$ 26.00
+          Valor total: {getTotal()}
         </Typography>
       </div>
     </Container>

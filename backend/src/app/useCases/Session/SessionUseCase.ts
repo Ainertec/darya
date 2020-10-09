@@ -16,7 +16,7 @@ export class SessionUseCase {
       throw new Error('incorrect password');
     }
     const token = await user.generateToken();
-
+    await user.populate('address.district').execPopulate();
     const serializedUser = {
       ...user.toObject(),
       password_hash: undefined,
