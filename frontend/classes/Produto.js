@@ -46,7 +46,13 @@ function gerarListaDeProdutos(json) {
     )}</strong></td>
         <td class="table-warning"><button onclick="carregarDadosProduto('${json._id}')" type="button" class="btn btn-primary btn-sm"><span class="fas fa-edit"></span> Editar</button></td>
         <td class="table-warning"><button onclick="confirmarAcao('Excluir este produto!','excluirProduto(this.value)','${json._id}')" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span> Excluir</button></td>
-    </tr>`;
+        <td class="table-warning">
+          <div class="custom-control custom-switch">
+            <input type="checkbox" onclick="alterarDisponibilidade('${json._id}',this.checked)" class="custom-control-input custom-switch" id="botaoSelectClientephoneaddress">
+            <label class="custom-control-label" for="botaoSelectClientephoneaddress">Disponível</label>
+          </div>
+        </td>
+      </tr>`;
 
   return codigoHTML;
 }
@@ -174,6 +180,7 @@ async function buscarDadosProduto(tipo) {
                   <th scope="col">Preço venda</th>
                   <th scope="col">Editar</th>
                   <th scope="col">Excluir</th>
+                  <th scope="col">Disponível</th>
               </tr>
           </thead>
           <tbody>`;
@@ -277,6 +284,7 @@ async function atualizarProduto(id) {
     dado[0].description = document.getElementById('descricaoproduto').value;
     dado[0].price = document.getElementById('precovenda').value;
     dado[0].ingredients = VETORDEINGREDIENTESCLASSEPRODUTO;
+    dado[0].available = true
     delete dado[0]._id;
     delete dado[0].cost
     delete dado[0].stock
@@ -315,6 +323,27 @@ async function excluirProduto(id) {
   } else {
     await buscarDadosProduto('todos');
   }
+}
+
+//funcao responsavel por colocar um produto disponivel ou indisponivel
+async function alterarDisponibilidade(id, status) {
+  let dado = VETORDEPRODUTOSCLASSEPRODUTO.filter(function (element) {
+    return element._id == id;
+  });
+
+  dado[0].available = status
+  delete dado[0]._id;
+  delete dado[0].cost
+  delete dado[0].stock
+  delete dado[0].updatedAt;
+  delete dado[0].createdAt;
+  delete dado[0].__v;
+
+  console.log(dado[0])
+
+  /*await aguardeCarregamento(true);
+  await requisicaoPUT(`products/${id}`, dado[0], { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+  await aguardeCarregamento(false);*/
 }
 
 //funcao responsavel por reiniciar classe produto

@@ -161,7 +161,7 @@ async function cadastrarClienteRapidoPedido(envio) {
       }`
 
       await aguardeCarregamento(true);
-      let result = await requisicaoPOST(`clients`, JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      let result = await requisicaoPOST(`users`, JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
 
       $('#modalcadastrorapidocliente').modal('hide');
@@ -183,7 +183,7 @@ async function cadastrarClienteRapidoPedido(envio) {
       }`
 
       await aguardeCarregamento(true);
-      let result = await requisicaoPOST(`clients`, JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      let result = await requisicaoPOST(`users`, JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
 
       $('#modalcadastrorapidocliente').modal('hide');
@@ -461,11 +461,11 @@ async function criarListagemDeBuscaDeClientes(tipo) {
   try {
     if (tipo == 'nome') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`clients/${document.getElementById('nometelefonecliente').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      json = await requisicaoGET(`users/${document.getElementById('nometelefonecliente').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
     } else if (tipo == 'todos') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`clients`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      json = await requisicaoGET(`users`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
     }
 
@@ -665,7 +665,7 @@ async function preencherDadosPedidoIncluirDadosEmPedido(tipo, id, quantidade) {
 
     try {
       await aguardeCarregamento(true);
-      let json = await requisicaoGET(`clients`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      let json = await requisicaoGET(`users`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
       let dado = json.data.find((element) => element._id == id);
 
@@ -677,7 +677,7 @@ async function preencherDadosPedidoIncluirDadosEmPedido(tipo, id, quantidade) {
       }
 
 
-      DADOSPEDIDO.cliente_id = dado._id;
+      DADOSPEDIDO.user_id = dado._id;
 
       document.getElementById('nomecliente').value = corrigirTamanhoString(15, dado.name);
       document.getElementById('nomecliente').title = dado.name
@@ -769,9 +769,9 @@ async function atualizarDadoPedido(id) {
     }
     await navegacaoModalDeCriacao(5);
 
-    await preencherDadosPedidoIncluirDadosEmPedido('cliente', dado.client.client_id, null);
+    await preencherDadosPedidoIncluirDadosEmPedido('cliente', dado.user.user_id, null);
     if (dado.address) {
-      document.getElementById('enderecocliente').value = await dado.address.client_address_id.toString();
+      document.getElementById('enderecocliente').value = await dado.address.user_address_id.toString();
     }
 
     for (let item of dado.items) {
@@ -809,7 +809,7 @@ function listaDePedidosAbertosParaPagamento(json) {
 
   codigoHTML += `<tr>
         <td class="table-warning text-dark"><strong><span class="fas fa-sticky-note"></span> ${json.identification}</strong></td>
-        <td class="table-warning" title="${json.client.name}"><strong>${corrigirTamanhoString(15, json.client.name)}</strong></td>
+        <td class="table-warning" title="${json.user.name}"><strong>${corrigirTamanhoString(15, json.user.name)}</strong></td>
         <td class="table-warning text-danger"><strong>R$${(parseFloat(json.total)).toFixed(2)}</strong></td>`
   if (json.deliveryman) {
     codigoHTML += `<td class="table-warning" title="${json.deliveryman.name}">${corrigirTamanhoString(15, json.deliveryman.name)}</td>`
@@ -836,21 +836,21 @@ async function buscarDadosAtualizar(tipo) {
 
   VETORDEPEDIDOSCLASSEPEDIDO = [];
 
-  try {
-    if (tipo == 'codigo') {
-      await aguardeCarregamento(true);
-      json = await requisicaoGET(`orders/${document.getElementById('nomePedidoPagamento').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
-      await aguardeCarregamento(false);
-      json.data = [json.data]
-    } else if (tipo == 'todos') {
-      await aguardeCarregamento(true);
-      json = await requisicaoGET('orders', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
-      await aguardeCarregamento(false);
-    }
+  //try {
+  if (tipo == 'codigo') {
+    await aguardeCarregamento(true);
+    json = await requisicaoGET(`orders/${document.getElementById('nomePedidoPagamento').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    await aguardeCarregamento(false);
+    json.data = [json.data]
+  } else if (tipo == 'todos') {
+    await aguardeCarregamento(true);
+    json = await requisicaoGET('orders', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    await aguardeCarregamento(false);
+  }
 
-    if (json.data[0]) {
+  if (json.data[0]) {
 
-      codigoHTML += `<table class="table table-sm col-10 mx-auto" style="margin-top:20px">
+    codigoHTML += `<table class="table table-sm col-10 mx-auto" style="margin-top:20px">
       <thead class="thead-dark">
           <tr>
               <th scope="col">Código</th>
@@ -864,29 +864,29 @@ async function buscarDadosAtualizar(tipo) {
       <tbody>
       `;
 
-      for (let item of json.data) {
-        VETORDEPEDIDOSCLASSEPEDIDO.push(item);
-        codigoHTML += listaDePedidosAbertosParaPagamento(item);
-      }
+    for (let item of json.data) {
+      VETORDEPEDIDOSCLASSEPEDIDO.push(item);
+      codigoHTML += listaDePedidosAbertosParaPagamento(item);
+    }
 
-      codigoHTML += `</tbody>
+    codigoHTML += `</tbody>
         </table>`;
 
 
-      document.getElementById('respostaListaDePedidosAbertosPagamento').innerHTML = codigoHTML;
-    } else {
-      document.getElementById('respostaListaDePedidosAbertosPagamento').innerHTML = `<h5 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Nenhum pedido em aberto encontrado!</h5>`;
-    }
-  } catch (error) {
-    mensagemDeErro('Não foi possível carregar os pedidos em aberto!')
+    document.getElementById('respostaListaDePedidosAbertosPagamento').innerHTML = codigoHTML;
+  } else {
+    document.getElementById('respostaListaDePedidosAbertosPagamento').innerHTML = `<h5 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Nenhum pedido em aberto encontrado!</h5>`;
   }
+  /*} catch (error) {
+    mensagemDeErro('Não foi possível carregar os pedidos em aberto!')
+  }*/
 }
 
 //funcao responsavel por cadastrar um pedido
 async function cadastrarPedido() {
   try {
     let aux = true, json = `{
-      "client_id":"${DADOSPEDIDO.cliente_id}",`
+      "user_id":"${DADOSPEDIDO.user_id}",`
     if (DADOSPEDIDO.motoboy_id) {
       json += `"deliveryman":"${DADOSPEDIDO.motoboy_id}",`
     }
@@ -935,7 +935,7 @@ async function cadastrarPedido() {
 async function atualizarPedido(id) {
   try {
     let aux = true, json = `{
-      "client_id":"${DADOSPEDIDO.cliente_id}",`
+      "user_id":"${DADOSPEDIDO.user_id}",`
     if (DADOSPEDIDO.motoboy_id) {
       json += `"deliveryman":"${DADOSPEDIDO.motoboy_id}",`
     }
@@ -1170,6 +1170,162 @@ async function enviarMotoboyParaEntrega(id) {
   } catch (error) {
     mensagemDeErro('Não foi possível enviar o motoboy para entrega!')
   }
+}
+
+//funcao responsavel por gerar o modal de lista de pedidos da web
+async function modalPedidosOnline() {
+  let codigoHTML = ``;
+
+  codigoHTML += `<div class="modal fade" id="modalpedidoonlineclassepedido" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title" id="staticBackdropLabel"><span class="fas fa-globe"></span> Listagem de pedidos online</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                          </div>
+                          <div class="modal-body">
+                              <div class="list-group">
+                                <a href="#" onclick="modalMotoboysOnine('djhfjhfgdf');" class="list-group-item list-group-item-action" data-dismiss="modal">
+                                  <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">Código: djhfjhfgdf </h5>
+                                    <small>25/03/2020 13:00:36</small>
+                                  </div>
+                                  <p class="mb-1">Cliente: Fulano - Total: R$25.60</p>
+                                  <small>Entrega</small>
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action">
+                                  <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">Código: djhfjhfgdf </h5>
+                                    <small>25/03/2020 13:00:36</small>
+                                  </div>
+                                  <p class="mb-1">Cliente: Fulano - Total: R$25.60</p>
+                                  <small>Entrega</small>
+                                </a>
+                              </div>
+                          </div>
+                        </div>
+                    </div>
+               </div>`
+
+  document.getElementById('modal').innerHTML = codigoHTML;
+  $('#modalpedidoonlineclassepedido').modal('show');
+}
+
+//funcao reponsavel por gerar o modal de selecao de motoboy online
+async function modalMotoboysOnine(codigo) {
+  let codigoHTML = ``;
+
+  codigoHTML += `<div class="modal fade" id="modalmotoboyonlineclassepedido" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title"><span class="fas fa-globe"></span> Listagem de pedidos online</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                          </div>
+                          <div class="modal-body">
+                            <div class="shadow-lg p-3 mb-5 bg-white rounded">
+                              <h5 class="text-center" style="margin-top: 30px;"><span class="fas fa-motorcycle"></span> Buscar Motoboys</h5>
+                              <div class="card-deck col-10 mx-auto d-block">
+                                  <div class="input-group mb-3">
+                                      <input id="nomeMotoboyOnline" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do motoboy">
+                                      <button onclick="if(validaDadosCampo(['#nomeMotoboyOnline'])){listagemMotoboyOnline('nome','${codigo}');}else{mensagemDeErroModal('Preencha o campo nome do motoboy!'); mostrarCamposIncorreto(['nomeMotoboyOnline']);}" type="button" class="btn btn-outline-info btn-sm">
+                                          <span class="fas fa-search"></span> Buscar
+                                      </button>
+                                      <br/>
+                                      <button onclick="listagemMotoboyOnline('ativos','${codigo}');" type="button" class="btn btn-outline-info btn-block btn-sm" style="margin-top:10px;">
+                                          <span class="fas fa-search-plus"></span> Exibir todos
+                                      </button>
+                                  </div>
+                              </div>
+                            </div>
+                            <div id="respostaMotoboyOnline"></div>
+                          </div>
+                        </div>
+                    </div>
+               </div>`
+
+  document.getElementById('modal').innerHTML = codigoHTML;
+  $('#modalmotoboyonlineclassepedido').modal('show');
+}
+
+//funcao responsavel por gerar a listagem de motoboy online
+async function listagemMotoboyOnline(tipo, codigo) {
+  let codigoHTML = ``,
+    json = JSON.parse(`{"data":[]}`);
+
+  try {
+    if (tipo == 'nome') {
+      await aguardeCarregamento(true);
+      let json2 = await requisicaoGET(`deliverymans/${document.getElementById('nomeMotoboyPedido').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      await aguardeCarregamento(false);
+      json.data = json2.data.filter((item) => {
+        return item.working_day == true;
+      })
+    } else if (tipo == 'ativos') {
+      await aguardeCarregamento(true);
+      json = await requisicaoGET('deliverymans/working_days', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      await aguardeCarregamento(false);
+    }
+
+    codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+    <table class="table table-sm col-12 mx-auto" style="margin-top:10px">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Nome</th>
+                <th scope="col">Telefone</th>
+                <th scope="col">Entregas</th>
+                <th scope="col">Status</th>
+                <th class="text-center" scope="col">Selecionar</th>
+            </tr>
+        </thead>
+        <tbody>`;
+    for await (item of json.data) {
+      codigoHTML += `<tr>
+                <td class="table-light text-dark" title="${item.name}"><strong><span class="fas fa-biking"></span> ${corrigirTamanhoString(15, item.name)}</strong></td>
+                <td class="table-light"><span class="fas fa-phone"></span> ${item.phone}</td>
+                <td class="table-light">`;
+      if (item.hasDelivery) {
+        codigoHTML += `<select class="form-control form-control-sm" style="width:150px" id="localDeEntragaMotoboy${item._id}">`
+        codigoHTML += `</select>`
+        mostrarLocaisDeEntregaMotoboy(item._id)
+      } else {
+        codigoHTML += `Nenhuma`;
+      }
+      codigoHTML += `</td>`;
+      if (item.available == false) {
+        if (item.hasDelivery) {
+          codigoHTML += `<td class="table-light"><strong><span class="badge badge-warning">Aguardo</span></strong></td>`;
+        } else {
+          codigoHTML += `<td class="table-light"><strong><span class="badge badge-success">Disponível</span></strong></td>`;
+        }
+        codigoHTML += `<td class="table-light text-center"><button onclick="modaldeConfirmacaoPedidoOnline('${item._id}','${codigo}');" type="button" class="btn btn-primary btn-sm" data-dismiss="modal"><span class="fas fa-check"></span> </button></td>`;
+      } else {
+        codigoHTML += `<td class="table-light"><strong><span class="badge badge-danger">Ocupado</span></strong></td>`;
+        codigoHTML += `<td class="table-light text-center"><button onclick="modaldeConfirmacaoPedidoOnline('${item._id}','${codigo}');" type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><span class="fas fa-check"></span> </button></td>`;
+      }
+      codigoHTML += `</tr>`;
+    }
+    codigoHTML += `</tbody>
+    </table>
+  </div>`;
+
+    if (json.data[0]) {
+      document.getElementById('respostaMotoboyOnline').innerHTML = codigoHTML;
+    } else {
+      document.getElementById('respostaMotoboyOnline').innerHTML = '<h5 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Nenhum motoboy encontrado!</h5>';
+    }
+  } catch (error) {
+    mensagemDeErroModal('Não foi possível carregar os motoboys!')
+  }
+}
+
+//funcao responsavel por gera modal de confirmacao de pedido online
+async function modaldeConfirmacaoPedidoOnline(idMotoboy, codigo) {
+  console.log(idMotoboy, codigo)
 }
 
 //funcao responsavel por imprimir/reimprimir comanda

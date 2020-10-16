@@ -13,6 +13,9 @@ function subMenuPedido() {
             <button onclick="modalRetiradaLocalouEnvio();" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px; width: 50px; height: 150px;">
                 <span class="fas fa-plus"></span> Criar Pedido <span class="fas fa-shopping-basket"></span>
             </button>
+            <button onclick="modalPedidosOnline();" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px; width: 50px; height: 150px;">
+                <span class="fas fa-globe"></span> Pedidos Online <span class="fas fa-mouse-pointer"></span>
+            </button>
             <!--<button onclick="modalBuscaEnviaMotoboyEntrega();" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px; width: 50px; height: 150px;">
                 <span class="fas fa-map-marked-alt"></span> Enviar Motoboy <span class="fas fa-motorcycle"></span>
             </button>-->
