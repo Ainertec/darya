@@ -14,6 +14,7 @@ export const order = Joi.object().keys({
   source: Joi.string().required(),
   note: Joi.string(),
   payment: Joi.string(),
+  viewed: Joi.boolean(),
 });
 export const orderUpdate = Joi.object().keys({
   user_id: Joi.custom(validObjectId, 'valid id'),
@@ -25,6 +26,7 @@ export const orderUpdate = Joi.object().keys({
   payment: Joi.string(),
   identification: Joi.string(),
   finished: Joi.boolean(),
+  viewed: Joi.boolean(),
 });
 
 export const paramIdentification = {
