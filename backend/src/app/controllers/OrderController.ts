@@ -124,6 +124,7 @@ class OrderController {
       source,
       note,
       payment,
+      viewed,
     } = request.body;
     const authUserId = request.userId;
 
@@ -172,6 +173,7 @@ class OrderController {
         note,
         payment,
         total,
+        viewed,
       });
 
       if (deliveryman) {
@@ -209,6 +211,7 @@ class OrderController {
       note,
       payment,
       finished,
+      viewed,
     } = request.body;
     const { id } = request.params;
 
@@ -229,6 +232,7 @@ class OrderController {
 
     if (note) order.note = note;
     if (payment) order.payment = payment;
+    if (viewed) order.viewed = viewed;
 
     if (finished) {
       const deliverymanPersisted = await Deliveryman.findOne({

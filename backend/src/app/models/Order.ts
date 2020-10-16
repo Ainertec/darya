@@ -124,6 +124,10 @@ const OrderSchema = new Schema(
       type: String,
       required: true,
     },
+    viewed: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

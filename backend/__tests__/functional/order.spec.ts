@@ -53,8 +53,10 @@ describe('should a User', () => {
           },
         ],
         source: 'Ifood',
+        viewed: false,
       })
       .set('Authorization', `Bearer ${use2.generateToken()}`);
+
     expect(response.body.user.name).toEqual(user.name);
     expect(response.body).toHaveProperty('total');
     expect(response.status).toBe(200);
@@ -252,6 +254,7 @@ describe('should a User', () => {
             quantity: 12,
           },
         ],
+        viewed: true,
       })
       .set('Authorization', `Bearer ${user.generateToken()}`);
     // console.log(response.body);
@@ -262,6 +265,7 @@ describe('should a User', () => {
         source: 'Whatsapp',
         identification: '1234567',
         note: 'Brabo',
+        viewed: true,
       }),
     );
   });

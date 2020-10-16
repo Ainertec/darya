@@ -67,6 +67,7 @@ export interface OrderInterface extends Document {
   note?: string;
   payment?: string;
   createdAt?: Date;
+  viewed: boolean;
 }
 
 export interface OrderInterfaceDeliveryman extends Document {
@@ -81,6 +82,7 @@ export interface OrderInterfaceDeliveryman extends Document {
   note?: string;
   payment?: string;
   createdAt?: Date;
+  viewed: boolean;
 }
 
 export interface UserOrderInterface {
