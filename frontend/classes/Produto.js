@@ -48,8 +48,8 @@ function gerarListaDeProdutos(json) {
         <td class="table-warning"><button onclick="confirmarAcao('Excluir este produto!','excluirProduto(this.value)','${json._id}')" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span> Excluir</button></td>
         <td class="table-warning">
           <div class="custom-control custom-switch">
-            <input type="checkbox" onclick="alterarDisponibilidade('${json._id}',this.checked)" class="custom-control-input custom-switch" id="botaoSelectClientephoneaddress">
-            <label class="custom-control-label" for="botaoSelectClientephoneaddress">Disponível</label>
+            <input type="checkbox" onclick="alterarDisponibilidade('${json._id}',this.checked)" class="custom-control-input custom-switch" id="botaoDispoProduto${json._id}" checked=${json.available ? true : false}>
+            <label class="custom-control-label" for="botaoDispoProduto${json._id}">Disponível</label>
           </div>
         </td>
       </tr>`;
@@ -275,25 +275,26 @@ async function cadastrarProduto() {
 
 //funcao responsavel por atualizar um produto
 async function atualizarProduto(id) {
-  let dado = VETORDEPRODUTOSCLASSEPRODUTO.filter(function (element) {
+  let dado = VETORDEPRODUTOSCLASSEPRODUTO.find(function (element) {
     return element._id == id;
   });
 
   try {
-    dado[0].name = document.getElementById('nomeproduto').value;
-    dado[0].description = document.getElementById('descricaoproduto').value;
-    dado[0].price = document.getElementById('precovenda').value;
-    dado[0].ingredients = VETORDEINGREDIENTESCLASSEPRODUTO;
-    dado[0].available = true
-    delete dado[0]._id;
-    delete dado[0].cost
-    delete dado[0].stock
-    delete dado[0].updatedAt;
-    delete dado[0].createdAt;
-    delete dado[0].__v;
+
+    dado.name = document.getElementById('nomeproduto').value;
+    dado.description = document.getElementById('descricaoproduto').value;
+    dado.price = document.getElementById('precovenda').value;
+    dado.ingredients = VETORDEINGREDIENTESCLASSEPRODUTO;
+    dado.available = true
+    delete dado._id;
+    delete dado.cost
+    delete dado.stock
+    delete dado.updatedAt;
+    delete dado.createdAt;
+    delete dado.__v;
 
     await aguardeCarregamento(true);
-    await requisicaoPUT(`products/${id}`, dado[0], { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    await requisicaoPUT(`products/${id}`, dado, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     await aguardeCarregamento(false);
     await mensagemDeAviso('Produto atualizado com sucesso!')
   } catch (error) {
@@ -327,23 +328,37 @@ async function excluirProduto(id) {
 
 //funcao responsavel por colocar um produto disponivel ou indisponivel
 async function alterarDisponibilidade(id, status) {
-  let dado = VETORDEPRODUTOSCLASSEPRODUTO.filter(function (element) {
+  let dado = VETORDEPRODUTOSCLASSEPRODUTO.find(function (element) {
     return element._id == id;
   });
 
-  dado[0].available = status
-  delete dado[0]._id;
-  delete dado[0].cost
-  delete dado[0].stock
-  delete dado[0].updatedAt;
-  delete dado[0].createdAt;
-  delete dado[0].__v;
+  const ingredients = dado.ingredients.map((ingredientsElement) => {
+    return {
+      ...ingredientsElement,
+      _id: undefined,
+      material: ingredientsElement.material._id
+    };
+  });
 
-  console.log(dado[0])
 
-  /*await aguardeCarregamento(true);
-  await requisicaoPUT(`products/${id}`, dado[0], { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
-  await aguardeCarregamento(false);*/
+  dado.available = status
+  dado.ingredients = ingredients
+  delete dado._id;
+  delete dado.cost
+  delete dado.stock
+  delete dado.updatedAt;
+  delete dado.createdAt;
+  delete dado.__v;
+
+  await aguardeCarregamento(true);
+  await requisicaoPUT(`products/${id}`, dado, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+  await aguardeCarregamento(false);
+
+  if (validaDadosCampo(['#nome'])) {
+    await buscarDadosProduto('nome');
+  } else {
+    await buscarDadosProduto('todos');
+  }
 }
 
 //funcao responsavel por reiniciar classe produto

@@ -836,21 +836,21 @@ async function buscarDadosAtualizar(tipo) {
 
   VETORDEPEDIDOSCLASSEPEDIDO = [];
 
-  //try {
-  if (tipo == 'codigo') {
-    await aguardeCarregamento(true);
-    json = await requisicaoGET(`orders/${document.getElementById('nomePedidoPagamento').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
-    await aguardeCarregamento(false);
-    json.data = [json.data]
-  } else if (tipo == 'todos') {
-    await aguardeCarregamento(true);
-    json = await requisicaoGET('orders', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
-    await aguardeCarregamento(false);
-  }
+  try {
+    if (tipo == 'codigo') {
+      await aguardeCarregamento(true);
+      json = await requisicaoGET(`orders/${document.getElementById('nomePedidoPagamento').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      await aguardeCarregamento(false);
+      json.data = [json.data]
+    } else if (tipo == 'todos') {
+      await aguardeCarregamento(true);
+      json = await requisicaoGET('orders', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      await aguardeCarregamento(false);
+    }
 
-  if (json.data[0]) {
+    if (json.data[0]) {
 
-    codigoHTML += `<table class="table table-sm col-10 mx-auto" style="margin-top:20px">
+      codigoHTML += `<table class="table table-sm col-10 mx-auto" style="margin-top:20px">
       <thead class="thead-dark">
           <tr>
               <th scope="col">Código</th>
@@ -864,22 +864,22 @@ async function buscarDadosAtualizar(tipo) {
       <tbody>
       `;
 
-    for (let item of json.data) {
-      VETORDEPEDIDOSCLASSEPEDIDO.push(item);
-      codigoHTML += listaDePedidosAbertosParaPagamento(item);
-    }
+      for (let item of json.data) {
+        VETORDEPEDIDOSCLASSEPEDIDO.push(item);
+        codigoHTML += listaDePedidosAbertosParaPagamento(item);
+      }
 
-    codigoHTML += `</tbody>
+      codigoHTML += `</tbody>
         </table>`;
 
 
-    document.getElementById('respostaListaDePedidosAbertosPagamento').innerHTML = codigoHTML;
-  } else {
-    document.getElementById('respostaListaDePedidosAbertosPagamento').innerHTML = `<h5 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Nenhum pedido em aberto encontrado!</h5>`;
-  }
-  /*} catch (error) {
+      document.getElementById('respostaListaDePedidosAbertosPagamento').innerHTML = codigoHTML;
+    } else {
+      document.getElementById('respostaListaDePedidosAbertosPagamento').innerHTML = `<h5 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Nenhum pedido em aberto encontrado!</h5>`;
+    }
+  } catch (error) {
     mensagemDeErro('Não foi possível carregar os pedidos em aberto!')
-  }*/
+  }
 }
 
 //funcao responsavel por cadastrar um pedido
@@ -891,7 +891,7 @@ async function cadastrarPedido() {
       json += `"deliveryman":"${DADOSPEDIDO.motoboy_id}",`
     }
     if (document.getElementById('enderecocliente')) {
-      json += `"client_address_id":"${document.getElementById('enderecocliente').value}",`
+      json += `"user_address_id":"${document.getElementById('enderecocliente').value}",`
     }
     json += `"source":"${document.getElementById('formaDeRequisicaoPedido').value}",
       "items":[`;
@@ -940,7 +940,7 @@ async function atualizarPedido(id) {
       json += `"deliveryman":"${DADOSPEDIDO.motoboy_id}",`
     }
     if (document.getElementById('enderecocliente')) {
-      json += `"client_address_id":"${document.getElementById('enderecocliente').value}",`
+      json += `"user_address_id":"${document.getElementById('enderecocliente').value}",`
     }
     json += `"source":"${document.getElementById('formaDeRequisicaoPedido').value}",
       "items":[`;
@@ -1174,6 +1174,11 @@ async function enviarMotoboyParaEntrega(id) {
 
 //funcao responsavel por gerar o modal de lista de pedidos da web
 async function modalPedidosOnline() {
+  await aguardeCarregamento(true);
+  let pedidos = await requisicaoGET('orders', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+  await aguardeCarregamento(false);
+  VETORDEPEDIDOSCLASSEPEDIDO = [];
+
   let codigoHTML = ``;
 
   codigoHTML += `<div class="modal fade" id="modalpedidoonlineclassepedido" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -1186,24 +1191,28 @@ async function modalPedidosOnline() {
                               </button>
                           </div>
                           <div class="modal-body">
-                              <div class="list-group">
-                                <a href="#" onclick="modalMotoboysOnine('djhfjhfgdf');" class="list-group-item list-group-item-action" data-dismiss="modal">
-                                  <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">Código: djhfjhfgdf </h5>
-                                    <small>25/03/2020 13:00:36</small>
-                                  </div>
-                                  <p class="mb-1">Cliente: Fulano - Total: R$25.60</p>
-                                  <small>Entrega</small>
-                                </a>
-                                <a href="#" class="list-group-item list-group-item-action">
-                                  <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">Código: djhfjhfgdf </h5>
-                                    <small>25/03/2020 13:00:36</small>
-                                  </div>
-                                  <p class="mb-1">Cliente: Fulano - Total: R$25.60</p>
-                                  <small>Entrega</small>
-                                </a>
-                              </div>
+                              <div class="list-group">`
+
+  for (pedido of pedidos.data) {
+    VETORDEPEDIDOSCLASSEPEDIDO.push(pedido);
+    const date = format(parseISO(pedido.createdAt), 'dd/MM/yyyy HH:mm:ss')
+
+    if (pedido.address) {
+      codigoHTML += `<a href="#" onclick="modalMotoboysOnline('${pedido._id}');" class="list-group-item list-group-item-action" data-dismiss="modal">`
+    } else {
+      codigoHTML += `<a href="#" onclick="modaldeConfirmacaoPedidoOnline('${pedido._id}');" class="list-group-item list-group-item-action" data-dismiss="modal">`
+    }
+
+    codigoHTML += `<div class="d-flex w-100 justify-content-between">
+                                                <h5 class="mb-1">Código: ${pedido.identification} </h5>
+                                                <small>${date}</small>
+                                              </div>
+                                              <p class="mb-1">Cliente: ${pedido.user.name} - Total: R$${(pedido.total).toFixed(2)}</p>
+                                              <small>${pedido.address ? '<strong class="text-primary">Entrega' : '<strong class="text-danger">Retirada local'}</strong></small>
+                                            </a>`
+  }
+
+  codigoHTML += `</div>
                           </div>
                         </div>
                     </div>
@@ -1214,7 +1223,7 @@ async function modalPedidosOnline() {
 }
 
 //funcao reponsavel por gerar o modal de selecao de motoboy online
-async function modalMotoboysOnine(codigo) {
+async function modalMotoboysOnline(id) {
   let codigoHTML = ``;
 
   codigoHTML += `<div class="modal fade" id="modalmotoboyonlineclassepedido" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -1232,11 +1241,11 @@ async function modalMotoboysOnine(codigo) {
                               <div class="card-deck col-10 mx-auto d-block">
                                   <div class="input-group mb-3">
                                       <input id="nomeMotoboyOnline" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do motoboy">
-                                      <button onclick="if(validaDadosCampo(['#nomeMotoboyOnline'])){listagemMotoboyOnline('nome','${codigo}');}else{mensagemDeErroModal('Preencha o campo nome do motoboy!'); mostrarCamposIncorreto(['nomeMotoboyOnline']);}" type="button" class="btn btn-outline-info btn-sm">
+                                      <button onclick="if(validaDadosCampo(['#nomeMotoboyOnline'])){listagemMotoboyOnline('nome','${id}');}else{mensagemDeErroModal('Preencha o campo nome do motoboy!'); mostrarCamposIncorreto(['nomeMotoboyOnline']);}" type="button" class="btn btn-outline-info btn-sm">
                                           <span class="fas fa-search"></span> Buscar
                                       </button>
                                       <br/>
-                                      <button onclick="listagemMotoboyOnline('ativos','${codigo}');" type="button" class="btn btn-outline-info btn-block btn-sm" style="margin-top:10px;">
+                                      <button onclick="listagemMotoboyOnline('ativos','${id}');" type="button" class="btn btn-outline-info btn-block btn-sm" style="margin-top:10px;">
                                           <span class="fas fa-search-plus"></span> Exibir todos
                                       </button>
                                   </div>
@@ -1253,7 +1262,7 @@ async function modalMotoboysOnine(codigo) {
 }
 
 //funcao responsavel por gerar a listagem de motoboy online
-async function listagemMotoboyOnline(tipo, codigo) {
+async function listagemMotoboyOnline(tipo, id) {
   let codigoHTML = ``,
     json = JSON.parse(`{"data":[]}`);
 
@@ -1302,10 +1311,10 @@ async function listagemMotoboyOnline(tipo, codigo) {
         } else {
           codigoHTML += `<td class="table-light"><strong><span class="badge badge-success">Disponível</span></strong></td>`;
         }
-        codigoHTML += `<td class="table-light text-center"><button onclick="modaldeConfirmacaoPedidoOnline('${item._id}','${codigo}');" type="button" class="btn btn-primary btn-sm" data-dismiss="modal"><span class="fas fa-check"></span> </button></td>`;
+        codigoHTML += `<td class="table-light text-center"><button onclick="adicionaMotoboyPedidoOnline('${item._id}','${id}');" type="button" class="btn btn-primary btn-sm" data-dismiss="modal"><span class="fas fa-check"></span> </button></td>`;
       } else {
         codigoHTML += `<td class="table-light"><strong><span class="badge badge-danger">Ocupado</span></strong></td>`;
-        codigoHTML += `<td class="table-light text-center"><button onclick="modaldeConfirmacaoPedidoOnline('${item._id}','${codigo}');" type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><span class="fas fa-check"></span> </button></td>`;
+        codigoHTML += `<td class="table-light text-center"><button onclick="adicionaMotoboyPedidoOnline('${item._id}','${id}');" type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><span class="fas fa-check"></span> </button></td>`;
       }
       codigoHTML += `</tr>`;
     }
@@ -1321,6 +1330,36 @@ async function listagemMotoboyOnline(tipo, codigo) {
   } catch (error) {
     mensagemDeErroModal('Não foi possível carregar os motoboys!')
   }
+}
+
+//funcao responsavel por adicionar motoboy em pedido online
+async function adicionaMotoboyPedidoOnline(idMotoboy, id) {
+  const pedido = VETORDEPEDIDOSCLASSEPEDIDO.find((pedidoElement) => {
+    return pedidoElement._id == id;
+  });
+
+  const items = pedido.items.map((itemsElement) => {
+    return {
+      product: itemsElement.product._id,
+      quantity: itemsElement.quantity
+    };
+  });
+
+  let json = {
+    user_id: pedido.user.user_id,
+    deliveryman: idMotoboy,
+    user_address_id: pedido.address.user_address_id,
+    source: pedido.source,
+    items: items,
+    payment: pedido.payment,
+    note: pedido.note,
+    viewed: true
+  }
+
+  await aguardeCarregamento(true);
+  let result = await requisicaoPUT(`orders/${id}`, json, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+  await aguardeCarregamento(false);
+
 }
 
 //funcao responsavel por gera modal de confirmacao de pedido online
