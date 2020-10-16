@@ -77,6 +77,9 @@ var SessionUseCase = /** @class */ (function () {
                         return [4 /*yield*/, user.generateToken()];
                     case 3:
                         token = _a.sent();
+                        return [4 /*yield*/, user.populate('address.district').execPopulate()];
+                    case 4:
+                        _a.sent();
                         serializedUser = __assign(__assign({}, user.toObject()), { password_hash: undefined, response: undefined });
                         return [2 /*return*/, {
                                 user: serializedUser,

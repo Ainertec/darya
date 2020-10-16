@@ -52,13 +52,13 @@ orderRoutes.getRoutes({
 // products
 var productRouters = new Products_routes_1.ProductRoutes(routes);
 productRouters.getRoutes({ product: productSchema_1.default, paramName: commonSchema_1.paramName, paramId: commonSchema_1.paramId });
+// districtsRoutes
+var districtRoutes = new Districts_routes_1.DistrictsRoutes(routes);
+districtRoutes.getRoutes({ paramName: commonSchema_1.paramName, paramId: commonSchema_1.paramId, district: districtSchema_1.default });
 routes.use(Authorization_1.default);
 // deliverymans
 var deliverymanRoutes = new Deliverymans_routes_1.DeliverymansRoutes(routes);
 deliverymanRoutes.getRoutes({ paramName: commonSchema_1.paramName, paramId: commonSchema_1.paramId, deliveryman: deliverymanSchema_1.default });
-// districtsRoutes
-var districtRoutes = new Districts_routes_1.DistrictsRoutes(routes);
-districtRoutes.getRoutes({ paramName: commonSchema_1.paramName, paramId: commonSchema_1.paramId, district: districtSchema_1.default });
 // ingredients
 var ingredientRoutes = new Ingredients_routes_1.IngredientsRoutes(routes);
 ingredientRoutes.getRoutes({ paramName: commonSchema_1.paramName, paramId: commonSchema_1.paramId, ingredient: ingredientSchema_1.default });

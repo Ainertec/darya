@@ -155,6 +155,10 @@ var OrderSchema = new mongoose_1.Schema({
         type: String,
         required: true,
     },
+    viewed: {
+        type: Boolean,
+        default: false,
+    },
 }, {
     timestamps: true,
 });

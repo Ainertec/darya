@@ -39,6 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/* eslint-disable no-unneeded-ternary */
 var supertest_1 = __importDefault(require("supertest"));
 var connection_1 = require("../utils/connection");
 var User_1 = __importDefault(require("../../src/app/models/User"));
@@ -103,6 +104,7 @@ describe('should a User', function () {
                                 },
                             ],
                             source: 'Ifood',
+                            viewed: false,
                         })
                             .set('Authorization', "Bearer " + use2.generateToken())];
                 case 5:
@@ -201,7 +203,7 @@ describe('should a User', function () {
         });
     }); });
     it('should not create an order with invalid source', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var user, deliveryman, district, products, response;
+        var user, deliveryman, products, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, factories_1.default.create('User', { admin: true })];
@@ -212,7 +214,7 @@ describe('should a User', function () {
                     deliveryman = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('District')];
                 case 3:
-                    district = _a.sent();
+                    _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product')];
                 case 4:
                     products = _a.sent();
@@ -309,7 +311,7 @@ describe('should a User', function () {
         });
     }); });
     it('should not create an order with invalid deliveryman', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var user, deliveryman, products, response;
+        var user, products, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, factories_1.default.create('User', { admin: true })];
@@ -317,7 +319,7 @@ describe('should a User', function () {
                     user = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Deliveryman')];
                 case 2:
-                    deliveryman = _a.sent();
+                    _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Product')];
                 case 3:
                     products = _a.sent();
@@ -374,6 +376,7 @@ describe('should a User', function () {
                                     quantity: 12,
                                 },
                             ],
+                            viewed: true,
                         })
                             .set('Authorization', "Bearer " + user.generateToken())];
                 case 4:
@@ -385,25 +388,26 @@ describe('should a User', function () {
                         source: 'Whatsapp',
                         identification: '1234567',
                         note: 'Brabo',
+                        viewed: true,
                     }));
                     return [2 /*return*/];
             }
         });
     }); });
     it('should update a order total with address change', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var district, user, order, response, isEqual;
+        var user, order, response, isEqual;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, factories_1.default.create('District')];
                 case 1:
-                    district = _a.sent();
+                    _a.sent();
                     return [4 /*yield*/, factories_1.default.create('User', { admin: true })];
                 case 2:
                     user = _a.sent();
                     return [4 /*yield*/, factories_1.default.create('Order', {
                             user: {
                                 user_id: user._id,
-                                name: 'asdf',
+                                name: 'Marcos',
                                 phone: ['1324'],
                             },
                         })];
@@ -510,7 +514,7 @@ describe('should a User', function () {
         });
     }); });
     it('should update a order user and address', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var user, order, product, response;
+        var user, order, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, factories_1.default.create('User', {
@@ -526,7 +530,7 @@ describe('should a User', function () {
                             name: 'Chocolate',
                         })];
                 case 3:
-                    product = _a.sent();
+                    _a.sent();
                     return [4 /*yield*/, supertest_1.default(app_1.default)
                             .put("/orders/" + order._id)
                             .send({
@@ -555,7 +559,7 @@ describe('should a User', function () {
         });
     }); });
     it('should not update a order user invalid', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var user, order, product, response;
+        var user, order, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, factories_1.default.create('User', {
@@ -571,7 +575,7 @@ describe('should a User', function () {
                             name: 'Chocolate',
                         })];
                 case 3:
-                    product = _a.sent();
+                    _a.sent();
                     return [4 /*yield*/, supertest_1.default(app_1.default)
                             .put("/orders/" + order._id)
                             .send({
@@ -592,7 +596,7 @@ describe('should a User', function () {
         });
     }); });
     it('should not update a order address invalid', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var user, order, product, response;
+        var user, order, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, factories_1.default.create('User', {
@@ -608,7 +612,7 @@ describe('should a User', function () {
                             name: 'Chocolate',
                         })];
                 case 3:
-                    product = _a.sent();
+                    _a.sent();
                     return [4 /*yield*/, supertest_1.default(app_1.default)
                             .put("/orders/" + order._id)
                             .send({
@@ -690,14 +694,14 @@ describe('should a User', function () {
         });
     }); });
     it('should list all orders', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var order, user, response;
+        var user, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, factories_1.default.createMany('Order', 3, {
                         finished: false,
                     })];
                 case 1:
-                    order = _a.sent();
+                    _a.sent();
                     return [4 /*yield*/, factories_1.default.create('User', { admin: true })];
                 case 2:
                     user = _a.sent();
@@ -767,6 +771,42 @@ describe('should a User', function () {
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     // console.log(response.body);
+                    expect(response.body).toEqual(expect.arrayContaining([
+                        expect.objectContaining({
+                            identification: '123123',
+                        }),
+                    ]));
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('should list a order by user id', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var user, deliveryman, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, factories_1.default.create('User')];
+                case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, factories_1.default.createMany('Order', 3, { finished: false })];
+                case 2:
+                    _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Deliveryman')];
+                case 3:
+                    deliveryman = _a.sent();
+                    return [4 /*yield*/, factories_1.default.create('Order', {
+                            deliveryman: deliveryman._id,
+                            user: { user_id: user._id, name: user.name },
+                            identification: '123123',
+                            finished: false,
+                        })];
+                case 4:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app_1.default)
+                            .get("/orders/user/")
+                            .set('Authorization', "Bearer " + user.generateToken())];
+                case 5:
+                    response = _a.sent();
+                    expect(response.status).toBe(200);
                     expect(response.body).toEqual(expect.arrayContaining([
                         expect.objectContaining({
                             identification: '123123',

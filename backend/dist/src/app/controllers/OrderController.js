@@ -165,6 +165,26 @@ var OrderController = /** @class */ (function () {
             });
         });
     };
+    OrderController.prototype.showByUser = function (request, response) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userId, orders;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        userId = request.userId;
+                        return [4 /*yield*/, Order_1.default.find({
+                                finished: false,
+                                'user.user_id': userId,
+                            })
+                                .populate('deliveryman')
+                                .populate('items.product')];
+                    case 1:
+                        orders = _a.sent();
+                        return [2 /*return*/, response.json(orders)];
+                }
+            });
+        });
+    };
     OrderController.prototype.show = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
             var identification, order;
@@ -209,11 +229,11 @@ var OrderController = /** @class */ (function () {
     OrderController.prototype.store = function (request, response) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var _b, user_id, deliveryman, user_address_id, items, source, note, payment, authUserId, isValidSource, authUser, user, _c, address_id, identification, address, _d, total, _e, order, deliverymanPersisted, error_1;
+            var _b, user_id, deliveryman, user_address_id, items, source, note, payment, viewed, authUserId, isValidSource, authUser, user, _c, address_id, identification, address, _d, total, _e, order, deliverymanPersisted, error_1;
             return __generator(this, function (_f) {
                 switch (_f.label) {
                     case 0:
-                        _b = request.body, user_id = _b.user_id, deliveryman = _b.deliveryman, user_address_id = _b.user_address_id, items = _b.items, source = _b.source, note = _b.note, payment = _b.payment;
+                        _b = request.body, user_id = _b.user_id, deliveryman = _b.deliveryman, user_address_id = _b.user_address_id, items = _b.items, source = _b.source, note = _b.note, payment = _b.payment, viewed = _b.viewed;
                         authUserId = request.userId;
                         isValidSource = Order_1.Source.getSource().includes(source);
                         if (!isValidSource) {
@@ -277,6 +297,7 @@ var OrderController = /** @class */ (function () {
                                 note: note,
                                 payment: payment,
                                 total: total,
+                                viewed: viewed,
                             })];
                     case 13:
                         order = _f.sent();
@@ -316,11 +337,11 @@ var OrderController = /** @class */ (function () {
     OrderController.prototype.update = function (request, response) {
         var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function () {
-            var _d, user_id, deliveryman, identification, user_address_id, items, source, note, payment, finished, id, order, _e, deliverymanPersisted, user, error_2, address, _f, error_3;
+            var _d, user_id, deliveryman, identification, user_address_id, items, source, note, payment, finished, viewed, id, order, _e, deliverymanPersisted, user, error_2, address, _f, error_3;
             return __generator(this, function (_g) {
                 switch (_g.label) {
                     case 0:
-                        _d = request.body, user_id = _d.user_id, deliveryman = _d.deliveryman, identification = _d.identification, user_address_id = _d.user_address_id, items = _d.items, source = _d.source, note = _d.note, payment = _d.payment, finished = _d.finished;
+                        _d = request.body, user_id = _d.user_id, deliveryman = _d.deliveryman, identification = _d.identification, user_address_id = _d.user_address_id, items = _d.items, source = _d.source, note = _d.note, payment = _d.payment, finished = _d.finished, viewed = _d.viewed;
                         id = request.params.id;
                         return [4 /*yield*/, Order_1.default.findOne({ _id: id })];
                     case 1:
@@ -345,6 +366,8 @@ var OrderController = /** @class */ (function () {
                             order.note = note;
                         if (payment)
                             order.payment = payment;
+                        if (viewed)
+                            order.viewed = viewed;
                         if (!finished) return [3 /*break*/, 7];
                         return [4 /*yield*/, Deliveryman_1.default.findOne({
                                 _id: order.deliveryman,
