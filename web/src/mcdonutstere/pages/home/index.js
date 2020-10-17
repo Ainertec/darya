@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, makeStyles, Container } from "@material-ui/core/";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 
@@ -6,13 +6,7 @@ import Navbar from "../../components/navbar/navbar";
 import Item from "./item";
 import BotaoFlutuante from "./botaoflutuante";
 import TabelaDeEndereco from "./tabelaDeEndereco";
-
-const JSONfake = [
-  { _id: "1", name: "teste", price: 2.5, description: "O melhor da casa!" },
-  { _id: "2", name: "teste22", price: 2.6, description: "O melhor da casa2!" },
-  { _id: "3", name: "teste3", price: 2.7, description: "O melhor da casa3!" },
-  { _id: "4", name: "teste4", price: 2.8, description: "O melhor da casa4!" },
-];
+import Api from "../../services/api";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,13 +23,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Home() {
+export default function Home() {
+  const [produtos, setProdutos] = useState([]);
   const classes = useStyles();
 
-  //   const itens = [];
-  //   for (let item of JSONfake) {
-  //     itens.push();
-  //   }
+  useEffect(() => {
+    Api.get('products').then(response => {
+      setProdutos(response.data);
+    });
+  }, []);
 
   return (
     <div className={classes.colorPag}>
@@ -47,7 +43,7 @@ function Home() {
           display="flex"
           className={classes.root}
         >
-          {JSONfake.map((item) => (
+          {produtos.map((item) => (
             <Item key={item._id} data={item} />
           ))}
         </Box>
@@ -64,5 +60,3 @@ function Home() {
     </div>
   );
 }
-
-export default Home;

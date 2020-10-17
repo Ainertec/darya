@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     makeStyles,
     Table,
@@ -10,6 +10,8 @@ import {
     Typography
 } from '@material-ui/core/';
 import Room from '@material-ui/icons/Room';
+
+import Api from '../../services/api';
 
 const useStyles = makeStyles({
     root: {
@@ -26,18 +28,16 @@ const useStyles = makeStyles({
     },
 });
 
-function createData(name, taxa) {
-    return { name, taxa };
-}
-
-const rows = [
-    createData('Lumiar', 20.00),
-    createData('São Pedro', 15.00),
-    createData('Santiago', 30.00),
-];
-
-function TabelaDeTaxas() {
+export default function TabelaDeTaxas() {
+    const [bairros, setBairros] = useState([]);
     const classes = useStyles();
+
+    useEffect(() => {
+        Api.get('districts').then(response => {
+            console.log(response.data)
+            setBairros(response.data);
+        });
+    }, []);
 
     return (
         <div className={classes.root}>
@@ -53,14 +53,14 @@ function TabelaDeTaxas() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.map((row) => (
-                            <TableRow key={row.name}>
+                        {bairros.map((dado) => (
+                            <TableRow key={dado.name}>
                                 <TableCell component="th" scope="row">
-                                    <Room /> {row.name}
+                                    <Room /> {dado.name} - {dado.city}
                                 </TableCell>
                                 <TableCell align="right" className={classes.linhaStyle}>
                                     <strong>
-                                        R$ {(row.taxa).toFixed(2)}
+                                        R$ {(dado.rate).toFixed(2)}
                                     </strong>
                                 </TableCell>
                             </TableRow>
@@ -71,5 +71,3 @@ function TabelaDeTaxas() {
         </div>
     );
 }
-
-export default TabelaDeTaxas;

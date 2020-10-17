@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DadosGerais() {
   const classes = useStyles();
-  const { addressId, cartItems } = useCart();
+  const { addressId, cartItems, note } = useCart();
   const { user } = useAuth();
 
   function getDeliveryAddress() {
@@ -45,7 +45,7 @@ export default function DadosGerais() {
   function getAddressRate() {
     const addressFound = user.address.find((add) => add._id == addressId);
     if (addressFound) return addressFound.district.rate.toFixed(2);
-    else return 0.0;
+    else return (0.00).toFixed(2);
   }
   function getTotal() {
     const total = cartItems.reduce((sum, item) => {
@@ -53,7 +53,7 @@ export default function DadosGerais() {
     }, 0);
     return (total + Number(getAddressRate())).toFixed(2);
   }
- 
+
 
   return (
     <Container>
@@ -76,7 +76,7 @@ export default function DadosGerais() {
           variant="body2"
           className={classes.precoStyle}
         >
-          Taxa de entrega: {getAddressRate()}
+          Taxa de entrega: R${getAddressRate()}
         </Typography>
         <Divider variant="middle" className={classes.divisorStyle} />
         <Typography variant="body2" component="h3">
@@ -106,8 +106,11 @@ export default function DadosGerais() {
             </TableBody>
           </Table>
         </TableContainer>
+        <Typography color="textSecondary" variant="body2">
+          Observação: {note}
+        </Typography>
         <Typography variant="h6" component="h4" className={classes.precoStyle}>
-          Valor total: {getTotal()}
+          Valor total: R${getTotal()}
         </Typography>
       </div>
     </Container>
