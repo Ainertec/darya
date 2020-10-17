@@ -5,7 +5,7 @@ import { IValidationsProduct } from './routesDTO';
 import Authorization from '../middlewares/Authorization';
 
 export class ProductRoutes {
-  constructor(private routes: Router) {}
+  constructor(private routes: Router) { }
 
   getRoutes(validations: IValidationsProduct) {
     this.routes.get('/products', ProductController.index);

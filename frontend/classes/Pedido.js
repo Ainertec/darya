@@ -167,7 +167,11 @@ async function cadastrarClienteRapidoPedido(envio) {
             "number":"${document.getElementById('numerocasaclientecriarpedido').value}",
             "reference":"${document.getElementById('complementoclientecriarpedido').value}"
           }
-        ]
+        ],
+        "username":"${document.getElementById('usuario').value}",
+        "password":"${document.getElementById('senha').value}"
+        "question":"Qual o nome da sua mãe?",
+        "response":"${Math.random()}"
       }`
 
       await aguardeCarregamento(true);
@@ -189,7 +193,11 @@ async function cadastrarClienteRapidoPedido(envio) {
 
       let json = `{
         "name":"${document.getElementById('nomeclientecriarpedido').value}",
-        "phone":["${document.getElementById('telefoneclientecriarpedido').value}"]
+        "phone":["${document.getElementById('telefoneclientecriarpedido').value}"],
+        "username":"${document.getElementById('usuario').value}",
+        "password":"${document.getElementById('senha').value}"
+        "question":"Qual o nome da sua mãe?",
+        "response":"${Math.random()}"
       }`
 
       await aguardeCarregamento(true);
