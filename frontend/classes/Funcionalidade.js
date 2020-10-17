@@ -4,18 +4,22 @@ require('bootstrap');
 const Highcharts = require('highcharts');
 const { format, parseISO } = require('date-fns')
 
-//funcao de inicializacao basica funcionalidade
-$(document).ready(function () {
-  limparTelaDeMensagem();
-});
-
 // funcao para gerar mensagem de erro
 function mensagemDeErro(mensagem) {
-  document.getElementById(
-    'mensagemDeErro'
-  ).innerHTML = `<span class="badge badge-danger h5">${mensagem}</span>`;
-  $('#mensagemDeErro').animate({ width: 'show' });
-  limparTelaDeMensagem();
+  document.getElementById('mensagemDeErro').innerHTML = `<div class="toast shadow-lg mb-5 bg-white rounded" role="alert" data-delay="5000" aria-atomic="true" style="opacity:0.9;">
+        <div class="toast-header bg-danger text-light">
+            <span class="fas fa-exclamation-triangle" style="margin-right:5px;"></span>
+            <strong class="mr-auto">Atenção</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            <strong>${mensagem}</strong>
+        </div>
+    </div>`
+
+  $('.toast').toast('show')
 }
 
 //funcao para gerar mensagem de erro no modal
@@ -29,18 +33,20 @@ function mensagemDeErroModal(mensagem) {
 
 // funcao para gerar mensagem de aviso
 function mensagemDeAviso(mensagem) {
-  document.getElementById(
-    'mensagemDeErro'
-  ).innerHTML = `<span class="badge badge-success h5">${mensagem}</span>`;
-  $('#mensagemDeErro').animate({ width: 'show' });
-  limparTelaDeMensagem();
-}
+  document.getElementById('mensagemDeErro').innerHTML = `<div class="toast shadow-lg mb-5 bg-white rounded" role="alert" data-delay="5000" aria-atomic="true" style="opacity:0.9;">
+        <div class="toast-header bg-success text-light">
+            <span class="fas fa-check-double" style="margin-right:5px;"></span>
+            <strong class="mr-auto">Informação</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            <strong>${mensagem}</strong>
+        </div>
+    </div>`
 
-// funcao para limpar tela de mensagens
-function limparTelaDeMensagem() {
-  setTimeout(function () {
-    $('#mensagemDeErro').animate({ width: 'hide' });
-  }, 5000);
+  $('.toast').toast('show')
 }
 
 //funcao para limpar a tela de mensagens do modal

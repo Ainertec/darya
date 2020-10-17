@@ -154,9 +154,9 @@ async function modalTelaCadastrarouAtualizarCliente(tipo) {
                     "address":[]
                   }`)
     );
-    codigoHTML += `<button type="button" onclick="if(validaDadosCampo(['#nomecliente'])){cadastrarCliente();}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['nomecliente']);}" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Salvar</button>`;
+    codigoHTML += `<button type="button" onclick="if(validaDadosCampo(['#nomecliente','#usuario','#senha'])){cadastrarCliente();}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['nomecliente','usuario','senha']);}" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Salvar</button>`;
   } else if (tipo == 'atualizar') {
-    codigoHTML += `<button onclick="if(validaDadosCampo(['#nomecliente'])){confirmarAcao('Atualizar este cliente!','atualizarCliente(this.value)',(this.value).toString()); $('#modalClasseCliente').modal('hide');}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['nomecliente']);}" id="botaoatualizarcliente" type="button" class="btn btn-primary btn-block"><span class="fas fa-edit"></span> Modificar</button>
+    codigoHTML += `<button onclick="if(validaDadosCampo(['#nomecliente','#usuario','#senha'])){confirmarAcao('Atualizar este cliente!','atualizarCliente(this.value)',(this.value).toString()); $('#modalClasseCliente').modal('hide');}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['nomecliente','usuario','senha']);}" id="botaoatualizarcliente" type="button" class="btn btn-primary btn-block"><span class="fas fa-edit"></span> Modificar</button>
                         <button onclick="confirmarAcao('Excluir este cliente!','excluirCliente(this.value)', (this.value).toString()); $('#modalClasseCliente').modal('hide');" id="botaoexcluircliente" type="button" class="btn btn-outline-danger btn-block"><span class="fas fa-trash"></span> Excluir</button>`;
   }
   codigoHTML += `</div>
@@ -391,7 +391,6 @@ function removerDadosNaTabelaTelefoneeEndereco(tipo, telefone, idCliente, posica
 async function cadastrarCliente() {
   try {
     let cliente = VETORDECLIENTESCLASSECLIENTE.find((element) => element._id == '-1');
-    let respostaQuestao = Math.random();
 
     if (cliente.phone[0]) {
       if (cliente.address[0]) {

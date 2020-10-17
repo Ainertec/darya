@@ -98,6 +98,16 @@ async function modalCadastrorapidoClientePedido(tipo) {
                                     <label for="nomeclientecriarpedido">Nome:</label>
                                     <input type="text" class="form-control" id="nomeclientecriarpedido" placeholder="Nome do cliente">
                                 </div>
+                                <div class="form-group form-row">
+                                  <div class="col">
+                                    <label for="nomecliente">Usuário:</label>
+                                    <input type="text" class="form-control" id="usuario" placeholder="Usuário" value="${Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 10)}">
+                                  </div>
+                                  <div class="col">
+                                    <label for="nomecliente">Senha:</label>
+                                    <input type="text" class="form-control" id="senha" placeholder="Senha" value="${Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 10) + Math.floor(Math.random() * 1000)}">
+                                  </div>
+                                </div>
                                 <div class="form-group">
                                     <label for="telefoneclientecriarpedido">Telefone:</label>
                                     <input type="text" class="form-control" id="telefoneclientecriarpedido" placeholder="Exemplo:(00) 00000-0000">
@@ -129,9 +139,9 @@ async function modalCadastrorapidoClientePedido(tipo) {
                           </div>
                           <div class="modal-footer">`
   if (tipo) {
-    codigoHTML += `<button type="button" onclick="if(validaDadosCampo(['#nomeclientecriarpedido','#telefoneclientecriarpedido','#ruaclientecriarpedido','#numerocasaclientecriarpedido','#complementoclientecriarpedido'])){cadastrarClienteRapidoPedido(${tipo});}else{mensagemDeErroModal('Preencha todos os campos com valores válidos!'); mostrarCamposIncorreto(['nomeclientecriarpedido','telefoneclientecriarpedido','ruaclientecriarpedido','numerocasaclientecriarpedido','complementoclientecriarpedido']);}" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Salvar</button>`
+    codigoHTML += `<button type="button" onclick="if(validaDadosCampo(['#nomeclientecriarpedido','#telefoneclientecriarpedido','#ruaclientecriarpedido','#numerocasaclientecriarpedido','#complementoclientecriarpedido','#usuario','#senha'])){cadastrarClienteRapidoPedido(${tipo});}else{mensagemDeErroModal('Preencha todos os campos com valores válidos!'); mostrarCamposIncorreto(['nomeclientecriarpedido','telefoneclientecriarpedido','ruaclientecriarpedido','numerocasaclientecriarpedido','complementoclientecriarpedido','usuario','senha']);}" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Salvar</button>`
   } else {
-    codigoHTML += `<button type="button" onclick="if(validaDadosCampo(['#nomeclientecriarpedido','#telefoneclientecriarpedido'])){cadastrarClienteRapidoPedido(${tipo});}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['nomeclientecriarpedido','telefoneclientecriarpedido']);}" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Salvar</button>`
+    codigoHTML += `<button type="button" onclick="if(validaDadosCampo(['#nomeclientecriarpedido','#telefoneclientecriarpedido','#usuario','#senha'])){cadastrarClienteRapidoPedido(${tipo});}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['nomeclientecriarpedido','telefoneclientecriarpedido','usuario','senha']);}" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Salvar</button>`
   }
   codigoHTML += ` </div>
                         </div>
@@ -366,6 +376,7 @@ function telaModalDeCriacaoDePedido(tipo, enviarPedido) {
                                       <option value="Whatsapp">Whatsapp</option>
                                       <option value="Instagram">Instagram</option>
                                       <option value="Pronta Entrega">Pronta Entrega</option>
+                                      <option value="site">Site</option>
                                   </select>
                               </div>
                               <div class="form-group">
@@ -1186,33 +1197,38 @@ async function modalPedidosOnline() {
                         <div class="modal-content">
                           <div class="modal-header">
                               <h5 class="modal-title" id="staticBackdropLabel"><span class="fas fa-globe"></span> Listagem de pedidos online</h5>
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <button type="button" onclick="inicializarVariaveisClassePedido();" class="close btn-danger" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                               </button>
                           </div>
                           <div class="modal-body">
-                              <div class="list-group">`
+                              <div class="list-group">
+                                <div class="shadow-lg p-3 mb-5 bg-white rounded">`
 
   for (pedido of pedidos.data) {
-    VETORDEPEDIDOSCLASSEPEDIDO.push(pedido);
-    const date = format(parseISO(pedido.createdAt), 'dd/MM/yyyy HH:mm:ss')
+    if (pedido.source == 'site' && !pedido.viewed) {
+      VETORDEPEDIDOSCLASSEPEDIDO.push(pedido);
+      const date = format(parseISO(pedido.createdAt), 'dd/MM/yyyy HH:mm:ss')
 
-    if (pedido.address) {
-      codigoHTML += `<a href="#" onclick="modalMotoboysOnline('${pedido._id}');" class="list-group-item list-group-item-action" data-dismiss="modal">`
-    } else {
-      codigoHTML += `<a href="#" onclick="modaldeConfirmacaoPedidoOnline('${pedido._id}');" class="list-group-item list-group-item-action" data-dismiss="modal">`
+      if (pedido.address) {
+        codigoHTML += `<a href="#" onclick="modalMotoboysOnline('${pedido._id}');" class="list-group-item list-group-item-action" data-dismiss="modal">`
+      } else {
+        codigoHTML += `<a href="#" onclick="modaldeConfirmacaoPedidoOnline('${pedido._id}',true);" class="list-group-item list-group-item-action" data-dismiss="modal">`
+      }
+
+      codigoHTML += `<div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1"><span class="fas fa-mouse-pointer"></span> Código: ${pedido.identification} </h5>
+                    <small>${date}</small>
+                  </div>
+                  <p class="mb-1">Cliente: ${pedido.user.name}</p>
+                  <p class="mb-1"><strong>Total: R$${(pedido.total).toFixed(2)}</strong></p>
+                  <small>${pedido.address ? '<strong class="text-primary">Entrega' : '<strong class="text-danger">Retirada local'}</strong></small>
+                </a>`
     }
-
-    codigoHTML += `<div class="d-flex w-100 justify-content-between">
-                                                <h5 class="mb-1">Código: ${pedido.identification} </h5>
-                                                <small>${date}</small>
-                                              </div>
-                                              <p class="mb-1">Cliente: ${pedido.user.name} - Total: R$${(pedido.total).toFixed(2)}</p>
-                                              <small>${pedido.address ? '<strong class="text-primary">Entrega' : '<strong class="text-danger">Retirada local'}</strong></small>
-                                            </a>`
   }
 
   codigoHTML += `</div>
+                            </div>
                           </div>
                         </div>
                     </div>
@@ -1220,6 +1236,7 @@ async function modalPedidosOnline() {
 
   document.getElementById('modal').innerHTML = codigoHTML;
   $('#modalpedidoonlineclassepedido').modal('show');
+  manipulacaoQtdPedidosOnline(false);
 }
 
 //funcao reponsavel por gerar o modal de selecao de motoboy online
@@ -1230,8 +1247,8 @@ async function modalMotoboysOnline(id) {
                     <div class="modal-dialog modal-dialog-scrollable">
                         <div class="modal-content">
                           <div class="modal-header">
-                              <h5 class="modal-title"><span class="fas fa-globe"></span> Listagem de pedidos online</h5>
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <h5 class="modal-title"><span class="fas fa-motorcycle"></span> Motoboy</h5>
+                              <button type="button" onclick="inicializarVariaveisClassePedido();" class="close btn-danger" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                               </button>
                           </div>
@@ -1357,14 +1374,80 @@ async function adicionaMotoboyPedidoOnline(idMotoboy, id) {
   }
 
   await aguardeCarregamento(true);
-  let result = await requisicaoPUT(`orders/${id}`, json, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+  await requisicaoPUT(`orders/${id}`, json, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
   await aguardeCarregamento(false);
 
+  await modaldeConfirmacaoPedidoOnline(id, false);
 }
 
 //funcao responsavel por gera modal de confirmacao de pedido online
-async function modaldeConfirmacaoPedidoOnline(idMotoboy, codigo) {
-  console.log(idMotoboy, codigo)
+function modaldeConfirmacaoPedidoOnline(id, retiradaLocal) {
+  let codigoHTML = ``;
+
+  codigoHTML += `<div class="modal fade" id="modalConfirmacaoPedidoOnline" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title" id="staticBackdropLabel"><span class="fas fa-globe"></span> Confirmação</h5>
+                              <button type="button" onclick="inicializarVariaveisClassePedido();" class="close btn-danger" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                          </div>
+                          <div class="modal-body">
+                            <h5>O pedido acaba de ser confirmado! Selecione uma das opções abaixo para prosseguir.</h5>
+                          </div>
+                          <div class="modal-footer">`
+
+  if (retiradaLocal) {
+    codigoHTML += `<button type="button" class="btn btn-success btn-sm" onclick="reImprimirPedido('${id}'); pedidoOnlineConfirmado('${id}');" data-dismiss="modal"><span class="fas fa-print"></span> Finalizar e imprimir</button>  
+                            <button type="button" class="btn btn-primary btn-sm" onclick="pedidoOnlineConfirmado('${id}');" data-dismiss="modal"><span class="fas fa-check"></span> Finalizar</button>
+                            <button type="button" class="btn btn-warning btn-sm" onclick="confirmarAcao('Atualizar este pedido!','atualizarDadoPedido(this.value)','${id}'); pedidoOnlineConfirmado('${id}');" data-dismiss="modal"><span class="fas fa-edit"></span> Alterar</button>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="confirmarAcao('Cancelar este pedido!','excluirPedido(this.value)','${id}');" data-dismiss="modal"><span class="fas fa-ban"></span> Cancelar</button>`
+  } else {
+    codigoHTML += `<button type="button" class="btn btn-success btn-sm" onclick="reImprimirPedido('${id}');" data-dismiss="modal"><span class="fas fa-print"></span> Finalizar e imprimir</button>  
+                            <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal"><span class="fas fa-check"></span> Finalizar</button>
+                            <button type="button" class="btn btn-warning btn-sm" onclick="confirmarAcao('Atualizar este pedido!','atualizarDadoPedido(this.value)','${id}'); data-dismiss="modal"><span class="fas fa-edit"></span> Alterar</button>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="confirmarAcao('Cancelar este pedido!','excluirPedido(this.value)','${id}');" data-dismiss="modal"><span class="fas fa-ban"></span> Cancelar</button>`
+  }
+
+  codigoHTML += `</div>
+                        </div>
+                    </div>
+               </div>`
+
+  document.getElementById('modal').innerHTML = codigoHTML;
+  $('#modalConfirmacaoPedidoOnline').modal('show');
+}
+
+//funcao responsavel por dar como confirmado o pedido online
+async function pedidoOnlineConfirmado(id) {
+  const pedido = VETORDEPEDIDOSCLASSEPEDIDO.find((pedidoElement) => {
+    return pedidoElement._id == id;
+  });
+
+  const items = pedido.items.map((itemsElement) => {
+    return {
+      product: itemsElement.product._id,
+      quantity: itemsElement.quantity
+    };
+  });
+
+  let json = {
+    user_id: pedido.user.user_id,
+    deliveryman: pedido.deliveryman ? pedido.deliveryman._id : undefined,
+    user_address_id: pedido.address ? pedido.address.user_address_id : undefined,
+    source: pedido.source,
+    items: items,
+    payment: pedido.payment,
+    note: pedido.note,
+    viewed: true
+  }
+
+  await aguardeCarregamento(true);
+  await requisicaoPUT(`orders/${id}`, json, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+  await aguardeCarregamento(false);
+
+  VETORDEPEDIDOSCLASSEPEDIDO = [];
 }
 
 //funcao responsavel por imprimir/reimprimir comanda
