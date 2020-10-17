@@ -56,7 +56,7 @@ class UserController {
       username,
       admin,
     } = request.body;
-    const userId = request.userId;
+    const { userId } = request;
     const userAdm = await User.findOne({ _id: userId });
 
     const sameUsername = await User.findOne({ username });
@@ -100,7 +100,7 @@ class UserController {
       response,
     } = request.body;
     const { id } = request.params;
-    const userId = request.userId;
+    const { userId } = request;
 
     const authUser = await User.findOne({ _id: userId });
 
@@ -122,7 +122,7 @@ class UserController {
       const isInvalidName = await this.userNameValidation(name, phone);
 
       if (isInvalidName) {
-        return response.status(400).json(isInvalidName);
+        return responseHttp.status(400).json(isInvalidName);
       }
       user.name = name;
     }
