@@ -141,7 +141,7 @@ class OrderController {
       : authUser;
     const address_id = authUser?.admin
       ? user_address_id
-      : authUser.address[0]._id;
+      : authUser.address[0]?._id;
 
     if (!user) return response.status(400).json('That user does not exist');
 
