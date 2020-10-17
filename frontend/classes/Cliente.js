@@ -415,7 +415,7 @@ async function cadastrarCliente() {
           password: cliente.password,
           question: cliente.question,
           response: cliente.response
-        }, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        });
         await aguardeCarregamento(false);
 
         $('#modalClasseCliente').modal('hide');
@@ -442,13 +442,14 @@ async function cadastrarCliente() {
           password: cliente.password,
           question: cliente.question,
           response: cliente.response
-        }, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        });
         await aguardeCarregamento(false);
 
         $('#modalClasseCliente').modal('hide');
 
         if (result == 400) {
           await mensagemDeErro('Atenção já existe um cliente com os mesmo dados!')
+          reiniciarClasseCliente();
         } else {
           await mensagemDeAviso('Cliente cadastrado com sucesso!')
           document.getElementById('nome').value = await result.data.name
@@ -461,6 +462,7 @@ async function cadastrarCliente() {
     }
   } catch (error) {
     mensagemDeErro('Não foi possível cadastrar o cliente!')
+    reiniciarClasseCliente();
   }
 
   CONTADORDEENDERECO = 0;
@@ -524,6 +526,7 @@ async function atualizarCliente(id) {
     }
   } catch (error) {
     mensagemDeErro('Não foi possível atualizar o cliente!')
+    reiniciarClasseCliente();
   }
 
   if (validaDadosCampo(['#nome'])) {
@@ -542,6 +545,7 @@ async function excluirCliente(id) {
     await mensagemDeAviso('Cliente excluído com sucesso!')
   } catch (error) {
     mensagemDeErro('Não foi possível excluir o cliente!')
+    reiniciarClasseCliente();
   }
 
   if (validaDadosCampo(['#nome'])) {

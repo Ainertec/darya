@@ -76,7 +76,7 @@ async function modalCadastrorapidoClientePedido(tipo) {
 
   if (tipo) {
     await aguardeCarregamento(true);
-    json = await requisicaoGET(`districts`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+    json = await requisicaoGET(`districts`)
     await aguardeCarregamento(false);
   }
 
@@ -175,7 +175,7 @@ async function cadastrarClienteRapidoPedido(envio) {
       }`
 
       await aguardeCarregamento(true);
-      let result = await requisicaoPOST(`users`, JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      let result = await requisicaoPOST(`users`, JSON.parse(json));
       await aguardeCarregamento(false);
 
       $('#modalcadastrorapidocliente').modal('hide');
@@ -201,7 +201,7 @@ async function cadastrarClienteRapidoPedido(envio) {
       }`
 
       await aguardeCarregamento(true);
-      let result = await requisicaoPOST(`users`, JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      let result = await requisicaoPOST(`users`, JSON.parse(json));
       await aguardeCarregamento(false);
 
       $('#modalcadastrorapidocliente').modal('hide');
@@ -542,11 +542,11 @@ async function criarListagemDeBuscaDeProduto(tipo) {
   try {
     if (tipo == 'nome') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`products/${document.getElementById('nomeproduto').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      json = await requisicaoGET(`products/${document.getElementById('nomeproduto').value}`);
       await aguardeCarregamento(false);
     } else if (tipo == 'todos') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`products`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      json = await requisicaoGET(`products`);
       await aguardeCarregamento(false);
     }
 
@@ -720,7 +720,7 @@ async function preencherDadosPedidoIncluirDadosEmPedido(tipo, id, quantidade) {
       if (VETORDEPRODUTOSCLASSEPEDIDO.findIndex((element) => element._id == id) == -1) {
 
         await aguardeCarregamento(true);
-        let json = await requisicaoGET(`products`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        let json = await requisicaoGET(`products`);
         await aguardeCarregamento(false);
         let dado = json.data.find((element) => element._id == id);
 
