@@ -6,7 +6,7 @@ import Authorization from '../middlewares/Authorization';
 import Authentication from '../middlewares/Authentication';
 
 export class ProductRoutes {
-  constructor(private routes: Router) {}
+  constructor(private routes: Router) { }
 
   getRoutes(validations: IValidationsProduct) {
     this.routes.get('/products', ProductController.index);

@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -50,45 +39,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SessionUseCase = void 0;
-// import { IClientRepository } from '../../Repositories/IClientRepository';
-var User_1 = __importDefault(require("../../models/User"));
-var SessionUseCase = /** @class */ (function () {
-    function SessionUseCase() {
+var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+var ProductAuth = /** @class */ (function () {
+    function ProductAuth() {
     }
-    // constructor(private repository: IClientRepository) {}
-    SessionUseCase.prototype.createSession = function (username, password) {
+    ProductAuth.prototype.auth = function (request, response, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var user, correctPassword, token, serializedUser;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, User_1.default.findOne({ username: username })];
-                    case 1:
-                        user = _a.sent();
-                        if (!user) {
-                            throw new Error('user does not exist');
-                        }
-                        return [4 /*yield*/, user.checkPassword(password)];
-                    case 2:
-                        correctPassword = _a.sent();
-                        if (!correctPassword) {
-                            throw new Error('incorrect password');
-                        }
-                        return [4 /*yield*/, user.generateToken()];
-                    case 3:
-                        token = _a.sent();
-                        return [4 /*yield*/, user.populate('address.district').execPopulate()];
-                    case 4:
-                        _a.sent();
-                        serializedUser = __assign(__assign({}, user.toObject()), { password_hash: undefined, response: undefined });
-                        return [2 /*return*/, {
-                                user: serializedUser,
-                                token: token,
-                            }];
+            var authHeaders, _a, token, jwtPayload;
+            return __generator(this, function (_b) {
+                authHeaders = request.headers.authorization;
+                if (!authHeaders) {
+                    return [2 /*return*/, next()];
                 }
+                _a = authHeaders.split(' '), token = _a[1];
+                try {
+                    jwtPayload = jsonwebtoken_1.default.verify(token, process.env.APP_SECRET);
+                    request.userId = jwtPayload.id;
+                    return [2 /*return*/, next()];
+                }
+                catch (error) {
+                    console.log(error.message);
+                    return [2 /*return*/, response.status(401).json({ message: 'Token invalid' })];
+                }
+                return [2 /*return*/];
             });
         });
     };
-    return SessionUseCase;
+    return ProductAuth;
 }());
-exports.SessionUseCase = SessionUseCase;
+exports.default = new ProductAuth().auth;

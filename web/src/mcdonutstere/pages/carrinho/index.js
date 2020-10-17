@@ -14,6 +14,7 @@ import SkipNextIcon from "@material-ui/icons/SkipNext";
 import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
+import { useHistory } from "react-router-dom";
 
 import Navbar from "../../components/navbar/navbar";
 import NavInferior from "../../components/navbar/navinferior";
@@ -22,6 +23,7 @@ import Endereco from "./endereco";
 import DadosGerais from "./dadogeral";
 import { useCart } from "../../contexts/cart";
 import { useAuth } from "../../contexts/auth";
+import Api from "../../services/api";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,13 +54,6 @@ const useStyles = makeStyles((theme) => ({
 function getTitulos() {
   return ["Items do pedido", "Dados para entrega", "Confirmar pedido"];
 }
-
-const JSONfake = JSON.parse(`[
-    {"id":"1","name":"teste","price":2.50,"description":"O melhor da casa!"},
-    {"id":"2","name":"teste2","price":2.60,"description":"O melhor da casa2!"},
-    {"id":"3","name":"teste3","price":2.70,"description":"O melhor da casa3!"},
-    {"id":"4","name":"teste4","price":2.80,"description":"O melhor da casa4!"}
-]`);
 
 function getStepContent(step, cartItems) {
   switch (step) {
@@ -104,10 +99,15 @@ function getStepContent(step, cartItems) {
 
 export default function TelaCarrinho() {
   const classes = useStyles();
-  const { cartItems, payment, addressId } = useCart();
+  const { cartItems, payment, addressId, note } = useCart();
   const { user } = useAuth();
   const [posicaoNavegacao, setProximoAnterior] = useState(0);
   const cabecario = getTitulos();
+
+  const history = useHistory();
+  function handleNavigateToPedidos() {
+    history.push("/mcdonuts/pedido");
+  }
 
   const continuar = () => {
     setProximoAnterior((opcaoDeNavegacao) => opcaoDeNavegacao + 1);
@@ -123,14 +123,19 @@ export default function TelaCarrinho() {
     });
 
     const order = {
-      client_id: user._id,
-      cliente_address_id: addressId,
+      user_id: user._id,
+      user_address_id: addressId != 0 ? addressId : undefined,
       items,
       payment,
-      source: "web",
+      source: "site",
+      note,
     };
     console.log(order);
-    voltar();
+    Api.post('orders', order).then(response => {
+      console.log(response)
+    });
+
+    handleNavigateToPedidos();
   }
 
   return (
@@ -219,7 +224,7 @@ export default function TelaCarrinho() {
                   ) : (
                       <Button
                         disabled={posicaoNavegacao === 0}
-                        onClick={voltar}
+                        onClick={sendOrder}
                         color="secondary"
                         variant="contained"
                       >

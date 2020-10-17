@@ -66,13 +66,15 @@ export default function TelaDeDadosCliente({ dado }) {
                     <h3>
                         Endereço de entrega
                     </h3>
-                    <Input label="Endereço" type="text" />
+                    <Input label="Rua" type="text" />
+                    <Input label="Número da casa" type="text" />
                     <Select dado={
                         {
                             name: "Bairro",
                         }
                     }
                     />
+                    <Input label="Complemento" type="text" />
                 </Grid>
                 <Grid item xs={12} className={classes.divisorStyle}>
                     <h3>

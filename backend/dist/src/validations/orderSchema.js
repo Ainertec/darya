@@ -18,6 +18,7 @@ exports.order = celebrate_1.Joi.object().keys({
     source: celebrate_1.Joi.string().required(),
     note: celebrate_1.Joi.string(),
     payment: celebrate_1.Joi.string(),
+    viewed: celebrate_1.Joi.boolean(),
 });
 exports.orderUpdate = celebrate_1.Joi.object().keys({
     user_id: celebrate_1.Joi.custom(validObjectId_1.default, 'valid id'),
@@ -29,6 +30,7 @@ exports.orderUpdate = celebrate_1.Joi.object().keys({
     payment: celebrate_1.Joi.string(),
     identification: celebrate_1.Joi.string(),
     finished: celebrate_1.Joi.boolean(),
+    viewed: celebrate_1.Joi.boolean(),
 });
 exports.paramIdentification = {
     identification: celebrate_1.Joi.string().required(),

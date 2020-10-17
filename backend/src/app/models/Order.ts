@@ -76,6 +76,7 @@ const Source = Object.freeze({
   delivery: 'Pronta Entrega',
   itau: 'Transferência Itaú',
   bradesco: 'Transferência Bradesco',
+  site: 'site',
   getSource() {
     const source = [
       this.ifood,
@@ -84,6 +85,7 @@ const Source = Object.freeze({
       this.delivery,
       this.itau,
       this.bradesco,
+      this.site
     ];
     return source;
   },

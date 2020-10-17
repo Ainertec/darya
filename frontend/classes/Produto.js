@@ -46,7 +46,13 @@ function gerarListaDeProdutos(json) {
     )}</strong></td>
         <td class="table-warning"><button onclick="carregarDadosProduto('${json._id}')" type="button" class="btn btn-primary btn-sm"><span class="fas fa-edit"></span> Editar</button></td>
         <td class="table-warning"><button onclick="confirmarAcao('Excluir este produto!','excluirProduto(this.value)','${json._id}')" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span> Excluir</button></td>
-    </tr>`;
+        <td class="table-warning">
+          <div class="custom-control custom-switch">
+            <input type="checkbox" onclick="alterarDisponibilidade('${json._id}',this.checked)" class="custom-control-input custom-switch" id="botaoDispoProduto${json._id}" checked=${json.available ? true : false}>
+            <label class="custom-control-label" for="botaoDispoProduto${json._id}">Disponível</label>
+          </div>
+        </td>
+      </tr>`;
 
   return codigoHTML;
 }
@@ -155,11 +161,11 @@ async function buscarDadosProduto(tipo) {
   try {
     if (tipo == 'nome') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`products/${document.getElementById('nome').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      json = await requisicaoGET(`products/${document.getElementById('nome').value}`);
       await aguardeCarregamento(false);
     } else if (tipo == 'todos') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`products`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      json = await requisicaoGET(`products`);
       await aguardeCarregamento(false);
     }
 
@@ -174,6 +180,7 @@ async function buscarDadosProduto(tipo) {
                   <th scope="col">Preço venda</th>
                   <th scope="col">Editar</th>
                   <th scope="col">Excluir</th>
+                  <th scope="col">Disponível</th>
               </tr>
           </thead>
           <tbody>`;
@@ -268,24 +275,26 @@ async function cadastrarProduto() {
 
 //funcao responsavel por atualizar um produto
 async function atualizarProduto(id) {
-  let dado = VETORDEPRODUTOSCLASSEPRODUTO.filter(function (element) {
+  let dado = VETORDEPRODUTOSCLASSEPRODUTO.find(function (element) {
     return element._id == id;
   });
 
   try {
-    dado[0].name = document.getElementById('nomeproduto').value;
-    dado[0].description = document.getElementById('descricaoproduto').value;
-    dado[0].price = document.getElementById('precovenda').value;
-    dado[0].ingredients = VETORDEINGREDIENTESCLASSEPRODUTO;
-    delete dado[0]._id;
-    delete dado[0].cost
-    delete dado[0].stock
-    delete dado[0].updatedAt;
-    delete dado[0].createdAt;
-    delete dado[0].__v;
+
+    dado.name = document.getElementById('nomeproduto').value;
+    dado.description = document.getElementById('descricaoproduto').value;
+    dado.price = document.getElementById('precovenda').value;
+    dado.ingredients = VETORDEINGREDIENTESCLASSEPRODUTO;
+    dado.available = true
+    delete dado._id;
+    delete dado.cost
+    delete dado.stock
+    delete dado.updatedAt;
+    delete dado.createdAt;
+    delete dado.__v;
 
     await aguardeCarregamento(true);
-    await requisicaoPUT(`products/${id}`, dado[0], { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    await requisicaoPUT(`products/${id}`, dado, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     await aguardeCarregamento(false);
     await mensagemDeAviso('Produto atualizado com sucesso!')
   } catch (error) {
@@ -309,6 +318,41 @@ async function excluirProduto(id) {
   } catch (error) {
     mensagemDeErro('Não foi possível excluir o produto!')
   }
+
+  if (validaDadosCampo(['#nome'])) {
+    await buscarDadosProduto('nome');
+  } else {
+    await buscarDadosProduto('todos');
+  }
+}
+
+//funcao responsavel por colocar um produto disponivel ou indisponivel
+async function alterarDisponibilidade(id, status) {
+  let dado = VETORDEPRODUTOSCLASSEPRODUTO.find(function (element) {
+    return element._id == id;
+  });
+
+  const ingredients = dado.ingredients.map((ingredientsElement) => {
+    return {
+      ...ingredientsElement,
+      _id: undefined,
+      material: ingredientsElement.material._id
+    };
+  });
+
+
+  dado.available = status
+  dado.ingredients = ingredients
+  delete dado._id;
+  delete dado.cost
+  delete dado.stock
+  delete dado.updatedAt;
+  delete dado.createdAt;
+  delete dado.__v;
+
+  await aguardeCarregamento(true);
+  await requisicaoPUT(`products/${id}`, dado, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+  await aguardeCarregamento(false);
 
   if (validaDadosCampo(['#nome'])) {
     await buscarDadosProduto('nome');

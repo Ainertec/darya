@@ -13,12 +13,23 @@ import {
   Grid,
   Divider,
 } from "@material-ui/core/";
+import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
+import DoneAllIcon from '@material-ui/icons/DoneAll';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "80%",
     marginBottom: 20,
   },
+  precoStyle: {
+    color: "red",
+  },
+  statusStyleAguardar: {
+    color: "orange"
+  },
+  statusStyleConfirmar: {
+    color: "blue"
+  }
 }));
 
 function createData(name, quantidade, preco) {
@@ -38,12 +49,15 @@ export default function Pedido() {
     <Card className={classes.root}>
       <CardContent>
         <Typography variant="h5" component="h2">
-          Pedido nº: 1512151
+          <strong>Pedido nº: 1512151</strong>
         </Typography>
         <Typography color="textSecondary">25/06/2020 16:30:45</Typography>
-        <Typography variant="body2" component="p">
-          Aguardo
-        </Typography>
+        <h4 className={classes.statusStyleAguardar}>
+          <HourglassEmptyIcon /> Em aguardo
+        </h4>
+        <h4 className={classes.statusStyleConfirmar}>
+          <DoneAllIcon /> Confirmado
+        </h4>
         <div>
           <Grid container alignItems="center">
             <Typography gutterBottom variant="h5">
@@ -66,7 +80,7 @@ export default function Pedido() {
             Taxa de entrega: R$12.00
           </Typography>
           <Divider variant="middle" className={classes.divisorStyle} />
-          <Typography variant="body" component="h3">
+          <Typography variant="body1" component="h3">
             Itens
           </Typography>
           <TableContainer className={classes.divisorStyle}>

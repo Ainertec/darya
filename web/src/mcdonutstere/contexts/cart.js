@@ -6,6 +6,7 @@ export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [addressId, setAddressId] = useState("0");
   const [payment, setPayment] = useState("Dinheiro com troco");
+  const [note, setNote] = useState("Nenhuma.");
 
   function addItem(item) {
     const alreadyExistItem = cartItems.find(
@@ -50,6 +51,8 @@ export const CartProvider = ({ children }) => {
         payment,
         setPayment,
         setAddressId,
+        note,
+        setNote,
       }}
     >
       {children}

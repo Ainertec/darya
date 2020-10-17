@@ -1,17 +1,31 @@
 import React from "react";
 import {
+  makeStyles,
   Radio,
   RadioGroup,
   FormControlLabel,
   FormControl,
   FormLabel,
   Container,
+  TextField,
 } from "@material-ui/core/";
 import { useCart } from "../../contexts/cart";
 import { useAuth } from "../../contexts/auth";
 
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    marginTop: 30,
+  },
+  styleObservacao: {
+    marginTop: 15,
+  },
+}));
+
+
 export default function Endereco() {
-  const { payment, setAddressId, setPayment, addressId } = useCart();
+  const classes = useStyles();
+  const { payment, setAddressId, setPayment, addressId, setNote, note } = useCart();
   const { user } = useAuth();
 
   const selecionarEndereco = (event) => {
@@ -25,7 +39,7 @@ export default function Endereco() {
 
   return (
     <Container>
-      <FormControl component="fieldset">
+      <FormControl component="fieldset" className={classes.root}>
         <FormLabel component="legend">Endereço de entrega</FormLabel>
         <RadioGroup
           aria-label="gender"
@@ -47,7 +61,7 @@ export default function Endereco() {
           />
         </RadioGroup>
       </FormControl>
-      <FormControl component="fieldset">
+      <FormControl component="fieldset" className={classes.root}>
         <FormLabel component="legend">Forma de pagamento</FormLabel>
         <RadioGroup
           aria-label="gender2"
@@ -61,31 +75,42 @@ export default function Endereco() {
             label="Dinheiro com troco"
           />
           <FormControlLabel
-            value="other5"
+            value="Dinheiro sem troco"
             control={<Radio />}
             label="Dinheiro sem troco"
           />
           <FormControlLabel
-            value="other6"
+            value="Cartão de crédito"
             control={<Radio />}
             label="Cartão de crédito"
           />
           <FormControlLabel
-            value="other7"
+            value="Cartão de débito"
             control={<Radio />}
             label="Cartão de débito"
           />
           <FormControlLabel
-            value="other8"
+            value="Transferência Bradesco"
             control={<Radio />}
             label="Transferência Bradesco"
           />
           <FormControlLabel
-            value="other9"
+            value="Transferência Itau"
             control={<Radio />}
             label="Transferência Itau"
           />
         </RadioGroup>
+      </FormControl>
+      <FormControl component="fieldset" className={classes.root}>
+        <FormLabel component="legend">Forma de pagamento</FormLabel>
+        <TextField
+          label="Observação"
+          multiline
+          rows={6}
+          variant="outlined"
+          onChange={event => setNote(event.target.value)} value={note}
+          className={classes.styleObservacao}
+        />
       </FormControl>
     </Container>
   );

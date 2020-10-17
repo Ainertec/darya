@@ -88,9 +88,21 @@ async function modalTelaCadastrarouAtualizarCliente(tipo) {
                             <form>
                               <div class="shadow-lg p-3 mb-5 bg-white rounded">
                                 <div class="form-group">
-                                    <label for="nomecliente">Nome:</label>
+                                    <label for="nomecliente">Nome do cliente:</label>
                                     <input type="text" class="form-control" id="nomecliente" placeholder="Nome do cliente">
                                 </div>
+                                <div class="form-group form-row">
+                                  <div class="col">
+                                    <label for="nomecliente">Usuário:</label>
+                                    <input type="text" class="form-control" id="usuario" placeholder="Usuário" value="${Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 10)}">
+                                  </div>
+                                  <div class="col">
+                                    <label for="nomecliente">Senha:</label>
+                                    <input type="text" class="form-control" id="senha" placeholder="Senha" value="${Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 10) + Math.floor(Math.random() * 1000)}">
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="shadow-lg p-3 mb-5 bg-white rounded">
                                 <table class="table table-sm col-12 mx-auto" style="margin-top:40px">
                                   <thead class="thead-dark">
                                       <tr>
@@ -131,11 +143,20 @@ async function modalTelaCadastrarouAtualizarCliente(tipo) {
                         <div class="modal-footer">`;
   if (tipo == 'cadastrar') {
     VETORDECLIENTESCLASSECLIENTE.push(
-      JSON.parse(`{"_id":"-1","name":"", "phone":[], "address":[]}`)
+      JSON.parse(`{
+                    "_id":"-1",
+                    "name":"",
+                    "username":"",
+                    "password":"",
+                    "question":"Qual o nome da sua mãe?",
+                    "response":"${Math.random()}",
+                    "phone":[],
+                    "address":[]
+                  }`)
     );
-    codigoHTML += `<button type="button" onclick="if(validaDadosCampo(['#nomecliente'])){cadastrarCliente();}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['nomecliente']);}" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Salvar</button>`;
+    codigoHTML += `<button type="button" onclick="if(validaDadosCampo(['#nomecliente','#usuario','#senha'])){cadastrarCliente();}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['nomecliente','usuario','senha']);}" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Salvar</button>`;
   } else if (tipo == 'atualizar') {
-    codigoHTML += `<button onclick="if(validaDadosCampo(['#nomecliente'])){confirmarAcao('Atualizar este cliente!','atualizarCliente(this.value)',(this.value).toString()); $('#modalClasseCliente').modal('hide');}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['nomecliente']);}" id="botaoatualizarcliente" type="button" class="btn btn-primary btn-block"><span class="fas fa-edit"></span> Modificar</button>
+    codigoHTML += `<button onclick="if(validaDadosCampo(['#nomecliente','#usuario','#senha'])){confirmarAcao('Atualizar este cliente!','atualizarCliente(this.value)',(this.value).toString()); $('#modalClasseCliente').modal('hide');}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['nomecliente','usuario','senha']);}" id="botaoatualizarcliente" type="button" class="btn btn-primary btn-block"><span class="fas fa-edit"></span> Modificar</button>
                         <button onclick="confirmarAcao('Excluir este cliente!','excluirCliente(this.value)', (this.value).toString()); $('#modalClasseCliente').modal('hide');" id="botaoexcluircliente" type="button" class="btn btn-outline-danger btn-block"><span class="fas fa-trash"></span> Excluir</button>`;
   }
   codigoHTML += `</div>
@@ -219,11 +240,11 @@ async function buscarDadosCliente(tipo) {
   try {
     if (tipo == 'nome') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`clients/${document.getElementById('nome').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      json = await requisicaoGET(`users/${document.getElementById('nome').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
     } else if (tipo == 'todos') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`clients`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      json = await requisicaoGET(`users`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
     }
 
@@ -270,6 +291,7 @@ async function carregarDadosCliente(id) {
     let dado = VETORDECLIENTESCLASSECLIENTE.find((element) => element._id == id), indice = 0;
 
     document.getElementById('nomecliente').value = dado.name;
+    document.getElementById('usuario').value = dado.username;
 
     for (let item of dado.phone) {
       $('#tabelatelefone').append(`<tr id="linhatel${indice}">
@@ -374,6 +396,8 @@ async function cadastrarCliente() {
       if (cliente.address[0]) {
 
         cliente.name = document.getElementById('nomecliente').value;
+        cliente.username = document.getElementById('usuario').value;
+        cliente.password = document.getElementById('senha').value;
         const addressSerialiazaded = cliente.address.map((addressElement) => {
           return {
             ...addressElement,
@@ -383,11 +407,15 @@ async function cadastrarCliente() {
         });
 
         await aguardeCarregamento(true);
-        let result = await requisicaoPOST(`clients`, {
+        let result = await requisicaoPOST(`users`, {
           address: addressSerialiazaded,
           phone: cliente.phone,
           name: cliente.name,
-        }, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+          username: cliente.username,
+          password: cliente.password,
+          question: cliente.question,
+          response: cliente.response
+        });
         await aguardeCarregamento(false);
 
         $('#modalClasseCliente').modal('hide');
@@ -401,19 +429,27 @@ async function cadastrarCliente() {
         }
 
       } else {
+
         cliente.name = document.getElementById('nomecliente').value;
+        cliente.username = document.getElementById('usuario').value;
+        cliente.password = document.getElementById('senha').value;
 
         await aguardeCarregamento(true);
-        let result = await requisicaoPOST(`clients`, {
+        let result = await requisicaoPOST(`users`, {
           name: cliente.name,
-          phone: cliente.phone
-        }, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+          phone: cliente.phone,
+          username: cliente.username,
+          password: cliente.password,
+          question: cliente.question,
+          response: cliente.response
+        });
         await aguardeCarregamento(false);
 
         $('#modalClasseCliente').modal('hide');
 
         if (result == 400) {
           await mensagemDeErro('Atenção já existe um cliente com os mesmo dados!')
+          reiniciarClasseCliente();
         } else {
           await mensagemDeAviso('Cliente cadastrado com sucesso!')
           document.getElementById('nome').value = await result.data.name
@@ -426,6 +462,7 @@ async function cadastrarCliente() {
     }
   } catch (error) {
     mensagemDeErro('Não foi possível cadastrar o cliente!')
+    reiniciarClasseCliente();
   }
 
   CONTADORDEENDERECO = 0;
@@ -438,7 +475,10 @@ async function atualizarCliente(id) {
 
     if (cliente.phone[0]) {
       if (cliente.address[0]) {
+
         const name = document.getElementById('nomecliente').value
+        username = document.getElementById('usuario').value
+        cliente.password = document.getElementById('senha').value;
         const serializadedAddress = cliente.address.map((addressElement) => {
           return {
             ...addressElement,
@@ -448,21 +488,34 @@ async function atualizarCliente(id) {
         });
 
         await aguardeCarregamento(true);
-        await requisicaoPUT(`clients/${id}`, {
+        console.log(cliente)
+        await requisicaoPUT(`users/${id}`, {
           address: serializadedAddress,
+          username: (username === cliente.username) ? undefined : username,
+          password: cliente.password,
+          question: cliente.question,
+          response: cliente.response,
           phone: cliente.phone,
           name: (name === cliente.name) ? undefined : name,
         }, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         await aguardeCarregamento(false);
 
         await mensagemDeAviso('Cliente atualizado com sucesso!')
-      } else {
-        const name = document.getElementById('nomecliente').value
 
+      } else {
+
+        const name = document.getElementById('nomecliente').value
+        username = document.getElementById('usuario').value
+        cliente.password = document.getElementById('senha').value;
         await aguardeCarregamento(true);
-        await requisicaoPUT(`clients/${id}`, {
+        console.log(cliente)
+        await requisicaoPUT(`users/${id}`, {
           name: (name === cliente.name) ? undefined : name,
-          phone: cliente.phone
+          phone: cliente.phone,
+          username: (username === cliente.username) ? undefined : username,
+          password: cliente.password,
+          question: cliente.question,
+          response: cliente.response
         }, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         await aguardeCarregamento(false);
 
@@ -473,6 +526,7 @@ async function atualizarCliente(id) {
     }
   } catch (error) {
     mensagemDeErro('Não foi possível atualizar o cliente!')
+    reiniciarClasseCliente();
   }
 
   if (validaDadosCampo(['#nome'])) {
@@ -486,11 +540,12 @@ async function atualizarCliente(id) {
 async function excluirCliente(id) {
   try {
     await aguardeCarregamento(true);
-    await requisicaoDELETE(`clients/${id}`, '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+    await requisicaoDELETE(`users/${id}`, '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
     await aguardeCarregamento(false);
     await mensagemDeAviso('Cliente excluído com sucesso!')
   } catch (error) {
     mensagemDeErro('Não foi possível excluir o cliente!')
+    reiniciarClasseCliente();
   }
 
   if (validaDadosCampo(['#nome'])) {

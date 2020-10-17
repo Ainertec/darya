@@ -108,6 +108,7 @@ var Source = Object.freeze({
     delivery: 'Pronta Entrega',
     itau: 'Transferência Itaú',
     bradesco: 'Transferência Bradesco',
+    site: 'site',
     getSource: function () {
         var source = [
             this.ifood,
@@ -116,6 +117,7 @@ var Source = Object.freeze({
             this.delivery,
             this.itau,
             this.bradesco,
+            this.site
         ];
         return source;
     },
@@ -154,6 +156,10 @@ var OrderSchema = new mongoose_1.Schema({
     identification: {
         type: String,
         required: true,
+    },
+    viewed: {
+        type: Boolean,
+        default: false,
     },
 }, {
     timestamps: true,
