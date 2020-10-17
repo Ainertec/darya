@@ -45,6 +45,14 @@ forgotPassworndRoutes.getRoutes();
 const userRoutes = new UserRoutes(routes);
 userRoutes.getRoutes({ paramName, paramId, client, clientUpdate });
 
+// products
+const productRouters = new ProductRoutes(routes);
+productRouters.getRoutes({ product, paramName, paramId });
+
+// districtsRoutes
+const districtRoutes = new DistrictsRoutes(routes);
+districtRoutes.getRoutes({ paramName, paramId, district });
+
 routes.use(Authentication);
 
 // orders
@@ -56,14 +64,6 @@ orderRoutes.getRoutes({
   paramIdentification,
   paramId,
 });
-
-// products
-const productRouters = new ProductRoutes(routes);
-productRouters.getRoutes({ product, paramName, paramId });
-
-// districtsRoutes
-const districtRoutes = new DistrictsRoutes(routes);
-districtRoutes.getRoutes({ paramName, paramId, district });
 
 routes.use(Authorization);
 
