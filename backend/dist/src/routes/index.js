@@ -39,6 +39,12 @@ forgotPassworndRoutes.getRoutes();
 // users
 var userRoutes = new Users_routes_1.UserRoutes(routes);
 userRoutes.getRoutes({ paramName: commonSchema_1.paramName, paramId: commonSchema_1.paramId, client: clientSchema_1.client, clientUpdate: clientSchema_1.clientUpdate });
+// products
+var productRouters = new Products_routes_1.ProductRoutes(routes);
+productRouters.getRoutes({ product: productSchema_1.default, paramName: commonSchema_1.paramName, paramId: commonSchema_1.paramId });
+// districtsRoutes
+var districtRoutes = new Districts_routes_1.DistrictsRoutes(routes);
+districtRoutes.getRoutes({ paramName: commonSchema_1.paramName, paramId: commonSchema_1.paramId, district: districtSchema_1.default });
 routes.use(Authentication_1.default);
 // orders
 var orderRoutes = new Orders_routes_1.OrdersRoutes(routes);
@@ -49,12 +55,6 @@ orderRoutes.getRoutes({
     paramIdentification: orderSchema_1.paramIdentification,
     paramId: commonSchema_1.paramId,
 });
-// products
-var productRouters = new Products_routes_1.ProductRoutes(routes);
-productRouters.getRoutes({ product: productSchema_1.default, paramName: commonSchema_1.paramName, paramId: commonSchema_1.paramId });
-// districtsRoutes
-var districtRoutes = new Districts_routes_1.DistrictsRoutes(routes);
-districtRoutes.getRoutes({ paramName: commonSchema_1.paramName, paramId: commonSchema_1.paramId, district: districtSchema_1.default });
 routes.use(Authorization_1.default);
 // deliverymans
 var deliverymanRoutes = new Deliverymans_routes_1.DeliverymansRoutes(routes);

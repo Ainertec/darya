@@ -227,13 +227,13 @@ var OrderController = /** @class */ (function () {
         });
     };
     OrderController.prototype.store = function (request, response) {
-        var _a;
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function () {
-            var _b, user_id, deliveryman, user_address_id, items, source, note, payment, viewed, authUserId, isValidSource, authUser, user, _c, address_id, identification, address, _d, total, _e, order, deliverymanPersisted, error_1;
-            return __generator(this, function (_f) {
-                switch (_f.label) {
+            var _c, user_id, deliveryman, user_address_id, items, source, note, payment, viewed, authUserId, isValidSource, authUser, user, _d, address_id, identification, address, _e, total, _f, order, deliverymanPersisted, error_1;
+            return __generator(this, function (_g) {
+                switch (_g.label) {
                     case 0:
-                        _b = request.body, user_id = _b.user_id, deliveryman = _b.deliveryman, user_address_id = _b.user_address_id, items = _b.items, source = _b.source, note = _b.note, payment = _b.payment, viewed = _b.viewed;
+                        _c = request.body, user_id = _c.user_id, deliveryman = _c.deliveryman, user_address_id = _c.user_address_id, items = _c.items, source = _c.source, note = _c.note, payment = _c.payment, viewed = _c.viewed;
                         authUserId = request.userId;
                         isValidSource = Order_1.Source.getSource().includes(source);
                         if (!isValidSource) {
@@ -241,49 +241,49 @@ var OrderController = /** @class */ (function () {
                         }
                         return [4 /*yield*/, User_1.default.findOne({ _id: authUserId })];
                     case 1:
-                        authUser = _f.sent();
+                        authUser = _g.sent();
                         if (!(authUser === null || authUser === void 0 ? void 0 : authUser.admin)) return [3 /*break*/, 3];
                         return [4 /*yield*/, User_1.default.findOne({ _id: user_id })];
                     case 2:
-                        _c = _f.sent();
+                        _d = _g.sent();
                         return [3 /*break*/, 4];
                     case 3:
-                        _c = authUser;
-                        _f.label = 4;
+                        _d = authUser;
+                        _g.label = 4;
                     case 4:
-                        user = _c;
+                        user = _d;
                         address_id = (authUser === null || authUser === void 0 ? void 0 : authUser.admin) ? user_address_id
-                            : authUser.address[0]._id;
+                            : (_a = authUser.address[0]) === null || _a === void 0 ? void 0 : _a._id;
                         if (!user)
                             return [2 /*return*/, response.status(400).json('That user does not exist')];
-                        identification = user.phone && ((_a = user.phone) === null || _a === void 0 ? void 0 : _a.length) > 0
+                        identification = user.phone && ((_b = user.phone) === null || _b === void 0 ? void 0 : _b.length) > 0
                             ? crypto_1.default.randomBytes(4).toString('hex') +
                                 user.phone[0].slice(user.phone[0].length - 2)
                             : crypto_1.default.randomBytes(4).toString('hex');
-                        _f.label = 5;
+                        _g.label = 5;
                     case 5:
-                        _f.trys.push([5, 19, , 20]);
+                        _g.trys.push([5, 19, , 20]);
                         if (!address_id) return [3 /*break*/, 7];
                         return [4 /*yield*/, this.getAddress(user._id, address_id)];
                     case 6:
-                        _d = _f.sent();
+                        _e = _g.sent();
                         return [3 /*break*/, 8];
                     case 7:
-                        _d = undefined;
-                        _f.label = 8;
+                        _e = undefined;
+                        _g.label = 8;
                     case 8:
-                        address = _d;
+                        address = _e;
                         if (!address) return [3 /*break*/, 10];
                         return [4 /*yield*/, this.getTotal(items, address.district_rate)];
                     case 9:
-                        _e = _f.sent();
+                        _f = _g.sent();
                         return [3 /*break*/, 12];
                     case 10: return [4 /*yield*/, this.getTotal(items, 0)];
                     case 11:
-                        _e = _f.sent();
-                        _f.label = 12;
+                        _f = _g.sent();
+                        _g.label = 12;
                     case 12:
-                        total = _e;
+                        total = _f;
                         return [4 /*yield*/, Order_1.default.create({
                                 identification: identification,
                                 user: {
@@ -300,34 +300,34 @@ var OrderController = /** @class */ (function () {
                                 viewed: viewed,
                             })];
                     case 13:
-                        order = _f.sent();
+                        order = _g.sent();
                         if (!deliveryman) return [3 /*break*/, 17];
                         return [4 /*yield*/, Deliveryman_1.default.findOne({
                                 _id: deliveryman,
                             })];
                     case 14:
-                        deliverymanPersisted = _f.sent();
+                        deliverymanPersisted = _g.sent();
                         if (!deliverymanPersisted) {
                             return [2 /*return*/, response.status(400).json('Invalid deliveryman')];
                         }
                         deliverymanPersisted.hasDelivery = true;
                         return [4 /*yield*/, deliverymanPersisted.save()];
                     case 15:
-                        _f.sent();
+                        _g.sent();
                         order.deliveryman = deliveryman;
                         return [4 /*yield*/, order.save()];
                     case 16:
-                        _f.sent();
-                        _f.label = 17;
+                        _g.sent();
+                        _g.label = 17;
                     case 17: return [4 /*yield*/, order
                             .populate('deliveryman')
                             .populate('items.product')
                             .execPopulate()];
                     case 18:
-                        _f.sent();
+                        _g.sent();
                         return [2 /*return*/, response.json(order)];
                     case 19:
-                        error_1 = _f.sent();
+                        error_1 = _g.sent();
                         return [2 /*return*/, response.status(400).json(error_1.message)];
                     case 20: return [2 /*return*/];
                 }

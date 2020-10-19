@@ -184,7 +184,7 @@ var UserController = /** @class */ (function () {
                     case 5:
                         isInvalidName = _b.sent();
                         if (isInvalidName) {
-                            return [2 /*return*/, response.status(400).json(isInvalidName)];
+                            return [2 /*return*/, responseHttp.status(400).json(isInvalidName)];
                         }
                         user.name = name;
                         _b.label = 6;
