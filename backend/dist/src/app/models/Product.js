@@ -33,6 +33,10 @@ var ProductSchema = new mongoose_1.Schema({
         type: Boolean,
         default: true,
     },
+    image: {
+        type: String,
+        required: true,
+    },
     ingredients: [IngredientSchema],
 }, {
     timestamps: true,

@@ -104,11 +104,11 @@ var ProductController = /** @class */ (function () {
     };
     ProductController.prototype.store = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, name, price, description, ingredients, available, cost, product;
+            var _a, name, price, description, ingredients, available, image, cost, product;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _a = request.body, name = _a.name, price = _a.price, description = _a.description, ingredients = _a.ingredients, available = _a.available;
+                        _a = request.body, name = _a.name, price = _a.price, description = _a.description, ingredients = _a.ingredients, available = _a.available, image = _a.image;
                         return [4 /*yield*/, getProductCost_1.default(ingredients)];
                     case 1:
                         cost = _b.sent();
@@ -119,6 +119,7 @@ var ProductController = /** @class */ (function () {
                                 description: description,
                                 ingredients: ingredients,
                                 available: available,
+                                image: image,
                             })];
                     case 2:
                         product = _b.sent();
@@ -132,11 +133,11 @@ var ProductController = /** @class */ (function () {
     };
     ProductController.prototype.update = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, name, price, ingredients, description, available, id, cost, product;
+            var _a, name, price, ingredients, description, available, image, id, cost, product;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _a = request.body, name = _a.name, price = _a.price, ingredients = _a.ingredients, description = _a.description, available = _a.available;
+                        _a = request.body, name = _a.name, price = _a.price, ingredients = _a.ingredients, description = _a.description, available = _a.available, image = _a.image;
                         id = request.params.id;
                         return [4 /*yield*/, getProductCost_1.default(ingredients)];
                     case 1:
@@ -147,6 +148,7 @@ var ProductController = /** @class */ (function () {
                                 description: description,
                                 ingredients: ingredients,
                                 cost: cost,
+                                image: image,
                             }, { new: true })];
                     case 2:
                         product = _b.sent();

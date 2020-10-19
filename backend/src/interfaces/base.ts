@@ -8,6 +8,7 @@ export interface ProductInterface extends Document {
   description?: string;
   ingredients: Ingredients[];
   cost: number;
+  image: string;
 }
 export interface Ingredients {
   material: IngredientInterface;

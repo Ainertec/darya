@@ -34,18 +34,18 @@ class ProductController {
 
     const products = authUser?.admin
       ? await Product.find({
-          name: { $regex: new RegExp(name), $options: 'i' },
-        }).populate('ingredients.material')
+        name: { $regex: new RegExp(name), $options: 'i' },
+      }).populate('ingredients.material')
       : await Product.find({
-          name: { $regex: new RegExp(name), $options: 'i' },
-          available: true,
-        }).populate('ingredients.material');
+        name: { $regex: new RegExp(name), $options: 'i' },
+        available: true,
+      }).populate('ingredients.material');
 
     return response.json(products);
   }
 
   async store(request: Request, response: Response) {
-    const { name, price, description, ingredients, available } = request.body;
+    const { name, price, description, ingredients, available, image } = request.body;
     const cost = await getCost(ingredients);
     const product = await Product.create({
       name,
@@ -54,13 +54,14 @@ class ProductController {
       description,
       ingredients,
       available,
+      image,
     });
     await product.populate('ingredients.material').execPopulate();
     return response.json(product);
   }
 
   async update(request: Request, response: Response) {
-    const { name, price, ingredients, description, available } = request.body;
+    const { name, price, ingredients, description, available, image } = request.body;
     const { id } = request.params;
     const cost = await getCost(ingredients);
 
@@ -72,6 +73,7 @@ class ProductController {
         description,
         ingredients,
         cost,
+        image,
       },
       { new: true },
     );

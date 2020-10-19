@@ -16,5 +16,6 @@ var product = celebrate_1.Joi.object().keys({
     price: celebrate_1.Joi.number().required(),
     cost: celebrate_1.Joi.number(),
     available: celebrate_1.Joi.boolean(),
+    image: celebrate_1.Joi.string().required(),
 });
 exports.default = product;
