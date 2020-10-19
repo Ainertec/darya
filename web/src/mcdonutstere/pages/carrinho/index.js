@@ -14,6 +14,9 @@ import SkipNextIcon from "@material-ui/icons/SkipNext";
 import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
+import MoodBadIcon from '@material-ui/icons/MoodBad';
+import RemoveShoppingCartIcon from '@material-ui/icons/RemoveShoppingCart';
+
 import { useHistory } from "react-router-dom";
 
 import Navbar from "../../components/navbar/navbar";
@@ -21,6 +24,7 @@ import NavInferior from "../../components/navbar/navinferior";
 import ItemCarrinho from "./item";
 import Endereco from "./endereco";
 import DadosGerais from "./dadogeral";
+import BotaoVoltar from '../../components/form/botaoVoltar';
 import { useCart } from "../../contexts/cart";
 import { useAuth } from "../../contexts/auth";
 import Api from "../../services/api";
@@ -142,6 +146,7 @@ export default function TelaCarrinho() {
     <div className={classes.colorPag}>
       <Navbar />
       <Container maxWidth="md" disableGutters>
+        <BotaoVoltar dado={`/mcdonuts`} />
         <Box
           justifyContent="center"
           flexWrap="wrap"
@@ -194,44 +199,54 @@ export default function TelaCarrinho() {
                   )}
                 </Box>
                 <Box justifyContent="center" flexWrap="wrap" display="flex">
-                  {posicaoNavegacao < cabecario.length ? (
-                    <>
-                      <Button
-                        disabled={posicaoNavegacao === 0}
-                        onClick={voltar}
-                        variant="contained"
-                      >
-                        <SkipPreviousIcon />
+                  {cartItems.length > 0 ? (
+                    posicaoNavegacao < cabecario.length ? (
+                      <>
+                        <Button
+                          disabled={posicaoNavegacao === 0}
+                          onClick={voltar}
+                          variant="contained"
+                        >
+                          <SkipPreviousIcon />
                         Voltar
                       </Button>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={continuar}
-                        style={{ marginLeft: 30 }}
-                      >
-                        {posicaoNavegacao === cabecario.length - 1 ? (
-                          <>
-                            <DoneOutlineIcon /> Fazer Pedido
-                          </>
-                        ) : (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={continuar}
+                          style={{ marginLeft: 30 }}
+                        >
+                          {posicaoNavegacao === cabecario.length - 1 ? (
                             <>
-                              Continuar <SkipNextIcon />
-                            </>
-                          )}
-                      </Button>
-                    </>
-                  ) : (
-                      <Button
-                        disabled={posicaoNavegacao === 0}
-                        onClick={sendOrder}
-                        color="secondary"
-                        variant="contained"
-                      >
-                        <DoneAllIcon />
+                              <DoneOutlineIcon /> Fazer Pedido
+                          </>
+                          ) : (
+                              <>
+                                Continuar <SkipNextIcon />
+                              </>
+                            )}
+                        </Button>
+                      </>
+                    ) : (
+                        <Button
+                          disabled={posicaoNavegacao === 0}
+                          onClick={sendOrder}
+                          color="secondary"
+                          variant="contained"
+                        >
+                          <DoneAllIcon />
                       Confirmar Pedido
-                      </Button>
-                    )}
+                        </Button>
+                      ))
+                    :
+                    <>
+                      <h3>
+                        <RemoveShoppingCartIcon />
+                        Nenhum item adicionado ao carrinho
+                        <MoodBadIcon />
+                      </h3>
+                    </>
+                  }
                 </Box>
               </div>
             </div>

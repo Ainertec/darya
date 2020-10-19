@@ -59,28 +59,28 @@ export default function TelaDeDadosCliente({ dado }) {
                     <h3>
                         Dados de cliente
                     </h3>
-                    <Input label="Nome completo" type="text" />
-                    <Input label="Telefone" type="phone" />
+                    <Input label="Nome completo" type="text" value={dado.user.name} />
+                    <Input label="Telefone" type="phone" value={dado.user.phone[0]} />
                 </Grid>
                 <Grid item xs={12} className={classes.divisorStyle}>
                     <h3>
                         Endereço de entrega
                     </h3>
-                    <Input label="Rua" type="text" />
-                    <Input label="Número da casa" type="text" />
+                    <Input label="Rua" type="text" value={dado.user.address[0] ? dado.user.address[0].street : ''} />
+                    <Input label="Número da casa" type="text" value={dado.user.address[0] ? dado.user.address[0].number : ''} />
                     <Select dado={
                         {
                             name: "Bairro",
                         }
                     }
                     />
-                    <Input label="Complemento" type="text" />
+                    <Input label="Complemento" type="text" value={dado.user.address[0] ? dado.user.address[0].complento : ''} />
                 </Grid>
                 <Grid item xs={12} className={classes.divisorStyle}>
                     <h3>
                         Dados de acesso
                     </h3>
-                    <Input label="Nome de usuário" type="text" />
+                    <Input label="Nome de usuário" type="text" value={dado.user.username} />
                     <Input label="Senha" type="password" />
                 </Grid>
                 <Grid item xs={12} className={classes.divisorStyle}>

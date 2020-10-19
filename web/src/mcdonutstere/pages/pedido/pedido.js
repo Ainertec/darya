@@ -42,34 +42,37 @@ const rows = [
   createData("Eclair", 2, 1.0),
 ];
 
-export default function Pedido() {
+export default function Pedido({ data }) {
   const classes = useStyles();
 
   return (
     <Card className={classes.root}>
       <CardContent>
         <Typography variant="h5" component="h2">
-          <strong>Pedido nº: 1512151</strong>
+          <strong>Pedido nº: {data.identification}</strong>
         </Typography>
-        <Typography color="textSecondary">25/06/2020 16:30:45</Typography>
-        <h4 className={classes.statusStyleAguardar}>
-          <HourglassEmptyIcon /> Em aguardo
-        </h4>
-        <h4 className={classes.statusStyleConfirmar}>
-          <DoneAllIcon /> Confirmado
-        </h4>
+        <Typography color="textSecondary">{data.createdAt}</Typography>
+        {data.viewed ?
+          <h4 className={classes.statusStyleConfirmar}>
+            <DoneAllIcon /> Confirmado
+          </h4>
+          :
+          <h4 className={classes.statusStyleAguardar}>
+            <HourglassEmptyIcon /> Em aguardo
+          </h4>
+        }
         <div>
           <Grid container alignItems="center">
             <Typography gutterBottom variant="h5">
-              Aldair Camargo
+              {data.user.name}
             </Typography>
           </Grid>
           <Typography color="textSecondary" variant="body2">
-            Endereço de entrega: Rua Nova - Lumiar - Nova Friburgo
+            Endereço de entrega: {data.address ? `${data.address.street}, nº${data.address.number} - ${data.address.district_name}` : `Retirada no local`}
           </Typography>
           <Divider variant="middle" className={classes.divisorStyle} />
           <Typography color="textSecondary" variant="body2">
-            Tel.: (22)2542-9670, (22)981533173
+            Tel.: {data.user.phone}
           </Typography>
           <Divider variant="middle" className={classes.divisorStyle} />
           <Typography
@@ -77,7 +80,7 @@ export default function Pedido() {
             variant="body2"
             className={classes.precoStyle}
           >
-            Taxa de entrega: R$12.00
+            Taxa de entrega: R${data.address ? (data.address.district_rate).toFixed(2) : (0.00).toFixed(2)}
           </Typography>
           <Divider variant="middle" className={classes.divisorStyle} />
           <Typography variant="body1" component="h3">
@@ -93,14 +96,14 @@ export default function Pedido() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <TableRow key={row.name}>
+                {data.items.map((row) => (
+                  <TableRow key={row._id}>
                     <TableCell component="th" scope="row">
-                      {row.name}
+                      {row.product.name}
                     </TableCell>
-                    <TableCell align="right">{row.quantidade}</TableCell>
+                    <TableCell align="right">{row.quantity}</TableCell>
                     <TableCell align="right" className={classes.precoStyle}>
-                      R$ {row.preco.toFixed(2)}
+                      R$ {(row.product.price).toFixed(2)}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -112,7 +115,7 @@ export default function Pedido() {
             component="h4"
             className={classes.precoStyle}
           >
-            Valor total: R$ 26.00
+            Valor total: R$ {(data.total).toFixed(2)}
           </Typography>
         </div>
       </CardContent>

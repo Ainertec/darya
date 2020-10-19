@@ -6,6 +6,7 @@ import {
 
 import TelaCliente from './tela';
 import Navbar from "../../components/navbar/navbar";
+import BotaoVoltar from '../../components/form/botaoVoltar';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,6 +26,7 @@ export default function TelaDeCadastroCliente() {
     <div className={classes.colorPag}>
       <Navbar hideIcons />
       <Container maxWidth="md" disableGutters>
+        <BotaoVoltar dado={`/mcdonuts`} />
         <TelaCliente dado={
           {
             title: "Criar conta",

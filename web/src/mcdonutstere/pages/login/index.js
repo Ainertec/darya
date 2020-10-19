@@ -14,7 +14,6 @@ import {
 } from '@material-ui/core/';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import SecurityIcon from '@material-ui/icons/Security';
-import LockOpenIcon from '@material-ui/icons/LockOpen';
 
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../../contexts/auth';
@@ -22,12 +21,13 @@ import { useAuth } from '../../contexts/auth';
 import Navbar from "../../components/navbar/navbar";
 import Input from "../../components/form/input";
 import Botao from "../../components/form/botao";
+import BotaoVoltar from '../../components/form/botaoVoltar';
 
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        paddingTop: 30,
-        marginBottom: 60,
+        paddingTop: 0,
+        marginBottom: 0,
     },
     colorPag: {
         backgroundColor: "#fff9c4",
@@ -88,6 +88,7 @@ function TelaLogin() {
             <Container maxWidth="md" disableGutters>
                 <Box justifyContent="center" flexWrap="wrap" display="flex" className={classes.root}>
                     <Grid item xs={9}>
+                        <BotaoVoltar dado={`/mcdonuts`} />
                         <Grid item xs={12}>
                             <Typography gutterBottom variant="h6" component="p" className={classes.textStyle}>
                                 <AccountCircle /> Acessar conta

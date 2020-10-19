@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Box, makeStyles, Container } from "@material-ui/core/";
+import {
+  Box,
+  makeStyles,
+  Container
+} from "@material-ui/core/";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 
 import Navbar from "../../components/navbar/navbar";
@@ -21,6 +25,11 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#fff9c4",
     borderRadius: 30,
   },
+  bannerStyle: {
+    borderRadius: 30,
+    height: '30vh',
+    width: '80vw'
+  }
 }));
 
 export default function Home() {

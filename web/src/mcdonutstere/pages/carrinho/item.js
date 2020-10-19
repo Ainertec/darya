@@ -7,6 +7,7 @@ import {
   Typography,
   Button,
   TextField,
+  CardMedia,
 } from "@material-ui/core/";
 
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
@@ -20,7 +21,7 @@ const useStyles = makeStyles({
   precostyle: {
     color: "red",
     justifyContent: "flex-end",
-    marginTop: 60,
+    marginTop: 30,
   },
 });
 
@@ -45,6 +46,13 @@ export default function ItemCarrinho({ data }) {
             <FastfoodIcon /> {data.product.name}
           </strong>
         </Typography>
+        <CardMedia
+          component="img"
+          alt="Contemplative Reptile"
+          height="90"
+          image={data.product.image}
+          title="Contemplative Reptile"
+        />
         <Typography variant="subtitle2" component="p">
           {data.product.description}
         </Typography>

@@ -6,6 +6,9 @@ import {
 
 import TelaCliente from './tela';
 import Navbar from "../../components/navbar/navbar";
+import BotaoVoltar from '../../components/form/botaoVoltar';
+import Api from "../../services/api";
+import { useAuth } from '../../contexts/auth';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,16 +23,19 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TelaDeAtualizarCliente() {
   const classes = useStyles();
+  const { user } = useAuth();
 
   return (
     <div className={classes.colorPag}>
       <Navbar hideIcons />
       <Container maxWidth="md" disableGutters>
+        <BotaoVoltar dado={`/mcdonuts`} />
         <TelaCliente
           dado={
             {
               title: "Atualizar conta",
               bottonTitle: "Atualizar",
+              user,
             }
           }
         />

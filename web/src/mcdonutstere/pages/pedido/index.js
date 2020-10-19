@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Box,
     makeStyles,
@@ -9,7 +9,8 @@ import {
 import Navbar from "../../components/navbar/navbar";
 import NavInferior from "../../components/navbar/navinferior";
 import Pedido from "./pedido";
-
+import BotaoVoltar from '../../components/form/botaoVoltar';
+import Api from "../../services/api";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -37,18 +38,24 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function TelaPedido() {
+    const [pedidos, setPedidos] = useState([]);
     const classes = useStyles();
+
+    useEffect(() => {
+        Api.get(`orders/user`).then(response => {
+            setPedidos(response.data);
+        });
+    }, []);
 
     return (
         <div className={classes.colorPag}>
             <Navbar />
             <Container maxWidth="md" disableGutters>
+                <BotaoVoltar dado={`/mcdonuts/carrinho`} />
                 <Box justifyContent="center" flexWrap="wrap" display="flex" className={classes.root}>
-                    <Pedido />
-                    <Pedido />
-                    <Pedido />
-                    <Pedido />
-                    <Pedido />
+                    {pedidos.map((item) => (
+                        <Pedido key={item._id} data={item} />
+                    ))}
                     <NavInferior posicao={1} />
                 </Box>
             </Container>

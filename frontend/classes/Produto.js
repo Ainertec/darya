@@ -130,6 +130,15 @@ async function modalTelaCadastrarouAtualizarProduto(tipo) {
                                       <label for="descricao">Descrição</label>
                                       <textarea class="form-control" id="descricaoproduto" rows="3">Nenhuma.</textarea>
                                   </div>
+                                  <div class="form-group">
+                                      <label for="precovenda">URL Imagem:</label>
+                                      <div class="input-group">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">URL</span>
+                                        </div>
+                                        <input type="text" class="form-control" id="urlimagem" placeholder="link da imagem" value="https://scontent-gig2-1.xx.fbcdn.net/v/t1.0-9/116713815_124951775960325_7453113145449815266_n.jpg?_nc_cat=102&_nc_sid=85a577&_nc_ohc=mQdSHbahKnAAX8uDfzF&_nc_ht=scontent-gig2-1.xx&oh=92557106d94984dbbbb8d4f954c84f27&oe=5FB125BB">
+                                      </div>
+                                  </div>
                                 </div>
                             </form>
                         </div>
@@ -214,6 +223,7 @@ async function carregarDadosProduto(id) {
     document.getElementById('nomeproduto').value = dado.name;
     document.getElementById('precovenda').value = parseFloat(dado.price).toFixed(2);
     document.getElementById('descricaoproduto').value = dado.description;
+    document.getElementById('urlimagem').value = dado.image;
     for (let item2 of dado.ingredients) {
       adicionarIngredienteaoProduto(item2.material._id, 'atualizar', item2.quantity);
     }
@@ -254,6 +264,7 @@ async function cadastrarProduto() {
         "name":"${$('#nomeproduto').val()}",
         "description":"${$('#descricaoproduto').val()}",
         "price":${$('#precovenda').val()},
+        "image":"${$('#urlimagem').val()}",
         "ingredients":[]
       }`;
 
@@ -284,6 +295,7 @@ async function atualizarProduto(id) {
     dado.name = document.getElementById('nomeproduto').value;
     dado.description = document.getElementById('descricaoproduto').value;
     dado.price = document.getElementById('precovenda').value;
+    dado.image = document.getElementById('urlimagem').value;
     dado.ingredients = VETORDEINGREDIENTESCLASSEPRODUTO;
     dado.available = true
     delete dado._id;
