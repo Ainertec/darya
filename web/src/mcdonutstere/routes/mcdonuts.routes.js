@@ -8,6 +8,7 @@ import LoginMcDonuts from "../pages/login/index";
 import CadastroMcDonuts from "../pages/cliente/index";
 import Perfil from "../pages/cliente/userUpdate";
 
+
 function PrivateRoute({ children, ...rest }) {
   const { signed } = useAuth();
 
@@ -18,13 +19,13 @@ function PrivateRoute({ children, ...rest }) {
         signed ? (
           children
         ) : (
-          <Redirect
-            to={{
-              pathname: "/mcdonuts/login",
-              state: { from: location },
-            }}
-          />
-        )
+            <Redirect
+              to={{
+                pathname: "/mcdonuts/login",
+                state: { from: location },
+              }}
+            />
+          )
       }
     />
   );
@@ -41,6 +42,7 @@ function rotas() {
       <PrivateRoute path="/mcdonuts/pedido">
         <Pedido />
       </PrivateRoute>
+
       <PrivateRoute path="/mcdonuts/perfil">
         <Perfil />
       </PrivateRoute>

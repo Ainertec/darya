@@ -13,6 +13,8 @@ import {
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import FastfoodIcon from "@material-ui/icons/Fastfood";
 import { useCart } from "../../contexts/cart";
+import { useAlert } from '../../contexts/alertN';
+
 const useStyles = makeStyles({
   root: {
     maxWidth: 270,
@@ -29,6 +31,7 @@ export default function ItemCarrinho({ data }) {
   const classes = useStyles();
   const { removeItem, cartItems, updateQuantity } = useCart();
   const [quantidade, setQuantidade] = useState(1);
+  const { setAbrir, setMsg } = useAlert();
 
   useEffect(() => {
     updateQuantity(data.product, quantidade);
@@ -37,6 +40,16 @@ export default function ItemCarrinho({ data }) {
   useEffect(() => {
     setQuantidade(data.quantity);
   }, [data.quantity]);
+
+  const notificacaoItem = () => {
+    setMsg('Item Removido!');
+    setAbrir(true);
+  }
+
+  const removerItem = (id) => {
+    removeItem(id);
+    notificacaoItem();
+  }
 
   return (
     <Card className={classes.root}>
@@ -76,7 +89,7 @@ export default function ItemCarrinho({ data }) {
           variant="outlined"
           color="secondary"
           size="small"
-          onClick={() => removeItem(data.product._id)}
+          onClick={() => removerItem(data.product._id)}
         >
           <DeleteForeverIcon />
         </Button>

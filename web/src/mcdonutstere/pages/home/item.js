@@ -11,6 +11,7 @@ import {
 } from "@material-ui/core/";
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
 import { useCart } from "../../contexts/cart";
+import { useAlert } from "../../contexts/alertN";
 
 const useStyles = makeStyles({
   root: {
@@ -28,13 +29,20 @@ const useStyles = makeStyles({
   },
 });
 
-function Item({ data }) {
+export default function Item({ data }) {
   const classes = useStyles();
   const { addItem } = useCart();
+  const { setAbrir, setMsg } = useAlert();
+
+  const notificaoItem = () => {
+    setMsg("Item adicionado ao carrinho!");
+    setAbrir(true);
+  }
 
   function handleAddItem() {
     console.log(data);
     addItem(data);
+    notificaoItem();
   }
 
   return (
@@ -66,6 +74,7 @@ function Item({ data }) {
           size="small"
           className={classes.botaoestilo}
           onClick={() => handleAddItem()}
+          value={true}
         >
           <AddShoppingCartIcon />
         </Button>
@@ -73,5 +82,3 @@ function Item({ data }) {
     </Card>
   );
 }
-
-export default Item;

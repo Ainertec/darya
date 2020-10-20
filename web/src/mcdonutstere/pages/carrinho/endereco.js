@@ -95,14 +95,14 @@ export default function Endereco() {
             label="Transferência Bradesco"
           />
           <FormControlLabel
-            value="Transferência Itau"
+            value="Transferência Itaú"
             control={<Radio />}
-            label="Transferência Itau"
+            label="Transferência Itaú"
           />
         </RadioGroup>
       </FormControl>
       <FormControl component="fieldset" className={classes.root}>
-        <FormLabel component="legend">Forma de pagamento</FormLabel>
+        <FormLabel component="legend">Observação</FormLabel>
         <TextField
           label="Observação"
           multiline

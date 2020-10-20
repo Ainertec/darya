@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   makeStyles,
-  Container
+  Container,
 } from "@material-ui/core/";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 
@@ -10,7 +10,9 @@ import Navbar from "../../components/navbar/navbar";
 import Item from "./item";
 import BotaoFlutuante from "./botaoflutuante";
 import TabelaDeEndereco from "./tabelaDeEndereco";
+import Notification from "../../components/notificacao/notification";
 import Api from "../../services/api";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,6 +48,7 @@ export default function Home() {
     <div className={classes.colorPag}>
       <Navbar />
       <Container maxWidth="md" disableGutters>
+        <Notification />
         <Box
           justifyContent="center"
           flexWrap="wrap"

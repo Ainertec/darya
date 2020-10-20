@@ -308,6 +308,7 @@ function telaModalDeCriacaoDePedido(tipo, enviarPedido) {
                               <table class="table table-sm col-12 mx-auto" style="margin-top:20px">
                                   <thead class="thead-dark">
                                       <tr>
+                                          <th scope="col">Imagem</th>
                                           <th scope="col">Nome</th>
                                           <th scope="col">Preço</th>
                                           <th scope="col">Quantidade</th>
@@ -371,8 +372,8 @@ function telaModalDeCriacaoDePedido(tipo, enviarPedido) {
                                   <select class="form-control form-control-sm" id="formaPagamento">
                                       <option value="Dinheiro sem troco">Dinheiro sem troco</option>
                                       <option value="Dinheiro com troco">Dinheiro com troco</option>
-                                      <option value="Cartão crédito">Cartão crédito</option>
-                                      <option value="Cartão débito">Cartão débito</option>
+                                      <option value="Cartão de crédito">Cartão de crédito</option>
+                                      <option value="Cartão de débito">Cartão de débito</option>
                                       <option value="Transferência Itaú">Transferência Itaú</option>
                                       <option value="Transferência Bradesco">Transferência Bradesco</option>
                                   </select>
@@ -556,6 +557,7 @@ async function criarListagemDeBuscaDeProduto(tipo) {
           <table class="table table-sm col-12 mx-auto" style="margin-top:10px">
             <thead class="thead-dark">
                 <tr>
+                    <th scope="col">Imagem</th>
                     <th scope="col">Nome</th>
                     <th scope="col">Preço</th>
                     <th scope="col">Descrição</th>
@@ -566,6 +568,7 @@ async function criarListagemDeBuscaDeProduto(tipo) {
             <tbody>`;
     for (let item of json.data) {
       codigoHTML += `<tr>
+                    <td class="table-light"><img src="${item.image}" class="mr-3" style="max-height:5%"></td>
                     <td class="table-light col-2" title="${item.name}"><strong><span class="fas fa-hamburger"></span> ${corrigirTamanhoString(15, item.name)}</strong></td>
                     <td class="table-light text-danger"><strong>R$${(parseFloat(item.price)).toFixed(2)}</strong></td>
                     <td class="table-light text-center" title="${item.description}"><strong>${corrigirTamanhoString(20, item.description)}</strong></td>
@@ -729,6 +732,7 @@ async function preencherDadosPedidoIncluirDadosEmPedido(tipo, id, quantidade) {
         );
 
         $('#listagemDeProdutoSelecionadoPedido').append(`<tr id="linhaProd${dado._id}">
+            <td class="table-warning"><img src="${dado.image}" class="mr-3" style="max-height:5%"></td>
             <td class="table-warning col-2" title="${dado.name}"><strong><span class="fas fa-hamburger"></span> ${corrigirTamanhoString(15, dado.name)}</strong></td>
             <td class="table-warning text-danger"><strong>R$${(parseFloat(dado.price)).toFixed(2)}</strong></td>
             <td class="table-warning"><input id="lisProdPed${dado._id}" type="Number" class="form-control form-control-sm" value=${quantidade}></td>

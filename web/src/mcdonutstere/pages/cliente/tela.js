@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
     Box,
     makeStyles,
@@ -8,14 +8,12 @@ import {
 import AccountCircle from "@material-ui/icons/AccountCircle";
 
 import Input from "../../components/form/input";
-import Botao from "../../components/form/botao";
-import Select from "../../components/form/select";
+import SelectQuestion from "../../components/form/selectQuestion";
+import SelectDistrict from "../../components/form/selectDistrict";
+import Api from "../../services/api";
+import { useUser } from "../../contexts/user";
 
 const useStyles = makeStyles((theme) => ({
-    campoBotaoStyle: {
-        marginTop: 40,
-        marginBottom: 20,
-    },
     textStyle: {
         textAlign: "center",
         boxShadow: "0 2px 5px 5px rgba(0, 0, 0, .3)",
@@ -36,6 +34,32 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TelaDeDadosCliente({ dado }) {
     const classes = useStyles();
+    const [district, setDistrict] = useState([]);
+    const {
+        name,
+        setName,
+        username,
+        setUsername,
+        password,
+        setPassword,
+        response,
+        setResponse,
+        phone,
+        setPhone,
+        street,
+        setStreet,
+        addressNumber,
+        setAddressNumber,
+        reference,
+        setReference,
+    } = useUser();
+
+
+    useEffect(() => {
+        Api.get('districts').then(response => {
+            setDistrict(response.data);
+        });
+    }, []);
 
     return (
         <Box
@@ -59,47 +83,43 @@ export default function TelaDeDadosCliente({ dado }) {
                     <h3>
                         Dados de cliente
                     </h3>
-                    <Input label="Nome completo" type="text" value={dado.user.name} />
-                    <Input label="Telefone" type="phone" value={dado.user.phone[0]} />
+                    <Input label="Nome completo" type="text" onChange={(event) => setName(event.target.value)} value={name ? name : ''} />
+                    <Input label="Telefone" type="phone" onChange={(event) => setPhone([event.target.value])} value={phone[0] ? phone[0] : ''} />
                 </Grid>
                 <Grid item xs={12} className={classes.divisorStyle}>
                     <h3>
                         Endereço de entrega
                     </h3>
-                    <Input label="Rua" type="text" value={dado.user.address[0] ? dado.user.address[0].street : ''} />
-                    <Input label="Número da casa" type="text" value={dado.user.address[0] ? dado.user.address[0].number : ''} />
-                    <Select dado={
+                    <Input label="Rua" type="text" onChange={(event) => setStreet([event.target.value])} value={street ? street : ''} />
+                    <Input label="Número da casa" type="text" onChange={(event) => setAddressNumber([event.target.value])} value={addressNumber ? addressNumber : ''} />
+                    <SelectDistrict dado={
                         {
                             name: "Bairro",
+                            data: district,
                         }
                     }
                     />
-                    <Input label="Complemento" type="text" value={dado.user.address[0] ? dado.user.address[0].complento : ''} />
+                    <Input label="Complemento" type="text" onChange={(event) => setReference([event.target.value])} value={reference ? reference : ''} />
                 </Grid>
                 <Grid item xs={12} className={classes.divisorStyle}>
                     <h3>
                         Dados de acesso
                     </h3>
-                    <Input label="Nome de usuário" type="text" value={dado.user.username} />
-                    <Input label="Senha" type="password" />
+                    <Input label="Nome de usuário" type="text" onChange={(event) => setUsername(event.target.value)} value={username ? username : ''} />
+                    <Input label="Senha" type="password" onChange={(event) => setPassword(event.target.value)} value={password ? password : ''} />
                 </Grid>
                 <Grid item xs={12} className={classes.divisorStyle}>
                     <h3>
                         Opção para recuperar senha
                     </h3>
-                    <Select dado={
+                    <SelectQuestion dado={
                         {
                             name: "Selecione uma pergunta",
                         }
                     }
                     />
-                    <Input label="Resposta da pergunta" type="text" />
+                    <Input label="Resposta da pergunta" type="text" onChange={(event) => setResponse(event.target.value)} value={response ? response : ''} />
                 </Grid>
-                <div className={classes.campoBotaoStyle}>
-                    <Grid item xs={12}>
-                        <Botao variant="contained" name={dado.bottonTitle} color="secondary" />
-                    </Grid>
-                </div>
             </Grid>
         </Box>
     );

@@ -17,11 +17,13 @@ import SecurityIcon from '@material-ui/icons/Security';
 
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../../contexts/auth';
+import { useAlert } from '../../contexts/alertN';
 
 import Navbar from "../../components/navbar/navbar";
 import Input from "../../components/form/input";
 import Botao from "../../components/form/botao";
 import BotaoVoltar from '../../components/form/botaoVoltar';
+import Notification from '../../components/notificacao/notification';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -59,6 +61,7 @@ function TelaLogin() {
     const [name, setName] = useState('')
     const [password, setPassword] = useState('')
     const { signIn } = useAuth();
+    const { setAbrir, setMsg } = useAlert();
 
     const classes = useStyles();
 
@@ -67,10 +70,19 @@ function TelaLogin() {
         history.push("/mcdonuts/cadastrar");
     }
 
+    const notificacaodeLogin = (mensagem) => {
+        setAbrir(true);
+        setMsg(mensagem);
+    }
+
     async function hanldleLogin() {
-        console.log(name, password)
         const response = await signIn({ name, password });
         console.log(response);
+        if (response == 200) {
+            notificacaodeLogin('Login efetuado com sucesso!');
+        } else {
+            notificacaodeLogin('Usuário ou senha incorretos!');
+        }
     }
 
     const [recuperarSenha, setRecuperarSenha] = useState(false);
@@ -86,6 +98,7 @@ function TelaLogin() {
         <div className={classes.colorPag}>
             <Navbar hideIcons={true} />
             <Container maxWidth="md" disableGutters>
+                <Notification />
                 <Box justifyContent="center" flexWrap="wrap" display="flex" className={classes.root}>
                     <Grid item xs={9}>
                         <BotaoVoltar dado={`/mcdonuts`} />

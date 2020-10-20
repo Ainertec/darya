@@ -37,6 +37,7 @@ function gerarListaDeProdutos(json) {
   let codigoHTML = ``;
 
   codigoHTML += `<tr>
+        <td class="table-warning"><img src="${json.image}" class="mr-3" style="max-height:5%"></td>
         <td class="table-warning text-dark" title="${json.name}"><strong><span class="fas fa-hamburger"></span> ${corrigirTamanhoString(15, json.name)
     }</strong></td>
         <td class="table-warning" title="${json.description}">${corrigirTamanhoString(40, json.description)}</td>
@@ -73,7 +74,10 @@ async function modalTelaCadastrarouAtualizarProduto(tipo) {
                             </button>
                             <div id="mensagemDeErroModal" class="justify-content-center"></div>
                         </div>
-                        <div class="modal-body">
+                        <div id="modalImageProduto" class="modal-body" style="background-image: url('https://scontent-gig2-1.xx.fbcdn.net/v/t1.0-9/116713815_124951775960325_7453113145449815266_n.jpg?_nc_cat=102&_nc_sid=85a577&_nc_ohc=mQdSHbahKnAAX8uDfzF&_nc_ht=scontent-gig2-1.xx&oh=92557106d94984dbbbb8d4f954c84f27&oe=5FB125BB');">
+                          <div class="shadow-lg p-3 mb-5 bg-white rounded">    
+                            <img id="imagemProduto" src="https://scontent-gig2-1.xx.fbcdn.net/v/t1.0-9/116713815_124951775960325_7453113145449815266_n.jpg?_nc_cat=102&_nc_sid=85a577&_nc_ohc=mQdSHbahKnAAX8uDfzF&_nc_ht=scontent-gig2-1.xx&oh=92557106d94984dbbbb8d4f954c84f27&oe=5FB125BB" class="rounded mx-auto d-block" style="max-width: 50%">
+                          </div>
                             <form>
                                 <div class="shadow-lg p-3 mb-5 bg-white rounded">
                                   <div class="form-group">
@@ -136,7 +140,7 @@ async function modalTelaCadastrarouAtualizarProduto(tipo) {
                                         <div class="input-group-prepend">
                                           <span class="input-group-text">URL</span>
                                         </div>
-                                        <input type="text" class="form-control" id="urlimagem" placeholder="link da imagem" value="https://scontent-gig2-1.xx.fbcdn.net/v/t1.0-9/116713815_124951775960325_7453113145449815266_n.jpg?_nc_cat=102&_nc_sid=85a577&_nc_ohc=mQdSHbahKnAAX8uDfzF&_nc_ht=scontent-gig2-1.xx&oh=92557106d94984dbbbb8d4f954c84f27&oe=5FB125BB">
+                                        <input type="text" class="form-control" id="urlimagem" placeholder="link da imagem" value="https://scontent-gig2-1.xx.fbcdn.net/v/t1.0-9/116713815_124951775960325_7453113145449815266_n.jpg?_nc_cat=102&_nc_sid=85a577&_nc_ohc=mQdSHbahKnAAX8uDfzF&_nc_ht=scontent-gig2-1.xx&oh=92557106d94984dbbbb8d4f954c84f27&oe=5FB125BB" onkeypress="$('#modalImageProduto').css('background-image', 'url('+this.value+')'); document.getElementById('imagemProduto').src = this.value;">
                                       </div>
                                   </div>
                                 </div>
@@ -183,6 +187,7 @@ async function buscarDadosProduto(tipo) {
       <table class="table table-sm col-8 mx-auto" style="margin-top:10px">
           <thead class="thead-dark">
               <tr>
+                  <th scope="col">Imagem</th>
                   <th scope="col">Nome</th>
                   <th scope="col">Descrição</th>
                   <th scope="col">Preço custo</th>
@@ -220,6 +225,8 @@ async function carregarDadosProduto(id) {
   try {
     let dado = VETORDEPRODUTOSCLASSEPRODUTO.find((element) => element._id == id);
 
+    $('#modalImageProduto').css(`background-image`, `url('${dado.image}')`);
+    document.getElementById('imagemProduto').src = dado.image;
     document.getElementById('nomeproduto').value = dado.name;
     document.getElementById('precovenda').value = parseFloat(dado.price).toFixed(2);
     document.getElementById('descricaoproduto').value = dado.description;

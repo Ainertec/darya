@@ -27,7 +27,9 @@ import DadosGerais from "./dadogeral";
 import BotaoVoltar from '../../components/form/botaoVoltar';
 import { useCart } from "../../contexts/cart";
 import { useAuth } from "../../contexts/auth";
+import { useAlert } from '../../contexts/alertN';
 import Api from "../../services/api";
+import Notification from '../../components/notificacao/notification';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -87,7 +89,6 @@ function getStepContent(step, cartItems) {
         <>
           <Typography
             variant="body1"
-            // component="h3"
             style={{ color: "red", textAlign: "center" }}
           >
             Alteração ou cancelamento após a confirmação do pedido
@@ -107,6 +108,7 @@ export default function TelaCarrinho() {
   const { user } = useAuth();
   const [posicaoNavegacao, setProximoAnterior] = useState(0);
   const cabecario = getTitulos();
+  const { setAbrir, setMsg } = useAlert();
 
   const history = useHistory();
   function handleNavigateToPedidos() {
@@ -139,6 +141,9 @@ export default function TelaCarrinho() {
       console.log(response)
     });
 
+    setMsg('Pedido criado com sucesso!');
+    setAbrir(true);
+
     handleNavigateToPedidos();
   }
 
@@ -147,6 +152,7 @@ export default function TelaCarrinho() {
       <Navbar />
       <Container maxWidth="md" disableGutters>
         <BotaoVoltar dado={`/mcdonuts`} />
+        <Notification />
         <Box
           justifyContent="center"
           flexWrap="wrap"
@@ -235,12 +241,12 @@ export default function TelaCarrinho() {
                           variant="contained"
                         >
                           <DoneAllIcon />
-                      Confirmar Pedido
+                          Confirmar Pedido
                         </Button>
                       ))
                     :
                     <>
-                      <h3>
+                      <h3 style={{ textAlign: 'center' }}>
                         <RemoveShoppingCartIcon />
                         Nenhum item adicionado ao carrinho
                         <MoodBadIcon />
