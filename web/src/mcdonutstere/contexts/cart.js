@@ -40,6 +40,13 @@ export const CartProvider = ({ children }) => {
     setCartItems(cartItems);
   }
 
+  function inicializarVariaveisCard() {
+    setCartItems([]);
+    setAddressId("0");
+    setPayment("Dinheiro com troco");
+    setNote("Nenhuma.");
+  }
+
   return (
     <CartContext.Provider
       value={{
@@ -53,6 +60,7 @@ export const CartProvider = ({ children }) => {
         setAddressId,
         note,
         setNote,
+        inicializarVariaveisCard,
       }}
     >
       {children}

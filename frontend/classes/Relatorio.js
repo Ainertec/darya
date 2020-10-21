@@ -310,7 +310,7 @@ function gerarListaDePedidosFechados(json) {
       const date = format(parseISO(item.createdAt), 'dd/MM/yyyy HH:mm:ss')
       codigoHTML += `<tr>
           <td><strong>${item.identification}</strong></td>
-          <td title="${item.client.name}"><strong>${corrigirTamanhoString(15, item.client.name)}</strong></td>`
+          <td title="${item.user.name}"><strong>${corrigirTamanhoString(15, item.user.name)}</strong></td>`
       if (item.deliveryman) {
         codigoHTML += `<td title="${item.deliveryman.name}"><strong>${corrigirTamanhoString(15, item.deliveryman.name)}</strong></td>`
       } else {

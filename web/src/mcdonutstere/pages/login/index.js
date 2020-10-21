@@ -24,6 +24,7 @@ import Input from "../../components/form/input";
 import Botao from "../../components/form/botao";
 import BotaoVoltar from '../../components/form/botaoVoltar';
 import Notification from '../../components/notificacao/notification';
+import Api from '../../services/api';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -76,23 +77,44 @@ function TelaLogin() {
     }
 
     async function hanldleLogin() {
-        const response = await signIn({ name, password });
-        console.log(response);
-        if (response == 200) {
+        const result = await signIn({ name, password });
+        console.log(result);
+        if (result == 200) {
             notificacaodeLogin('Login efetuado com sucesso!');
         } else {
             notificacaodeLogin('Usuário ou senha incorretos!');
         }
     }
 
+
+    const [question, setQuestion] = useState('Nenhuma.');
+    const [response, setResponse] = useState();
+    const [newPassword, setNewPassword] = useState();
     const [recuperarSenha, setRecuperarSenha] = useState(false);
-    const handleAbrirRecuperarSenha = () => {
+
+    async function handleAbrirRecuperarSenha() {
         setRecuperarSenha(true);
+        Api.get(`forgot/${name}`).then(result => {
+            setQuestion(result.data.question);
+        });
     };
 
     const handleFecharRecuperarSenha = () => {
         setRecuperarSenha(false);
     };
+
+    async function recuperarSenhaConta() {
+        const resetSenha = {
+            username: name,
+            response,
+            password: newPassword,
+        }
+        await Api.post(`forgot`, resetSenha).then(result => {
+            setAbrir(true);
+            setMsg('Senha atualizada com sucesso!');
+            handleFecharRecuperarSenha();
+        });
+    }
 
     return (
         <div className={classes.colorPag}>
@@ -132,14 +154,14 @@ function TelaLogin() {
                             <DialogContentText>
                                 Para criar uma nova senha responda a pergunta:
                                 <br />
-                                <strong>Qual é o nome da sua mãe?</strong>
+                                <strong>{question}</strong>
                             </DialogContentText>
-                            <Input label="Resposta da pergunta" type="text" />
-                            <Input label="Nova Senha" type="password" />
+                            <Input label="Resposta da pergunta" type="text" onChange={event => setResponse(event.target.value)} value={response} />
+                            <Input label="Nova Senha" type="password" onChange={event => setNewPassword(event.target.value)} value={newPassword} />
                         </DialogContent>
                         <DialogActions>
                             <Botao variant="text" name="Cancelar" color="primary" onClick={handleFecharRecuperarSenha} />
-                            <Botao variant="contained" name="Alterar" color="secondary" onClick={handleFecharRecuperarSenha} />
+                            <Botao variant="contained" name="Alterar" color="secondary" onClick={recuperarSenhaConta} />
                         </DialogActions>
                     </Dialog>
                 </div>

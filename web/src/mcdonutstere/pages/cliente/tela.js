@@ -84,14 +84,14 @@ export default function TelaDeDadosCliente({ dado }) {
                         Dados de cliente
                     </h3>
                     <Input label="Nome completo" type="text" onChange={(event) => setName(event.target.value)} value={name ? name : ''} />
-                    <Input label="Telefone" type="phone" onChange={(event) => setPhone([event.target.value])} value={phone[0] ? phone[0] : ''} />
+                    <Input label="Telefone" type="phone" onChange={(event) => setPhone(event.target.value)} value={phone ? phone : ''} />
                 </Grid>
                 <Grid item xs={12} className={classes.divisorStyle}>
                     <h3>
                         Endereço de entrega
                     </h3>
-                    <Input label="Rua" type="text" onChange={(event) => setStreet([event.target.value])} value={street ? street : ''} />
-                    <Input label="Número da casa" type="text" onChange={(event) => setAddressNumber([event.target.value])} value={addressNumber ? addressNumber : ''} />
+                    <Input label="Rua" type="text" onChange={(event) => setStreet(event.target.value)} value={street ? street : ''} />
+                    <Input label="Número da casa" type="text" onChange={(event) => setAddressNumber(event.target.value)} value={addressNumber ? addressNumber : ''} />
                     <SelectDistrict dado={
                         {
                             name: "Bairro",
@@ -99,7 +99,7 @@ export default function TelaDeDadosCliente({ dado }) {
                         }
                     }
                     />
-                    <Input label="Complemento" type="text" onChange={(event) => setReference([event.target.value])} value={reference ? reference : ''} />
+                    <Input label="Complemento" type="text" onChange={(event) => setReference(event.target.value)} value={reference ? reference : ''} />
                 </Grid>
                 <Grid item xs={12} className={classes.divisorStyle}>
                     <h3>

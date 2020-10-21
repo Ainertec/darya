@@ -54,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cabecaloProgressoStyle: {
     borderRadius: 30,
+    boxShadow: "0 2px 5px 5px rgba(0, 0, 0, .3)",
   },
 }));
 
@@ -104,7 +105,7 @@ function getStepContent(step, cartItems) {
 
 export default function TelaCarrinho() {
   const classes = useStyles();
-  const { cartItems, payment, addressId, note } = useCart();
+  const { cartItems, payment, addressId, note, inicializarVariaveisCard } = useCart();
   const { user } = useAuth();
   const [posicaoNavegacao, setProximoAnterior] = useState(0);
   const cabecario = getTitulos();
@@ -139,12 +140,11 @@ export default function TelaCarrinho() {
     console.log(order);
     Api.post('orders', order).then(response => {
       console.log(response)
+      setMsg('Pedido criado com sucesso!');
+      setAbrir(true);
+      inicializarVariaveisCard();
+      setTimeout(function () { handleNavigateToPedidos(); }, 500);
     });
-
-    setMsg('Pedido criado com sucesso!');
-    setAbrir(true);
-
-    handleNavigateToPedidos();
   }
 
   return (

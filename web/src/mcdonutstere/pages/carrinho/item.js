@@ -19,6 +19,7 @@ const useStyles = makeStyles({
   root: {
     maxWidth: 270,
     margin: 5,
+    boxShadow: "0 2px 5px 5px rgba(0, 0, 0, .3)",
   },
   precostyle: {
     color: "red",

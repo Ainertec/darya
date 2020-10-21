@@ -63,9 +63,13 @@ function gerarListaDeClientes(json) {
     codigoHTML += `Nenhum existente.`
   }
   codigoHTML += `</td>
-        <td class="table-warning"><button onclick="carregarDadosCliente('${json._id}');" type="button" class="btn btn-primary btn-sm"><span class="fas fa-edit"></span> Editar</button></td>
-        <td class="table-warning"><button onclick="confirmarAcao('Excluir este cliente!','excluirCliente(this.value)','${json._id}')" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span> Excluir</button></td>
-    </tr>`;
+        <td class="table-warning"><button onclick="carregarDadosCliente('${json._id}');" type="button" class="btn btn-primary btn-sm"><span class="fas fa-edit"></span> Editar</button></td>`
+  if (json.admin) {
+    codigoHTML += `<td class="table-warning"><button onclick="confirmarAcao('Excluir este cliente!','excluirCliente(this.value)','${json._id}')" type="button" class="btn btn-outline-danger btn-sm" disabled><span class="fas fa-trash"></span> Excluir</button></td>`
+  } else {
+    codigoHTML += `<td class="table-warning"><button onclick="confirmarAcao('Excluir este cliente!','excluirCliente(this.value)','${json._id}')" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span> Excluir</button></td>`
+  }
+  codigoHTML += `</tr>`;
 
   return codigoHTML;
 }
@@ -321,6 +325,9 @@ async function carregarDadosCliente(id) {
     document.getElementById('botaoadicionarendereco').value = dado._id.toString();
     document.getElementById('botaoatualizarcliente').value = dado._id.toString();
     document.getElementById('botaoexcluircliente').value = dado._id.toString();
+    if (dado.admin) {
+      document.getElementById('botaoexcluircliente').disabled = true;
+    }
 
   } catch (error) {
     mensagemDeErroModal('Não foi possível carregar os dados do cliente!')

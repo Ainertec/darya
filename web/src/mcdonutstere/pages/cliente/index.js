@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   makeStyles,
   Container,
@@ -10,6 +10,10 @@ import Navbar from "../../components/navbar/navbar";
 import BotaoVoltar from '../../components/form/botaoVoltar';
 import Botao from "../../components/form/botao";
 import { useUser } from "../../contexts/user";
+import { useAlert } from '../../contexts/alertN';
+import { useHistory } from 'react-router-dom';
+import Notification from '../../components/notificacao/notification';
+import Api from '../../services/api';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,25 +39,57 @@ export default function TelaDeCadastroCliente() {
     response,
     question,
     phone,
+    userDistrict,
+    street,
+    addressNumber,
+    reference,
+    iniciarVariaveisUser,
   } = useUser();
+  const { setAbrir, setMsg } = useAlert();
+  const history = useHistory();
 
-  function cadastrarCliente() {
+  function handleNavigateToLogin() {
+    history.push('/mcdonuts/login');
+  };
+
+  async function notificacaoCadastroCliente() {
+    await setMsg('Cadastrado com sucesso!')
+    await setAbrir(true);
+    handleNavigateToLogin();
+  }
+
+  async function cadastrarCliente() {
     const user = {
       name,
       username,
       password,
       response,
       question,
-      phone,
+      phone: [phone],
+      address: userDistrict ? [{
+        district: userDistrict,
+        street,
+        number: addressNumber,
+        reference,
+      }] : undefined,
     };
+
+    await Api.post(`users`, user).then(response => {
+      notificacaoCadastroCliente();
+    });
 
     console.log(user);
   }
+
+  useEffect(() => {
+    iniciarVariaveisUser();
+  }, []);
 
   return (
     <div className={classes.colorPag}>
       <Navbar hideIcons />
       <Container maxWidth="md" disableGutters>
+        <Notification />
         <BotaoVoltar dado={`/mcdonuts`} />
         <TelaCliente dado={
           {

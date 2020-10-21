@@ -12,6 +12,8 @@ import Botao from "../../components/form/botao";
 import Api from "../../services/api";
 import { useAuth } from '../../contexts/auth';
 import { useUser } from "../../contexts/user";
+import { useAlert } from '../../contexts/alertN';
+import Notification from '../../components/notificacao/notification';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,7 +32,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TelaDeAtualizarCliente() {
   const classes = useStyles();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
+  const { setAbrir, setMsg } = useAlert();
   const {
     name,
     setName,
@@ -52,39 +55,60 @@ export default function TelaDeAtualizarCliente() {
     setAddressNumber,
     reference,
     setReference,
+    iniciarVariaveisUser,
   } = useUser();
 
-  function atualizarCliente() {
-    const userUpdate = {
-      _id: user._id,
-      name,
-      username,
-      password,
-      response,
-      question,
-      phone,
-      address: user.address ? [{
-        disctrict: userDistrict,
+  function notificacaoUpdateCliente() {
+    setMsg('Atualizado com Sucesso!');
+    setAbrir(true);
+    signOut();
+  }
+
+  async function atualizarCliente() {
+    user.phone[0] = phone;
+    if (userDistrict) {
+      user.address[0] = {
+        district: userDistrict,
         street,
         number: addressNumber,
         reference,
-      }] : undefined,
+      }
+    }
+
+    const userUpdate = {
+      name: (name == user.name ? undefined : name),
+      username: (username == user.username ? undefined : username),
+      password,
+      response,
+      question,
+      phone: user.phone,
+      address: user.address ? user.address : undefined,
     };
 
-    console.log(userUpdate);
+    Api.put(`users/${user._id}`, userUpdate).then(response => {
+      notificacaoUpdateCliente();
+    });
   }
 
   useEffect(() => {
+    iniciarVariaveisUser();
     setName(user.name);
     setUsername(user.username);
-    setPhone(user.phone);
-    setUserDistrict()
+    setPhone(user.phone[0]);
+    console.log(phone)
+    if (user.address[0]) {
+      setUserDistrict(user.address[0].district._id)
+      setStreet(user.address[0].street)
+      setAddressNumber(user.address[0].number)
+      setReference(user.address[0].reference)
+    }
   }, []);
 
   return (
     <div className={classes.colorPag}>
       <Navbar hideIcons />
       <Container maxWidth="md" disableGutters>
+        <Notification />
         <BotaoVoltar dado={`/mcdonuts`} />
         <TelaCliente
           dado={
@@ -97,7 +121,7 @@ export default function TelaDeAtualizarCliente() {
         />
         <div className={classes.campoBotaoStyle}>
           <Grid item xs={12}>
-            <Botao variant="contained" name="Cadastrar" color="secondary" onClick={atualizarCliente} />
+            <Botao variant="contained" name="Atualizar" color="secondary" onClick={atualizarCliente} />
           </Grid>
         </div>
       </Container>

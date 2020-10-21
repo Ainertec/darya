@@ -15,7 +15,7 @@ import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 
 import { useHistory } from "react-router-dom";
 import { useAuth } from "../../contexts/auth";
-
+import { useAlert } from '../../contexts/alertN';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,6 +46,7 @@ function Navbar({ hideIcons }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const { setAbrir, setMsg } = useAlert();
 
   const history = useHistory();
   function handleNavigateToCart() {
@@ -66,8 +67,14 @@ function Navbar({ hideIcons }) {
     history.push("/mcdonuts");
   };
 
+  function notificacaoSair() {
+    setMsg('Logout efetuado com sucesso!');
+    setAbrir(true);
+  }
+
   const handleMenuSignOut = (event) => {
     signOut();
+    notificacaoSair();
     setAnchorEl(null);
   };
 
@@ -126,11 +133,11 @@ function Navbar({ hideIcons }) {
                 onClose={handleClose}
                 className={classes.subMenuStyle}
               >
-                <MenuItem onClick={handleMenuSignOut}>
-                  <ExitToAppIcon className={classes.IconMenuStyle} /> Sair
-                </MenuItem>
                 <MenuItem onClick={handleToProfile}>
                   <AccountCircle className={classes.IconMenuStyle} /> Perfil
+                </MenuItem>
+                <MenuItem onClick={handleMenuSignOut}>
+                  <ExitToAppIcon className={classes.IconMenuStyle} /> Sair
                 </MenuItem>
               </Menu>
             </div>

@@ -78,7 +78,7 @@ var ForgotPasswordUseCase = /** @class */ (function () {
                         return [4 /*yield*/, user.save()];
                     case 2:
                         _a.sent();
-                        return [2 /*return*/, test];
+                        return [2 /*return*/, user];
                 }
             });
         });

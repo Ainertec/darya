@@ -15,10 +15,14 @@ import { useAuth } from "../../contexts/auth";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginTop: 30,
+    margin: 10,
+    padding: 10,
   },
   styleObservacao: {
     marginTop: 15,
+  },
+  labelStyle: {
+    marginTop: 10,
   },
 }));
 
@@ -40,7 +44,7 @@ export default function Endereco() {
   return (
     <Container>
       <FormControl component="fieldset" className={classes.root}>
-        <FormLabel component="legend">Endereço de entrega</FormLabel>
+        <FormLabel component="legend" className={classes.labelStyle}>Endereço de entrega</FormLabel>
         <RadioGroup
           aria-label="gender"
           name="gender1"
@@ -51,7 +55,7 @@ export default function Endereco() {
             <FormControlLabel
               value={address._id}
               control={<Radio />}
-              label={`${address.district.name} - ${address.street}`}
+              label={`Endereço: ${address.district.name}, Bairro ${address.street} - Taxa: ${(address.district.rate).toFixed(2)}`}
             />
           ))}
           <FormControlLabel

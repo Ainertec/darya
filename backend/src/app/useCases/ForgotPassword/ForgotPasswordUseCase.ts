@@ -22,6 +22,6 @@ export class ForgotPasswordUseCase {
 
     user.password = newPassword;
     await user.save();
-    return test;
+    return user;
   }
 }

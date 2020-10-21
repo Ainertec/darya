@@ -393,7 +393,7 @@ async function gerarGraficoMotoboy(id) {
                                 <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="staticBackdropLabel"><span class="fas fa-motorcycle"></span> Grafico Motoboy</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <button type="button" class="close btn-outline-danger" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
@@ -417,7 +417,7 @@ async function gerarGraficoMotoboy(id) {
                 const date = format(parseISO(item.createdAt), 'dd/MM/yyyy HH:mm:ss')
                 codigoHTML += `<tr>
                                         <td>${item.identification}</td>
-                                        <td title="${item.client.name}">${corrigirTamanhoString(15, item.client.name)}</td>
+                                        <td title="${item.user.name}">${corrigirTamanhoString(15, item.user.name)}</td>
                                         <td title="${item.deliveryman.name}"><strong>${corrigirTamanhoString(15, item.deliveryman.name)}</strong></td>
                                         <td>`
                 for (let item2 of item.items) {

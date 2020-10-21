@@ -15,6 +15,7 @@ import {
 } from "@material-ui/core/";
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import DoneAllIcon from '@material-ui/icons/DoneAll';
+import { format, parseISO } from 'date-fns';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,16 +33,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function createData(name, quantidade, preco) {
-  return { name, quantidade, preco };
-}
-
-const rows = [
-  createData("Frozen yoghurt", 5, 6.0),
-  createData("Ice cream sandwich", 2, 9.0),
-  createData("Eclair", 2, 1.0),
-];
-
 export default function Pedido({ data }) {
   const classes = useStyles();
 
@@ -51,7 +42,7 @@ export default function Pedido({ data }) {
         <Typography variant="h5" component="h2">
           <strong>Pedido nº: {data.identification}</strong>
         </Typography>
-        <Typography color="textSecondary">{data.createdAt}</Typography>
+        <Typography color="textSecondary">{format(parseISO(data.createdAt), 'dd/MM/yyyy HH:mm:ss')}</Typography>
         {data.viewed ?
           <h4 className={classes.statusStyleConfirmar}>
             <DoneAllIcon /> Confirmado

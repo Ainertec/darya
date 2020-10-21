@@ -19,6 +19,12 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
     maxWidth: 360,
+    boxShadow: "0 2px 5px 5px rgba(0, 0, 0, .3)",
+    paddingTop: 20,
+    paddingBottom: 20,
+    paddingLeft: 8,
+    borderRadius: 20,
+    backgroundColor: '#fff',
   },
   precoStyle: {
     color: "red",
@@ -39,7 +45,7 @@ export default function DadosGerais() {
     } else {
       const addressFound = user.address.find((add) => add._id == addressId);
 
-      return `${addressFound.district.name} - ${addressFound.street} `;
+      return `${addressFound.street} - ${addressFound.district.name}`;
     }
   }
   function getAddressRate() {
@@ -68,7 +74,7 @@ export default function DadosGerais() {
         </Typography>
         <Divider variant="middle" className={classes.divisorStyle} />
         <Typography color="textSecondary" variant="body2">
-          Tel.: {user.phone.join(' ')}
+          Tel.: {user.phone.join('/')}
         </Typography>
         <Divider variant="middle" className={classes.divisorStyle} />
         <Typography
