@@ -460,7 +460,7 @@ function reiniciarClasseMotoboy() {
 async function impressaoRelatorioMotoboy(id) {
     try {
         await aguardeCarregamento(true);
-        let json2 = await requisicaoGET(`reports/deliveryman/orders/${id}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+        let json2 = await requisicaoPrintGET(`reports/deliveryman/orders/${id}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
         if (json2.data[0]) {
             await requisicaoGET(`printers/deliveryman_report/${id}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
             await mensagemDeAviso('Imprimindo relatório ...')

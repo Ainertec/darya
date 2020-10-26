@@ -18,6 +18,8 @@ import SecurityIcon from '@material-ui/icons/Security';
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../../contexts/auth';
 import { useAlert } from '../../contexts/alertN';
+import { useProgresso } from '../../contexts/prog';
+import Carregando from '../../components/progress/carregando';
 
 import Navbar from "../../components/navbar/navbar";
 import Input from "../../components/form/input";
@@ -63,6 +65,7 @@ function TelaLogin() {
     const [password, setPassword] = useState('')
     const { signIn } = useAuth();
     const { setAbrir, setMsg } = useAlert();
+    const { setProgresso } = useProgresso();
 
     const classes = useStyles();
 
@@ -77,8 +80,9 @@ function TelaLogin() {
     }
 
     async function hanldleLogin() {
+        await setProgresso(true)
         const result = await signIn({ name, password });
-        console.log(result);
+        await setProgresso(false)
         if (result == 200) {
             notificacaodeLogin('Login efetuado com sucesso!');
         } else {
@@ -94,9 +98,11 @@ function TelaLogin() {
 
     async function handleAbrirRecuperarSenha() {
         setRecuperarSenha(true);
-        Api.get(`forgot/${name}`).then(result => {
+        await setProgresso(true)
+        await Api.get(`forgot/${name}`).then(result => {
             setQuestion(result.data.question);
         });
+        await setProgresso(false)
     };
 
     const handleFecharRecuperarSenha = () => {
@@ -109,11 +115,13 @@ function TelaLogin() {
             response,
             password: newPassword,
         }
+        await setProgresso(true)
         await Api.post(`forgot`, resetSenha).then(result => {
             setAbrir(true);
             setMsg('Senha atualizada com sucesso!');
             handleFecharRecuperarSenha();
         });
+        await setProgresso(false)
     }
 
     return (
@@ -121,6 +129,7 @@ function TelaLogin() {
             <Navbar hideIcons={true} />
             <Container maxWidth="md" disableGutters>
                 <Notification />
+                <Carregando />
                 <Box justifyContent="center" flexWrap="wrap" display="flex" className={classes.root}>
                     <Grid item xs={9}>
                         <BotaoVoltar dado={`/mcdonuts`} />

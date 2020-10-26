@@ -11,6 +11,8 @@ import Item from "./item";
 import BotaoFlutuante from "./botaoflutuante";
 import TabelaDeEndereco from "./tabelaDeEndereco";
 import Notification from "../../components/notificacao/notification";
+import { useProgresso } from "../../contexts/prog";
+import Carregando from "../../components/progress/carregando";
 import Api from "../../services/api";
 
 
@@ -37,11 +39,17 @@ const useStyles = makeStyles((theme) => ({
 export default function Home() {
   const [produtos, setProdutos] = useState([]);
   const classes = useStyles();
+  const { setProgresso } = useProgresso();
 
   useEffect(() => {
-    Api.get('products').then(response => {
-      setProdutos(response.data);
-    });
+    async function carregarProdutos() {
+      await setProgresso(true);
+      await Api.get('products').then(response => {
+        setProdutos(response.data);
+      });
+      await setProgresso(false);
+    }
+    carregarProdutos();
   }, []);
 
   return (
@@ -49,6 +57,7 @@ export default function Home() {
       <Navbar />
       <Container maxWidth="md" disableGutters>
         <Notification />
+        <Carregando />
         <Box
           justifyContent="center"
           flexWrap="wrap"
@@ -56,7 +65,9 @@ export default function Home() {
           className={classes.root}
         >
           {produtos.map((item) => (
-            <Item key={item._id} data={item} />
+            item.available && (
+              <Item key={item._id} data={item} />
+            )
           ))}
         </Box>
         <Box

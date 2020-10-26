@@ -543,11 +543,11 @@ async function criarListagemDeBuscaDeProduto(tipo) {
   try {
     if (tipo == 'nome') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`products/${document.getElementById('nomeproduto').value}`);
+      json = await requisicaoGET(`products/${document.getElementById('nomeproduto').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
     } else if (tipo == 'todos') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`products`);
+      json = await requisicaoGET(`products`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
     }
 
@@ -567,7 +567,8 @@ async function criarListagemDeBuscaDeProduto(tipo) {
             </thead>
             <tbody>`;
     for (let item of json.data) {
-      codigoHTML += `<tr>
+      if (item.available) {
+        codigoHTML += `<tr>
                     <td class="table-light"><img src="${item.image}" class="mr-3" style="max-height:5%"></td>
                     <td class="table-light col-2" title="${item.name}"><strong><span class="fas fa-hamburger"></span> ${corrigirTamanhoString(15, item.name)}</strong></td>
                     <td class="table-light text-danger"><strong>R$${(parseFloat(item.price)).toFixed(2)}</strong></td>
@@ -575,6 +576,7 @@ async function criarListagemDeBuscaDeProduto(tipo) {
                     <td class="table-light"><input id="quantidadeProduto${item._id}" type="Number" class="form-control form-control-sm" value=1></td>
                     <td class="table-light text-center"><button onclick="if(validaDadosCampo(['#quantidadeProduto${item._id}']) && validaValoresCampo(['#quantidadeProduto${item._id}'])){preencherDadosPedidoIncluirDadosEmPedido('produto','${item._id}', quantidadeProduto${item._id}.value );}else{mensagemDeErroModal('Preencha o campo quantidade com um valor válido!'); mostrarCamposIncorreto(['quantidadeProduto${item._id}']);}" type="button" class="btn btn-primary btn-sm"><span class="fas fa-check"></span> </button></td>
                 </tr>`;
+      }
     }
     codigoHTML += `</tbody>
           </table>
@@ -1217,26 +1219,30 @@ async function modalPedidosOnline() {
                               <div class="list-group">
                                 <div class="shadow-lg p-3 mb-5 bg-white rounded">`
 
-  for (pedido of pedidos.data) {
-    if (pedido.source == 'site' && !pedido.viewed) {
-      VETORDEPEDIDOSCLASSEPEDIDO.push(pedido);
-      const date = format(parseISO(pedido.createdAt), 'dd/MM/yyyy HH:mm:ss')
+  const pedidoFilter = pedidos.data.filter(function (element) { return element.source == 'site' && !element.viewed })
 
-      if (pedido.address) {
-        codigoHTML += `<a href="#" onclick="modalMotoboysOnline('${pedido._id}');" class="list-group-item list-group-item-action" data-dismiss="modal">`
-      } else {
-        codigoHTML += `<a href="#" onclick="modaldeConfirmacaoPedidoOnline('${pedido._id}',true);" class="list-group-item list-group-item-action" data-dismiss="modal">`
-      }
+  pedidoFilter.map((pedido) => {
+    VETORDEPEDIDOSCLASSEPEDIDO.push(pedido);
+    const date = format(parseISO(pedido.createdAt), 'dd/MM/yyyy HH:mm:ss')
 
-      codigoHTML += `<div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1"><span class="fas fa-mouse-pointer"></span> Código: ${pedido.identification} </h5>
-                    <small>${date}</small>
-                  </div>
-                  <p class="mb-1">Cliente: ${pedido.user.name}</p>
-                  <p class="mb-1"><strong>Total: R$${(pedido.total).toFixed(2)}</strong></p>
-                  <small>${pedido.address ? '<strong class="text-primary">Entrega' : '<strong class="text-danger">Retirada local'}</strong></small>
-                </a>`
+    if (pedido.address) {
+      codigoHTML += `<a href="#" onclick="modalMotoboysOnline('${pedido._id}');" class="list-group-item list-group-item-action" data-dismiss="modal">`
+    } else {
+      codigoHTML += `<a href="#" onclick="modaldeConfirmacaoPedidoOnline('${pedido._id}',true);" class="list-group-item list-group-item-action" data-dismiss="modal">`
     }
+
+    codigoHTML += `<div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1"><span class="fas fa-mouse-pointer"></span> Código: ${pedido.identification} </h5>
+                  <small>${date}</small>
+                </div>
+                <p class="mb-1">Cliente: ${pedido.user.name}</p>
+                <p class="mb-1"><strong>Total: R$${(pedido.total).toFixed(2)}</strong></p>
+                <small>${pedido.address ? '<strong class="text-primary">Entrega' : '<strong class="text-danger">Retirada local'}</strong></small>
+              </a>`
+  })
+
+  if (pedidoFilter[0] == null) {
+    codigoHTML += `<h5 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Nenhum pedido online em aberto encontrado!</h5>`;
   }
 
   codigoHTML += `</div>
@@ -1466,7 +1472,7 @@ async function pedidoOnlineConfirmado(id) {
 async function reImprimirPedido(id) {
   try {
     await aguardeCarregamento(true);
-    await requisicaoPOST(`printers`, {
+    await requisicaoPrintPOST(`printers`, {
       id: id
     }, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
     await aguardeCarregamento(false);

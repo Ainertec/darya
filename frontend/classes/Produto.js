@@ -48,9 +48,13 @@ function gerarListaDeProdutos(json) {
         <td class="table-warning"><button onclick="carregarDadosProduto('${json._id}')" type="button" class="btn btn-primary btn-sm"><span class="fas fa-edit"></span> Editar</button></td>
         <td class="table-warning"><button onclick="confirmarAcao('Excluir este produto!','excluirProduto(this.value)','${json._id}')" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span> Excluir</button></td>
         <td class="table-warning">
-          <div class="custom-control custom-switch">
-            <input type="checkbox" onclick="alterarDisponibilidade('${json._id}',this.checked)" class="custom-control-input custom-switch" id="botaoDispoProduto${json._id}" checked=${json.available ? true : false}>
-            <label class="custom-control-label" for="botaoDispoProduto${json._id}">Disponível</label>
+          <div class="custom-control custom-switch">`
+  if (json.available) {
+    codigoHTML += `<input type="checkbox" onclick="alterarDisponibilidade('${json._id}',this.checked)" class="custom-control-input custom-switch" id="botaoDispoProduto${json._id}" checked>`
+  } else {
+    codigoHTML += `<input type="checkbox" onclick="alterarDisponibilidade('${json._id}',this.checked)" class="custom-control-input custom-switch" id="botaoDispoProduto${json._id}">`
+  }
+  codigoHTML += `<label class="custom-control-label" for="botaoDispoProduto${json._id}">Disponível</label>
           </div>
         </td>
       </tr>`;
@@ -174,11 +178,11 @@ async function buscarDadosProduto(tipo) {
   try {
     if (tipo == 'nome') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`products/${document.getElementById('nome').value}`);
+      json = await requisicaoGET(`products/${document.getElementById('nome').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
     } else if (tipo == 'todos') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`products`);
+      json = await requisicaoGET(`products`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
       await aguardeCarregamento(false);
     }
 

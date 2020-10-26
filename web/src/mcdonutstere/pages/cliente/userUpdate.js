@@ -13,6 +13,8 @@ import Api from "../../services/api";
 import { useAuth } from '../../contexts/auth';
 import { useUser } from "../../contexts/user";
 import { useAlert } from '../../contexts/alertN';
+import { useProgresso } from '../../contexts/prog';
+import Carregando from '../../components/progress/carregando';
 import Notification from '../../components/notificacao/notification';
 
 const useStyles = makeStyles((theme) => ({
@@ -34,6 +36,7 @@ export default function TelaDeAtualizarCliente() {
   const classes = useStyles();
   const { user, signOut } = useAuth();
   const { setAbrir, setMsg } = useAlert();
+  const { setProgresso } = useProgresso();
   const {
     name,
     setName,
@@ -85,9 +88,11 @@ export default function TelaDeAtualizarCliente() {
       address: user.address ? user.address : undefined,
     };
 
-    Api.put(`users/${user._id}`, userUpdate).then(response => {
+    await setProgresso(true);
+    await Api.put(`users/${user._id}`, userUpdate).then(response => {
       notificacaoUpdateCliente();
     });
+    await setProgresso(false);
   }
 
   useEffect(() => {
@@ -95,7 +100,6 @@ export default function TelaDeAtualizarCliente() {
     setName(user.name);
     setUsername(user.username);
     setPhone(user.phone[0]);
-    console.log(phone)
     if (user.address[0]) {
       setUserDistrict(user.address[0].district._id)
       setStreet(user.address[0].street)
@@ -109,6 +113,7 @@ export default function TelaDeAtualizarCliente() {
       <Navbar hideIcons />
       <Container maxWidth="md" disableGutters>
         <Notification />
+        <Carregando />
         <BotaoVoltar dado={`/mcdonuts`} />
         <TelaCliente
           dado={

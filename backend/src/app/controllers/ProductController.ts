@@ -11,35 +11,16 @@ class ProductController {
   }
 
   async index(request: Request, response: Response) {
-    const { userId } = request;
-    const authUser = await User.findOne({ _id: userId });
-    if (authUser?.admin) {
-      const products = await Product.find({}).populate('ingredients.material');
-
-      return response.json(products);
-    } else {
-      const products = await Product.find({ available: true }).populate(
-        'ingredients.material',
-      );
-
-      return response.json(products);
-    }
+    const products = await Product.find({}).populate('ingredients.material');
+    return response.json(products);
   }
 
   async show(request: Request, response: Response) {
     const { name } = request.params;
-    const { userId } = request;
 
-    const authUser = await User.findOne({ _id: userId });
-
-    const products = authUser?.admin
-      ? await Product.find({
-        name: { $regex: new RegExp(name), $options: 'i' },
-      }).populate('ingredients.material')
-      : await Product.find({
-        name: { $regex: new RegExp(name), $options: 'i' },
-        available: true,
-      }).populate('ingredients.material');
+    const products = await Product.find({
+      name: { $regex: new RegExp(name), $options: 'i' },
+    }).populate('ingredients.material')
 
     return response.json(products);
   }
@@ -73,15 +54,13 @@ class ProductController {
         description,
         ingredients,
         cost,
+        available,
         image,
       },
       { new: true },
     );
     if (!product) return response.status(400).json('product not found');
 
-    if (available) {
-      product.available = available;
-    }
     await product.save();
 
     await product.populate('ingredients.material').execPopulate();

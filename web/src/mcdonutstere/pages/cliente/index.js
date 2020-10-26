@@ -12,6 +12,8 @@ import Botao from "../../components/form/botao";
 import { useUser } from "../../contexts/user";
 import { useAlert } from '../../contexts/alertN';
 import { useHistory } from 'react-router-dom';
+import { useProgresso } from '../../contexts/prog';
+import Carregando from '../../components/progress/carregando';
 import Notification from '../../components/notificacao/notification';
 import Api from '../../services/api';
 
@@ -46,6 +48,7 @@ export default function TelaDeCadastroCliente() {
     iniciarVariaveisUser,
   } = useUser();
   const { setAbrir, setMsg } = useAlert();
+  const { setProgresso } = useProgresso();
   const history = useHistory();
 
   function handleNavigateToLogin() {
@@ -74,11 +77,12 @@ export default function TelaDeCadastroCliente() {
       }] : undefined,
     };
 
+    await setProgresso(true);
     await Api.post(`users`, user).then(response => {
       notificacaoCadastroCliente();
     });
+    await setProgresso(false);
 
-    console.log(user);
   }
 
   useEffect(() => {
@@ -90,6 +94,7 @@ export default function TelaDeCadastroCliente() {
       <Navbar hideIcons />
       <Container maxWidth="md" disableGutters>
         <Notification />
+        <Carregando />
         <BotaoVoltar dado={`/mcdonuts`} />
         <TelaCliente dado={
           {

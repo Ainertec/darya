@@ -5,6 +5,7 @@ import { AuthProvider } from "../contexts/auth";
 import { CartProvider } from "../contexts/cart";
 import { AlertProvider } from "../contexts/alertN";
 import { UserProvider } from "../contexts/user";
+import { ProgressoProvider } from "../contexts/prog";
 
 export default function RotasMcDonuts() {
     return (
@@ -12,7 +13,9 @@ export default function RotasMcDonuts() {
             <CartProvider>
                 <AlertProvider>
                     <UserProvider>
-                        <RotaMcDonuts />
+                        <ProgressoProvider>
+                            <RotaMcDonuts />
+                        </ProgressoProvider>
                     </UserProvider>
                 </AlertProvider>
             </CartProvider>

@@ -8,6 +8,8 @@ import MoodBadIcon from '@material-ui/icons/MoodBad';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 
 
+import { useProgresso } from '../../contexts/prog';
+import Carregando from '../../components/progress/carregando';
 import Navbar from "../../components/navbar/navbar";
 import NavInferior from "../../components/navbar/navinferior";
 import Pedido from "./pedido";
@@ -43,11 +45,17 @@ const useStyles = makeStyles((theme) => ({
 export default function TelaPedido() {
     const [pedidos, setPedidos] = useState([]);
     const classes = useStyles();
+    const { setProgresso } = useProgresso();
 
     useEffect(() => {
-        Api.get(`orders/user`).then(response => {
-            setPedidos(response.data);
-        });
+        async function buscarPedidos() {
+            await setProgresso(true)
+            await Api.get(`orders/user`).then(response => {
+                setPedidos(response.data);
+            });
+            await setProgresso(false)
+        }
+        buscarPedidos();
     }, []);
 
     return (
@@ -55,6 +63,7 @@ export default function TelaPedido() {
             <Navbar />
             <Container maxWidth="md" disableGutters>
                 <Notification />
+                <Carregando />
                 <BotaoVoltar dado={`/mcdonuts/carrinho`} />
                 <Box justifyContent="center" flexWrap="wrap" display="flex" className={classes.root}>
                     {pedidos.length > 0 ?

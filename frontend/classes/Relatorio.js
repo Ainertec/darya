@@ -341,7 +341,7 @@ function gerarListaDePedidosFechados(json) {
 async function impressaoRelatorioGeral() {
   try {
     await aguardeCarregamento(true);
-    await requisicaoGET(`printers/sold_report`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+    await requisicaoPrintGET(`printers/sold_report`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
     await aguardeCarregamento(false);
     await mensagemDeAviso('Imprimindo relatório geral...')
   } catch (error) {

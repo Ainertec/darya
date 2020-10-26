@@ -1,22 +1,22 @@
 import React, { createContext, useContext, useState } from "react";
 
-const CarrinhoContext = createContext({});
+const ProgressoContext = createContext({});
 
-export const CarrinhoProvider = ({ children }) => {
-    const [open, setOpen] = useState(false);
+export const ProgressoProvider = ({ children }) => {
+    const [progresso, setProgresso] = useState(false);
 
     return (
-        <CarrinhoContext.Provider
+        <ProgressoContext.Provider
             value={{
-                setOpen,
-                open,
+                progresso,
+                setProgresso,
             }}
         >
             {children}
-        </CarrinhoContext.Provider>
+        </ProgressoContext.Provider>
     );
 };
-export function useCarrinho() {
-    const context = useContext(CarrinhoContext);
+export function useProgresso() {
+    const context = useContext(ProgressoContext);
     return context;
 }

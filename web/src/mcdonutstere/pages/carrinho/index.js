@@ -28,6 +28,8 @@ import BotaoVoltar from '../../components/form/botaoVoltar';
 import { useCart } from "../../contexts/cart";
 import { useAuth } from "../../contexts/auth";
 import { useAlert } from '../../contexts/alertN';
+import { useProgresso } from '../../contexts/prog';
+import Carregando from '../../components/progress/carregando';
 import Api from "../../services/api";
 import Notification from '../../components/notificacao/notification';
 
@@ -110,6 +112,7 @@ export default function TelaCarrinho() {
   const [posicaoNavegacao, setProximoAnterior] = useState(0);
   const cabecario = getTitulos();
   const { setAbrir, setMsg } = useAlert();
+  const { setProgresso } = useProgresso();
 
   const history = useHistory();
   function handleNavigateToPedidos() {
@@ -124,7 +127,7 @@ export default function TelaCarrinho() {
     setProximoAnterior((opcaoDeNavegacao) => opcaoDeNavegacao - 1);
   };
 
-  function sendOrder() {
+  async function sendOrder() {
     const items = cartItems.map((item) => {
       return { product: item.product._id, quantity: item.quantity };
     });
@@ -137,14 +140,16 @@ export default function TelaCarrinho() {
       source: "site",
       note,
     };
-    console.log(order);
-    Api.post('orders', order).then(response => {
+
+    await setProgresso(true);
+    await Api.post('orders', order).then(response => {
       console.log(response)
       setMsg('Pedido criado com sucesso!');
       setAbrir(true);
       inicializarVariaveisCard();
-      setTimeout(function () { handleNavigateToPedidos(); }, 500);
     });
+    await setProgresso(false);
+    await setTimeout(function () { handleNavigateToPedidos(); }, 500);
   }
 
   return (
@@ -153,6 +158,7 @@ export default function TelaCarrinho() {
       <Container maxWidth="md" disableGutters>
         <BotaoVoltar dado={`/mcdonuts`} />
         <Notification />
+        <Carregando />
         <Box
           justifyContent="center"
           flexWrap="wrap"

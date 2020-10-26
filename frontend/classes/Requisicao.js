@@ -75,3 +75,44 @@ async function requisicaoPUT(url, json, authorization) {
 
   return retorno;
 }
+
+
+// ---------------------------------------------------- Requisicoes print ----------------------------------------------------------
+
+// funcao de requisicao get sem paramentro JSON
+async function requisicaoPrintGET(url, authorization) {
+  let retorno;
+  await axios
+    .get(`http://localhost:3333/${url}`, authorization)
+    .then(function (response) {
+      if (response.status == 200) {
+        retorno = response;
+      } else {
+        retorno = response.status
+      }
+    })
+    .catch(function (error) {
+      retorno = error.response.status
+    });
+
+  return retorno;
+}
+
+// funcao de requisicao post com paramentro JSON
+async function requisicaoPrintPOST(url, json, authorization) {
+  let retorno = null;
+  await axios
+    .post(`http://localhost:3333/${url}`, json, authorization)
+    .then(function (response) {
+      if (response.status == 200) {
+        retorno = response
+      } else {
+        retorno = response.status
+      }
+    })
+    .catch(function (error) {
+      retorno = error.response.status
+    });
+
+  return retorno;
+}
