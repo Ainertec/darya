@@ -31,7 +31,7 @@ function modalRetiradaLocalouEnvio() {
                           </div>
                         </div>
                     </div>
-                </div>`
+                </div>`;
 
   document.getElementById('modal').innerHTML = codigoHTML;
   $('#modalRetiradaPedido').modal('show');
@@ -64,19 +64,22 @@ function modalCriarouBuscarClientePedido(envio) {
                           </div>
                         </div>
                     </div>
-                </div>`
+                </div>`;
 
   document.getElementById('modal').innerHTML = codigoHTML;
-  setTimeout(function () { $('#modalCriarBuscaCliente').modal('show'); }, 500)
+  setTimeout(function () {
+    $('#modalCriarBuscaCliente').modal('show');
+  }, 500);
 }
 
 //funcao responsavel por gerar a tela de cadastra rapido de cliente
 async function modalCadastrorapidoClientePedido(tipo) {
-  let codigoHTML = ``, json = null;
+  let codigoHTML = ``,
+    json = null;
 
   if (tipo) {
     await aguardeCarregamento(true);
-    json = await requisicaoGET(`districts`)
+    json = await requisicaoGET(`districts`);
     await aguardeCarregamento(false);
   }
 
@@ -101,17 +104,25 @@ async function modalCadastrorapidoClientePedido(tipo) {
                                 <div class="form-group form-row">
                                   <div class="col">
                                     <label for="nomecliente">Usuário:</label>
-                                    <input type="text" class="form-control" id="usuario" placeholder="Usuário" value="${Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 10)}">
+                                    <input type="text" class="form-control" id="usuario" placeholder="Usuário" value="${Math.random()
+                                      .toString(36)
+                                      .replace(/[^a-z]+/g, '')
+                                      .substr(0, 10)}">
                                   </div>
                                   <div class="col">
                                     <label for="nomecliente">Senha:</label>
-                                    <input type="text" class="form-control" id="senha" placeholder="Senha" value="${Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 10) + Math.floor(Math.random() * 1000)}">
+                                    <input type="text" class="form-control" id="senha" placeholder="Senha" value="${
+                                      Math.random()
+                                        .toString(36)
+                                        .replace(/[^a-z]+/g, '')
+                                        .substr(0, 10) + Math.floor(Math.random() * 1000)
+                                    }">
                                   </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="telefoneclientecriarpedido">Telefone:</label>
                                     <input type="text" class="form-control" id="telefoneclientecriarpedido" placeholder="Exemplo:(00) 00000-0000">
-                                </div>`
+                                </div>`;
   if (tipo) {
     codigoHTML += `<div class="form-group">
                                   <label for="ruaclientecriarpedido">Rua:</label>
@@ -132,21 +143,21 @@ async function modalCadastrorapidoClientePedido(tipo) {
                                 <div class="form-group">
                                   <label for="complementoclientecriarpedido">Complemento:</label>
                                   <input type="text" class="form-control" id="complementoclientecriarpedido" value="Nenhum">
-                                </div>`
+                                </div>`;
   }
   codigoHTML += `</form>
                 </div>
                           </div>
-                          <div class="modal-footer">`
+                          <div class="modal-footer">`;
   if (tipo) {
-    codigoHTML += `<button type="button" onclick="if(validaDadosCampo(['#nomeclientecriarpedido','#telefoneclientecriarpedido','#ruaclientecriarpedido','#numerocasaclientecriarpedido','#complementoclientecriarpedido','#usuario','#senha'])){cadastrarClienteRapidoPedido(${tipo});}else{mensagemDeErroModal('Preencha todos os campos com valores válidos!'); mostrarCamposIncorreto(['nomeclientecriarpedido','telefoneclientecriarpedido','ruaclientecriarpedido','numerocasaclientecriarpedido','complementoclientecriarpedido','usuario','senha']);}" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Salvar</button>`
+    codigoHTML += `<button type="button" onclick="if(validaDadosCampo(['#nomeclientecriarpedido','#telefoneclientecriarpedido','#ruaclientecriarpedido','#numerocasaclientecriarpedido','#complementoclientecriarpedido','#usuario','#senha'])){cadastrarClienteRapidoPedido(${tipo});}else{mensagemDeErroModal('Preencha todos os campos com valores válidos!'); mostrarCamposIncorreto(['nomeclientecriarpedido','telefoneclientecriarpedido','ruaclientecriarpedido','numerocasaclientecriarpedido','complementoclientecriarpedido','usuario','senha']);}" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Salvar</button>`;
   } else {
-    codigoHTML += `<button type="button" onclick="if(validaDadosCampo(['#nomeclientecriarpedido','#telefoneclientecriarpedido','#usuario','#senha'])){cadastrarClienteRapidoPedido(${tipo});}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['nomeclientecriarpedido','telefoneclientecriarpedido','usuario','senha']);}" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Salvar</button>`
+    codigoHTML += `<button type="button" onclick="if(validaDadosCampo(['#nomeclientecriarpedido','#telefoneclientecriarpedido','#usuario','#senha'])){cadastrarClienteRapidoPedido(${tipo});}else{mensagemDeErroModal('Preencha os campos com valores válidos!'); mostrarCamposIncorreto(['nomeclientecriarpedido','telefoneclientecriarpedido','usuario','senha']);}" class="btn btn-primary btn-block"><span class="fas fa-check-double"></span> Salvar</button>`;
   }
   codigoHTML += ` </div>
                         </div>
                     </div>
-                </div>`
+                </div>`;
 
   document.getElementById('modal').innerHTML = codigoHTML;
   $('#modalcadastrorapidocliente').modal('show');
@@ -156,7 +167,6 @@ async function modalCadastrorapidoClientePedido(tipo) {
 async function cadastrarClienteRapidoPedido(envio) {
   try {
     if (envio) {
-
       let json = `{
         "name":"${document.getElementById('nomeclientecriarpedido').value}",
         "phone":["${document.getElementById('telefoneclientecriarpedido').value}"],
@@ -172,7 +182,7 @@ async function cadastrarClienteRapidoPedido(envio) {
         "password":"${document.getElementById('senha').value}"
         "question":"Qual o nome da sua mãe?",
         "response":"${Math.random()}"
-      }`
+      }`;
 
       await aguardeCarregamento(true);
       let result = await requisicaoPOST(`users`, JSON.parse(json));
@@ -181,16 +191,15 @@ async function cadastrarClienteRapidoPedido(envio) {
       $('#modalcadastrorapidocliente').modal('hide');
 
       if (result == 400) {
-        await mensagemDeErro('Atenção já existe um cliente com os mesmo dados!')
+        await mensagemDeErro('Atenção já existe um cliente com os mesmo dados!');
       } else {
-        await mensagemDeAviso('Cliente cadastrado com sucesso!')
-        await telaModalDeCriacaoDePedido('cadastrar', true)
-        $('#formuDadosClientePedido').fadeIn()
-        $('#respostaClienteParaPedido').fadeOut()
-        await preencherDadosPedidoIncluirDadosEmPedido('cliente', result.data._id)
+        await mensagemDeAviso('Cliente cadastrado com sucesso!');
+        await telaModalDeCriacaoDePedido('cadastrar', true);
+        $('#formuDadosClientePedido').fadeIn();
+        $('#respostaClienteParaPedido').fadeOut();
+        await preencherDadosPedidoIncluirDadosEmPedido('cliente', result.data._id);
       }
     } else {
-
       let json = `{
         "name":"${document.getElementById('nomeclientecriarpedido').value}",
         "phone":["${document.getElementById('telefoneclientecriarpedido').value}"],
@@ -198,7 +207,7 @@ async function cadastrarClienteRapidoPedido(envio) {
         "password":"${document.getElementById('senha').value}"
         "question":"Qual o nome da sua mãe?",
         "response":"${Math.random()}"
-      }`
+      }`;
 
       await aguardeCarregamento(true);
       let result = await requisicaoPOST(`users`, JSON.parse(json));
@@ -207,18 +216,17 @@ async function cadastrarClienteRapidoPedido(envio) {
       $('#modalcadastrorapidocliente').modal('hide');
 
       if (result == 400) {
-        await mensagemDeErro('Atenção já existe um cliente com os mesmo dados!')
+        await mensagemDeErro('Atenção já existe um cliente com os mesmo dados!');
       } else {
-        await mensagemDeAviso('Cliente cadastrado com sucesso!')
-        await telaModalDeCriacaoDePedido('cadastrar', false)
-        $('#formuDadosClientePedido').fadeIn()
-        $('#respostaClienteParaPedido').fadeOut()
-        await preencherDadosPedidoIncluirDadosEmPedido('cliente', result.data._id)
+        await mensagemDeAviso('Cliente cadastrado com sucesso!');
+        await telaModalDeCriacaoDePedido('cadastrar', false);
+        $('#formuDadosClientePedido').fadeIn();
+        $('#respostaClienteParaPedido').fadeOut();
+        await preencherDadosPedidoIncluirDadosEmPedido('cliente', result.data._id);
       }
-
     }
   } catch (error) {
-    mensagemDeErro('Não foi possível cadastrar o cliente!')
+    mensagemDeErro('Não foi possível cadastrar o cliente!');
   }
 }
 
@@ -270,13 +278,13 @@ function telaModalDeCriacaoDePedido(tipo, enviarPedido) {
                                   <label for="telefonecliente">Telefone:</label>
                                   <select class="form-control form-control-sm" id="telefonecliente">
                                   </select>
-                                </div>`
+                                </div>`;
   if (enviarPedido) {
     codigoHTML += `<div class="form-group">
                                     <label for="enderecocliente">Endereço:</label>
                                     <select class="form-control form-control-sm" id="enderecocliente">
                                     </select>
-                                </div>`
+                                </div>`;
   }
   codigoHTML += `</div>
     </form>
@@ -325,7 +333,7 @@ function telaModalDeCriacaoDePedido(tipo, enviarPedido) {
 
                     </div>
 
-                    <div id="pagMotoboy">`
+                    <div id="pagMotoboy">`;
   if (enviarPedido) {
     codigoHTML += `<div id="buscarDadosMotoboy">
                           <div class="shadow-lg p-3 mb-5 bg-white rounded">
@@ -357,10 +365,10 @@ function telaModalDeCriacaoDePedido(tipo, enviarPedido) {
                                   <input type="text" class="form-control" id="telefonemotoboy" placeholder="Exemplo: (00)00000-0000" disabled>
                               </div>
                             </div>
-                          </form>`
+                          </form>`;
   } else {
     codigoHTML += `<h5 class="text-center" style="margin-bottom: 40px; margin-top: 30px;"><span class="fas fa-motorcycle"></span> Dados Motoboy</h5>
-    <h6 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Opção retirar pedido no local selecionada!</h6>`
+    <h6 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Opção retirar pedido no local selecionada!</h6>`;
   }
   codigoHTML += `</div>
                     <div id="pagExtra">
@@ -427,7 +435,8 @@ function telaModalDeCriacaoDePedido(tipo, enviarPedido) {
   $('#pagProduto').animate({ height: 'hide' });
   $('#formuDadosClientePedido').fadeOut();
   $('#pagMotoboy').animate({ height: 'hide' });
-  $('#formuDadoMotoboyPedido').fadeOut(); $('#formuDadosClientePedido').fadeOut();
+  $('#formuDadoMotoboyPedido').fadeOut();
+  $('#formuDadosClientePedido').fadeOut();
   $('#pagExtra').animate({ height: 'hide' });
   $('#botaoanterior').animate({ height: 'hide' });
   $('#botaoConfirmacao').animate({ height: 'hide' });
@@ -481,11 +490,15 @@ async function criarListagemDeBuscaDeClientes(tipo) {
   try {
     if (tipo == 'nome') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`users/${document.getElementById('nometelefonecliente').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      json = await requisicaoGET(`users/${document.getElementById('nometelefonecliente').value}`, {
+        headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
+      });
       await aguardeCarregamento(false);
     } else if (tipo == 'todos') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`users`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      json = await requisicaoGET(`users`, {
+        headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
+      });
       await aguardeCarregamento(false);
     }
 
@@ -501,21 +514,35 @@ async function criarListagemDeBuscaDeClientes(tipo) {
           </thead>
           <tbody>`;
     for (let item of json.data) {
-      if ((!item.address[0] && document.getElementById('enderecocliente'))) {
+      if (!item.address[0] && document.getElementById('enderecocliente')) {
         codigoHTML += `<tr>
-                        <td class="table-light text-danger" title="${item.name}"><strong><span class="fas fa-user"></span> ${corrigirTamanhoString(15, item.name)}</strong></td>
-                        <td class="table-light text-danger"><strong><span class="fas fa-phone"></span> ${item.phone[0]}</strong></td>
+                        <td class="table-light text-danger" title="${
+                          item.name
+                        }"><strong><span class="fas fa-user"></span> ${corrigirTamanhoString(
+          15,
+          item.name
+        )}</strong></td>
+                        <td class="table-light text-danger"><strong><span class="fas fa-phone"></span> ${
+                          item.phone[0]
+                        }</strong></td>
                         <td class="table-light text-danger"><strong><span class="fas fa-map-marker-alt"></span> Nenhum.</strong></td>
                         <td class="table-light text-center" title="Não é possível enviar pedidos para clientes sem endereço!"><button  type="button" class="btn btn-danger btn-sm" disabled><span class="fas fa-ban"></span></button></td>
                       </tr>`;
       } else {
         codigoHTML += `<tr>
-                        <td class="table-light text-dark" title="${item.name}"><strong><span class="fas fa-user"></span> ${corrigirTamanhoString(15, item.name)}</strong></td>
-                        <td class="table-light"><strong><span class="fas fa-phone"></span> ${item.phone[0]}</strong></td>`
+                        <td class="table-light text-dark" title="${
+                          item.name
+                        }"><strong><span class="fas fa-user"></span> ${corrigirTamanhoString(
+          15,
+          item.name
+        )}</strong></td>
+                        <td class="table-light"><strong><span class="fas fa-phone"></span> ${
+                          item.phone[0]
+                        }</strong></td>`;
         if (item.address[0]) {
-          codigoHTML += `<td class="table-light"><strong><span class="fas fa-map-marker-alt"></span> ${item.phone.length} endereço(s)</strong></td>`
+          codigoHTML += `<td class="table-light"><strong><span class="fas fa-map-marker-alt"></span> ${item.phone.length} endereço(s)</strong></td>`;
         } else {
-          codigoHTML += `<td class="table-light"><strong><span class="fas fa-map-marker-alt"></span> Nenhum.</strong></td>`
+          codigoHTML += `<td class="table-light"><strong><span class="fas fa-map-marker-alt"></span> Nenhum.</strong></td>`;
         }
         codigoHTML += `<td class="table-light text-center" title="Selecionar cliente!"><button onclick="preencherDadosPedidoIncluirDadosEmPedido('cliente','${item._id}'); $('#formuDadosClientePedido').fadeIn(); $('#respostaClienteParaPedido').fadeOut();" type="button" class="btn btn-primary btn-sm"><span class="fas fa-check"></span></button></td>
                       </tr>`;
@@ -528,10 +555,11 @@ async function criarListagemDeBuscaDeClientes(tipo) {
     if (json.data[0]) {
       document.getElementById('respostaClienteParaPedido').innerHTML = codigoHTML;
     } else {
-      document.getElementById('respostaClienteParaPedido').innerHTML = '<h5 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Nenhum cliente encontrado!</h5>';
+      document.getElementById('respostaClienteParaPedido').innerHTML =
+        '<h5 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Nenhum cliente encontrado!</h5>';
     }
   } catch (error) {
-    mensagemDeErroModal('Não foi possível carregar os clientes!')
+    mensagemDeErroModal('Não foi possível carregar os clientes!');
   }
 }
 
@@ -543,11 +571,15 @@ async function criarListagemDeBuscaDeProduto(tipo) {
   try {
     if (tipo == 'nome') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`products/${document.getElementById('nomeproduto').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      json = await requisicaoGET(`products/${document.getElementById('nomeproduto').value}`, {
+        headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
+      });
       await aguardeCarregamento(false);
     } else if (tipo == 'todos') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`products`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      json = await requisicaoGET(`products`, {
+        headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
+      });
       await aguardeCarregamento(false);
     }
 
@@ -569,12 +601,33 @@ async function criarListagemDeBuscaDeProduto(tipo) {
     for (let item of json.data) {
       if (item.available) {
         codigoHTML += `<tr>
-                    <td class="table-light"><img src="${item.image}" class="mr-3" style="max-height:5%"></td>
-                    <td class="table-light col-2" title="${item.name}"><strong><span class="fas fa-hamburger"></span> ${corrigirTamanhoString(15, item.name)}</strong></td>
-                    <td class="table-light text-danger"><strong>R$${(parseFloat(item.price)).toFixed(2)}</strong></td>
-                    <td class="table-light text-center" title="${item.description}"><strong>${corrigirTamanhoString(20, item.description)}</strong></td>
-                    <td class="table-light"><input id="quantidadeProduto${item._id}" type="Number" class="form-control form-control-sm" value=1></td>
-                    <td class="table-light text-center"><button onclick="if(validaDadosCampo(['#quantidadeProduto${item._id}']) && validaValoresCampo(['#quantidadeProduto${item._id}'])){preencherDadosPedidoIncluirDadosEmPedido('produto','${item._id}', quantidadeProduto${item._id}.value );}else{mensagemDeErroModal('Preencha o campo quantidade com um valor válido!'); mostrarCamposIncorreto(['quantidadeProduto${item._id}']);}" type="button" class="btn btn-primary btn-sm"><span class="fas fa-check"></span> </button></td>
+                    <td class="table-light"><img src="${
+                      item.image
+                    }" class="mr-3" style="max-height:5%"></td>
+                    <td class="table-light col-2" title="${
+                      item.name
+                    }"><strong><span class="fas fa-hamburger"></span> ${corrigirTamanhoString(
+          15,
+          item.name
+        )}</strong></td>
+                    <td class="table-light text-danger"><strong>R$${parseFloat(item.price).toFixed(
+                      2
+                    )}</strong></td>
+                    <td class="table-light text-center" title="${
+                      item.description
+                    }"><strong>${corrigirTamanhoString(20, item.description)}</strong></td>
+                    <td class="table-light"><input id="quantidadeProduto${
+                      item._id
+                    }" type="Number" class="form-control form-control-sm" value=1></td>
+                    <td class="table-light text-center"><button onclick="if(validaDadosCampo(['#quantidadeProduto${
+                      item._id
+                    }']) && validaValoresCampo(['#quantidadeProduto${
+          item._id
+        }'])){preencherDadosPedidoIncluirDadosEmPedido('produto','${item._id}', quantidadeProduto${
+          item._id
+        }.value );}else{mensagemDeErroModal('Preencha o campo quantidade com um valor válido!'); mostrarCamposIncorreto(['quantidadeProduto${
+          item._id
+        }']);}" type="button" class="btn btn-primary btn-sm"><span class="fas fa-check"></span> </button></td>
                 </tr>`;
       }
     }
@@ -587,10 +640,11 @@ async function criarListagemDeBuscaDeProduto(tipo) {
     if (json.data[0]) {
       document.getElementById('respostaProdutoParaPedido').innerHTML = codigoHTML;
     } else {
-      document.getElementById('respostaProdutoParaPedido').innerHTML = '<h5 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Nenhum produto encontrado!</h5>';
+      document.getElementById('respostaProdutoParaPedido').innerHTML =
+        '<h5 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Nenhum produto encontrado!</h5>';
     }
   } catch (error) {
-    mensagemDeErroModal('Não foi possível carregar os produtos!')
+    mensagemDeErroModal('Não foi possível carregar os produtos!');
   }
 }
 
@@ -602,14 +656,19 @@ async function criarListagemDeBuscaDeMotoboy(tipo) {
   try {
     if (tipo == 'nome') {
       await aguardeCarregamento(true);
-      let json2 = await requisicaoGET(`deliverymans/${document.getElementById('nomeMotoboyPedido').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      let json2 = await requisicaoGET(
+        `deliverymans/${document.getElementById('nomeMotoboyPedido').value}`,
+        { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } }
+      );
       await aguardeCarregamento(false);
       json.data = json2.data.filter((item) => {
         return item.working_day == true;
-      })
+      });
     } else if (tipo == 'ativos') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET('deliverymans/working_days', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      json = await requisicaoGET('deliverymans/working_days', {
+        headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
+      });
       await aguardeCarregamento(false);
     }
 
@@ -627,13 +686,18 @@ async function criarListagemDeBuscaDeMotoboy(tipo) {
           <tbody>`;
     for await (item of json.data) {
       codigoHTML += `<tr>
-                  <td class="table-light text-dark" title="${item.name}"><strong><span class="fas fa-biking"></span> ${corrigirTamanhoString(15, item.name)}</strong></td>
+                  <td class="table-light text-dark" title="${
+                    item.name
+                  }"><strong><span class="fas fa-biking"></span> ${corrigirTamanhoString(
+        15,
+        item.name
+      )}</strong></td>
                   <td class="table-light"><span class="fas fa-phone"></span> ${item.phone}</td>
                   <td class="table-light">`;
       if (item.hasDelivery) {
-        codigoHTML += `<select class="form-control form-control-sm" style="width:150px" id="localDeEntragaMotoboy${item._id}">`
-        codigoHTML += `</select>`
-        mostrarLocaisDeEntregaMotoboy(item._id)
+        codigoHTML += `<select class="form-control form-control-sm" style="width:150px" id="localDeEntragaMotoboy${item._id}">`;
+        codigoHTML += `</select>`;
+        mostrarLocaisDeEntregaMotoboy(item._id);
       } else {
         codigoHTML += `Nenhuma`;
       }
@@ -658,10 +722,11 @@ async function criarListagemDeBuscaDeMotoboy(tipo) {
     if (json.data[0]) {
       document.getElementById('respostaMotoboyParaPedido').innerHTML = codigoHTML;
     } else {
-      document.getElementById('respostaMotoboyParaPedido').innerHTML = '<h5 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Nenhum motoboy encontrado!</h5>';
+      document.getElementById('respostaMotoboyParaPedido').innerHTML =
+        '<h5 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Nenhum motoboy encontrado!</h5>';
     }
   } catch (error) {
-    mensagemDeErroModal('Não foi possível carregar os motoboys!')
+    mensagemDeErroModal('Não foi possível carregar os motoboys!');
   }
 }
 
@@ -669,61 +734,74 @@ async function criarListagemDeBuscaDeMotoboy(tipo) {
 async function mostrarLocaisDeEntregaMotoboy(id) {
   try {
     await aguardeCarregamento(true);
-    let codigoHTML = ``, json = await requisicaoGET(`orders/deliveryman/${id}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    let codigoHTML = ``,
+      json = await requisicaoGET(`orders/deliveryman/${id}`, {
+        headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
+      });
     await aguardeCarregamento(false);
 
     for (let item of json.data) {
-      codigoHTML += `<option title="${item.address.street}, nº ${item.address.number}, ${item.address.reference} - ${item.address.district_name}">${corrigirTamanhoString(15, item.address.street)}, nº ${item.address.number}, ${corrigirTamanhoString(20, item.address.reference)} - ${corrigirTamanhoString(15, item.address.district_name)}</option>`
+      codigoHTML += `<option title="${item.address.street}, nº ${item.address.number}, ${
+        item.address.reference
+      } - ${item.address.district_name}">${corrigirTamanhoString(15, item.address.street)}, nº ${
+        item.address.number
+      }, ${corrigirTamanhoString(20, item.address.reference)} - ${corrigirTamanhoString(
+        15,
+        item.address.district_name
+      )}</option>`;
     }
 
     document.getElementById(`localDeEntragaMotoboy${id}`).innerHTML = codigoHTML;
   } catch (error) {
-    mensagemDeErroModal('Não foi possível carregar os dados dos bairros de entrega!')
+    mensagemDeErroModal('Não foi possível carregar os dados dos bairros de entrega!');
   }
 }
 
 //funcao responsavel por preencher os campos e incluir os dados na variavel de pedido
 async function preencherDadosPedidoIncluirDadosEmPedido(tipo, id, quantidade) {
-
   if (tipo == 'cliente') {
-
     try {
       await aguardeCarregamento(true);
-      let json = await requisicaoGET(`users`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      let json = await requisicaoGET(`users`, {
+        headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
+      });
       await aguardeCarregamento(false);
       let dado = json.data.find((element) => element._id == id);
 
-      document.getElementById('nomecliente').value = ''
-      document.getElementById('nomecliente').title = ''
-      document.getElementById('telefonecliente').innerHTML = ''
+      document.getElementById('nomecliente').value = '';
+      document.getElementById('nomecliente').title = '';
+      document.getElementById('telefonecliente').innerHTML = '';
       if (document.getElementById('enderecocliente')) {
-        document.getElementById('enderecocliente').innerHTML = ''
+        document.getElementById('enderecocliente').innerHTML = '';
       }
-
 
       DADOSPEDIDO.user_id = dado._id;
 
       document.getElementById('nomecliente').value = corrigirTamanhoString(15, dado.name);
-      document.getElementById('nomecliente').title = dado.name
+      document.getElementById('nomecliente').title = dado.name;
       for (let item of dado.phone) {
         $('#telefonecliente').append(`<option>${item}</option>`);
       }
       if (document.getElementById('enderecocliente')) {
         for (let item of dado.address) {
           $('#enderecocliente').append(
-            `<option value="${item._id}" title="${item.street}, nº ${item.number} - ${item.district.name} - ${item.district.city}">${corrigirTamanhoString(15, item.street)}, nº ${item.number} - ${corrigirTamanhoString(15, item.district.name)} - ${corrigirTamanhoString(15, item.district.city)}</option>`
+            `<option value="${item._id}" title="${item.street}, nº ${item.number} - ${
+              item.district.name
+            } - ${item.district.city}">${corrigirTamanhoString(15, item.street)}, nº ${
+              item.number
+            } - ${corrigirTamanhoString(15, item.district.name)} - ${corrigirTamanhoString(
+              15,
+              item.district.city
+            )}</option>`
           );
         }
       }
     } catch (error) {
-      mensagemDeErroModal('Não foi possível adicionar o cliente!')
+      mensagemDeErroModal('Não foi possível adicionar o cliente!');
     }
-
   } else if (tipo == 'produto') {
-
     try {
       if (VETORDEPRODUTOSCLASSEPEDIDO.findIndex((element) => element._id == id) == -1) {
-
         await aguardeCarregamento(true);
         let json = await requisicaoGET(`products`);
         await aguardeCarregamento(false);
@@ -734,25 +812,37 @@ async function preencherDadosPedidoIncluirDadosEmPedido(tipo, id, quantidade) {
         );
 
         $('#listagemDeProdutoSelecionadoPedido').append(`<tr id="linhaProd${dado._id}">
-            <td class="table-warning"><img src="${dado.image}" class="mr-3" style="max-height:5%"></td>
-            <td class="table-warning col-2" title="${dado.name}"><strong><span class="fas fa-hamburger"></span> ${corrigirTamanhoString(15, dado.name)}</strong></td>
-            <td class="table-warning text-danger"><strong>R$${(parseFloat(dado.price)).toFixed(2)}</strong></td>
-            <td class="table-warning"><input id="lisProdPed${dado._id}" type="Number" class="form-control form-control-sm" value=${quantidade}></td>
-            <td class="table-warning text-center"><button onclick="removerProdutoDaTabelaeVetor('${dado._id}');" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span></button></td>
+            <td class="table-warning"><img src="${
+              dado.image
+            }" class="mr-3" style="max-height:5%"></td>
+            <td class="table-warning col-2" title="${
+              dado.name
+            }"><strong><span class="fas fa-hamburger"></span> ${corrigirTamanhoString(
+          15,
+          dado.name
+        )}</strong></td>
+            <td class="table-warning text-danger"><strong>R$${parseFloat(dado.price).toFixed(
+              2
+            )}</strong></td>
+            <td class="table-warning"><input id="lisProdPed${
+              dado._id
+            }" type="Number" class="form-control form-control-sm" value=${quantidade}></td>
+            <td class="table-warning text-center"><button onclick="removerProdutoDaTabelaeVetor('${
+              dado._id
+            }');" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span></button></td>
         </tr>`);
-
       } else {
-        mensagemDeErroModal('Produto já adicionado altere a quantidade!')
+        mensagemDeErroModal('Produto já adicionado altere a quantidade!');
       }
     } catch (error) {
-      mensagemDeErroModal('Não foi possível adicionar o produto!')
+      mensagemDeErroModal('Não foi possível adicionar o produto!');
     }
-
   } else if (tipo == 'motoboy') {
-
     try {
       await aguardeCarregamento(true);
-      let json = await requisicaoGET('deliverymans/working_days', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      let json = await requisicaoGET('deliverymans/working_days', {
+        headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
+      });
       await aguardeCarregamento(false);
       let dado = json.data.find((element) => element._id == id);
 
@@ -762,9 +852,8 @@ async function preencherDadosPedidoIncluirDadosEmPedido(tipo, id, quantidade) {
       document.getElementById('nomemotoboy').title = dado.name;
       document.getElementById('telefonemotoboy').value = dado.phone;
     } catch (error) {
-      mensagemDeErroModal('Não doi possível adicionar o motoboy!')
+      mensagemDeErroModal('Não doi possível adicionar o motoboy!');
     }
-
   }
 }
 
@@ -777,15 +866,15 @@ function removerProdutoDaTabelaeVetor(id) {
       .getElementById('listagemDeProdutoSelecionadoPedido')
       .removeChild(document.getElementById(`linhaProd${id}`));
   } catch (error) {
-    mensagemDeErroModal('Não foi possível remover o produto!')
+    mensagemDeErroModal('Não foi possível remover o produto!');
   }
 }
 
 //funcao responsavel por atualizar os dados do pedido
 async function atualizarDadoPedido(id) {
   try {
-
-    let dado = VETORDEPEDIDOSCLASSEPEDIDO.find((element) => element._id == id), indice = 0;
+    let dado = VETORDEPEDIDOSCLASSEPEDIDO.find((element) => element._id == id),
+      indice = 0;
 
     if (dado.deliveryman && dado.address) {
       await telaModalDeCriacaoDePedido('atualizar', true);
@@ -796,7 +885,9 @@ async function atualizarDadoPedido(id) {
 
     await preencherDadosPedidoIncluirDadosEmPedido('cliente', dado.user.user_id, null);
     if (dado.address) {
-      document.getElementById('enderecocliente').value = await dado.address.user_address_id.toString();
+      document.getElementById(
+        'enderecocliente'
+      ).value = await dado.address.user_address_id.toString();
     }
 
     for (let item of dado.items) {
@@ -821,10 +912,8 @@ async function atualizarDadoPedido(id) {
     $('#respostaMotoboyParaPedido').fadeOut();
     $('#formuDadosClientePedido').fadeIn();
     $('#formuDadoMotoboyPedido').fadeIn();
-
-
   } catch (error) {
-    mensagemDeErroModal('Não foi possível carregar os dados do pedido!')
+    mensagemDeErroModal('Não foi possível carregar os dados do pedido!');
   }
 }
 
@@ -833,13 +922,22 @@ function listaDePedidosAbertosParaPagamento(json) {
   let codigoHTML = ``;
 
   codigoHTML += `<tr>
-        <td class="table-warning text-dark"><strong><span class="fas fa-sticky-note"></span> ${json.identification}</strong></td>
-        <td class="table-warning" title="${json.user.name}"><strong>${corrigirTamanhoString(15, json.user.name)}</strong></td>
-        <td class="table-warning text-danger"><strong>R$${(parseFloat(json.total)).toFixed(2)}</strong></td>`
+        <td class="table-warning text-dark"><strong><span class="fas fa-sticky-note"></span> ${
+          json.identification
+        }</strong></td>
+        <td class="table-warning" title="${json.user.name}"><strong>${corrigirTamanhoString(
+    15,
+    json.user.name
+  )}</strong></td>
+        <td class="table-warning text-danger"><strong>R$${parseFloat(json.total).toFixed(
+          2
+        )}</strong></td>`;
   if (json.deliveryman) {
-    codigoHTML += `<td class="table-warning" title="${json.deliveryman.name}">${corrigirTamanhoString(15, json.deliveryman.name)}</td>`
+    codigoHTML += `<td class="table-warning" title="${
+      json.deliveryman.name
+    }">${corrigirTamanhoString(15, json.deliveryman.name)}</td>`;
   } else {
-    codigoHTML += `<td class="table-warning">Retirada local</td>`
+    codigoHTML += `<td class="table-warning">Retirada local</td>`;
   }
   codigoHTML += `<td class="table-warning">
             <button onclick="atualizarDadoPedido('${json._id}');" type="button" class="btn btn-primary btn-sm"><span class="fas fa-edit"></span> Alterar</button>
@@ -864,17 +962,20 @@ async function buscarDadosAtualizar(tipo) {
   try {
     if (tipo == 'codigo') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`orders/${document.getElementById('nomePedidoPagamento').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      json = await requisicaoGET(`orders/${document.getElementById('nomePedidoPagamento').value}`, {
+        headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
+      });
       await aguardeCarregamento(false);
-      json.data = [json.data]
+      json.data = [json.data];
     } else if (tipo == 'todos') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET('orders', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      json = await requisicaoGET('orders', {
+        headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
+      });
       await aguardeCarregamento(false);
     }
 
     if (json.data[0]) {
-
       codigoHTML += `<table class="table table-sm col-10 mx-auto" style="margin-top:20px">
       <thead class="thead-dark">
           <tr>
@@ -897,26 +998,28 @@ async function buscarDadosAtualizar(tipo) {
       codigoHTML += `</tbody>
         </table>`;
 
-
       document.getElementById('respostaListaDePedidosAbertosPagamento').innerHTML = codigoHTML;
     } else {
-      document.getElementById('respostaListaDePedidosAbertosPagamento').innerHTML = `<h5 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Nenhum pedido em aberto encontrado!</h5>`;
+      document.getElementById(
+        'respostaListaDePedidosAbertosPagamento'
+      ).innerHTML = `<h5 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Nenhum pedido em aberto encontrado!</h5>`;
     }
   } catch (error) {
-    mensagemDeErro('Não foi possível carregar os pedidos em aberto!')
+    mensagemDeErro('Não foi possível carregar os pedidos em aberto!');
   }
 }
 
 //funcao responsavel por cadastrar um pedido
 async function cadastrarPedido() {
   try {
-    let aux = true, json = `{
-      "user_id":"${DADOSPEDIDO.user_id}",`
+    let aux = true,
+      json = `{
+      "user_id":"${DADOSPEDIDO.user_id}",`;
     if (DADOSPEDIDO.motoboy_id) {
-      json += `"deliveryman":"${DADOSPEDIDO.motoboy_id}",`
+      json += `"deliveryman":"${DADOSPEDIDO.motoboy_id}",`;
     }
     if (document.getElementById('enderecocliente')) {
-      json += `"user_address_id":"${document.getElementById('enderecocliente').value}",`
+      json += `"user_address_id":"${document.getElementById('enderecocliente').value}",`;
     }
     json += `"source":"${document.getElementById('formaDeRequisicaoPedido').value}",
       "items":[`;
@@ -940,32 +1043,34 @@ async function cadastrarPedido() {
       }`;
 
     await aguardeCarregamento(true);
-    let result = await requisicaoPOST('orders', JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    let result = await requisicaoPOST('orders', JSON.parse(json), {
+      headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
+    });
     await aguardeCarregamento(false);
 
     await reImprimirPedido(result.data._id);
     $('#modalCriarPedidoClassePedido').modal('hide');
     if (result.data.deliveryman) {
-      await modalEnviaMotoboyEntrega(result.data.deliveryman._id)
+      await modalEnviaMotoboyEntrega(result.data.deliveryman._id);
     }
     await inicializarVariaveisClassePedido();
-    await mensagemDeAviso('Pedido cadastrado com sucesso!')
-
+    await mensagemDeAviso('Pedido cadastrado com sucesso!');
   } catch (error) {
-    mensagemDeErro('Não foi possível cadastrar o pedido!')
+    mensagemDeErro('Não foi possível cadastrar o pedido!');
   }
 }
 
 //funcao responsavel por atualizar um pedido
 async function atualizarPedido(id) {
   try {
-    let aux = true, json = `{
-      "user_id":"${DADOSPEDIDO.user_id}",`
+    let aux = true,
+      json = `{
+      "user_id":"${DADOSPEDIDO.user_id}",`;
     if (DADOSPEDIDO.motoboy_id) {
-      json += `"deliveryman":"${DADOSPEDIDO.motoboy_id}",`
+      json += `"deliveryman":"${DADOSPEDIDO.motoboy_id}",`;
     }
     if (document.getElementById('enderecocliente')) {
-      json += `"user_address_id":"${document.getElementById('enderecocliente').value}",`
+      json += `"user_address_id":"${document.getElementById('enderecocliente').value}",`;
     }
     json += `"source":"${document.getElementById('formaDeRequisicaoPedido').value}",
       "items":[`;
@@ -989,21 +1094,22 @@ async function atualizarPedido(id) {
       }`;
 
     await aguardeCarregamento(true);
-    let result = await requisicaoPUT(`orders/${id}`, JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+    let result = await requisicaoPUT(`orders/${id}`, JSON.parse(json), {
+      headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
+    });
     await aguardeCarregamento(false);
 
     await reImprimirPedido(result.data._id);
     await inicializarVariaveisClassePedido();
-    await mensagemDeAviso('Pedido atualizado com sucesso!')
-
+    await mensagemDeAviso('Pedido atualizado com sucesso!');
   } catch (error) {
-    mensagemDeErro('Não foi possível atualizar o pedido!')
+    mensagemDeErro('Não foi possível atualizar o pedido!');
   }
 
   if (validaDadosCampo(['#nomePedidoPagamento'])) {
-    await buscarDadosAtualizar('codigo')
+    await buscarDadosAtualizar('codigo');
   } else {
-    await buscarDadosAtualizar('todos')
+    await buscarDadosAtualizar('todos');
   }
 }
 
@@ -1011,26 +1117,41 @@ async function atualizarPedido(id) {
 async function excluirPedido(id) {
   try {
     await aguardeCarregamento(true);
-    let result = await requisicaoGET(`orders`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
-    let order = result.data.find(element => element._id == id)
-    await requisicaoDELETE(`orders/${id}`, '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    let result = await requisicaoGET(`orders`, {
+      headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
+    });
+    let order = result.data.find((element) => element._id == id);
+    await requisicaoDELETE(`orders/${id}`, '', {
+      headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
+    });
     if (order.deliveryman) {
-      let result2 = await requisicaoGET(`orders/deliveryman/${order.deliveryman._id}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+      let result2 = await requisicaoGET(`orders/deliveryman/${order.deliveryman._id}`, {
+        headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
+      });
       if (result2.data.length == 0) {
-        await requisicaoPUT(`deliverymans/${order.deliveryman._id}`, { "available": false, "hasDelivery": false, "name": order.deliveryman.name, "phone": order.deliveryman.phone }, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+        await requisicaoPUT(
+          `deliverymans/${order.deliveryman._id}`,
+          {
+            available: false,
+            hasDelivery: false,
+            name: order.deliveryman.name,
+            phone: order.deliveryman.phone,
+          },
+          { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } }
+        );
       }
     }
     await aguardeCarregamento(false);
 
-    await mensagemDeAviso('Pedido excluído com sucesso!')
+    await mensagemDeAviso('Pedido excluído com sucesso!');
   } catch (error) {
-    mensagemDeErro('Não foi possível excluir o pedido!')
+    mensagemDeErro('Não foi possível excluir o pedido!');
   }
 
   if (validaDadosCampo(['#nomePedidoPagamento'])) {
-    await buscarDadosAtualizar('codigo')
+    await buscarDadosAtualizar('codigo');
   } else {
-    await buscarDadosAtualizar('todos')
+    await buscarDadosAtualizar('todos');
   }
 }
 
@@ -1038,17 +1159,21 @@ async function excluirPedido(id) {
 async function finalizarPedido(id) {
   try {
     await aguardeCarregamento(true);
-    await requisicaoPUT(`orders/${id}`, { "finished": true }, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+    await requisicaoPUT(
+      `orders/${id}`,
+      { finished: true },
+      { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } }
+    );
     await aguardeCarregamento(false);
-    await mensagemDeAviso('Pedido finalizado com sucesso!')
+    await mensagemDeAviso('Pedido finalizado com sucesso!');
   } catch (error) {
-    mensagemDeErro('Não foi possível finalizar o pedido!')
+    mensagemDeErro('Não foi possível finalizar o pedido!');
   }
 
   if (validaDadosCampo(['#nomePedidoPagamento'])) {
-    await buscarDadosAtualizar('codigo')
+    await buscarDadosAtualizar('codigo');
   } else {
-    await buscarDadosAtualizar('todos')
+    await buscarDadosAtualizar('todos');
   }
 }
 
@@ -1073,7 +1198,7 @@ function modalEnviaMotoboyEntrega(id) {
                           <button type="button" data-dismiss="modal" class="btn btn-warning btn-block"><span class="fas fa-hourglass-half"></span> Aguardar</button>
                         </div>
                     </div>
-                </div>`
+                </div>`;
 
   document.getElementById('modal').innerHTML = codigoHTML;
   $('#modalEnviaMotoboyClassePedido').modal('show');
@@ -1121,26 +1246,33 @@ function modalBuscaEnviaMotoboyEntrega() {
 //funcao responsavel por gerar a lista de motoboy para enviar entrega
 async function criarListaEnviarMotoboyEntrega(tipo) {
   let codigoHTML = ``,
-    json = null, aux = false, indice = 0;
+    json = null,
+    aux = false,
+    indice = 0;
 
   try {
     if (tipo == 'nome') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET(`deliverymans/${document.getElementById('nomeMotoboyAguardo').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      json = await requisicaoGET(
+        `deliverymans/${document.getElementById('nomeMotoboyAguardo').value}`,
+        { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } }
+      );
       await aguardeCarregamento(false);
       for (let item of json.data) {
         if (item.working_day == false && item.hasDelivery == false) {
-          delete json.data[indice]
+          delete json.data[indice];
         }
         indice++;
       }
     } else if (tipo == 'ativos') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET('deliverymans/working_days', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      json = await requisicaoGET('deliverymans/working_days', {
+        headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
+      });
       await aguardeCarregamento(false);
       for (let item of json.data) {
         if (item.hasDelivery == false) {
-          delete json.data[indice]
+          delete json.data[indice];
         }
         indice++;
       }
@@ -1159,13 +1291,20 @@ async function criarListaEnviarMotoboyEntrega(tipo) {
     for (let item of json.data) {
       if (item.available == false) {
         codigoHTML += `<tr>
-                    <td class="table-light text-dark" title="${item.name}"><strong><span class="fas fa-biking"></span> ${corrigirTamanhoString(15, item.name)}</strong></td>
+                    <td class="table-light text-dark" title="${
+                      item.name
+                    }"><strong><span class="fas fa-biking"></span> ${corrigirTamanhoString(
+          15,
+          item.name
+        )}</strong></td>
                     <td class="table-light"><span class="fas fa-phone"></span> ${item.phone}</td>
                     <td class="table-light"><span class="badge badge-warning">Aguardo</span></td>
                     <td class="table-light text-center">
-                      <button onclick="confirmarAcao('Enviar motoboy para entrega!','enviarMotoboyParaEntrega(this.value)','${item._id}');" type="button" data-dismiss="modal" class="btn btn-primary btn-sm"><span class="fas fa-check-circle"></span> </button>
+                      <button onclick="confirmarAcao('Enviar motoboy para entrega!','enviarMotoboyParaEntrega(this.value)','${
+                        item._id
+                      }');" type="button" data-dismiss="modal" class="btn btn-primary btn-sm"><span class="fas fa-check-circle"></span> </button>
                     </td>
-                  </tr>`
+                  </tr>`;
         aux = true;
       }
     }
@@ -1173,34 +1312,42 @@ async function criarListaEnviarMotoboyEntrega(tipo) {
         </table>`;
 
     if (aux) {
-      document.getElementById('respostaMotoboyParaPedidoEnvairEntrega').innerHTML = codigoHTML
+      document.getElementById('respostaMotoboyParaPedidoEnvairEntrega').innerHTML = codigoHTML;
     } else {
-      document.getElementById('respostaMotoboyParaPedidoEnvairEntrega').innerHTML = '<h5 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Nenhum motoboy em aguardo encontrado!</h5>'
+      document.getElementById('respostaMotoboyParaPedidoEnvairEntrega').innerHTML =
+        '<h5 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Nenhum motoboy em aguardo encontrado!</h5>';
     }
   } catch (error) {
-    mensagemDeErroModal('Não foi possível carregar os motoboy em aguardo!')
+    mensagemDeErroModal('Não foi possível carregar os motoboy em aguardo!');
   }
-
 }
 
 //funcao responsavel por enviar o motoboy para entrega
 async function enviarMotoboyParaEntrega(id) {
   try {
     await aguardeCarregamento(true);
-    let json = await requisicaoGET(`deliverymans`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
-    let motoboy = json.data.find(element => element._id == id)
-    await requisicaoPUT(`deliverymans/${id}`, { "available": true, "name": motoboy.name, "phone": motoboy.phone }, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+    let json = await requisicaoGET(`deliverymans`, {
+      headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
+    });
+    let motoboy = json.data.find((element) => element._id == id);
+    await requisicaoPUT(
+      `deliverymans/${id}`,
+      { available: true, name: motoboy.name, phone: motoboy.phone },
+      { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } }
+    );
     await aguardeCarregamento(false);
-    await mensagemDeAviso('Motoboy enviado para entrega com sucesso!')
+    await mensagemDeAviso('Motoboy enviado para entrega com sucesso!');
   } catch (error) {
-    mensagemDeErro('Não foi possível enviar o motoboy para entrega!')
+    mensagemDeErro('Não foi possível enviar o motoboy para entrega!');
   }
 }
 
 //funcao responsavel por gerar o modal de lista de pedidos da web
 async function modalPedidosOnline() {
   await aguardeCarregamento(true);
-  let pedidos = await requisicaoGET('orders', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+  let pedidos = await requisicaoGET('orders', {
+    headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
+  });
   await aguardeCarregamento(false);
   VETORDEPEDIDOSCLASSEPEDIDO = [];
 
@@ -1217,29 +1364,37 @@ async function modalPedidosOnline() {
                           </div>
                           <div class="modal-body">
                               <div class="list-group">
-                                <div class="shadow-lg p-3 mb-5 bg-white rounded">`
+                                <div class="shadow-lg p-3 mb-5 bg-white rounded">`;
 
-  const pedidoFilter = pedidos.data.filter(function (element) { return element.source == 'site' && !element.viewed })
+  const pedidoFilter = pedidos.data.filter(function (element) {
+    return element.source == 'site' && !element.viewed;
+  });
 
   pedidoFilter.map((pedido) => {
     VETORDEPEDIDOSCLASSEPEDIDO.push(pedido);
-    const date = format(parseISO(pedido.createdAt), 'dd/MM/yyyy HH:mm:ss')
+    const date = format(parseISO(pedido.createdAt), 'dd/MM/yyyy HH:mm:ss');
 
     if (pedido.address) {
-      codigoHTML += `<a href="#" onclick="modalMotoboysOnline('${pedido._id}');" class="list-group-item list-group-item-action" data-dismiss="modal">`
+      codigoHTML += `<a href="#" onclick="modalMotoboysOnline('${pedido._id}');" class="list-group-item list-group-item-action" data-dismiss="modal">`;
     } else {
-      codigoHTML += `<a href="#" onclick="modaldeConfirmacaoPedidoOnline('${pedido._id}',true);" class="list-group-item list-group-item-action" data-dismiss="modal">`
+      codigoHTML += `<a href="#" onclick="modaldeConfirmacaoPedidoOnline('${pedido._id}',true);" class="list-group-item list-group-item-action" data-dismiss="modal">`;
     }
 
     codigoHTML += `<div class="d-flex w-100 justify-content-between">
-                  <h5 class="mb-1"><span class="fas fa-mouse-pointer"></span> Código: ${pedido.identification} </h5>
+                  <h5 class="mb-1"><span class="fas fa-mouse-pointer"></span> Código: ${
+                    pedido.identification
+                  } </h5>
                   <small>${date}</small>
                 </div>
                 <p class="mb-1">Cliente: ${pedido.user.name}</p>
-                <p class="mb-1"><strong>Total: R$${(pedido.total).toFixed(2)}</strong></p>
-                <small>${pedido.address ? '<strong class="text-primary">Entrega' : '<strong class="text-danger">Retirada local'}</strong></small>
-              </a>`
-  })
+                <p class="mb-1"><strong>Total: R$${pedido.total.toFixed(2)}</strong></p>
+                <small>${
+                  pedido.address
+                    ? '<strong class="text-primary">Entrega'
+                    : '<strong class="text-danger">Retirada local'
+                }</strong></small>
+              </a>`;
+  });
 
   if (pedidoFilter[0] == null) {
     codigoHTML += `<h5 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Nenhum pedido online em aberto encontrado!</h5>`;
@@ -1250,7 +1405,7 @@ async function modalPedidosOnline() {
                           </div>
                         </div>
                     </div>
-               </div>`
+               </div>`;
 
   document.getElementById('modal').innerHTML = codigoHTML;
   $('#modalpedidoonlineclassepedido').modal('show');
@@ -1290,7 +1445,7 @@ async function modalMotoboysOnline(id) {
                           </div>
                         </div>
                     </div>
-               </div>`
+               </div>`;
 
   document.getElementById('modal').innerHTML = codigoHTML;
   $('#modalmotoboyonlineclassepedido').modal('show');
@@ -1304,14 +1459,19 @@ async function listagemMotoboyOnline(tipo, id) {
   try {
     if (tipo == 'nome') {
       await aguardeCarregamento(true);
-      let json2 = await requisicaoGET(`deliverymans/${document.getElementById('nomeMotoboyPedido').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      let json2 = await requisicaoGET(
+        `deliverymans/${document.getElementById('nomeMotoboyPedido').value}`,
+        { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } }
+      );
       await aguardeCarregamento(false);
       json.data = json2.data.filter((item) => {
         return item.working_day == true;
-      })
+      });
     } else if (tipo == 'ativos') {
       await aguardeCarregamento(true);
-      json = await requisicaoGET('deliverymans/working_days', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+      json = await requisicaoGET('deliverymans/working_days', {
+        headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
+      });
       await aguardeCarregamento(false);
     }
 
@@ -1329,13 +1489,18 @@ async function listagemMotoboyOnline(tipo, id) {
         <tbody>`;
     for await (item of json.data) {
       codigoHTML += `<tr>
-                <td class="table-light text-dark" title="${item.name}"><strong><span class="fas fa-biking"></span> ${corrigirTamanhoString(15, item.name)}</strong></td>
+                <td class="table-light text-dark" title="${
+                  item.name
+                }"><strong><span class="fas fa-biking"></span> ${corrigirTamanhoString(
+        15,
+        item.name
+      )}</strong></td>
                 <td class="table-light"><span class="fas fa-phone"></span> ${item.phone}</td>
                 <td class="table-light">`;
       if (item.hasDelivery) {
-        codigoHTML += `<select class="form-control form-control-sm" style="width:150px" id="localDeEntragaMotoboy${item._id}">`
-        codigoHTML += `</select>`
-        mostrarLocaisDeEntregaMotoboy(item._id)
+        codigoHTML += `<select class="form-control form-control-sm" style="width:150px" id="localDeEntragaMotoboy${item._id}">`;
+        codigoHTML += `</select>`;
+        mostrarLocaisDeEntregaMotoboy(item._id);
       } else {
         codigoHTML += `Nenhuma`;
       }
@@ -1360,10 +1525,11 @@ async function listagemMotoboyOnline(tipo, id) {
     if (json.data[0]) {
       document.getElementById('respostaMotoboyOnline').innerHTML = codigoHTML;
     } else {
-      document.getElementById('respostaMotoboyOnline').innerHTML = '<h5 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Nenhum motoboy encontrado!</h5>';
+      document.getElementById('respostaMotoboyOnline').innerHTML =
+        '<h5 class="text-center" style="margin-top:20px;"><span class="fas fa-exclamation-triangle"></span> Nenhum motoboy encontrado!</h5>';
     }
   } catch (error) {
-    mensagemDeErroModal('Não foi possível carregar os motoboys!')
+    mensagemDeErroModal('Não foi possível carregar os motoboys!');
   }
 }
 
@@ -1376,7 +1542,7 @@ async function adicionaMotoboyPedidoOnline(idMotoboy, id) {
   const items = pedido.items.map((itemsElement) => {
     return {
       product: itemsElement.product._id,
-      quantity: itemsElement.quantity
+      quantity: itemsElement.quantity,
     };
   });
 
@@ -1388,11 +1554,13 @@ async function adicionaMotoboyPedidoOnline(idMotoboy, id) {
     items: items,
     payment: pedido.payment,
     note: pedido.note,
-    viewed: true
-  }
+    viewed: true,
+  };
 
   await aguardeCarregamento(true);
-  await requisicaoPUT(`orders/${id}`, json, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+  await requisicaoPUT(`orders/${id}`, json, {
+    headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
+  });
   await aguardeCarregamento(false);
 
   await modaldeConfirmacaoPedidoOnline(id, false);
@@ -1414,24 +1582,24 @@ function modaldeConfirmacaoPedidoOnline(id, retiradaLocal) {
                           <div class="modal-body">
                             <h5>O pedido acaba de ser confirmado! Selecione uma das opções abaixo para prosseguir.</h5>
                           </div>
-                          <div class="modal-footer">`
+                          <div class="modal-footer">`;
 
   if (retiradaLocal) {
     codigoHTML += `<button type="button" class="btn btn-success btn-sm" onclick="reImprimirPedido('${id}'); pedidoOnlineConfirmado('${id}');" data-dismiss="modal"><span class="fas fa-print"></span> Finalizar e imprimir</button>  
                             <button type="button" class="btn btn-primary btn-sm" onclick="pedidoOnlineConfirmado('${id}');" data-dismiss="modal"><span class="fas fa-check"></span> Finalizar</button>
                             <button type="button" class="btn btn-warning btn-sm" onclick="confirmarAcao('Atualizar este pedido!','atualizarDadoPedido(this.value)','${id}'); pedidoOnlineConfirmado('${id}');" data-dismiss="modal"><span class="fas fa-edit"></span> Alterar</button>
-                            <button type="button" class="btn btn-danger btn-sm" onclick="confirmarAcao('Cancelar este pedido!','excluirPedido(this.value)','${id}');" data-dismiss="modal"><span class="fas fa-ban"></span> Cancelar</button>`
+                            <button type="button" class="btn btn-danger btn-sm" onclick="confirmarAcao('Cancelar este pedido!','excluirPedido(this.value)','${id}');" data-dismiss="modal"><span class="fas fa-ban"></span> Cancelar</button>`;
   } else {
     codigoHTML += `<button type="button" class="btn btn-success btn-sm" onclick="reImprimirPedido('${id}');" data-dismiss="modal"><span class="fas fa-print"></span> Finalizar e imprimir</button>  
                             <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal"><span class="fas fa-check"></span> Finalizar</button>
                             <button type="button" class="btn btn-warning btn-sm" onclick="confirmarAcao('Atualizar este pedido!','atualizarDadoPedido(this.value)','${id}'); data-dismiss="modal"><span class="fas fa-edit"></span> Alterar</button>
-                            <button type="button" class="btn btn-danger btn-sm" onclick="confirmarAcao('Cancelar este pedido!','excluirPedido(this.value)','${id}');" data-dismiss="modal"><span class="fas fa-ban"></span> Cancelar</button>`
+                            <button type="button" class="btn btn-danger btn-sm" onclick="confirmarAcao('Cancelar este pedido!','excluirPedido(this.value)','${id}');" data-dismiss="modal"><span class="fas fa-ban"></span> Cancelar</button>`;
   }
 
   codigoHTML += `</div>
                         </div>
                     </div>
-               </div>`
+               </div>`;
 
   document.getElementById('modal').innerHTML = codigoHTML;
   $('#modalConfirmacaoPedidoOnline').modal('show');
@@ -1446,7 +1614,7 @@ async function pedidoOnlineConfirmado(id) {
   const items = pedido.items.map((itemsElement) => {
     return {
       product: itemsElement.product._id,
-      quantity: itemsElement.quantity
+      quantity: itemsElement.quantity,
     };
   });
 
@@ -1458,11 +1626,13 @@ async function pedidoOnlineConfirmado(id) {
     items: items,
     payment: pedido.payment,
     note: pedido.note,
-    viewed: true
-  }
+    viewed: true,
+  };
 
   await aguardeCarregamento(true);
-  await requisicaoPUT(`orders/${id}`, json, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+  await requisicaoPUT(`orders/${id}`, json, {
+    headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
+  });
   await aguardeCarregamento(false);
 
   VETORDEPEDIDOSCLASSEPEDIDO = [];
@@ -1472,14 +1642,26 @@ async function pedidoOnlineConfirmado(id) {
 async function reImprimirPedido(id) {
   try {
     await aguardeCarregamento(true);
-    await requisicaoPrintPOST(`printers`, {
-      id: id
-    }, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+    await requisicaoPrintPOST(
+      `printers`,
+      {
+        id: id,
+      },
+      { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } }
+    );
     await aguardeCarregamento(false);
-    await mensagemDeAviso('Imprimindo pedido ...')
+    await mensagemDeAviso('Imprimindo pedido ...');
   } catch (error) {
-    mensagemDeErro('Não foi possível imprimir o pedido!')
+    mensagemDeErro('Não foi possível imprimir o pedido!');
   }
+}
+// funcao responsavel por receber o codigo de barras lido pelo celular em real time
+function socketPedidioRealTime() {
+  const socket = io('http://localhost:3333', {});
+
+  socket.on('newOrder', (newOrder) => {
+    buscarProdutoVenda(newOrder);
+  });
 }
 
 //funcao responsavel por inicializar variaveis globais do classe pedido
@@ -1487,7 +1669,7 @@ function inicializarVariaveisClassePedido() {
   VETORDEPRODUTOSCLASSEPEDIDO = [];
   DADOSPEDIDO = JSON.parse(`{}`);
   subMenuPedido();
-  document.getElementById('modal').innerHTML = ''
-  document.getElementById('modal2').innerHTML = ''
-  document.getElementById('alert2').innerHTML = ''
+  document.getElementById('modal').innerHTML = '';
+  document.getElementById('modal2').innerHTML = '';
+  document.getElementById('alert2').innerHTML = '';
 }

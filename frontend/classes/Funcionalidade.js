@@ -2,12 +2,16 @@
 const $ = require('jquery');
 require('bootstrap');
 const Highcharts = require('highcharts');
-const { format, parseISO } = require('date-fns')
-
+const { format, parseISO } = require('date-fns');
+const socket = require('socket.io-client');
 // funcao para gerar mensagem de erro
 function mensagemDeErro(mensagem) {
-  document.getElementById('mensagemDeErro').innerHTML = `<div class="toast shadow-lg mb-5 bg-white rounded" role="alert" data-delay="5000" aria-atomic="true" style="opacity:0.9;">
-        <div class="toast-header bg-danger text-light">
+  document.getElementById(
+    'mensagemDeErro'
+  ).innerHTML = `<div class="toast shadow-lg mb-5 bg-white rounded" role="alert" data-delay="5000" aria-atomic="true" style="opacity:0.9;">
+        <div class="toast-
+    header bg-danger
+   text-light">
             <span class="fas fa-exclamation-triangle" style="margin-right:5px;"></span>
             <strong class="mr-auto">Atenção</strong>
             <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
@@ -17,9 +21,8 @@ function mensagemDeErro(mensagem) {
         <div class="toast-body">
             <strong>${mensagem}</strong>
         </div>
-    </div>`
-
-  $('.toast').toast('show')
+    </div>`;
+  $('.toast').toast('show');
 }
 
 //funcao para gerar mensagem de erro no modal
@@ -33,8 +36,12 @@ function mensagemDeErroModal(mensagem) {
 
 // funcao para gerar mensagem de aviso
 function mensagemDeAviso(mensagem) {
-  document.getElementById('mensagemDeErro').innerHTML = `<div class="toast shadow-lg mb-5 bg-white rounded" role="alert" data-delay="5000" aria-atomic="true" style="opacity:0.9;">
-        <div class="toast-header bg-success text-light">
+  document.getElementById(
+    'mensagemDeErro'
+  ).innerHTML = `<div class="toast shadow-lg mb-5 bg-white rounded" role="alert" data-delay="5000" aria-atomic="true" style="opacity:0.9;">
+        <div class="toast-
+    header bg-succes
+  s text-light">
             <span class="fas fa-check-double" style="margin-right:5px;"></span>
             <strong class="mr-auto">Informação</strong>
             <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
@@ -44,9 +51,8 @@ function mensagemDeAviso(mensagem) {
         <div class="toast-body">
             <strong>${mensagem}</strong>
         </div>
-    </div>`
-
-  $('.toast').toast('show')
+    </div>`;
+  $('.toast').toast('show');
 }
 
 //funcao para limpar a tela de mensagens do modal
@@ -99,17 +105,16 @@ function confirmarAcao(mensagem, funcao, value) {
             <p class="text-danger"><strong>${mensagem} Deseja continuar?</strong></p>
           </div>
           <div class="modal-footer">
-          <button onclick="document.getElementById(\'modal\').innerHTML=\'\';" type="button" class="btn btn-outline-dark" data-dismiss="modal"><span class="fas fa-times iconsTam"></span> Não</button>`
+          <button onclick="document.getElementById(\'modal\').innerHTML=\'\';" type="button" class="btn btn-outline-dark" data-dismiss="modal"><span class="fas fa-times iconsTam"></span> Não</button>`;
   if (value == null) {
-    codigoHTML += `<button onclick="${funcao}; document.getElementById('modal').innerHTML='';" type="button" class="btn btn-danger" data-dismiss="modal"><span class="fas fa-check iconsTam"></span> Sim</button>`
+    codigoHTML += `<button onclick="${funcao}; document.getElementById('modal').innerHTML='';" type="button" class="btn btn-danger" data-dismiss="modal"><span class="fas fa-check iconsTam"></span> Sim</button>`;
   } else {
-    codigoHTML += `<button onclick="${funcao}; document.getElementById('modal').innerHTML='';" value="${value}" type="button" class="btn btn-danger" data-dismiss="modal"><span class="fas fa-check iconsTam"></span> Sim</button>`
+    codigoHTML += `<button onclick="${funcao}; document.getElementById('modal').innerHTML='';" value="${value}" type="button" class="btn btn-danger" data-dismiss="modal"><span class="fas fa-check iconsTam"></span> Sim</button>`;
   }
   codigoHTML += `</div>
         </div>
       </div>
-    </div>`
-
+    </div>`;
   document.getElementById('alert2').innerHTML = codigoHTML;
   $('#alertaConfirmacao').modal('show');
 }
@@ -137,19 +142,20 @@ function mostrarCamposIncorreto(campo) {
 
 // funcao responsavel por buscar a sessao do usuario
 function buscarSessionUser() {
-  return JSON.parse(sessionStorage.getItem('loginDarya'))
+  return JSON.parse(sessionStorage.getItem('loginDarya'));
 }
 
 //funcao responsavel por gerar a tela de aguarde o carregamento
 let timerCarregador;
 function aguardeCarregamento(tipo) {
-  let contCarregador = 0, codigoHTML = `<div style="background-color: rgba(0, 0, 0, 0.8); position: absolute; height: 99.2vh; width: 100vw; z-index:1055; border-radius:10px;">
-      <h5 class="text-center text-light">
+  let contCarregador = 0,
+    codigoHTML = `<div style="background-color: rgba(0, 0, 0, 0.8); position: absolute; height: 99.2vh; width: 100vw; z-index:1055; border-radius:10px;">
+      <h5 class="text-cen
+   ter text-light">
         <img src="./img/loading.gif" class="rounded mx-auto d-block" style="height: 40px; width: 40px; margin-top: 48vh;">
         Aguarde...
       </h5>
-    <div>`
-
+    <div>`;
   if (tipo) {
     document.getElementById('carregamento').innerHTML = codigoHTML;
     clearInterval(timerCarregador);
@@ -164,17 +170,19 @@ function aguardeCarregamento(tipo) {
             <h6 class="text-center text-light">
               Aguarde 10 segundos para tentar novemante.
             </h6>
-          <div>`
-
+          <div>`;
         document.getElementById('carregamento').innerHTML = codigoHTML;
         clearInterval(timerCarregador);
 
-        setTimeout(function () { document.getElementById('carregamento').innerHTML = '' }, 10000)
+        setTimeout(function () {
+          document.getElementById('carregamento').innerHTML = '';
+        }, 10000);
+      } else {
+        clearInterval(timerCarregador);
+        setTimeout(function () {
+          document.getElementById('carregamento').innerHTML = '';
+        }, 300);
       }
-
-    }, 1000)
-  } else {
-    clearInterval(timerCarregador);
-    setTimeout(function () { document.getElementById('carregamento').innerHTML = ''; }, 300)
+    });
   }
 }

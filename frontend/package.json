@@ -32,6 +32,7 @@
     "date-fns": "^2.14.0",
     "highcharts": "^8.1.2",
     "jquery": "^3.5.1",
-    "popper.js": "^1.16.1"
+    "popper.js": "^1.16.1",
+    "socket.io-client": "^2.3.1"
   }
 }

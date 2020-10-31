@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { Request, Response } from 'express';
+import { request, Request, Response } from 'express';
 import { Types } from 'mongoose';
 import crypto from 'crypto';
 import Order, { Source } from '../models/Order';
@@ -194,6 +194,8 @@ class OrderController {
         .populate('deliveryman')
         .populate('items.product')
         .execPopulate();
+
+      request.io.emit('newOrder', order);
       return response.json(order);
     } catch (error) {
       return response.status(400).json(error.message);

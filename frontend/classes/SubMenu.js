@@ -6,6 +6,7 @@ function subMenuPedido() {
         VETORDEPRODUTOSCLASSEPEDIDO = [],
         DADOSPEDIDO = JSON.parse(`{}`)
     let codigoHTML = ``;
+    socketPedidioRealTime();
 
     codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
         <h4 class="text-center"><span class="fas fa-shopping-basket"></span> Opções de Pedido</h4>

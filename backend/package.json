@@ -20,6 +20,7 @@
     "@types/jsonwebtoken": "^8.5.0",
     "@types/mongoose": "^5.7.30",
     "@types/shelljs": "^0.8.8",
+    "@types/socket.io": "^2.1.11",
     "@types/supertest": "^2.0.10",
     "@typescript-eslint/eslint-plugin": "^3.7.0",
     "@typescript-eslint/parser": "^3.7.0",
@@ -56,6 +57,7 @@
     "jsonwebtoken": "^8.5.1",
     "jsrtf": "^0.0.3",
     "mongoose": "^5.9.22",
-    "shelljs": "^0.8.4"
+    "shelljs": "^0.8.4",
+    "socket.io": "^2.3.0"
   }
 }
