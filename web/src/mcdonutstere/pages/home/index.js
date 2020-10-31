@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useCallback, useMemo } from "react";
 import {
   Box,
   makeStyles,
   Container,
 } from "@material-ui/core/";
+import socketio from 'socket.io-client';
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+
 
 import Navbar from "../../components/navbar/navbar";
 import Item from "./item";
@@ -40,6 +42,15 @@ export default function Home() {
   const [produtos, setProdutos] = useState([]);
   const classes = useStyles();
   const { setProgresso } = useProgresso();
+
+  const socket = useMemo(() => socketio(`http://localhost:3333`), []);
+
+  useEffect(() => {
+    socket.on('shop', (data) => {
+      console.log(data);
+    });
+  }, []);
+
 
   useEffect(() => {
     async function carregarProdutos() {

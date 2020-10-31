@@ -38,8 +38,8 @@ routes.get('/shop', shopController.index);
 const sessionRoutes = new Session_routes_1.SessionRoutes(routes);
 sessionRoutes.getRoutes();
 // forgot
-const forgotPassworndRoutes = new ForgotPassword_routes_1.ForgotPasswordRoutes(routes);
-forgotPassworndRoutes.getRoutes();
+const forgotPasswordRoutes = new ForgotPassword_routes_1.ForgotPasswordRoutes(routes);
+forgotPasswordRoutes.getRoutes();
 // users
 const userRoutes = new Users_routes_1.UserRoutes(routes);
 userRoutes.getRoutes({ paramName: commonSchema_1.paramName, paramId: commonSchema_1.paramId, client: clientSchema_1.client, clientUpdate: clientSchema_1.clientUpdate });
