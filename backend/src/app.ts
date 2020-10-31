@@ -23,8 +23,8 @@ if (!(process.env.NODE_ENV === 'test'))
     useUnifiedTopology: true,
     useFindAndModify: false,
   });
- 
-  const connectedUsers = {};
+
+const connectedUsers = {};
 
 io.on('connection', (socket) => {
   const { userId } = socket.handshake.query;
@@ -42,4 +42,4 @@ app.use((req, res, next) => {
 
 app.use(routes);
 app.use(errors());
-export default app;
+export default server;

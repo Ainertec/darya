@@ -3,15 +3,17 @@ const $ = require('jquery');
 require('bootstrap');
 const Highcharts = require('highcharts');
 const { format, parseISO } = require('date-fns');
-const socket = require('socket.io-client');
+const io = require('socket.io-client');
+
+//funcao de inicializacao o realtime de pedido na inicializacao do sistema
+$(document).ready(function () {
+  socketPedidioRealTime();
+});
+
 // funcao para gerar mensagem de erro
 function mensagemDeErro(mensagem) {
-  document.getElementById(
-    'mensagemDeErro'
-  ).innerHTML = `<div class="toast shadow-lg mb-5 bg-white rounded" role="alert" data-delay="5000" aria-atomic="true" style="opacity:0.9;">
-        <div class="toast-
-    header bg-danger
-   text-light">
+  document.getElementById('mensagemDeErro').innerHTML = `<div class="toast shadow-lg mb-5 bg-white rounded" role="alert" data-delay="5000" aria-atomic="true" style="opacity:0.9;">
+        <div class="toast-header bg-dangertext-light">
             <span class="fas fa-exclamation-triangle" style="margin-right:5px;"></span>
             <strong class="mr-auto">Atenção</strong>
             <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
@@ -27,21 +29,15 @@ function mensagemDeErro(mensagem) {
 
 //funcao para gerar mensagem de erro no modal
 function mensagemDeErroModal(mensagem) {
-  document.getElementById(
-    'mensagemDeErroModal'
-  ).innerHTML = `<span class="badge badge-danger h5">${mensagem}</span>`;
+  document.getElementById('mensagemDeErroModal').innerHTML = `<span class="badge badge-danger h5">${mensagem}</span>`;
   $('#mensagemDeErroModal').animate({ width: 'show' });
   limparTelaMensagemModal();
 }
 
 // funcao para gerar mensagem de aviso
 function mensagemDeAviso(mensagem) {
-  document.getElementById(
-    'mensagemDeErro'
-  ).innerHTML = `<div class="toast shadow-lg mb-5 bg-white rounded" role="alert" data-delay="5000" aria-atomic="true" style="opacity:0.9;">
-        <div class="toast-
-    header bg-succes
-  s text-light">
+  document.getElementById('mensagemDeErro').innerHTML = `<div class="toast shadow-lg mb-5 bg-white rounded" role="alert" data-delay="5000" aria-atomic="true" style="opacity:0.9;">
+        <div class="toast-header bg-success text-light">
             <span class="fas fa-check-double" style="margin-right:5px;"></span>
             <strong class="mr-auto">Informação</strong>
             <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
@@ -150,8 +146,7 @@ let timerCarregador;
 function aguardeCarregamento(tipo) {
   let contCarregador = 0,
     codigoHTML = `<div style="background-color: rgba(0, 0, 0, 0.8); position: absolute; height: 99.2vh; width: 100vw; z-index:1055; border-radius:10px;">
-      <h5 class="text-cen
-   ter text-light">
+      <h5 class="text-center text-light">
         <img src="./img/loading.gif" class="rounded mx-auto d-block" style="height: 40px; width: 40px; margin-top: 48vh;">
         Aguarde...
       </h5>

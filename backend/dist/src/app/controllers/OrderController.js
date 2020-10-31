@@ -325,6 +325,7 @@ var OrderController = /** @class */ (function () {
                             .execPopulate()];
                     case 18:
                         _g.sent();
+                        request.io.emit('newOrder', order);
                         return [2 /*return*/, response.json(order)];
                     case 19:
                         error_1 = _g.sent();

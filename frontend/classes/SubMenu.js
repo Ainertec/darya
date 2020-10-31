@@ -6,7 +6,6 @@ function subMenuPedido() {
         VETORDEPRODUTOSCLASSEPEDIDO = [],
         DADOSPEDIDO = JSON.parse(`{}`)
     let codigoHTML = ``;
-    socketPedidioRealTime();
 
     codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
         <h4 class="text-center"><span class="fas fa-shopping-basket"></span> Opções de Pedido</h4>
@@ -14,7 +13,7 @@ function subMenuPedido() {
             <button onclick="modalRetiradaLocalouEnvio();" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px; width: 50px; height: 150px;">
                 <span class="fas fa-plus"></span> Criar Pedido <span class="fas fa-shopping-basket"></span>
             </button>
-            <button onclick="modalPedidosOnline();" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px; width: 50px; height: 150px;">
+            <button id="botaoPedidoOnline" onclick="modalPedidosOnline();" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px; width: 50px; height: 150px;">
                 <span class="fas fa-globe"></span> Pedidos Online <span class="fas fa-mouse-pointer"></span>
                 ${QTDPEDIDOSONLINE > 0 ? '<span class="badge badge-warning badge-pill">' + QTDPEDIDOSONLINE + '</span>' : ''}
             </button>
@@ -45,13 +44,28 @@ function subMenuPedido() {
     setTimeout(function () { document.getElementById('janela2').innerHTML = codigoHTML }, 30)
 }
 
-
 //funcao responsavel por manipular o numero de pedidos exibidos nos pedidos online
 let QTDPEDIDOSONLINE = 0;
 function manipulacaoQtdPedidosOnline(notificacao) {
     if (notificacao) {
         QTDPEDIDOSONLINE += 1;
+        if (document.getElementById('botaoPedidoOnline')) {
+            document.getElementById('botaoPedidoOnline').innerHTML = `<span class="fas fa-globe"></span> Pedidos Online <span class="fas fa-mouse-pointer"></span>
+            <span class="badge badge-warning badge-pill">${QTDPEDIDOSONLINE}</span>`
+        }
     } else {
         QTDPEDIDOSONLINE = 0;
+        if (document.getElementById('botaoPedidoOnline')) {
+            document.getElementById('botaoPedidoOnline').innerHTML = `<span class="fas fa-globe"></span> Pedidos Online <span class="fas fa-mouse-pointer"></span>`
+        }
     }
+}
+
+// funcao responsavel por receber o pedido em real time
+function socketPedidioRealTime() {
+    const socket = io('http://localhost:3333', {});
+    socket.on('newOrder', (newOrder) => {
+        manipulacaoQtdPedidosOnline(true);
+        addPedidoOnlineListeRealTime(newOrder);
+    });
 }

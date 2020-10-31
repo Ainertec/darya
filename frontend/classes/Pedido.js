@@ -105,18 +105,17 @@ async function modalCadastrorapidoClientePedido(tipo) {
                                   <div class="col">
                                     <label for="nomecliente">Usuário:</label>
                                     <input type="text" class="form-control" id="usuario" placeholder="Usuário" value="${Math.random()
-                                      .toString(36)
-                                      .replace(/[^a-z]+/g, '')
-                                      .substr(0, 10)}">
+      .toString(36)
+      .replace(/[^a-z]+/g, '')
+      .substr(0, 10)}">
                                   </div>
                                   <div class="col">
                                     <label for="nomecliente">Senha:</label>
-                                    <input type="text" class="form-control" id="senha" placeholder="Senha" value="${
-                                      Math.random()
-                                        .toString(36)
-                                        .replace(/[^a-z]+/g, '')
-                                        .substr(0, 10) + Math.floor(Math.random() * 1000)
-                                    }">
+                                    <input type="text" class="form-control" id="senha" placeholder="Senha" value="${Math.random()
+      .toString(36)
+      .replace(/[^a-z]+/g, '')
+      .substr(0, 10) + Math.floor(Math.random() * 1000)
+    }">
                                   </div>
                                 </div>
                                 <div class="form-group">
@@ -516,29 +515,25 @@ async function criarListagemDeBuscaDeClientes(tipo) {
     for (let item of json.data) {
       if (!item.address[0] && document.getElementById('enderecocliente')) {
         codigoHTML += `<tr>
-                        <td class="table-light text-danger" title="${
-                          item.name
-                        }"><strong><span class="fas fa-user"></span> ${corrigirTamanhoString(
-          15,
-          item.name
-        )}</strong></td>
-                        <td class="table-light text-danger"><strong><span class="fas fa-phone"></span> ${
-                          item.phone[0]
-                        }</strong></td>
+                        <td class="table-light text-danger" title="${item.name
+          }"><strong><span class="fas fa-user"></span> ${corrigirTamanhoString(
+            15,
+            item.name
+          )}</strong></td>
+                        <td class="table-light text-danger"><strong><span class="fas fa-phone"></span> ${item.phone[0]
+          }</strong></td>
                         <td class="table-light text-danger"><strong><span class="fas fa-map-marker-alt"></span> Nenhum.</strong></td>
                         <td class="table-light text-center" title="Não é possível enviar pedidos para clientes sem endereço!"><button  type="button" class="btn btn-danger btn-sm" disabled><span class="fas fa-ban"></span></button></td>
                       </tr>`;
       } else {
         codigoHTML += `<tr>
-                        <td class="table-light text-dark" title="${
-                          item.name
-                        }"><strong><span class="fas fa-user"></span> ${corrigirTamanhoString(
-          15,
-          item.name
-        )}</strong></td>
-                        <td class="table-light"><strong><span class="fas fa-phone"></span> ${
-                          item.phone[0]
-                        }</strong></td>`;
+                        <td class="table-light text-dark" title="${item.name
+          }"><strong><span class="fas fa-user"></span> ${corrigirTamanhoString(
+            15,
+            item.name
+          )}</strong></td>
+                        <td class="table-light"><strong><span class="fas fa-phone"></span> ${item.phone[0]
+          }</strong></td>`;
         if (item.address[0]) {
           codigoHTML += `<td class="table-light"><strong><span class="fas fa-map-marker-alt"></span> ${item.phone.length} endereço(s)</strong></td>`;
         } else {
@@ -601,33 +596,25 @@ async function criarListagemDeBuscaDeProduto(tipo) {
     for (let item of json.data) {
       if (item.available) {
         codigoHTML += `<tr>
-                    <td class="table-light"><img src="${
-                      item.image
-                    }" class="mr-3" style="max-height:5%"></td>
-                    <td class="table-light col-2" title="${
-                      item.name
-                    }"><strong><span class="fas fa-hamburger"></span> ${corrigirTamanhoString(
-          15,
-          item.name
-        )}</strong></td>
+                    <td class="table-light"><img src="${item.image
+          }" class="mr-3" style="max-height:5%"></td>
+                    <td class="table-light col-2" title="${item.name
+          }"><strong><span class="fas fa-hamburger"></span> ${corrigirTamanhoString(
+            15,
+            item.name
+          )}</strong></td>
                     <td class="table-light text-danger"><strong>R$${parseFloat(item.price).toFixed(
-                      2
-                    )}</strong></td>
-                    <td class="table-light text-center" title="${
-                      item.description
-                    }"><strong>${corrigirTamanhoString(20, item.description)}</strong></td>
-                    <td class="table-light"><input id="quantidadeProduto${
-                      item._id
-                    }" type="Number" class="form-control form-control-sm" value=1></td>
-                    <td class="table-light text-center"><button onclick="if(validaDadosCampo(['#quantidadeProduto${
-                      item._id
-                    }']) && validaValoresCampo(['#quantidadeProduto${
-          item._id
-        }'])){preencherDadosPedidoIncluirDadosEmPedido('produto','${item._id}', quantidadeProduto${
-          item._id
-        }.value );}else{mensagemDeErroModal('Preencha o campo quantidade com um valor válido!'); mostrarCamposIncorreto(['quantidadeProduto${
-          item._id
-        }']);}" type="button" class="btn btn-primary btn-sm"><span class="fas fa-check"></span> </button></td>
+            2
+          )}</strong></td>
+                    <td class="table-light text-center" title="${item.description
+          }"><strong>${corrigirTamanhoString(20, item.description)}</strong></td>
+                    <td class="table-light"><input id="quantidadeProduto${item._id
+          }" type="Number" class="form-control form-control-sm" value=1></td>
+                    <td class="table-light text-center"><button onclick="if(validaDadosCampo(['#quantidadeProduto${item._id
+          }']) && validaValoresCampo(['#quantidadeProduto${item._id
+          }'])){preencherDadosPedidoIncluirDadosEmPedido('produto','${item._id}', quantidadeProduto${item._id
+          }.value );}else{mensagemDeErroModal('Preencha o campo quantidade com um valor válido!'); mostrarCamposIncorreto(['quantidadeProduto${item._id
+          }']);}" type="button" class="btn btn-primary btn-sm"><span class="fas fa-check"></span> </button></td>
                 </tr>`;
       }
     }
@@ -686,12 +673,11 @@ async function criarListagemDeBuscaDeMotoboy(tipo) {
           <tbody>`;
     for await (item of json.data) {
       codigoHTML += `<tr>
-                  <td class="table-light text-dark" title="${
-                    item.name
-                  }"><strong><span class="fas fa-biking"></span> ${corrigirTamanhoString(
-        15,
-        item.name
-      )}</strong></td>
+                  <td class="table-light text-dark" title="${item.name
+        }"><strong><span class="fas fa-biking"></span> ${corrigirTamanhoString(
+          15,
+          item.name
+        )}</strong></td>
                   <td class="table-light"><span class="fas fa-phone"></span> ${item.phone}</td>
                   <td class="table-light">`;
       if (item.hasDelivery) {
@@ -741,14 +727,12 @@ async function mostrarLocaisDeEntregaMotoboy(id) {
     await aguardeCarregamento(false);
 
     for (let item of json.data) {
-      codigoHTML += `<option title="${item.address.street}, nº ${item.address.number}, ${
-        item.address.reference
-      } - ${item.address.district_name}">${corrigirTamanhoString(15, item.address.street)}, nº ${
-        item.address.number
-      }, ${corrigirTamanhoString(20, item.address.reference)} - ${corrigirTamanhoString(
-        15,
-        item.address.district_name
-      )}</option>`;
+      codigoHTML += `<option title="${item.address.street}, nº ${item.address.number}, ${item.address.reference
+        } - ${item.address.district_name}">${corrigirTamanhoString(15, item.address.street)}, nº ${item.address.number
+        }, ${corrigirTamanhoString(20, item.address.reference)} - ${corrigirTamanhoString(
+          15,
+          item.address.district_name
+        )}</option>`;
     }
 
     document.getElementById(`localDeEntragaMotoboy${id}`).innerHTML = codigoHTML;
@@ -785,10 +769,8 @@ async function preencherDadosPedidoIncluirDadosEmPedido(tipo, id, quantidade) {
       if (document.getElementById('enderecocliente')) {
         for (let item of dado.address) {
           $('#enderecocliente').append(
-            `<option value="${item._id}" title="${item.street}, nº ${item.number} - ${
-              item.district.name
-            } - ${item.district.city}">${corrigirTamanhoString(15, item.street)}, nº ${
-              item.number
+            `<option value="${item._id}" title="${item.street}, nº ${item.number} - ${item.district.name
+            } - ${item.district.city}">${corrigirTamanhoString(15, item.street)}, nº ${item.number
             } - ${corrigirTamanhoString(15, item.district.name)} - ${corrigirTamanhoString(
               15,
               item.district.city
@@ -812,24 +794,20 @@ async function preencherDadosPedidoIncluirDadosEmPedido(tipo, id, quantidade) {
         );
 
         $('#listagemDeProdutoSelecionadoPedido').append(`<tr id="linhaProd${dado._id}">
-            <td class="table-warning"><img src="${
-              dado.image
-            }" class="mr-3" style="max-height:5%"></td>
-            <td class="table-warning col-2" title="${
-              dado.name
-            }"><strong><span class="fas fa-hamburger"></span> ${corrigirTamanhoString(
-          15,
-          dado.name
-        )}</strong></td>
+            <td class="table-warning"><img src="${dado.image
+          }" class="mr-3" style="max-height:5%"></td>
+            <td class="table-warning col-2" title="${dado.name
+          }"><strong><span class="fas fa-hamburger"></span> ${corrigirTamanhoString(
+            15,
+            dado.name
+          )}</strong></td>
             <td class="table-warning text-danger"><strong>R$${parseFloat(dado.price).toFixed(
-              2
-            )}</strong></td>
-            <td class="table-warning"><input id="lisProdPed${
-              dado._id
-            }" type="Number" class="form-control form-control-sm" value=${quantidade}></td>
-            <td class="table-warning text-center"><button onclick="removerProdutoDaTabelaeVetor('${
-              dado._id
-            }');" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span></button></td>
+            2
+          )}</strong></td>
+            <td class="table-warning"><input id="lisProdPed${dado._id
+          }" type="Number" class="form-control form-control-sm" value=${quantidade}></td>
+            <td class="table-warning text-center"><button onclick="removerProdutoDaTabelaeVetor('${dado._id
+          }');" type="button" class="btn btn-outline-danger btn-sm"><span class="fas fa-trash"></span></button></td>
         </tr>`);
       } else {
         mensagemDeErroModal('Produto já adicionado altere a quantidade!');
@@ -922,20 +900,18 @@ function listaDePedidosAbertosParaPagamento(json) {
   let codigoHTML = ``;
 
   codigoHTML += `<tr>
-        <td class="table-warning text-dark"><strong><span class="fas fa-sticky-note"></span> ${
-          json.identification
-        }</strong></td>
+        <td class="table-warning text-dark"><strong><span class="fas fa-sticky-note"></span> ${json.identification
+    }</strong></td>
         <td class="table-warning" title="${json.user.name}"><strong>${corrigirTamanhoString(
-    15,
-    json.user.name
-  )}</strong></td>
+      15,
+      json.user.name
+    )}</strong></td>
         <td class="table-warning text-danger"><strong>R$${parseFloat(json.total).toFixed(
-          2
-        )}</strong></td>`;
+      2
+    )}</strong></td>`;
   if (json.deliveryman) {
-    codigoHTML += `<td class="table-warning" title="${
-      json.deliveryman.name
-    }">${corrigirTamanhoString(15, json.deliveryman.name)}</td>`;
+    codigoHTML += `<td class="table-warning" title="${json.deliveryman.name
+      }">${corrigirTamanhoString(15, json.deliveryman.name)}</td>`;
   } else {
     codigoHTML += `<td class="table-warning">Retirada local</td>`;
   }
@@ -1291,18 +1267,16 @@ async function criarListaEnviarMotoboyEntrega(tipo) {
     for (let item of json.data) {
       if (item.available == false) {
         codigoHTML += `<tr>
-                    <td class="table-light text-dark" title="${
-                      item.name
-                    }"><strong><span class="fas fa-biking"></span> ${corrigirTamanhoString(
-          15,
-          item.name
-        )}</strong></td>
+                    <td class="table-light text-dark" title="${item.name
+          }"><strong><span class="fas fa-biking"></span> ${corrigirTamanhoString(
+            15,
+            item.name
+          )}</strong></td>
                     <td class="table-light"><span class="fas fa-phone"></span> ${item.phone}</td>
                     <td class="table-light"><span class="badge badge-warning">Aguardo</span></td>
                     <td class="table-light text-center">
-                      <button onclick="confirmarAcao('Enviar motoboy para entrega!','enviarMotoboyParaEntrega(this.value)','${
-                        item._id
-                      }');" type="button" data-dismiss="modal" class="btn btn-primary btn-sm"><span class="fas fa-check-circle"></span> </button>
+                      <button onclick="confirmarAcao('Enviar motoboy para entrega!','enviarMotoboyParaEntrega(this.value)','${item._id
+          }');" type="button" data-dismiss="modal" class="btn btn-primary btn-sm"><span class="fas fa-check-circle"></span> </button>
                     </td>
                   </tr>`;
         aux = true;
@@ -1364,7 +1338,7 @@ async function modalPedidosOnline() {
                           </div>
                           <div class="modal-body">
                               <div class="list-group">
-                                <div class="shadow-lg p-3 mb-5 bg-white rounded">`;
+                                <div class="shadow-lg p-3 mb-5 bg-white rounded" id="listaDePedidosOnline">`;
 
   const pedidoFilter = pedidos.data.filter(function (element) {
     return element.source == 'site' && !element.viewed;
@@ -1381,18 +1355,16 @@ async function modalPedidosOnline() {
     }
 
     codigoHTML += `<div class="d-flex w-100 justify-content-between">
-                  <h5 class="mb-1"><span class="fas fa-mouse-pointer"></span> Código: ${
-                    pedido.identification
-                  } </h5>
+                  <h5 class="mb-1"><span class="fas fa-mouse-pointer"></span> Código: ${pedido.identification
+      } </h5>
                   <small>${date}</small>
                 </div>
                 <p class="mb-1">Cliente: ${pedido.user.name}</p>
                 <p class="mb-1"><strong>Total: R$${pedido.total.toFixed(2)}</strong></p>
-                <small>${
-                  pedido.address
-                    ? '<strong class="text-primary">Entrega'
-                    : '<strong class="text-danger">Retirada local'
-                }</strong></small>
+                <small>${pedido.address
+        ? '<strong class="text-primary">Entrega'
+        : '<strong class="text-danger">Retirada local'
+      }</strong></small>
               </a>`;
   });
 
@@ -1410,6 +1382,32 @@ async function modalPedidosOnline() {
   document.getElementById('modal').innerHTML = codigoHTML;
   $('#modalpedidoonlineclassepedido').modal('show');
   manipulacaoQtdPedidosOnline(false);
+}
+
+//funcao responsavel por adicionar pedidos em realtime na lista de pedidos online
+function addPedidoOnlineListeRealTime(pedido) {
+  if (document.getElementById('listaDePedidosOnline')) {
+    let codigoHTML = ``;
+
+    VETORDEPEDIDOSCLASSEPEDIDO.push(pedido);
+    const date = format(parseISO(pedido.createdAt), 'dd/MM/yyyy HH:mm:ss');
+
+    if (pedido.address) {
+      codigoHTML += `<a href="#" onclick="modalMotoboysOnline('${pedido._id}');" class="list-group-item list-group-item-info list-group-item-action" data-dismiss="modal">`;
+    } else {
+      codigoHTML += `<a href="#" onclick="modaldeConfirmacaoPedidoOnline('${pedido._id}',true);" class="list-group-item list-group-item-info list-group-item-action" data-dismiss="modal">`;
+    }
+
+    codigoHTML += `<div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1"><span class="fas fa-mouse-pointer"></span> Código: ${pedido.identification} </h5>
+                    <small>${date}</small>
+                  </div>
+                  <p class="mb-1">Cliente: ${pedido.user.name}</p>
+                  <p class="mb-1"><strong>Total: R$${pedido.total.toFixed(2)}</strong></p>
+                  <small>${pedido.address ? '<strong class="text-primary">Entrega' : '<strong class="text-danger">Retirada local'}</strong></small>
+                </a>`
+    $('#listaDePedidosOnline').append(codigoHTML)
+  }
 }
 
 //funcao reponsavel por gerar o modal de selecao de motoboy online
@@ -1489,12 +1487,11 @@ async function listagemMotoboyOnline(tipo, id) {
         <tbody>`;
     for await (item of json.data) {
       codigoHTML += `<tr>
-                <td class="table-light text-dark" title="${
-                  item.name
-                }"><strong><span class="fas fa-biking"></span> ${corrigirTamanhoString(
-        15,
-        item.name
-      )}</strong></td>
+                <td class="table-light text-dark" title="${item.name
+        }"><strong><span class="fas fa-biking"></span> ${corrigirTamanhoString(
+          15,
+          item.name
+        )}</strong></td>
                 <td class="table-light"><span class="fas fa-phone"></span> ${item.phone}</td>
                 <td class="table-light">`;
       if (item.hasDelivery) {
@@ -1654,14 +1651,6 @@ async function reImprimirPedido(id) {
   } catch (error) {
     mensagemDeErro('Não foi possível imprimir o pedido!');
   }
-}
-// funcao responsavel por receber o codigo de barras lido pelo celular em real time
-function socketPedidioRealTime() {
-  const socket = io('http://localhost:3333', {});
-
-  socket.on('newOrder', (newOrder) => {
-    buscarProdutoVenda(newOrder);
-  });
 }
 
 //funcao responsavel por inicializar variaveis globais do classe pedido

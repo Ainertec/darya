@@ -7,7 +7,7 @@ import Authentication from '../middlewares/Authentication';
 import Authorization from '../middlewares/Authorization';
 
 export class UserRoutes {
-  constructor(private routes: Router) {}
+  constructor(private routes: Router) { }
 
   getRoutes(validations: IValidationsClient) {
     this.routes.get(
