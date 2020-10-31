@@ -1,4 +1,4 @@
-import factory from '../factories';
+import factory from './factories';
 import { Document } from 'mongoose';
 
 interface UserInterface extends Document {

@@ -106,7 +106,7 @@ class PrinterController {
             : process.env.DIR_PRODUCTION;
         await fs_1.default.writeFile(`${dir}/${id}.rtf`, buffer, { encoding: 'utf-8', flag: 'w' }, err => {
             if (err)
-                return response.status(400).json(`${err}`);
+                return;
         });
         const vbs = process.env.NODE_ENV === 'test'
             ? path_1.default.resolve(__dirname, '..', '..', '..', '__tests__', 'recipes', 'impressao.vbs')

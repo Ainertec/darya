@@ -1,16 +1,16 @@
-import { string } from '@hapi/joi';
-import { IClient } from '../Entity/Client';
-import { IOrderDocument } from '../Entity/Order';
+import {IUser  } from '../Entity/User';
+
 import { IProduct } from '../Entity/Product';
+import { OrderInterface } from '../interfaces/base';
 
 export interface IOrderRepository {
-  save(arg: IOrderSaveRequest): Promise<IOrderDocument>;
-  findClientId(id: string): Promise<IClient>;
+  save(arg: IOrderSaveRequest): Promise<OrderInterface>;
+  findClientId(id: string): Promise<IUser>;
   findProductId(id: string): Promise<IProduct>;
 }
 
 export interface IOrderSaveRequest {
-  items: { product: string; quantity: number }[];
+  items: { product: string| any; quantity: number }[];
   identification: string;
   note: string;
   addressToSend: {
@@ -23,8 +23,8 @@ export interface IOrderSaveRequest {
     reference: string;
   };
   total: number;
-  client: {
-    client_id: string;
+  user: {
+    user_id: string;
     name: string;
     phone: string[];
   };

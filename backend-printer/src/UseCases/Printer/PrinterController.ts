@@ -135,7 +135,7 @@ class PrinterController {
       buffer,
       { encoding: 'utf-8', flag: 'w' },
       err => {
-        if (err) return response.status(400).json(`${err}`);
+        if (err) return 
       },
     );
 

@@ -1,4 +1,4 @@
-import { IDistrict } from '../Entity/Client';
+import { IDistrict } from '../Entity/User';
 
 export interface IDistrictRepository {
   byName(name: string);
