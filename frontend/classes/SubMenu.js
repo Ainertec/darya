@@ -65,7 +65,9 @@ function manipulacaoQtdPedidosOnline(notificacao) {
 function socketPedidioRealTime() {
     const socket = io('http://localhost:3333', {});
     socket.on('newOrder', (newOrder) => {
-        manipulacaoQtdPedidosOnline(true);
-        addPedidoOnlineListeRealTime(newOrder);
+        if (newOrder.source == 'site') {
+            manipulacaoQtdPedidosOnline(true);
+            addPedidoOnlineListeRealTime(newOrder);
+        }
     });
 }

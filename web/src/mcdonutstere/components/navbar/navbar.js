@@ -8,6 +8,7 @@ import {
   Menu,
   MenuItem,
   Avatar,
+  Badge
 } from "@material-ui/core/";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircle from "@material-ui/icons/AccountCircle";
@@ -16,6 +17,7 @@ import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { useHistory } from "react-router-dom";
 import { useAuth } from "../../contexts/auth";
 import { useAlert } from '../../contexts/alertN';
+import { useLojaOpen } from '../../contexts/openShop';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,6 +49,7 @@ function Navbar({ hideIcons }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const { setAbrir, setMsg } = useAlert();
+  const { lojaOpen } = useLojaOpen();
 
   const history = useHistory();
   function handleNavigateToCart() {
@@ -86,7 +89,9 @@ function Navbar({ hideIcons }) {
     <div className={classes.root}>
       <AppBar position="static" className={classes.estiloNavbar}>
         <Toolbar>
-          <Avatar src="https://scontent-gig2-1.xx.fbcdn.net/v/t1.0-9/116713815_124951775960325_7453113145449815266_n.jpg?_nc_cat=102&_nc_sid=85a577&_nc_ohc=mQdSHbahKnAAX8uDfzF&_nc_ht=scontent-gig2-1.xx&oh=92557106d94984dbbbb8d4f954c84f27&oe=5FB125BB" />
+          <Badge color={lojaOpen ? "primary" : "secondary"} badgeContent={lojaOpen ? "Aberto" : "Fechado"} overlap="circle">
+            <Avatar src="https://scontent-gig2-1.xx.fbcdn.net/v/t1.0-9/116713815_124951775960325_7453113145449815266_n.jpg?_nc_cat=102&_nc_sid=85a577&_nc_ohc=mQdSHbahKnAAX8uDfzF&_nc_ht=scontent-gig2-1.xx&oh=92557106d94984dbbbb8d4f954c84f27&oe=5FB125BB" />
+          </Badge>
           <Typography
             variant="button"
             onClick={handleToHome}

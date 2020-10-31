@@ -29,6 +29,7 @@ import { useCart } from "../../contexts/cart";
 import { useAuth } from "../../contexts/auth";
 import { useAlert } from '../../contexts/alertN';
 import { useProgresso } from '../../contexts/prog';
+import { useLojaOpen } from '../../contexts/openShop';
 import Carregando from '../../components/progress/carregando';
 import Api from "../../services/api";
 import Notification from '../../components/notificacao/notification';
@@ -113,6 +114,7 @@ export default function TelaCarrinho() {
   const cabecario = getTitulos();
   const { setAbrir, setMsg } = useAlert();
   const { setProgresso } = useProgresso();
+  const { lojaOpen } = useLojaOpen();
 
   const history = useHistory();
   function handleNavigateToPedidos() {
@@ -211,51 +213,61 @@ export default function TelaCarrinho() {
                   )}
                 </Box>
                 <Box justifyContent="center" flexWrap="wrap" display="flex">
-                  {cartItems.length > 0 ? (
-                    posicaoNavegacao < cabecario.length ? (
-                      <>
-                        <Button
-                          disabled={posicaoNavegacao === 0}
-                          onClick={voltar}
-                          variant="contained"
-                        >
-                          <SkipPreviousIcon />
-                        Voltar
-                      </Button>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={continuar}
-                          style={{ marginLeft: 30 }}
-                        >
-                          {posicaoNavegacao === cabecario.length - 1 ? (
-                            <>
-                              <DoneOutlineIcon /> Fazer Pedido
-                          </>
-                          ) : (
+                  {lojaOpen ? (
+                    cartItems.length > 0 ? (
+                      posicaoNavegacao < cabecario.length ? (
+                        <>
+                          <Button
+                            disabled={posicaoNavegacao === 0}
+                            onClick={voltar}
+                            variant="contained"
+                          >
+                            <SkipPreviousIcon />
+                          Voltar
+                        </Button>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={continuar}
+                            style={{ marginLeft: 30 }}
+                          >
+                            {posicaoNavegacao === cabecario.length - 1 ? (
                               <>
-                                Continuar <SkipNextIcon />
-                              </>
-                            )}
-                        </Button>
+                                <DoneOutlineIcon /> Fazer Pedido
+                            </>
+                            ) : (
+                                <>
+                                  Continuar <SkipNextIcon />
+                                </>
+                              )}
+                          </Button>
+                        </>
+                      ) : (
+                          <Button
+                            disabled={posicaoNavegacao === 0}
+                            onClick={sendOrder}
+                            color="secondary"
+                            variant="contained"
+                          >
+                            <DoneAllIcon />
+                            Confirmar Pedido
+                          </Button>
+                        ))
+                      :
+                      <>
+                        <h3 style={{ textAlign: 'center' }}>
+                          <RemoveShoppingCartIcon />
+                          Nenhum item adicionado ao carrinho
+                          <MoodBadIcon />
+                        </h3>
                       </>
-                    ) : (
-                        <Button
-                          disabled={posicaoNavegacao === 0}
-                          onClick={sendOrder}
-                          color="secondary"
-                          variant="contained"
-                        >
-                          <DoneAllIcon />
-                          Confirmar Pedido
-                        </Button>
-                      ))
+                  )
                     :
                     <>
                       <h3 style={{ textAlign: 'center' }}>
                         <RemoveShoppingCartIcon />
-                        Nenhum item adicionado ao carrinho
-                        <MoodBadIcon />
+                          Não é possível efetuar pedidos, Loja fechada!
+                          <MoodBadIcon />
                       </h3>
                     </>
                   }

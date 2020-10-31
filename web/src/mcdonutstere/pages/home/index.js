@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useCallback, useMemo } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import {
   Box,
   makeStyles,
@@ -14,6 +14,7 @@ import BotaoFlutuante from "./botaoflutuante";
 import TabelaDeEndereco from "./tabelaDeEndereco";
 import Notification from "../../components/notificacao/notification";
 import { useProgresso } from "../../contexts/prog";
+import { useLojaOpen } from '../../contexts/openShop';
 import Carregando from "../../components/progress/carregando";
 import Api from "../../services/api";
 
@@ -42,19 +43,23 @@ export default function Home() {
   const [produtos, setProdutos] = useState([]);
   const classes = useStyles();
   const { setProgresso } = useProgresso();
+  const { setLojaOpen } = useLojaOpen();
 
   const socket = useMemo(() => socketio(`http://localhost:3333`), []);
 
   useEffect(() => {
     socket.on('shop', (data) => {
       console.log(data);
+      setLojaOpen(data);
     });
   }, []);
-
 
   useEffect(() => {
     async function carregarProdutos() {
       await setProgresso(true);
+      await Api.get('shop').then(response => {
+        setLojaOpen(response.data.open);
+      });
       await Api.get('products').then(response => {
         setProdutos(response.data);
       });

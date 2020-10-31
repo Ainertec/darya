@@ -6,6 +6,7 @@ import { CartProvider } from "../contexts/cart";
 import { AlertProvider } from "../contexts/alertN";
 import { UserProvider } from "../contexts/user";
 import { ProgressoProvider } from "../contexts/prog";
+import { LojaOpenProvider } from '../contexts/openShop';
 
 export default function RotasMcDonuts() {
     return (
@@ -14,7 +15,9 @@ export default function RotasMcDonuts() {
                 <AlertProvider>
                     <UserProvider>
                         <ProgressoProvider>
-                            <RotaMcDonuts />
+                            <LojaOpenProvider>
+                                <RotaMcDonuts />
+                            </LojaOpenProvider>
                         </ProgressoProvider>
                     </UserProvider>
                 </AlertProvider>

@@ -8,6 +8,7 @@ const io = require('socket.io-client');
 //funcao de inicializacao o realtime de pedido na inicializacao do sistema
 $(document).ready(function () {
   socketPedidioRealTime();
+  retornoEstadoLoja();
 });
 
 // funcao para gerar mensagem de erro

@@ -24,8 +24,8 @@
     <img src="img/logo.png" class="navbar-brand" style="width: 60px;" alt="...">
     <ul class="nav justify-content-end">
       <div class="custom-control custom-switch" style="margin-right: 15px;">
-        <input type="checkbox" onclick="this.checked? console.log('loja Aberta'):console.log('loja fechada')"
-          class="custom-control-input custom-switch" id="botaoSelectLojaAberta">
+        <input type="checkbox" onclick="alterarEstadoLoja(this.checked)" class="custom-control-input custom-switch"
+          id="botaoSelectLojaAberta">
         <label class="custom-control-label text-light" for="botaoSelectLojaAberta">Aberto <span
             class="fas fa-door-open"></span></label>
       </div>
@@ -103,6 +103,7 @@
   <script src="./classes/Funcionalidade.js"></script>
   <script src="./classes/SubMenu.js"></script>
   <script src="./classes/Login.js"></script>
+  <script src="./classes/Loja.js"></script>
   <script src="./classes/Requisicao.js"></script>
 
 </body>
