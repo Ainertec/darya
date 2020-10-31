@@ -4,9 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.paramDeliveryman = exports.paramIdentification = exports.orderUpdate = exports.order = void 0;
-var celebrate_1 = require("celebrate");
-var validObjectId_1 = __importDefault(require("./validObjectId"));
-var items = celebrate_1.Joi.object().keys({
+const celebrate_1 = require("celebrate");
+const validObjectId_1 = __importDefault(require("./validObjectId"));
+const items = celebrate_1.Joi.object().keys({
     product: celebrate_1.Joi.custom(validObjectId_1.default, 'valid id').required(),
     quantity: celebrate_1.Joi.number().required(),
 });

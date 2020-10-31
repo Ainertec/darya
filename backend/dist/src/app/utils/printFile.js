@@ -7,26 +7,26 @@ exports.printFile = void 0;
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-empty-function */
-var path_1 = __importDefault(require("path"));
-var fs_1 = __importDefault(require("fs"));
-var shelljs_1 = require("shelljs");
-var mongoose_1 = require("mongoose");
+const path_1 = __importDefault(require("path"));
+const fs_1 = __importDefault(require("fs"));
+const shelljs_1 = require("shelljs");
+const mongoose_1 = require("mongoose");
 function printFile(content, fileName) {
     try {
-        var buffer = Buffer.from(content, 'binary');
-        var dir = process.env.NODE_ENV === 'test'
+        const buffer = Buffer.from(content, 'binary');
+        const dir = process.env.NODE_ENV === 'test'
             ? path_1.default.resolve(__dirname, '..', '..', '..', '__tests__', 'recipes')
             : process.env.DIR_PRODUCTION;
-        fs_1.default.writeFile(dir + "/" + fileName + ".rtf", buffer, { encoding: 'utf-8', flag: 'w' }, function () { });
+        fs_1.default.writeFile(`${dir}/${fileName}.rtf`, buffer, { encoding: 'utf-8', flag: 'w' }, () => { });
     }
     catch (error) {
         throw new mongoose_1.Error(error.message);
     }
-    var vbs = process.env.NODE_ENV === 'test'
+    const vbs = process.env.NODE_ENV === 'test'
         ? path_1.default.resolve(__dirname, '..', '..', '..', '__tests__', 'recipes', 'impressao.vbs')
         : process.env.DIR_INITIALIZE_PRINT;
     if (vbs) {
-        setTimeout(function () {
+        setTimeout(() => {
             shelljs_1.exec(vbs);
         }, 1000);
     }

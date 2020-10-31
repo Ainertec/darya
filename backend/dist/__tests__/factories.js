@@ -3,15 +3,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var factory_girl_1 = __importDefault(require("factory-girl"));
-var faker_1 = __importDefault(require("faker"));
-var crypto_1 = __importDefault(require("crypto"));
-var Product_1 = __importDefault(require("../src/app/models/Product"));
-var Deliveryman_1 = __importDefault(require("../src/app/models/Deliveryman"));
-var District_1 = __importDefault(require("../src/app/models/District"));
-var User_1 = __importDefault(require("../src/app/models/User"));
-var Ingredient_1 = __importDefault(require("../src/app/models/Ingredient"));
-var Order_1 = __importDefault(require("../src/app/models/Order"));
+const factory_girl_1 = __importDefault(require("factory-girl"));
+const faker_1 = __importDefault(require("faker"));
+const crypto_1 = __importDefault(require("crypto"));
+const Product_1 = __importDefault(require("../src/app/models/Product"));
+const Deliveryman_1 = __importDefault(require("../src/app/models/Deliveryman"));
+const District_1 = __importDefault(require("../src/app/models/District"));
+const User_1 = __importDefault(require("../src/app/models/User"));
+const Ingredient_1 = __importDefault(require("../src/app/models/Ingredient"));
+const Order_1 = __importDefault(require("../src/app/models/Order"));
 factory_girl_1.default.define('Product', Product_1.default, {
     name: faker_1.default.commerce.productName(),
     price: faker_1.default.commerce.price(),

@@ -4,13 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DeliverymansRoutes = void 0;
-var celebrate_1 = require("celebrate");
-var DeliverymanController_1 = __importDefault(require("../app/controllers/DeliverymanController"));
-var DeliverymansRoutes = /** @class */ (function () {
-    function DeliverymansRoutes(routes) {
+const celebrate_1 = require("celebrate");
+const DeliverymanController_1 = __importDefault(require("../app/controllers/DeliverymanController"));
+class DeliverymansRoutes {
+    constructor(routes) {
         this.routes = routes;
     }
-    DeliverymansRoutes.prototype.getRoutes = function (validations) {
+    getRoutes(validations) {
         this.routes.get('/deliverymans', DeliverymanController_1.default.index);
         this.routes.get('/deliverymans/hasDelivery', DeliverymanController_1.default.showByDelivery);
         this.routes.get('/deliverymans/availables', DeliverymanController_1.default.show);
@@ -20,7 +20,6 @@ var DeliverymansRoutes = /** @class */ (function () {
         this.routes.put('/deliverymans/:id', celebrate_1.celebrate({ body: validations.deliveryman, params: validations.paramId }), DeliverymanController_1.default.update);
         this.routes.put('/deliverymans', DeliverymanController_1.default.reset);
         this.routes.delete('/deliverymans/:id', celebrate_1.celebrate({ params: validations.paramId }), DeliverymanController_1.default.delete);
-    };
-    return DeliverymansRoutes;
-}());
+    }
+}
 exports.DeliverymansRoutes = DeliverymansRoutes;

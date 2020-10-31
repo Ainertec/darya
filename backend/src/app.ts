@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import express from 'express';
+import express,{ Request, Response } from 'express';
 import cors from 'cors';
 
 import socketio from 'socket.io';
@@ -9,8 +9,9 @@ import { errors } from 'celebrate';
 import mongoose from 'mongoose';
 import routes from './routes';
 
+
 const app = express();
-const server = new http.Server(app);
+const server =  new http.Server(app);
 const io = socketio(server);
 
 
@@ -31,9 +32,9 @@ io.on('connection', (socket) => {
   connectedUsers[userId] = socket.id;
 });
 
-app.use((req, res, next) => {
+app.use((req: Request, res:Response, next) => {
   req.io = io;
-  req.connectedUsers = connectedUsers;
+  req.connectedUser = connectedUsers;
 
   return next();
 });
@@ -42,4 +43,4 @@ app.use((req, res, next) => {
 
 app.use(routes);
 app.use(errors());
-export default app;
+export default server;
