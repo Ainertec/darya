@@ -31,15 +31,21 @@ import { SessionRoutes } from './Session.routes';
 import { ForgotPasswordRoutes } from './ForgotPassword.routes';
 import Authentication from '../middlewares/Authentication';
 import Authorization from '../middlewares/Authorization';
+import { ShopController } from '../app/controllers/ShopController';
 
 const routes = Router();
+
+const shopController = new ShopController();
+routes.post('/shop',Authentication,shopController.store);
+routes.get('/shop',shopController.index);
+
 
 // session
 const sessionRoutes = new SessionRoutes(routes);
 sessionRoutes.getRoutes();
 // forgot
-const forgotPassworndRoutes = new ForgotPasswordRoutes(routes);
-forgotPassworndRoutes.getRoutes();
+const forgotPasswordRoutes = new ForgotPasswordRoutes(routes);
+forgotPasswordRoutes.getRoutes();
 
 // users
 const userRoutes = new UserRoutes(routes);
@@ -90,5 +96,6 @@ routes.get(
   celebrate({ query: serial }),
   SerialController.exit,
 );
+
 
 export default routes;
