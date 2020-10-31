@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = require("mongoose");
-var DeliverymanSchema = new mongoose_1.Schema({
+const mongoose_1 = require("mongoose");
+const DeliverymanSchema = new mongoose_1.Schema({
     name: {
         type: String,
         required: true,

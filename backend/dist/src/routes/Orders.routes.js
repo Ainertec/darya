@@ -4,14 +4,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrdersRoutes = void 0;
-var celebrate_1 = require("celebrate");
-var OrderController_1 = __importDefault(require("../app/controllers/OrderController"));
-var Authorization_1 = __importDefault(require("../middlewares/Authorization"));
-var OrdersRoutes = /** @class */ (function () {
-    function OrdersRoutes(routes) {
+const celebrate_1 = require("celebrate");
+const OrderController_1 = __importDefault(require("../app/controllers/OrderController"));
+const Authorization_1 = __importDefault(require("../middlewares/Authorization"));
+class OrdersRoutes {
+    constructor(routes) {
         this.routes = routes;
     }
-    OrdersRoutes.prototype.getRoutes = function (validations) {
+    getRoutes(validations) {
         this.routes.get('/orders', Authorization_1.default, OrderController_1.default.index);
         this.routes.get('/orders/user', OrderController_1.default.showByUser);
         this.routes.get('/orders/deliveryman/:deliveryman', Authorization_1.default, celebrate_1.celebrate({ params: validations.paramDeliveryman }), OrderController_1.default.showByDeliveryman);
@@ -19,7 +19,6 @@ var OrdersRoutes = /** @class */ (function () {
         this.routes.post('/orders', celebrate_1.celebrate({ body: validations.order }), OrderController_1.default.store);
         this.routes.put('/orders/:id', Authorization_1.default, celebrate_1.celebrate({ body: validations.orderUpdate }), OrderController_1.default.update);
         this.routes.delete('/orders/:id', Authorization_1.default, celebrate_1.celebrate({ params: validations.paramId }), OrderController_1.default.delete);
-    };
-    return OrdersRoutes;
-}());
+    }
+}
 exports.OrdersRoutes = OrdersRoutes;

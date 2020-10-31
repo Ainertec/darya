@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = require("mongoose");
-var IngredientSchema = new mongoose_1.Schema({
+const mongoose_1 = require("mongoose");
+const IngredientSchema = new mongoose_1.Schema({
     material: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: 'Ingredient',
@@ -12,7 +12,7 @@ var IngredientSchema = new mongoose_1.Schema({
         required: true,
     },
 });
-var ProductSchema = new mongoose_1.Schema({
+const ProductSchema = new mongoose_1.Schema({
     name: {
         type: String,
         required: true,

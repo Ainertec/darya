@@ -17,7 +17,7 @@ var io = socket_io_1.default(server);
 app.use(cors_1.default());
 app.use(express_1.default.json());
 if (!(process.env.NODE_ENV === 'test'))
-    mongoose_1.default.connect("" + process.env.DB_URL, {
+    mongoose_1.default.connect(`${process.env.DB_URL}`, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false,
