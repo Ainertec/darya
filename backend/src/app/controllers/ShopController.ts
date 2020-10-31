@@ -7,6 +7,7 @@ export class ShopController{
   async store(request: Request, response: Response){
     const {open} = request.body;
     Shop.setOpen(open);
+    request.io.emit('shop',open);
     return response.status(200).send({});
   }
 
