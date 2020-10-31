@@ -4,16 +4,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 require("dotenv/config");
-var express_1 = __importDefault(require("express"));
-var cors_1 = __importDefault(require("cors"));
-var socket_io_1 = __importDefault(require("socket.io"));
-var http_1 = __importDefault(require("http"));
-var celebrate_1 = require("celebrate");
-var mongoose_1 = __importDefault(require("mongoose"));
-var routes_1 = __importDefault(require("./routes"));
-var app = express_1.default();
-var server = new http_1.default.Server(app);
-var io = socket_io_1.default(server);
+const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
+const socket_io_1 = __importDefault(require("socket.io"));
+const http_1 = __importDefault(require("http"));
+const celebrate_1 = require("celebrate");
+const mongoose_1 = __importDefault(require("mongoose"));
+const routes_1 = __importDefault(require("./routes"));
+const app = express_1.default();
+const server = new http_1.default.Server(app);
+const io = socket_io_1.default(server);
 app.use(cors_1.default());
 app.use(express_1.default.json());
 if (!(process.env.NODE_ENV === 'test'))
@@ -22,14 +22,14 @@ if (!(process.env.NODE_ENV === 'test'))
         useUnifiedTopology: true,
         useFindAndModify: false,
     });
-var connectedUsers = {};
-io.on('connection', function (socket) {
-    var userId = socket.handshake.query.userId;
+const connectedUsers = {};
+io.on('connection', (socket) => {
+    const { userId } = socket.handshake.query;
     connectedUsers[userId] = socket.id;
 });
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
     req.io = io;
-    req.connectedUsers = connectedUsers;
+    req.connectedUser = connectedUsers;
     return next();
 });
 app.use(routes_1.default);
