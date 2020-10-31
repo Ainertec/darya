@@ -6,6 +6,7 @@ class ShopController {
     async store(request, response) {
         const { open } = request.body;
         openShop_1.Shop.setOpen(open);
+        request.io.emit('shop', open);
         return response.status(200).send({});
     }
     async index(request, response) {
