@@ -9,7 +9,7 @@ async function alterarEstadoLoja(status) {
 
 //function de retorno sobre status da loja
 function retornoEstadoLoja() {
-    const socket = io('http://localhost:3333', {});
+    const socket = io('https://requestaiappcenter.herokuapp.com/', {});
     socket.on('open', (open) => {
         document.getElementById('botaoSelectLojaAberta').checked = open;
     });

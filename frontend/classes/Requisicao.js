@@ -1,13 +1,11 @@
 // /---------------------------------------------------- Classe Requisicao --------------------------------------------------------
 const axios = require("axios");
 
-//https://requestaiappcenter.herokuapp.com/mcdonuts/
-
 // funcao de requisicao get sem paramentro JSON
 async function requisicaoGET(url, authorization) {
   let retorno;
   await axios
-    .get(`http://localhost:3333/${url}`, authorization)
+    .get(`https://requestaiappcenter.herokuapp.com/mcdonuts/${url}`, authorization)
     .then(function (response) {
       if (response.status == 200) {
         retorno = response;
@@ -27,7 +25,7 @@ async function requisicaoDELETE(url, json, authorization) {
   let retorno = null;
 
   await axios
-    .delete(`http://localhost:3333/${url}${json}`, authorization)
+    .delete(`https://requestaiappcenter.herokuapp.com/mcdonuts/${url}${json}`, authorization)
     .then(function (response) {
       if (response.status == 200) {
         retorno = response
@@ -44,7 +42,7 @@ async function requisicaoDELETE(url, json, authorization) {
 async function requisicaoPOST(url, json, authorization) {
   let retorno = null;
   await axios
-    .post(`http://localhost:3333/${url}`, json, authorization)
+    .post(`https://requestaiappcenter.herokuapp.com/mcdonuts/${url}`, json, authorization)
     .then(function (response) {
       if (response.status == 200) {
         retorno = response
@@ -63,7 +61,7 @@ async function requisicaoPOST(url, json, authorization) {
 async function requisicaoPUT(url, json, authorization) {
   let retorno = null;
   await axios
-    .put(`http://localhost:3333/${url}`, json, authorization)
+    .put(`https://requestaiappcenter.herokuapp.com/mcdonuts/${url}`, json, authorization)
     .then(function (response) {
       if (response.status == 200) {
         retorno = response

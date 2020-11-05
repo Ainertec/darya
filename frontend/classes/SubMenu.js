@@ -63,7 +63,7 @@ function manipulacaoQtdPedidosOnline(notificacao) {
 
 // funcao responsavel por receber o pedido em real time
 function socketPedidioRealTime() {
-    const socket = io('http://localhost:3333', {});
+    const socket = io('https://requestaiappcenter.herokuapp.com/', {});
     socket.on('newOrder', (newOrder) => {
         if (newOrder.source == 'site') {
             manipulacaoQtdPedidosOnline(true);
